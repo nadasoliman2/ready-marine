@@ -1,0 +1,366 @@
+[
+ {
+  "id": 1,
+  "name": "طلب بيك أب",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 2,
+  "name": "تم استلام البيك أب",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 3,
+  "name": "تم الاستلام في المخزن",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 4,
+  "name": "قيد التوصيل",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 5,
+  "name": "تسليم ناجح",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 6,
+  "name": "تأجيل",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 7,
+  "name": "تم الارتجاع للفرع",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 8,
+  "name": "تقفيل المرتجع",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 13,
+  "name": "مشكلة في التسليم",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 14,
+  "name": "تم الارتجاع للراسل",
+  "custody": "shipper custody",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 16,
+  "name": "في الطريق للمخزن",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 17,
+  "name": "استبدال او استلام طرد",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 18,
+  "name": "تسليم جزئي",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 19,
+  "name": "تهرب بعد الوصول و التنسيق",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 20,
+  "name": "رفض الاستلام و تم دفع الشحن",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 21,
+  "name": "مرتجع جزئي",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 22,
+  "name": "مرتجع استبدال",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 24,
+  "name": "in transit",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 25,
+  "name": "رفض الاستلام و رفض والدفع",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 26,
+  "name": "في الطريق إلي الفرع",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 27,
+  "name": "في الطريق للتاجر",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 28,
+  "name": "مرتجعات الى الفروع",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 29,
+  "name": "تم حل المشكلة - واتس اب",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 30,
+  "name": "تم حل المشكلة - p",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 31,
+  "name": "مرتجعات بالفرع",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 33,
+  "name": "تم التسليم",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 34,
+  "name": "اعاده توزيع",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 39,
+  "name": "تحويلات بين الفروع",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 43,
+  "name": "جاري التعويض",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 45,
+  "name": "المحاولة الاولي",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 46,
+  "name": "المحاولة الثانية",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 47,
+  "name": "المحاولة الثالثة",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 100,
+  "name": "معلقة",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 105,
+  "name": "مرتجعات انتجريشن",
+  "custody": "shipper custody",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 110,
+  "name": "خروج للمخزن وعدم وصول",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 115,
+  "name": "استلام انتجريشن",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 120,
+  "name": "وصول لمخزن خطأ",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 125,
+  "name": "تم استلام في الفرع",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 135,
+  "name": "مرتجعات الي الرئيسي",
+  "custody": "open",
+  "type": "both",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 150,
+  "name": "مرتجعات معلقه",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 220,
+  "name": "تم التعويض",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": true
+ },
+ {
+  "id": 330,
+  "name": "تخصيص البيك أب",
+  "custody": "user custody",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 450,
+  "name": "توجيه من منطقة التوزيع",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 600,
+  "name": "تم استلام - فرع المنطقة",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 700,
+  "name": "تم التأكيد-واتس اب",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 800,
+  "name": "تم الالغاء- واتس اب",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 900,
+  "name": "تم التاجيل- واتس اب",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 1100,
+  "name": "تم رفض و رفض الدفع",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 1150,
+  "name": "لم يتم تاكيد الرفض",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 1200,
+  "name": "لم يتم تاكيد التأجيل",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 1250,
+  "name": "لم يتم  تاكيد الالغاء",
+  "custody": "open",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ },
+ {
+  "id": 1500,
+  "name": "Pay with Flash",
+  "custody": "user custody",
+  "type": "shipment",
+  "disabled_for_shipper": false
+ }
+]

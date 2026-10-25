@@ -1,0 +1,16 @@
+# Local run on this machine only (not committed — listed in .git/info/exclude).
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up -d --build
+#
+# Port 3001 is taken here by another project's container, so the frontend is published
+# on 3002 instead. FRONTEND_URL and NEXT_PUBLIC_SITE_URL in .env say 3002 to match.
+services:
+  frontend:
+    ports: !override
+      - "3002:3000"
+  # The backend runs natively here, outside the compose network, so it reaches the image
+  # service on this machine's port 8000 (IMAGETOOLS_URL=http://localhost:8000 in Backend/.env).
+  # Bound to 127.0.0.1 only. Start it alone with:
+  #   docker compose -f docker-compose.yml -f docker-compose.local.yml up -d --build imagetools
+  imagetools:
+    ports:
+      - "127.0.0.1:8000:8000"

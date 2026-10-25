@@ -1,0 +1,1763 @@
+<html lang="en" dir="ltr" class="plugin-pages plugin-id-default" data-theme="light" data-rh="lang,dir,class">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="generator" content="Docusaurus v2.0.0-beta.20">
+    <title>API Reference | Bosta Docs</title>
+    <meta data-rh="true" name="twitter:card" content="summary_large_image">
+    <meta data-rh="true" name="docusaurus_locale" content="en">
+    <meta data-rh="true" name="docusaurus_tag" content="default">
+    <meta data-rh="true" name="docsearch:language" content="en">
+    <meta data-rh="true" name="docsearch:docusaurus_tag" content="default">
+    <style type="text/css">
+        :root,
+        :host {
+            --fa-font-solid: normal 900 1em/1 "Font Awesome 6 Solid";
+            --fa-font-regular: normal 400 1em/1 "Font Awesome 6 Regular";
+            --fa-font-light: normal 300 1em/1 "Font Awesome 6 Light";
+            --fa-font-thin: normal 100 1em/1 "Font Awesome 6 Thin";
+            --fa-font-duotone: normal 900 1em/1 "Font Awesome 6 Duotone";
+            --fa-font-sharp-solid: normal 900 1em/1 "Font Awesome 6 Sharp";
+            --fa-font-brands: normal 400 1em/1 "Font Awesome 6 Brands";
+        }
+
+        svg:not(:root).svg-inline--fa,
+        svg:not(:host).svg-inline--fa {
+            overflow: visible;
+            box-sizing: content-box;
+        }
+
+        .svg-inline--fa {
+            display: var(--fa-display, inline-block);
+            height: 1em;
+            overflow: visible;
+            vertical-align: -0.125em;
+        }
+
+        .svg-inline--fa.fa-2xs {
+            vertical-align: 0.1em;
+        }
+
+        .svg-inline--fa.fa-xs {
+            vertical-align: 0em;
+        }
+
+        .svg-inline--fa.fa-sm {
+            vertical-align: -0.0714285705em;
+        }
+
+        .svg-inline--fa.fa-lg {
+            vertical-align: -0.2em;
+        }
+
+        .svg-inline--fa.fa-xl {
+            vertical-align: -0.25em;
+        }
+
+        .svg-inline--fa.fa-2xl {
+            vertical-align: -0.3125em;
+        }
+
+        .svg-inline--fa.fa-pull-left {
+            margin-right: var(--fa-pull-margin, 0.3em);
+            width: auto;
+        }
+
+        .svg-inline--fa.fa-pull-right {
+            margin-left: var(--fa-pull-margin, 0.3em);
+            width: auto;
+        }
+
+        .svg-inline--fa.fa-li {
+            width: var(--fa-li-width, 2em);
+            top: 0.25em;
+        }
+
+        .svg-inline--fa.fa-fw {
+            width: var(--fa-fw-width, 1.25em);
+        }
+
+        .fa-layers svg.svg-inline--fa {
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .fa-layers-counter,
+        .fa-layers-text {
+            display: inline-block;
+            position: absolute;
+            text-align: center;
+        }
+
+        .fa-layers {
+            display: inline-block;
+            height: 1em;
+            position: relative;
+            text-align: center;
+            vertical-align: -0.125em;
+            width: 1em;
+        }
+
+        .fa-layers svg.svg-inline--fa {
+            -webkit-transform-origin: center center;
+            transform-origin: center center;
+        }
+
+        .fa-layers-text {
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            -webkit-transform-origin: center center;
+            transform-origin: center center;
+        }
+
+        .fa-layers-counter {
+            background-color: var(--fa-counter-background-color, #ff253a);
+            border-radius: var(--fa-counter-border-radius, 1em);
+            box-sizing: border-box;
+            color: var(--fa-inverse, #fff);
+            line-height: var(--fa-counter-line-height, 1);
+            max-width: var(--fa-counter-max-width, 5em);
+            min-width: var(--fa-counter-min-width, 1.5em);
+            overflow: hidden;
+            padding: var(--fa-counter-padding, 0.25em 0.5em);
+            right: var(--fa-right, 0);
+            text-overflow: ellipsis;
+            top: var(--fa-top, 0);
+            -webkit-transform: scale(var(--fa-counter-scale, 0.25));
+            transform: scale(var(--fa-counter-scale, 0.25));
+            -webkit-transform-origin: top right;
+            transform-origin: top right;
+        }
+
+        .fa-layers-bottom-right {
+            bottom: var(--fa-bottom, 0);
+            right: var(--fa-right, 0);
+            top: auto;
+            -webkit-transform: scale(var(--fa-layers-scale, 0.25));
+            transform: scale(var(--fa-layers-scale, 0.25));
+            -webkit-transform-origin: bottom right;
+            transform-origin: bottom right;
+        }
+
+        .fa-layers-bottom-left {
+            bottom: var(--fa-bottom, 0);
+            left: var(--fa-left, 0);
+            right: auto;
+            top: auto;
+            -webkit-transform: scale(var(--fa-layers-scale, 0.25));
+            transform: scale(var(--fa-layers-scale, 0.25));
+            -webkit-transform-origin: bottom left;
+            transform-origin: bottom left;
+        }
+
+        .fa-layers-top-right {
+            top: var(--fa-top, 0);
+            right: var(--fa-right, 0);
+            -webkit-transform: scale(var(--fa-layers-scale, 0.25));
+            transform: scale(var(--fa-layers-scale, 0.25));
+            -webkit-transform-origin: top right;
+            transform-origin: top right;
+        }
+
+        .fa-layers-top-left {
+            left: var(--fa-left, 0);
+            right: auto;
+            top: var(--fa-top, 0);
+            -webkit-transform: scale(var(--fa-layers-scale, 0.25));
+            transform: scale(var(--fa-layers-scale, 0.25));
+            -webkit-transform-origin: top left;
+            transform-origin: top left;
+        }
+
+        .fa-1x {
+            font-size: 1em;
+        }
+
+        .fa-2x {
+            font-size: 2em;
+        }
+
+        .fa-3x {
+            font-size: 3em;
+        }
+
+        .fa-4x {
+            font-size: 4em;
+        }
+
+        .fa-5x {
+            font-size: 5em;
+        }
+
+        .fa-6x {
+            font-size: 6em;
+        }
+
+        .fa-7x {
+            font-size: 7em;
+        }
+
+        .fa-8x {
+            font-size: 8em;
+        }
+
+        .fa-9x {
+            font-size: 9em;
+        }
+
+        .fa-10x {
+            font-size: 10em;
+        }
+
+        .fa-2xs {
+            font-size: 0.625em;
+            line-height: 0.1em;
+            vertical-align: 0.225em;
+        }
+
+        .fa-xs {
+            font-size: 0.75em;
+            line-height: 0.0833333337em;
+            vertical-align: 0.125em;
+        }
+
+        .fa-sm {
+            font-size: 0.875em;
+            line-height: 0.0714285718em;
+            vertical-align: 0.0535714295em;
+        }
+
+        .fa-lg {
+            font-size: 1.25em;
+            line-height: 0.05em;
+            vertical-align: -0.075em;
+        }
+
+        .fa-xl {
+            font-size: 1.5em;
+            line-height: 0.0416666682em;
+            vertical-align: -0.125em;
+        }
+
+        .fa-2xl {
+            font-size: 2em;
+            line-height: 0.03125em;
+            vertical-align: -0.1875em;
+        }
+
+        .fa-fw {
+            text-align: center;
+            width: 1.25em;
+        }
+
+        .fa-ul {
+            list-style-type: none;
+            margin-left: var(--fa-li-margin, 2.5em);
+            padding-left: 0;
+        }
+
+        .fa-ul>li {
+            position: relative;
+        }
+
+        .fa-li {
+            left: calc(var(--fa-li-width, 2em) * -1);
+            position: absolute;
+            text-align: center;
+            width: var(--fa-li-width, 2em);
+            line-height: inherit;
+        }
+
+        .fa-border {
+            border-color: var(--fa-border-color, #eee);
+            border-radius: var(--fa-border-radius, 0.1em);
+            border-style: var(--fa-border-style, solid);
+            border-width: var(--fa-border-width, 0.08em);
+            padding: var(--fa-border-padding, 0.2em 0.25em 0.15em);
+        }
+
+        .fa-pull-left {
+            float: left;
+            margin-right: var(--fa-pull-margin, 0.3em);
+        }
+
+        .fa-pull-right {
+            float: right;
+            margin-left: var(--fa-pull-margin, 0.3em);
+        }
+
+        .fa-beat {
+            -webkit-animation-name: fa-beat;
+            animation-name: fa-beat;
+            -webkit-animation-delay: var(--fa-animation-delay, 0s);
+            animation-delay: var(--fa-animation-delay, 0s);
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 1s);
+            animation-duration: var(--fa-animation-duration, 1s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, ease-in-out);
+            animation-timing-function: var(--fa-animation-timing, ease-in-out);
+        }
+
+        .fa-bounce {
+            -webkit-animation-name: fa-bounce;
+            animation-name: fa-bounce;
+            -webkit-animation-delay: var(--fa-animation-delay, 0s);
+            animation-delay: var(--fa-animation-delay, 0s);
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 1s);
+            animation-duration: var(--fa-animation-duration, 1s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));
+            animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));
+        }
+
+        .fa-fade {
+            -webkit-animation-name: fa-fade;
+            animation-name: fa-fade;
+            -webkit-animation-delay: var(--fa-animation-delay, 0s);
+            animation-delay: var(--fa-animation-delay, 0s);
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 1s);
+            animation-duration: var(--fa-animation-duration, 1s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+            animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+        }
+
+        .fa-beat-fade {
+            -webkit-animation-name: fa-beat-fade;
+            animation-name: fa-beat-fade;
+            -webkit-animation-delay: var(--fa-animation-delay, 0s);
+            animation-delay: var(--fa-animation-delay, 0s);
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 1s);
+            animation-duration: var(--fa-animation-duration, 1s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+            animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+        }
+
+        .fa-flip {
+            -webkit-animation-name: fa-flip;
+            animation-name: fa-flip;
+            -webkit-animation-delay: var(--fa-animation-delay, 0s);
+            animation-delay: var(--fa-animation-delay, 0s);
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 1s);
+            animation-duration: var(--fa-animation-duration, 1s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, ease-in-out);
+            animation-timing-function: var(--fa-animation-timing, ease-in-out);
+        }
+
+        .fa-shake {
+            -webkit-animation-name: fa-shake;
+            animation-name: fa-shake;
+            -webkit-animation-delay: var(--fa-animation-delay, 0s);
+            animation-delay: var(--fa-animation-delay, 0s);
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 1s);
+            animation-duration: var(--fa-animation-duration, 1s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, linear);
+            animation-timing-function: var(--fa-animation-timing, linear);
+        }
+
+        .fa-spin {
+            -webkit-animation-name: fa-spin;
+            animation-name: fa-spin;
+            -webkit-animation-delay: var(--fa-animation-delay, 0s);
+            animation-delay: var(--fa-animation-delay, 0s);
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 2s);
+            animation-duration: var(--fa-animation-duration, 2s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, linear);
+            animation-timing-function: var(--fa-animation-timing, linear);
+        }
+
+        .fa-spin-reverse {
+            --fa-animation-direction: reverse;
+        }
+
+        .fa-pulse,
+        .fa-spin-pulse {
+            -webkit-animation-name: fa-spin;
+            animation-name: fa-spin;
+            -webkit-animation-direction: var(--fa-animation-direction, normal);
+            animation-direction: var(--fa-animation-direction, normal);
+            -webkit-animation-duration: var(--fa-animation-duration, 1s);
+            animation-duration: var(--fa-animation-duration, 1s);
+            -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+            -webkit-animation-timing-function: var(--fa-animation-timing, steps(8));
+            animation-timing-function: var(--fa-animation-timing, steps(8));
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .fa-beat,
+            .fa-bounce,
+            .fa-fade,
+            .fa-beat-fade,
+            .fa-flip,
+            .fa-pulse,
+            .fa-shake,
+            .fa-spin,
+            .fa-spin-pulse {
+                -webkit-animation-delay: -1ms;
+                animation-delay: -1ms;
+                -webkit-animation-duration: 1ms;
+                animation-duration: 1ms;
+                -webkit-animation-iteration-count: 1;
+                animation-iteration-count: 1;
+                transition-delay: 0s;
+                transition-duration: 0s;
+            }
+        }
+
+        @-webkit-keyframes fa-beat {
+
+            0%,
+            90% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+
+            45% {
+                -webkit-transform: scale(var(--fa-beat-scale, 1.25));
+                transform: scale(var(--fa-beat-scale, 1.25));
+            }
+        }
+
+        @keyframes fa-beat {
+
+            0%,
+            90% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+
+            45% {
+                -webkit-transform: scale(var(--fa-beat-scale, 1.25));
+                transform: scale(var(--fa-beat-scale, 1.25));
+            }
+        }
+
+        @-webkit-keyframes fa-bounce {
+            0% {
+                -webkit-transform: scale(1, 1) translateY(0);
+                transform: scale(1, 1) translateY(0);
+            }
+
+            10% {
+                -webkit-transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);
+                transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);
+            }
+
+            30% {
+                -webkit-transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));
+                transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));
+            }
+
+            50% {
+                -webkit-transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);
+                transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);
+            }
+
+            57% {
+                -webkit-transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));
+                transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));
+            }
+
+            64% {
+                -webkit-transform: scale(1, 1) translateY(0);
+                transform: scale(1, 1) translateY(0);
+            }
+
+            100% {
+                -webkit-transform: scale(1, 1) translateY(0);
+                transform: scale(1, 1) translateY(0);
+            }
+        }
+
+        @keyframes fa-bounce {
+            0% {
+                -webkit-transform: scale(1, 1) translateY(0);
+                transform: scale(1, 1) translateY(0);
+            }
+
+            10% {
+                -webkit-transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);
+                transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);
+            }
+
+            30% {
+                -webkit-transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));
+                transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));
+            }
+
+            50% {
+                -webkit-transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);
+                transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);
+            }
+
+            57% {
+                -webkit-transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));
+                transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));
+            }
+
+            64% {
+                -webkit-transform: scale(1, 1) translateY(0);
+                transform: scale(1, 1) translateY(0);
+            }
+
+            100% {
+                -webkit-transform: scale(1, 1) translateY(0);
+                transform: scale(1, 1) translateY(0);
+            }
+        }
+
+        @-webkit-keyframes fa-fade {
+            50% {
+                opacity: var(--fa-fade-opacity, 0.4);
+            }
+        }
+
+        @keyframes fa-fade {
+            50% {
+                opacity: var(--fa-fade-opacity, 0.4);
+            }
+        }
+
+        @-webkit-keyframes fa-beat-fade {
+
+            0%,
+            100% {
+                opacity: var(--fa-beat-fade-opacity, 0.4);
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                -webkit-transform: scale(var(--fa-beat-fade-scale, 1.125));
+                transform: scale(var(--fa-beat-fade-scale, 1.125));
+            }
+        }
+
+        @keyframes fa-beat-fade {
+
+            0%,
+            100% {
+                opacity: var(--fa-beat-fade-opacity, 0.4);
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                -webkit-transform: scale(var(--fa-beat-fade-scale, 1.125));
+                transform: scale(var(--fa-beat-fade-scale, 1.125));
+            }
+        }
+
+        @-webkit-keyframes fa-flip {
+            50% {
+                -webkit-transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
+                transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
+            }
+        }
+
+        @keyframes fa-flip {
+            50% {
+                -webkit-transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
+                transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
+            }
+        }
+
+        @-webkit-keyframes fa-shake {
+            0% {
+                -webkit-transform: rotate(-15deg);
+                transform: rotate(-15deg);
+            }
+
+            4% {
+                -webkit-transform: rotate(15deg);
+                transform: rotate(15deg);
+            }
+
+            8%,
+            24% {
+                -webkit-transform: rotate(-18deg);
+                transform: rotate(-18deg);
+            }
+
+            12%,
+            28% {
+                -webkit-transform: rotate(18deg);
+                transform: rotate(18deg);
+            }
+
+            16% {
+                -webkit-transform: rotate(-22deg);
+                transform: rotate(-22deg);
+            }
+
+            20% {
+                -webkit-transform: rotate(22deg);
+                transform: rotate(22deg);
+            }
+
+            32% {
+                -webkit-transform: rotate(-12deg);
+                transform: rotate(-12deg);
+            }
+
+            36% {
+                -webkit-transform: rotate(12deg);
+                transform: rotate(12deg);
+            }
+
+            40%,
+            100% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+        }
+
+        @keyframes fa-shake {
+            0% {
+                -webkit-transform: rotate(-15deg);
+                transform: rotate(-15deg);
+            }
+
+            4% {
+                -webkit-transform: rotate(15deg);
+                transform: rotate(15deg);
+            }
+
+            8%,
+            24% {
+                -webkit-transform: rotate(-18deg);
+                transform: rotate(-18deg);
+            }
+
+            12%,
+            28% {
+                -webkit-transform: rotate(18deg);
+                transform: rotate(18deg);
+            }
+
+            16% {
+                -webkit-transform: rotate(-22deg);
+                transform: rotate(-22deg);
+            }
+
+            20% {
+                -webkit-transform: rotate(22deg);
+                transform: rotate(22deg);
+            }
+
+            32% {
+                -webkit-transform: rotate(-12deg);
+                transform: rotate(-12deg);
+            }
+
+            36% {
+                -webkit-transform: rotate(12deg);
+                transform: rotate(12deg);
+            }
+
+            40%,
+            100% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+        }
+
+        @-webkit-keyframes fa-spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fa-spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        .fa-rotate-90 {
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+
+        .fa-rotate-180 {
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .fa-rotate-270 {
+            -webkit-transform: rotate(270deg);
+            transform: rotate(270deg);
+        }
+
+        .fa-flip-horizontal {
+            -webkit-transform: scale(-1, 1);
+            transform: scale(-1, 1);
+        }
+
+        .fa-flip-vertical {
+            -webkit-transform: scale(1, -1);
+            transform: scale(1, -1);
+        }
+
+        .fa-flip-both,
+        .fa-flip-horizontal.fa-flip-vertical {
+            -webkit-transform: scale(-1, -1);
+            transform: scale(-1, -1);
+        }
+
+        .fa-rotate-by {
+            -webkit-transform: rotate(var(--fa-rotate-angle, none));
+            transform: rotate(var(--fa-rotate-angle, none));
+        }
+
+        .fa-stack {
+            display: inline-block;
+            vertical-align: middle;
+            height: 2em;
+            position: relative;
+            width: 2.5em;
+        }
+
+        .fa-stack-1x,
+        .fa-stack-2x {
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: var(--fa-stack-z-index, auto);
+        }
+
+        .svg-inline--fa.fa-stack-1x {
+            height: 1em;
+            width: 1.25em;
+        }
+
+        .svg-inline--fa.fa-stack-2x {
+            height: 2em;
+            width: 2.5em;
+        }
+
+        .fa-inverse {
+            color: var(--fa-inverse, #fff);
+        }
+
+        .sr-only,
+        .fa-sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .sr-only-focusable:not(:focus),
+        .fa-sr-only-focusable:not(:focus) {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .svg-inline--fa .fa-primary {
+            fill: var(--fa-primary-color, currentColor);
+            opacity: var(--fa-primary-opacity, 1);
+        }
+
+        .svg-inline--fa .fa-secondary {
+            fill: var(--fa-secondary-color, currentColor);
+            opacity: var(--fa-secondary-opacity, 0.4);
+        }
+
+        .svg-inline--fa.fa-swap-opacity .fa-primary {
+            opacity: var(--fa-secondary-opacity, 0.4);
+        }
+
+        .svg-inline--fa.fa-swap-opacity .fa-secondary {
+            opacity: var(--fa-primary-opacity, 1);
+        }
+
+        .svg-inline--fa mask .fa-primary,
+        .svg-inline--fa mask .fa-secondary {
+            fill: black;
+        }
+
+        .fad.fa-inverse,
+        .fa-duotone.fa-inverse {
+            color: var(--fa-inverse, #fff);
+        }
+    </style>
+    <link data-rh="true" rel="icon" href="/img/favicon.ico">
+    <link data-rh="true" rel="stylesheet" href="https://unpkg.com/@stoplight/elements@7.3.7/styles.min.css">
+    <link rel="stylesheet" href="/assets/css/styles.08b139e6.css">
+    <link rel="preload" href="/assets/js/runtime~main.6a3129c5.js" as="script">
+    <link rel="preload" href="/assets/js/main.65ef2ccc.js" as="script">
+    <link rel="canonical" href="https://docs.bosta.co//api/" data-rh="true">
+    <link rel="alternate" href="https://docs.bosta.co//api/" hreflang="en" data-rh="true">
+    <link rel="alternate" href="https://docs.bosta.co//api/" hreflang="x-default" data-rh="true">
+    <meta property="og:url" content="https://docs.bosta.co//api/" data-rh="true">
+    <link rel="prefetch" href="/assets/js/1be78505.93dd9d02.js">
+    <link rel="prefetch" href="/assets/js/9bd7a39a.20ebf322.js">
+    <link rel="prefetch" href="/assets/js/935f2afb.c29246d3.js">
+    <link rel="prefetch" href="/assets/js/14eb3368.541f1922.js">
+    <link rel="prefetch" href="/assets/js/af96e430.d7d46f06.js">
+    <link rel="prefetch" href="/assets/js/c4f5d8e4.9667a7ca.js">
+    <link rel="prefetch" href="/assets/js/ad776868.90a05ee0.js">
+    <link rel="prefetch" href="/assets/js/48dcf387.6cf5e52f.js">
+    <link rel="prefetch" href="/assets/js/ad776868.90a05ee0.js">
+</head>
+
+<body class="navigation-with-keyboard" data-rh="class" style="overflow: visible;">
+    <script>!function () { function t(t) { document.documentElement.setAttribute("data-theme", t) } var e = function () { var t = null; try { t = localStorage.getItem("theme") } catch (t) { } return t }(); t(null !== e ? e : "light") }()</script>
+    <div id="__docusaurus">
+        <div role="region"><a href="#" class="skipToContent_ZgBM">Skip to main content</a></div>
+        <nav class="navbar navbar--fixed-top">
+            <div class="navbar__inner">
+                <div class="navbar__items"><button aria-label="Navigation bar toggle" class="navbar__toggle clean-btn"
+                        type="button" tabindex="0"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"
+                                d="M4 7h22M4 15h22M4 23h22"></path>
+                        </svg></button><a class="navbar__brand" href="/">
+                        <div class="navbar__logo"><img src="/img/logo.svg" alt="bosta-logo"
+                                class="themedImage_W2Cr themedImage--light_TfLj"></div>
+                    </a><a class="navbar__item navbar__link" href="/docs/category/how-to">Docs</a><a aria-current="page"
+                        class="navbar__item navbar__link navbar__link--active" href="/api">API Reference</a></div>
+                <div class="navbar__items navbar__items--right">
+                    <div class="searchBox_dLyj">
+                        <div class="navbar__search searchBarContainer_NW3z"><input placeholder="Search"
+                                aria-label="Search" class="navbar__search-input" value="">
+                            <div class="loadingRing_RJI3 searchBarLoadingRing_YnHq">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="searchHintContainer_Pkmr"><kbd class="searchHint_iIMx">⌘</kbd><kbd
+                                    class="searchHint_iIMx">K</kbd></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="presentation" class="navbar-sidebar__backdrop"></div>
+        </nav>
+        <div class="main-wrapper">
+            <div class="" id="mosaic-provider-react-aria-0-1" style="height: 100%;">
+                <div data-overlay-container="true" class="" style="height: 100%;">
+                    <div class="sl-elements sl-antialiased sl-h-full sl-text-base sl-font-ui sl-text-body">
+                        <div class="sl-elements-api sl-flex sl-inset-0 sl-h-full">
+                            <div class="sl-flex sl-overflow-y-auto sl-flex-col sl-sticky sl-inset-y-0 sl-pt-8 sl-bg-canvas-100 sl-border-r"
+                                style="width: calc(50% - 600px); padding-left: calc(50% - 900px); min-width: 300px;">
+                                <div class="sl-flex sl-items-center sl-mb-5 sl-ml-4">
+                                    <h4
+                                        class="sl-text-paragraph sl-leading-snug sl-font-prose sl-font-semibold sl-text-heading">
+                                        Bosta Server APIs</h4>
+                                </div>
+                                <div class="sl-flex sl-overflow-y-auto sl-flex-col sl-flex-grow sl-flex-shrink">
+                                    <div class="sl-overflow-y-auto sl-w-full sl-bg-canvas-100">
+                                        <div class="sl-my-3"><a
+                                                class="ElementsTableOfContentsItem sl-block sl-no-underline" href="#/">
+                                                <div id="sl-toc-/" title="Overview"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate">Overview</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs"></div>
+                                                </div>
+                                            </a>
+                                            <div
+                                                class="sl-text-sm sl-leading-relaxed sl-tracking-wide sl-font-bold sl-uppercase sl-mt-6 sl-mb-2 sl-pl-4">
+                                                Endpoints</div>
+                                            <div title="Users"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Users</div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="Groups"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Groups
+                                                </div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="Businesses"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Businesses
+                                                </div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="Pickup locations"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Pickup
+                                                    locations</div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas" data-icon="chevron-down"
+                                                            class="svg-inline--fa fa-chevron-down fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                                            <path fill="currentColor"
+                                                                d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div><a class="ElementsTableOfContentsItem sl-block sl-no-underline"
+                                                href="#/operations/CreateDefaultPickupLocation">
+                                                <div id="sl-toc-/operations/CreateDefaultPickupLocation"
+                                                    title="Create your default pickup location"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Create
+                                                        your default pickup location</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs">
+                                                        <div class="sl-font-medium sl-uppercase sl-text-warning">put
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a><a class="ElementsTableOfContentsItem sl-block sl-no-underline"
+                                                href="#/operations/Businessgetpickup-locations">
+                                                <div id="sl-toc-/operations/Businessgetpickup-locations"
+                                                    title="List business pickup-locations"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">List
+                                                        business pickup-locations</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs">
+                                                        <div class="sl-font-medium sl-uppercase sl-text-success">get
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a><a class="ElementsTableOfContentsItem sl-block sl-no-underline"
+                                                href="#/operations/Createpickuplocations">
+                                                <div id="sl-toc-/operations/Createpickuplocations"
+                                                    title="Add business pickup location"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Add
+                                                        business pickup location</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs">
+                                                        <div class="sl-font-medium sl-uppercase sl-text-primary">post
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a><a class="ElementsTableOfContentsItem sl-block sl-no-underline"
+                                                href="#/operations/Updatepickup-location">
+                                                <div id="sl-toc-/operations/Updatepickup-location"
+                                                    title="Update business pickup location"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Update
+                                                        business pickup location</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs">
+                                                        <div class="sl-font-medium sl-uppercase sl-text-warning">put
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a><a class="ElementsTableOfContentsItem sl-block sl-no-underline"
+                                                href="#/operations/Getpickup-location">
+                                                <div id="sl-toc-/operations/Getpickup-location"
+                                                    title="Get business pickup location"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Get
+                                                        business pickup location</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs">
+                                                        <div class="sl-font-medium sl-uppercase sl-text-success">get
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a><a class="ElementsTableOfContentsItem sl-block sl-no-underline"
+                                                href="#/operations/Deletepickup-location">
+                                                <div id="sl-toc-/operations/Deletepickup-location"
+                                                    title="Delete business pickup location"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-primary-tint sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Delete
+                                                        business pickup location</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs">
+                                                        <div class="sl-font-medium sl-uppercase sl-text-danger">delete
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a><a class="ElementsTableOfContentsItem sl-block sl-no-underline"
+                                                href="#/operations/Setdefaultpickup-location">
+                                                <div id="sl-toc-/operations/Setdefaultpickup-location"
+                                                    title="Set business default pickup location"
+                                                    class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                    <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Set
+                                                        business default pickup location</div>
+                                                    <div class="sl-flex sl-items-center sl-text-xs">
+                                                        <div class="sl-font-medium sl-uppercase sl-text-warning">put
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div title="Pickup Requests"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Pickup
+                                                    Requests</div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="city"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">city</div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="notifications"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">
+                                                    notifications</div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="Deliveries"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Deliveries
+                                                </div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="Pricing"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Pricing
+                                                </div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                            <div title="Products"
+                                                class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-4 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none">
+                                                <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5">Products
+                                                </div>
+                                                <div class="sl-flex sl-items-center sl-text-xs">
+                                                    <div class="sl-flex sl-items-center"><svg aria-hidden="true"
+                                                            focusable="false" data-prefix="fas"
+                                                            data-icon="chevron-right"
+                                                            class="svg-inline--fa fa-chevron-right fa-fw sl-icon sl-text-muted"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                                            <path fill="currentColor"
+                                                                d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                            </path>
+                                                        </svg></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><a
+                                    href="https://stoplight.io/?utm_source=elements&amp;utm_medium=Bosta Server APIs&amp;utm_campaign=powered_by&amp;utm_content=/operations/Deletepickup-location"
+                                    target="_blank" rel="noopener noreferrer"
+                                    class="sl-flex sl-items-center sl-px-4 sl-py-3 sl-border-t"><svg aria-hidden="true"
+                                        focusable="false" data-prefix="fas" data-icon="bolt"
+                                        class="svg-inline--fa fa-bolt sl-icon fa-fw sl-mr-1"
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"
+                                        style="color: rgb(144, 97, 249);">
+                                        <path fill="currentColor"
+                                            d="M240.5 224H352C365.3 224 377.3 232.3 381.1 244.7C386.6 257.2 383.1 271.3 373.1 280.1L117.1 504.1C105.8 513.9 89.27 514.7 77.19 505.9C65.1 497.1 60.7 481.1 66.59 467.4L143.5 288H31.1C18.67 288 6.733 279.7 2.044 267.3C-2.645 254.8 .8944 240.7 10.93 231.9L266.9 7.918C278.2-1.92 294.7-2.669 306.8 6.114C318.9 14.9 323.3 30.87 317.4 44.61L240.5 224z">
+                                        </path>
+                                    </svg>
+                                    <div>powered by&nbsp;<strong>Stoplight</strong></div>
+                                </a>
+                            </div>
+                            <div class="sl-overflow-y-auto sl-flex-1 sl-w-full sl-px-24 sl-bg-canvas">
+                                <div class="sl-py-16" style="max-width: 1500px;">
+                                    <div
+                                        class="sl-stack sl-stack--vertical sl-stack--8 HttpOperation sl-flex sl-flex-col sl-items-stretch sl-w-full">
+                                        <div
+                                            class="sl-stack sl-stack--vertical sl-stack--5 sl-flex sl-flex-col sl-items-stretch">
+                                            <div class="sl-relative">
+                                                <div
+                                                    class="sl-stack sl-stack--horizontal sl-stack--5 sl-flex sl-flex-row sl-items-center">
+                                                    <h1
+                                                        class="sl-text-5xl sl-leading-tight sl-font-prose sl-font-semibold sl-text-heading">
+                                                        Delete business pickup location</h1>
+                                                    <div
+                                                        class="sl-stack sl-stack--horizontal sl-stack--2 sl-flex sl-flex-row sl-items-center">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sl-relative">
+                                                <div>
+                                                    <div title="http://app.bosta.co/api/v2/pickup-locations/{id}"
+                                                        class="sl-stack sl-stack--horizontal sl-stack--3 sl-inline-flex sl-flex-row sl-items-center sl-max-w-full sl-font-mono sl-py-2 sl-pr-4 sl-pl-2.5 sl-bg-canvas-50 sl-rounded-lg">
+                                                        <div
+                                                            class="sl-text-lg sl-font-semibold sl-uppercase sl-px-2.5 sl-py-1 sl-bg-danger sl-text-on-primary sl-rounded-lg">
+                                                            delete</div>
+                                                        <div
+                                                            class="sl-flex sl-overflow-x-hidden sl-text-lg sl-select-all">
+                                                            <div dir="rtl"
+                                                                class="sl-overflow-x-hidden sl-truncate sl-text-muted">
+                                                                http://app.bosta.co/api/v2</div>
+                                                            <div class="sl-flex-1 sl-font-semibold">
+                                                                /pickup-locations/{id}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="sl-flex">
+                                            <div data-testid="two-column-left" class="sl-flex-1 sl-w-0">
+                                                <div
+                                                    class="sl-stack sl-stack--vertical sl-stack--10 sl-flex sl-flex-col sl-items-stretch">
+                                                    <div
+                                                        class="sl-stack sl-stack--vertical sl-stack--8 sl-flex sl-flex-col sl-items-stretch">
+                                                        <div class="sl-flex sl-flex-wrap">
+                                                            <h2 id="/operations/Deletepickup-location#Request"
+                                                                aria-label="Request"
+                                                                class="sl-link-heading sl-py-1 sl-pr-6 sl-text-4xl sl-leading-tight sl-font-prose sl-font-bold sl-text-heading">
+                                                                <a href="#/operations/Deletepickup-location#Request"
+                                                                    class="sl-link sl-link-heading__link sl-inline-flex sl-items-center sl-text-current">
+                                                                    <div>Request</div>
+                                                                    <div
+                                                                        class="sl-link-heading__icon sl-text-base sl-ml-4 sl-text-muted">
+                                                                        <svg aria-hidden="true" focusable="false"
+                                                                            data-prefix="fas" data-icon="link"
+                                                                            class="svg-inline--fa fa-link sl-icon"
+                                                                            role="img"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            viewBox="0 0 640 512">
+                                                                            <path fill="currentColor"
+                                                                                d="M172.5 131.1C228.1 75.51 320.5 75.51 376.1 131.1C426.1 181.1 433.5 260.8 392.4 318.3L391.3 319.9C381 334.2 361 337.6 346.7 327.3C332.3 317 328.9 297 339.2 282.7L340.3 281.1C363.2 249 359.6 205.1 331.7 177.2C300.3 145.8 249.2 145.8 217.7 177.2L105.5 289.5C73.99 320.1 73.99 372 105.5 403.5C133.3 431.4 177.3 435 209.3 412.1L210.9 410.1C225.3 400.7 245.3 404 255.5 418.4C265.8 432.8 262.5 452.8 248.1 463.1L246.5 464.2C188.1 505.3 110.2 498.7 60.21 448.8C3.741 392.3 3.741 300.7 60.21 244.3L172.5 131.1zM467.5 380C411 436.5 319.5 436.5 263 380C213 330 206.5 251.2 247.6 193.7L248.7 192.1C258.1 177.8 278.1 174.4 293.3 184.7C307.7 194.1 311.1 214.1 300.8 229.3L299.7 230.9C276.8 262.1 280.4 306.9 308.3 334.8C339.7 366.2 390.8 366.2 422.3 334.8L534.5 222.5C566 191 566 139.1 534.5 108.5C506.7 80.63 462.7 76.99 430.7 99.9L429.1 101C414.7 111.3 394.7 107.1 384.5 93.58C374.2 79.2 377.5 59.21 391.9 48.94L393.5 47.82C451 6.731 529.8 13.25 579.8 63.24C636.3 119.7 636.3 211.3 579.8 267.7L467.5 380z">
+                                                                            </path>
+                                                                        </svg></div>
+                                                                </a></h2>
+                                                            <div class="sl-self-center sl-py-1"></div>
+                                                        </div>
+                                                        <div
+                                                            class="sl-stack sl-stack--vertical sl-stack--3 sl-flex sl-flex-col sl-items-stretch">
+                                                            <div class="sl-relative">
+                                                                <div
+                                                                    class="sl-panel sl-outline-none sl-w-full sl-rounded-lg sl-border">
+                                                                    <div aria-expanded="false" tabindex="0"
+                                                                        class="sl-panel__titlebar sl-flex sl-items-center sl-relative focus:sl-z-10 sl-text-base sl-leading-none sl-font-medium sl-pr-4 sl-pl-3 sl-border-input focus:sl-border-primary sl-cursor-pointer sl-select-none"
+                                                                        role="button">
+                                                                        <div
+                                                                            class="sl-flex sl-flex-1 sl-items-center sl-h-lg">
+                                                                            <div
+                                                                                class="sl-flex sl-items-center sl-mr-1.5">
+                                                                                <svg aria-hidden="true"
+                                                                                    focusable="false" data-prefix="fas"
+                                                                                    data-icon="chevron-right"
+                                                                                    class="svg-inline--fa fa-chevron-right fa-fw fa-sm sl-icon"
+                                                                                    role="img"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 320 512">
+                                                                                    <path fill="currentColor"
+                                                                                        d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                                                    </path>
+                                                                                </svg></div>
+                                                                            <div role="heading">Security: Bearer Auth
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="sl-relative">
+                                                                <div
+                                                                    class="sl-panel sl-outline-none sl-w-full sl-rounded-lg sl-border">
+                                                                    <div aria-expanded="false" tabindex="0"
+                                                                        class="sl-panel__titlebar sl-flex sl-items-center sl-relative focus:sl-z-10 sl-text-base sl-leading-none sl-font-medium sl-pr-4 sl-pl-3 sl-border-input focus:sl-border-primary sl-cursor-pointer sl-select-none"
+                                                                        role="button">
+                                                                        <div
+                                                                            class="sl-flex sl-flex-1 sl-items-center sl-h-lg">
+                                                                            <div
+                                                                                class="sl-flex sl-items-center sl-mr-1.5">
+                                                                                <svg aria-hidden="true"
+                                                                                    focusable="false" data-prefix="fas"
+                                                                                    data-icon="chevron-right"
+                                                                                    class="svg-inline--fa fa-chevron-right fa-fw fa-sm sl-icon"
+                                                                                    role="img"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 320 512">
+                                                                                    <path fill="currentColor"
+                                                                                        d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
+                                                                                    </path>
+                                                                                </svg></div>
+                                                                            <div role="heading">Security: API Key</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="sl-stack sl-stack--vertical sl-stack--5 sl-flex sl-flex-col sl-items-stretch">
+                                                            <div class="sl-flex sl-flex-wrap">
+                                                                <h3 id="/operations/Deletepickup-location#Path-Parameters"
+                                                                    aria-label="Path Parameters"
+                                                                    class="sl-link-heading sl-py-1 sl-pr-6 sl-text-2xl sl-leading-snug sl-font-prose sl-font-semibold sl-text-heading">
+                                                                    <a href="#/operations/Deletepickup-location#Path-Parameters"
+                                                                        class="sl-link sl-link-heading__link sl-inline-flex sl-items-center sl-text-current">
+                                                                        <div>Path Parameters</div>
+                                                                        <div
+                                                                            class="sl-link-heading__icon sl-text-base sl-ml-4 sl-text-muted">
+                                                                            <svg aria-hidden="true" focusable="false"
+                                                                                data-prefix="fas" data-icon="link"
+                                                                                class="svg-inline--fa fa-link sl-icon"
+                                                                                role="img"
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 640 512">
+                                                                                <path fill="currentColor"
+                                                                                    d="M172.5 131.1C228.1 75.51 320.5 75.51 376.1 131.1C426.1 181.1 433.5 260.8 392.4 318.3L391.3 319.9C381 334.2 361 337.6 346.7 327.3C332.3 317 328.9 297 339.2 282.7L340.3 281.1C363.2 249 359.6 205.1 331.7 177.2C300.3 145.8 249.2 145.8 217.7 177.2L105.5 289.5C73.99 320.1 73.99 372 105.5 403.5C133.3 431.4 177.3 435 209.3 412.1L210.9 410.1C225.3 400.7 245.3 404 255.5 418.4C265.8 432.8 262.5 452.8 248.1 463.1L246.5 464.2C188.1 505.3 110.2 498.7 60.21 448.8C3.741 392.3 3.741 300.7 60.21 244.3L172.5 131.1zM467.5 380C411 436.5 319.5 436.5 263 380C213 330 206.5 251.2 247.6 193.7L248.7 192.1C258.1 177.8 278.1 174.4 293.3 184.7C307.7 194.1 311.1 214.1 300.8 229.3L299.7 230.9C276.8 262.1 280.4 306.9 308.3 334.8C339.7 366.2 390.8 366.2 422.3 334.8L534.5 222.5C566 191 566 139.1 534.5 108.5C506.7 80.63 462.7 76.99 430.7 99.9L429.1 101C414.7 111.3 394.7 107.1 384.5 93.58C374.2 79.2 377.5 59.21 391.9 48.94L393.5 47.82C451 6.731 529.8 13.25 579.8 63.24C636.3 119.7 636.3 211.3 579.8 267.7L467.5 380z">
+                                                                                </path>
+                                                                            </svg></div>
+                                                                    </a></h3>
+                                                                <div class="sl-self-center sl-py-1"></div>
+                                                            </div>
+                                                            <div class="" id="mosaic-provider-react-aria-8-1">
+                                                                <div data-overlay-container="true" class="">
+                                                                    <div class="JsonSchemaViewer">
+                                                                        <div></div>
+                                                                        <div data-level="0" class="sl-text-sm">
+                                                                            <div data-id="6e2e9fdefc19b"
+                                                                                class="sl-flex sl-relative sl-max-w-full sl-py-2">
+                                                                                <div
+                                                                                    class="sl-stack sl-stack--vertical sl-stack--1 sl-flex sl-flex-1 sl-flex-col sl-items-stretch sl-max-w-full">
+                                                                                    <div
+                                                                                        class="sl-flex sl-items-center sl-max-w-full">
+                                                                                        <div
+                                                                                            class="sl-flex sl-items-baseline sl-text-base">
+                                                                                            <div
+                                                                                                class="sl-font-mono sl-font-semibold sl-mr-2">
+                                                                                                id</div><span
+                                                                                                class="sl-truncate sl-text-muted">string</span>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="sl-flex-1 sl-h-px sl-mx-3">
+                                                                                        </div><span
+                                                                                            class="sl-ml-2 sl-text-warning">required</span>
+                                                                                    </div>
+                                                                                    <div class="sl-prose sl-markdown-viewer "
+                                                                                        style="font-size: 12px;">
+                                                                                        <p>Pickup location ID</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="sl-stack sl-stack--vertical sl-stack--1 sl-flex sl-flex-col sl-w-full sl-h-auto">
+                                                        <div class="sl-flex sl-flex-wrap">
+                                                            <h2 id="/operations/Deletepickup-location#Responses"
+                                                                aria-label="Responses"
+                                                                class="sl-link-heading sl-py-1 sl-pr-6 sl-text-4xl sl-leading-tight sl-font-prose sl-font-bold sl-text-heading">
+                                                                <a href="#/operations/Deletepickup-location#Responses"
+                                                                    class="sl-link sl-link-heading__link sl-inline-flex sl-items-center sl-text-current">
+                                                                    <div>Responses</div>
+                                                                    <div
+                                                                        class="sl-link-heading__icon sl-text-base sl-ml-4 sl-text-muted">
+                                                                        <svg aria-hidden="true" focusable="false"
+                                                                            data-prefix="fas" data-icon="link"
+                                                                            class="svg-inline--fa fa-link sl-icon"
+                                                                            role="img"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            viewBox="0 0 640 512">
+                                                                            <path fill="currentColor"
+                                                                                d="M172.5 131.1C228.1 75.51 320.5 75.51 376.1 131.1C426.1 181.1 433.5 260.8 392.4 318.3L391.3 319.9C381 334.2 361 337.6 346.7 327.3C332.3 317 328.9 297 339.2 282.7L340.3 281.1C363.2 249 359.6 205.1 331.7 177.2C300.3 145.8 249.2 145.8 217.7 177.2L105.5 289.5C73.99 320.1 73.99 372 105.5 403.5C133.3 431.4 177.3 435 209.3 412.1L210.9 410.1C225.3 400.7 245.3 404 255.5 418.4C265.8 432.8 262.5 452.8 248.1 463.1L246.5 464.2C188.1 505.3 110.2 498.7 60.21 448.8C3.741 392.3 3.741 300.7 60.21 244.3L172.5 131.1zM467.5 380C411 436.5 319.5 436.5 263 380C213 330 206.5 251.2 247.6 193.7L248.7 192.1C258.1 177.8 278.1 174.4 293.3 184.7C307.7 194.1 311.1 214.1 300.8 229.3L299.7 230.9C276.8 262.1 280.4 306.9 308.3 334.8C339.7 366.2 390.8 366.2 422.3 334.8L534.5 222.5C566 191 566 139.1 534.5 108.5C506.7 80.63 462.7 76.99 430.7 99.9L429.1 101C414.7 111.3 394.7 107.1 384.5 93.58C374.2 79.2 377.5 59.21 391.9 48.94L393.5 47.82C451 6.731 529.8 13.25 579.8 63.24C636.3 119.7 636.3 211.3 579.8 267.7L467.5 380z">
+                                                                            </path>
+                                                                        </svg></div>
+                                                                </a></h2>
+                                                            <div class="sl-self-center sl-py-1">
+                                                                <div id="react-aria-8-110" aria-orientation="horizontal"
+                                                                    class="sl-stack sl-stack--horizontal sl-stack--2 sl-flex sl-overflow-x-hidden sl-overflow-y-hidden sl-flex-row sl-h-auto sl-text-lg"
+                                                                    role="tablist">
+                                                                    <div tabindex="0" data-key="200"
+                                                                        id="react-aria-8-110-tab-200"
+                                                                        aria-selected="true"
+                                                                        aria-controls="react-aria-8-110-tabpanel-200"
+                                                                        class="sl-font-medium sl-p-1 sl-px-2 sl-py-1 sl-bg-success sl-text-body sl-rounded-lg sl-border-light sl-cursor"
+                                                                        role="tab">200</div>
+                                                                    <div tabindex="-1" data-key="400"
+                                                                        id="react-aria-8-110-tab-400"
+                                                                        aria-selected="false"
+                                                                        class="sl-font-medium sl-p-1 sl-px-2 sl-py-1 hover:sl-bg-warning-tint sl-text-warning hover:sl-text-body sl-rounded-lg sl-border-light sl-cursor-pointer"
+                                                                        role="tab">400</div>
+                                                                    <div tabindex="-1" data-key="401"
+                                                                        id="react-aria-8-110-tab-401"
+                                                                        aria-selected="false"
+                                                                        class="sl-font-medium sl-p-1 sl-px-2 sl-py-1 hover:sl-bg-warning-tint sl-text-warning hover:sl-text-body sl-rounded-lg sl-border-light sl-cursor-pointer"
+                                                                        role="tab">401</div>
+                                                                    <div tabindex="-1" data-key="403"
+                                                                        id="react-aria-8-110-tab-403"
+                                                                        aria-selected="false"
+                                                                        class="sl-font-medium sl-p-1 sl-px-2 sl-py-1 hover:sl-bg-warning-tint sl-text-warning hover:sl-text-body sl-rounded-lg sl-border-light sl-cursor-pointer"
+                                                                        role="tab">403</div>
+                                                                    <div tabindex="-1" data-key="500"
+                                                                        id="react-aria-8-110-tab-500"
+                                                                        aria-selected="false"
+                                                                        class="sl-font-medium sl-p-1 sl-px-2 sl-py-1 hover:sl-bg-danger-tint sl-text-danger hover:sl-text-body sl-rounded-lg sl-border-light sl-cursor-pointer"
+                                                                        role="tab">500</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="undefined-tabpanel-undefined"
+                                                            aria-labelledby="react-aria-8-110-tab-200"
+                                                            class="sl-flex-1 sl-py-0" role="tabpanel">
+                                                            <div
+                                                                class="sl-stack sl-stack--vertical sl-stack--8 sl-flex sl-flex-col sl-items-stretch sl-pt-8">
+                                                                <div class="sl-relative">
+                                                                    <div class="sl-prose sl-markdown-viewer ">
+                                                                        <p>Ok</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="sl-flex sl-flex-wrap">
+                                                                    <h3 id="/operations/Deletepickup-location#response-body"
+                                                                        aria-label="Body"
+                                                                        class="sl-link-heading sl-py-1 sl-pr-6 sl-text-2xl sl-leading-snug sl-font-prose sl-font-semibold sl-text-heading">
+                                                                        <a href="#/operations/Deletepickup-location#response-body"
+                                                                            class="sl-link sl-link-heading__link sl-inline-flex sl-items-center sl-text-current">
+                                                                            <div>Body</div>
+                                                                            <div
+                                                                                class="sl-link-heading__icon sl-text-base sl-ml-4 sl-text-muted">
+                                                                                <svg aria-hidden="true"
+                                                                                    focusable="false" data-prefix="fas"
+                                                                                    data-icon="link"
+                                                                                    class="svg-inline--fa fa-link sl-icon"
+                                                                                    role="img"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 640 512">
+                                                                                    <path fill="currentColor"
+                                                                                        d="M172.5 131.1C228.1 75.51 320.5 75.51 376.1 131.1C426.1 181.1 433.5 260.8 392.4 318.3L391.3 319.9C381 334.2 361 337.6 346.7 327.3C332.3 317 328.9 297 339.2 282.7L340.3 281.1C363.2 249 359.6 205.1 331.7 177.2C300.3 145.8 249.2 145.8 217.7 177.2L105.5 289.5C73.99 320.1 73.99 372 105.5 403.5C133.3 431.4 177.3 435 209.3 412.1L210.9 410.1C225.3 400.7 245.3 404 255.5 418.4C265.8 432.8 262.5 452.8 248.1 463.1L246.5 464.2C188.1 505.3 110.2 498.7 60.21 448.8C3.741 392.3 3.741 300.7 60.21 244.3L172.5 131.1zM467.5 380C411 436.5 319.5 436.5 263 380C213 330 206.5 251.2 247.6 193.7L248.7 192.1C258.1 177.8 278.1 174.4 293.3 184.7C307.7 194.1 311.1 214.1 300.8 229.3L299.7 230.9C276.8 262.1 280.4 306.9 308.3 334.8C339.7 366.2 390.8 366.2 422.3 334.8L534.5 222.5C566 191 566 139.1 534.5 108.5C506.7 80.63 462.7 76.99 430.7 99.9L429.1 101C414.7 111.3 394.7 107.1 384.5 93.58C374.2 79.2 377.5 59.21 391.9 48.94L393.5 47.82C451 6.731 529.8 13.25 579.8 63.24C636.3 119.7 636.3 211.3 579.8 267.7L467.5 380z">
+                                                                                    </path>
+                                                                                </svg></div>
+                                                                        </a></h3>
+                                                                    <div class="sl-self-center sl-py-1">
+                                                                        <div class="sl-flex sl-flex-1 sl-justify-end">
+                                                                            <div class="sl-select sl-relative">
+                                                                                <div aria-hidden="true"
+                                                                                    style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;">
+                                                                                    <input type="text" tabindex="0"
+                                                                                        style="font-size: 16px;"><label><select
+                                                                                            size="1" tabindex="-1">
+                                                                                            <option></option>
+                                                                                            <option value="0">
+                                                                                                application/json
+                                                                                            </option>
+                                                                                        </select></label></div>
+                                                                                <div class="sl-relative"><button
+                                                                                        aria-label="Response Body Content Type"
+                                                                                        aria-haspopup="listbox"
+                                                                                        aria-expanded="false"
+                                                                                        id="react-aria-8-113"
+                                                                                        aria-labelledby="react-aria-8-113 react-aria-8-115"
+                                                                                        type="button"
+                                                                                        class="sl-button sl-w-full sl-h-sm sl-text-base sl-font-normal sl-px-1.5 sl-bg-transparent sl-rounded sl-border-transparent hover:sl-border-input focus:sl-border-primary active:sl-border-primary sl-border disabled:sl-opacity-60">
+                                                                                        <div
+                                                                                            class="sl-flex sl-flex-1 sl-justify-items-start sl-items-center">
+                                                                                            <div class="sl-pr-1">
+                                                                                                application/json</div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="sl-text-xs sl--mr-0.5 sl-ml-1">
+                                                                                            <div
+                                                                                                class="sl-pt-0.5 sl-pr-0.5">
+                                                                                                <svg aria-hidden="true"
+                                                                                                    focusable="false"
+                                                                                                    data-prefix="fas"
+                                                                                                    data-icon="chevron-down"
+                                                                                                    class="svg-inline--fa fa-chevron-down fa-xs sl-icon"
+                                                                                                    role="img"
+                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                                    viewBox="0 0 448 512">
+                                                                                                    <path
+                                                                                                        fill="currentColor"
+                                                                                                        d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z">
+                                                                                                    </path>
+                                                                                                </svg></div>
+                                                                                        </div>
+                                                                                    </button></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div data-testid="two-column-right" class="sl-relative sl-w-2/5 sl-ml-16"
+                                                style="max-width: 500px;">
+                                                <div
+                                                    class="sl-stack sl-stack--vertical sl-stack--6 sl-flex sl-flex-col sl-items-stretch">
+                                                    <div class="sl-inverted">
+                                                        <div class="sl-overflow-y-hidden sl-rounded-lg">
+                                                            <div class="TryItPanel sl-bg-canvas-100 sl-rounded-lg">
+                                                                <div class="sl-panel sl-outline-none sl-w-full">
+                                                                    <div aria-expanded="true" tabindex="0"
+                                                                        class="sl-panel__titlebar sl-flex sl-items-center sl-relative focus:sl-z-10 sl-text-base sl-leading-none sl-pr-3 sl-pl-3 sl-bg-canvas-200 sl-text-body sl-border-input focus:sl-border-primary sl-cursor-pointer sl-select-none"
+                                                                        role="button">
+                                                                        <div
+                                                                            class="sl-flex sl-flex-1 sl-items-center sl-h-lg">
+                                                                            <div
+                                                                                class="sl-flex sl-items-center sl-mr-1.5">
+                                                                                <svg aria-hidden="true"
+                                                                                    focusable="false" data-prefix="fas"
+                                                                                    data-icon="caret-down"
+                                                                                    class="svg-inline--fa fa-caret-down fa-fw sl-icon"
+                                                                                    role="img"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 320 512">
+                                                                                    <path fill="currentColor"
+                                                                                        d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z">
+                                                                                    </path>
+                                                                                </svg></div>Auth
+                                                                        </div><button type="button"
+                                                                            aria-label="security-schemes"
+                                                                            aria-haspopup="true" aria-expanded="false"
+                                                                            id="react-aria-8-106"
+                                                                            class="sl-button sl-h-sm sl-text-base sl-font-medium sl-px-1.5 hover:sl-bg-canvas-50 active:sl-bg-canvas-100 sl-text-muted hover:sl-text-body focus:sl-text-body sl-rounded sl-border-transparent sl-border disabled:sl-opacity-70">Bearer
+                                                                            Auth<div
+                                                                                class="sl-text-xs sl--mr-0.5 sl-ml-1">
+                                                                                <svg aria-hidden="true"
+                                                                                    focusable="false" data-prefix="fas"
+                                                                                    data-icon="sort"
+                                                                                    class="svg-inline--fa fa-sort fa-fw sl-icon"
+                                                                                    role="img"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 320 512">
+                                                                                    <path fill="currentColor"
+                                                                                        d="M27.66 224h264.7c24.6 0 36.89-29.78 19.54-47.12l-132.3-136.8c-5.406-5.406-12.47-8.107-19.53-8.107c-7.055 0-14.09 2.701-19.45 8.107L8.119 176.9C-9.229 194.2 3.055 224 27.66 224zM292.3 288H27.66c-24.6 0-36.89 29.77-19.54 47.12l132.5 136.8C145.9 477.3 152.1 480 160 480c7.053 0 14.12-2.703 19.53-8.109l132.3-136.8C329.2 317.8 316.9 288 292.3 288z">
+                                                                                    </path>
+                                                                                </svg></div></button>
+                                                                    </div>
+                                                                    <div class="sl-panel__content-wrapper sl-bg-canvas-100"
+                                                                        role="region">
+                                                                        <div class="ParameterGrid sl-p-4"><label
+                                                                                aria-hidden="true"
+                                                                                for="id_auth_Token_ahwni9W9">Token</label><span
+                                                                                class="sl-mx-3">:</span>
+                                                                            <div class="sl-flex sl-flex-1">
+                                                                                <div
+                                                                                    class="sl-input sl-flex-1 sl-relative">
+                                                                                    <input id="id_auth_Token_ahwni9W9"
+                                                                                        aria-label="Token"
+                                                                                        placeholder="123" type="text"
+                                                                                        aria-required="true"
+                                                                                        class="sl-relative sl-w-full sl-h-md sl-text-base sl-pr-2.5 sl-pl-2.5 sl-rounded sl-border-transparent hover:sl-border-input focus:sl-border-primary sl-border"
+                                                                                        value=""></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="sl-panel sl-outline-none sl-w-full">
+                                                                    <div aria-expanded="true" tabindex="0"
+                                                                        class="sl-panel__titlebar sl-flex sl-items-center sl-relative focus:sl-z-10 sl-text-base sl-leading-none sl-pr-4 sl-pl-3 sl-bg-canvas-200 sl-text-body sl-border-input focus:sl-border-primary sl-cursor-pointer sl-select-none"
+                                                                        role="button">
+                                                                        <div
+                                                                            class="sl-flex sl-flex-1 sl-items-center sl-h-lg">
+                                                                            <div
+                                                                                class="sl-flex sl-items-center sl-mr-1.5">
+                                                                                <svg aria-hidden="true"
+                                                                                    focusable="false" data-prefix="fas"
+                                                                                    data-icon="caret-down"
+                                                                                    class="svg-inline--fa fa-caret-down fa-fw sl-icon"
+                                                                                    role="img"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 320 512">
+                                                                                    <path fill="currentColor"
+                                                                                        d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z">
+                                                                                    </path>
+                                                                                </svg></div>Parameters
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="sl-panel__content-wrapper sl-bg-canvas-100"
+                                                                        role="region">
+                                                                        <div
+                                                                            class="sl-overflow-y-auto ParameterGrid OperationParametersContent sl-p-4">
+                                                                            <label aria-hidden="true"
+                                                                                data-testid="param-label"
+                                                                                for="id_id_S5XcRoQi"
+                                                                                class="sl-text-base">id*</label><span
+                                                                                class="sl-mx-3">:</span>
+                                                                            <div>
+                                                                                <div class="sl-flex sl-flex-1">
+                                                                                    <div
+                                                                                        class="sl-input sl-flex-1 sl-relative">
+                                                                                        <input id="id_id_S5XcRoQi"
+                                                                                            aria-label="id"
+                                                                                            placeholder="string"
+                                                                                            type="text"
+                                                                                            aria-required="true"
+                                                                                            class="sl-relative sl-w-full sl-h-md sl-text-base sl-pr-2.5 sl-pl-2.5 sl-rounded sl-border-transparent hover:sl-border-input focus:sl-border-primary sl-border"
+                                                                                            value=""></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="SendButtonHolder sl-mt-4 sl-p-4 sl-pt-0">
+                                                                    <div
+                                                                        class="sl-stack sl-stack--horizontal sl-stack--2 sl-flex sl-flex-row sl-items-center">
+                                                                        <button type="button"
+                                                                            class="sl-button sl-h-sm sl-text-base sl-font-medium sl-px-1.5 sl-bg-primary hover:sl-bg-primary-dark active:sl-bg-primary-darker disabled:sl-bg-canvas-100 sl-text-on-primary disabled:sl-text-body sl-rounded sl-border-transparent sl-border disabled:sl-opacity-70">Send
+                                                                            API Request</button></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="sl-panel sl-outline-none sl-w-full sl-rounded-lg">
+                                                        <div
+                                                            class="sl-panel__titlebar sl-flex sl-items-center sl-relative focus:sl-z-10 sl-text-base sl-leading-none sl-pr-3 sl-pl-4 sl-bg-canvas-200 sl-text-body sl-border-input focus:sl-border-primary sl-select-none">
+                                                            <div class="sl-flex sl-flex-1 sl-items-center sl-h-lg">
+                                                                <div class="sl--ml-2"><button type="button"
+                                                                        aria-label="Request Sample Language"
+                                                                        aria-haspopup="true" aria-expanded="false"
+                                                                        id="react-aria-8-117"
+                                                                        class="sl-button sl-h-sm sl-text-base sl-font-medium sl-px-1.5 hover:sl-bg-canvas-50 active:sl-bg-canvas-100 sl-text-muted hover:sl-text-body focus:sl-text-body sl-rounded sl-border-transparent sl-border disabled:sl-opacity-70">Request
+                                                                        Sample: Shell / cURL<div
+                                                                            class="sl-text-xs sl--mr-0.5 sl-ml-1"><svg
+                                                                                aria-hidden="true" focusable="false"
+                                                                                data-prefix="fas"
+                                                                                data-icon="chevron-down"
+                                                                                class="svg-inline--fa fa-chevron-down fa-fw sl-icon"
+                                                                                role="img"
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 448 512">
+                                                                                <path fill="currentColor"
+                                                                                    d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z">
+                                                                                </path>
+                                                                            </svg></div></button></div>
+                                                            </div><button type="button"
+                                                                class="sl-button sl-h-sm sl-text-base sl-font-medium sl-px-1.5 hover:sl-bg-canvas-50 active:sl-bg-canvas-100 sl-text-muted hover:sl-text-body focus:sl-text-body sl-rounded sl-border-transparent sl-border disabled:sl-opacity-70">
+                                                                <div class="sl-mx-0"><svg aria-hidden="true"
+                                                                        focusable="false" data-prefix="fas"
+                                                                        data-icon="copy"
+                                                                        class="svg-inline--fa fa-copy fa-fw fa-sm sl-icon"
+                                                                        role="img" xmlns="http://www.w3.org/2000/svg"
+                                                                        viewBox="0 0 512 512">
+                                                                        <path fill="currentColor"
+                                                                            d="M384 96L384 0h-112c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48H464c26.51 0 48-21.49 48-48V128h-95.1C398.4 128 384 113.6 384 96zM416 0v96h96L416 0zM192 352V128h-144c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48h192c26.51 0 48-21.49 48-48L288 416h-32C220.7 416 192 387.3 192 352z">
+                                                                        </path>
+                                                                    </svg></div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="sl-panel__content-wrapper sl-bg-canvas-100">
+                                                            <div class="sl-panel__content sl-p-0">
+                                                                <pre tabindex="0" aria-label="curl --request DELETE \
+  --url http://app.bosta.co/api/v2/pickup-locations/id \
+  --header 'Authorization: Bearer undefined' \
+  --header 'Content-Type: application/json'" class="sl-code-viewer sl-grid sl-overflow-x-hidden sl-overflow-y-hidden sl-relative sl-outline-none sl-group"
+                                                                    role="group"
+                                                                    style="--fs-code: 12;"><div class="sl-code-viewer__scroller sl-overflow-x-auto sl-overflow-y-auto" style="max-height: 400px;"><div class="sl-code-highlight prism-code language-bash" style="padding: 12px 15px; font-family: var(--font-code); font-size: var(--fs-code); line-height: var(--lh-code);"><div class="sl-flex"><div class="sl-flex-1 sl-break-all"><span class="token function" style="color: rgb(111, 66, 193);">curl</span><span class="token plain"> --request DELETE </span><span class="token punctuation" style="color: rgb(51, 51, 51);">\</span><span class="token plain"></span></div></div><div class="sl-flex"><div class="sl-flex-1 sl-break-all"><span class="token plain">  --url http://app.bosta.co/api/v2/pickup-locations/id </span><span class="token punctuation" style="color: rgb(51, 51, 51);">\</span><span class="token plain"></span></div></div><div class="sl-flex"><div class="sl-flex-1 sl-break-all"><span class="token plain">  --header </span><span class="token string" style="color: rgb(3, 47, 98);">'Authorization: Bearer undefined'</span><span class="token plain"> </span><span class="token punctuation" style="color: rgb(51, 51, 51);">\</span><span class="token plain"></span></div></div><div class="sl-flex"><div class="sl-flex-1 sl-break-all"><span class="token plain">  --header </span><span class="token string" style="color: rgb(3, 47, 98);">'Content-Type: application/json'</span></div></div></div></div></pre>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="sl-panel sl-outline-none sl-w-full sl-rounded-lg">
+                                                        <div
+                                                            class="sl-panel__titlebar sl-flex sl-items-center sl-relative focus:sl-z-10 sl-text-base sl-leading-none sl-pr-3 sl-pl-4 sl-bg-canvas-200 sl-text-body sl-border-input focus:sl-border-primary sl-select-none">
+                                                            <div class="sl-flex sl-flex-1 sl-items-center sl-h-lg"><span
+                                                                    class="sl-text-body">Response Example</span></div>
+                                                            <button type="button"
+                                                                class="sl-button sl-h-sm sl-text-base sl-font-medium sl-px-1.5 hover:sl-bg-canvas-50 active:sl-bg-canvas-100 sl-text-muted hover:sl-text-body focus:sl-text-body sl-rounded sl-border-transparent sl-border disabled:sl-opacity-70">
+                                                                <div class="sl-mx-0"><svg aria-hidden="true"
+                                                                        focusable="false" data-prefix="fas"
+                                                                        data-icon="copy"
+                                                                        class="svg-inline--fa fa-copy fa-fw fa-sm sl-icon"
+                                                                        role="img" xmlns="http://www.w3.org/2000/svg"
+                                                                        viewBox="0 0 512 512">
+                                                                        <path fill="currentColor"
+                                                                            d="M384 96L384 0h-112c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48H464c26.51 0 48-21.49 48-48V128h-95.1C398.4 128 384 113.6 384 96zM416 0v96h96L416 0zM192 352V128h-144c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48h192c26.51 0 48-21.49 48-48L288 416h-32C220.7 416 192 387.3 192 352z">
+                                                                        </path>
+                                                                    </svg></div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="sl-panel__content-wrapper sl-bg-canvas-100">
+                                                            <div class="sl-panel__content sl-p-0">
+                                                                <pre tabindex="0" aria-label="{
+  &quot;success&quot;: true,
+  &quot;message&quot;: &quot;pickup location deleted successfully.&quot;,
+  &quot;data&quot;: null
+}" class="sl-code-viewer sl-grid sl-overflow-x-hidden sl-overflow-y-hidden sl-relative sl-outline-none sl-group"
+                                                                    role="group"
+                                                                    style="--fs-code: 12;"><div class="sl-code-viewer__scroller sl-overflow-x-auto sl-overflow-y-auto" style="max-height: 500px;"><div class="sl-code-highlight prism-code language-json" style="padding: 12px 15px; font-family: var(--font-code); font-size: var(--fs-code); line-height: var(--lh-code);"><div class="sl-flex"><div class="sl-code-highlight__ln sl-flex-shrink-0 sl-select-none sl-opacity-50" style="width: 28px; font-size: 0.9em; padding-top: 0.1em; line-height: var(--lh-code);">1</div><div class="sl-flex-1 sl-break-all"><span class="token punctuation" style="color: rgb(51, 51, 51);">{</span><span class="token plain"></span></div></div><div class="sl-flex"><div class="sl-code-highlight__ln sl-flex-shrink-0 sl-select-none sl-opacity-50" style="width: 28px; font-size: 0.9em; padding-top: 0.1em; line-height: var(--lh-code);">2</div><div class="sl-flex-1 sl-break-all"><span class="token plain">  </span><span class="token property" style="color: rgb(24, 54, 145);">"success"</span><span class="token operator" style="color: rgb(215, 58, 73);">:</span><span class="token plain"> </span><span class="token boolean" style="color: rgb(0, 92, 197);">true</span><span class="token punctuation" style="color: rgb(51, 51, 51);">,</span><span class="token plain"></span></div></div><div class="sl-flex"><div class="sl-code-highlight__ln sl-flex-shrink-0 sl-select-none sl-opacity-50" style="width: 28px; font-size: 0.9em; padding-top: 0.1em; line-height: var(--lh-code);">3</div><div class="sl-flex-1 sl-break-all"><span class="token plain">  </span><span class="token property" style="color: rgb(24, 54, 145);">"message"</span><span class="token operator" style="color: rgb(215, 58, 73);">:</span><span class="token plain"> </span><span class="token string" style="color: rgb(3, 47, 98);">"pickup location deleted successfully."</span><span class="token punctuation" style="color: rgb(51, 51, 51);">,</span><span class="token plain"></span></div></div><div class="sl-flex"><div class="sl-code-highlight__ln sl-flex-shrink-0 sl-select-none sl-opacity-50" style="width: 28px; font-size: 0.9em; padding-top: 0.1em; line-height: var(--lh-code);">4</div><div class="sl-flex-1 sl-break-all"><span class="token plain">  </span><span class="token property" style="color: rgb(24, 54, 145);">"data"</span><span class="token operator" style="color: rgb(215, 58, 73);">:</span><span class="token plain"> </span><span class="token null keyword" style="color: rgb(215, 58, 73);">null</span><span class="token plain"></span></div></div><div class="sl-flex"><div class="sl-code-highlight__ln sl-flex-shrink-0 sl-select-none sl-opacity-50" style="width: 28px; font-size: 0.9em; padding-top: 0.1em; line-height: var(--lh-code);">5</div><div class="sl-flex-1 sl-break-all"><span class="token plain"></span><span class="token punctuation" style="color: rgb(51, 51, 51);">}</span></div></div></div></div></pre>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="br-footer__container"><svg width="111" height="34" viewBox="0 0 111 34" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M32.663 8.833 17.795.266a1.894 1.894 0 0 0-1.938 0L.99 8.833C.395 9.188 0 9.82 0 10.53v12.554c0 .71.356 1.342.989 1.697l14.868 8.566c.317.158.633.277.989.277s.672-.08.988-.277l14.869-8.566c.593-.355.988-.987.988-1.697V10.53a2.12 2.12 0 0 0-1.028-1.697Zm-2.451 11.132-5.497-3.158 5.497-3.158v6.316ZM16.846 3.66l11.902 6.87-11.902 6.868L4.903 10.53l11.943-6.869ZM3.44 13.61l5.497 3.158-5.497 3.159v-6.317Zm13.406 16.304L4.903 23.044l7.435-4.303 3.48 2.014c.316.157.632.276.988.276s.672-.08.989-.276l3.48-2.014 7.434 4.303-11.863 6.869ZM65.683 11.793c-4.113 0-6.96 2.803-6.96 6.83 0 4.026 2.847 6.83 6.92 6.83 4.113 0 6.96-2.804 6.96-6.83 0-4.027-2.847-6.83-6.92-6.83Zm0 10.54c-2.136 0-3.48-1.46-3.48-3.71s1.384-3.711 3.48-3.711c2.056 0 3.48 1.5 3.48 3.71-.04 2.211-1.424 3.712-3.48 3.712ZM80.274 17.202c-1.621-.237-3.045-.435-3.045-1.54 0-.553.396-1.263 2.215-1.263 1.463 0 2.53.631 2.847 1.737l3.124-.71c-.672-2.37-2.729-3.672-5.773-3.672-3.401 0-5.695 1.579-5.695 3.947 0 3.316 2.927 3.711 5.3 4.067 1.66.236 3.123.434 3.123 1.618 0 .632-.474 1.382-2.728 1.382-1.7 0-2.848-.632-3.203-1.777l-3.124.632c.711 2.447 2.847 3.75 6.248 3.75 3.756 0 6.129-1.579 6.129-4.105.04-3.277-2.966-3.711-5.418-4.066ZM92.256 22.491c-1.028 0-1.621-.71-1.621-1.934v-5.526h5.299v-2.882h-5.3V8.122h-3.44v12.474c0 3.12 1.74 4.896 4.746 4.896 2.61 0 4.31-1.185 4.903-3.395l-2.768-.869c-.316.79-.949 1.263-1.819 1.263ZM107.639 13.807l-.119-.158c-.87-1.224-2.293-1.856-4.192-1.856-3.48 0-5.97 2.882-5.97 6.83 0 3.987 2.49 6.869 5.891 6.869 1.898 0 3.322-.672 4.232-1.974l.118-.158v.04l.672 1.736H111V12.188h-2.729l-.632 1.619Zm-3.48 8.527c-2.017 0-3.361-1.461-3.361-3.75 0-2.25 1.305-3.711 3.361-3.711s3.401 1.46 3.401 3.71-1.384 3.75-3.401 3.75ZM51.486 11.794c-1.819 0-3.203.631-4.112 1.855l-.198.276V8.162h-3.44v16.974h2.728l.712-1.815.119.157c.949 1.343 2.372 2.014 4.23 2.014 3.48 0 5.893-2.803 5.893-6.83-.04-4.065-2.452-6.868-5.932-6.868Zm-.87 10.54c-1.581 0-3.44-.632-3.44-3.75 0-2.29 1.344-3.75 3.48-3.75 1.977 0 3.282 1.5 3.282 3.75-.04 2.25-1.345 3.75-3.322 3.75Z"
+                    fill="#E30613"></path>
+            </svg>
+            <div class="br-footer__container-links">
+                <ul>
+                    <li>Products</li>
+                    <li><a href="https://bosta.co/solutions" target="_blank" rel="noopener noreferrer">Solutions</a>
+                    </li>
+                    <li><a href="https://bosta.co/dashboard" target="_blank" rel="noopener noreferrer">Dashboard</a>
+                    </li>
+                    <li><a href="https://bosta.co/mobile" target="_blank" rel="noopener noreferrer">Mobile App</a></li>
+                </ul>
+                <ul>
+                    <li>Integrations</li>
+                    <li><a href="https://bosta.co/merged-integrations?plugin=shopify" target="_blank"
+                            rel="noopener noreferrer">Shopify</a></li>
+                    <li><a href="https://bosta.co/merged-integrations?plugin=woocommerce" target="_blank"
+                            rel="noopener noreferrer">WooCommerce</a></li>
+                    <li><a href="https://bosta.co/integrations" target="_blank" rel="noopener noreferrer">Custom
+                            APIs</a></li>
+                </ul>
+                <ul>
+                    <li>Businesses</li>
+                    <li><a href="https://bosta.co/business" target="_blank" rel="noopener noreferrer">Businesses</a>
+                    </li>
+                    <li><a href="https://bosta.co/smes" target="_blank" rel="noopener noreferrer">Use Cases</a></li>
+                </ul>
+                <ul>
+                    <li>Company</li>
+                    <li><a href="https://bosta.co/about" target="_blank" rel="noopener noreferrer">About us</a></li>
+                    <li><a href="https://bosta.co/smes" target="_blank" rel="noopener noreferrer">Use Cases</a></li>
+                    <li><a href="https://bosta.co/pricing" target="_blank" rel="noopener noreferrer">Pricing</a></li>
+                    <li><a href="https://bosta.co/faq" target="_blank" rel="noopener noreferrer">FAQ</a></li>
+                    <li><a href="https://bosta.co/contact-shipping-sales" target="_blank" rel="noopener noreferrer">Help
+                            Center</a></li>
+                </ul>
+                <ul>
+                    <li class="br-footer__container-track-shipment"><a href="https://bosta.co/tracking-shipments"
+                            target="_blank" rel="noopener noreferrer">Track Shipment</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/runtime~main.6a3129c5.js"></script>
+    <script src="/assets/js/main.65ef2ccc.js"></script>
+
+</body>
+
+</html>

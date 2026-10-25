@@ -1,0 +1,62 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Next.js build output
+frontend/.next/
+frontend/out/
+
+# Backend specific
+Backend/node_modules/
+Backend/public/uploads/*
+!Backend/public/uploads/.gitkeep
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+Backend/.env
+frontend/.env
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+# Optional: if you don't want to commit the compose overrides
+# docker-compose.override.yml
+
+# Temporary files
+.tmp_deps/
+sayarty_deps/
+.bolt/
+docker-data/
+
+# catalogue scraping
+# Cached source HTML: ~8 GB of Liferay boilerplate, only ~1.5% of each page is
+# the product blob we parse. Kept outside the repo as a local backup.
+catalouge_scraping/*/data/raw/
+catalouge_scraping/data/raw/
+# Compiled Vision OCR helper (platform-specific build artifact)
+catalouge_scraping/ocr/ocr
+
+# Scraping data (kept locally, not in the repo)
+catalouge_scraping/
+bosta-scrapping/
+products-scrape/
+readycar_scrapping/
+readymarine_scrapping/

@@ -1,0 +1,314 @@
+{
+ "shippingzones": [
+  {
+   "_id": "6a060f16aa14dd45788dd972",
+   "name": "Egypt",
+   "name_ar": "مصر",
+   "is_active": true,
+   "priority": 1,
+   "locations": [
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Cairo",
+     "city_ar": "القاهره",
+     "_id": "6a0b92d267c61de082f56652"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Alexandria",
+     "city_ar": "الاسكندريه",
+     "_id": "6a0b92d267c61de082f56653"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "North Coast",
+     "city_ar": "الساحل الشمالي",
+     "_id": "6a0b92d267c61de082f56654"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Behira",
+     "city_ar": "البحيره",
+     "_id": "6a0b92d267c61de082f56655"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Dakahlia",
+     "city_ar": "الدقهليه",
+     "_id": "6a0b92d267c61de082f56656"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "El Kalioubia",
+     "city_ar": "القليوبيه",
+     "_id": "6a0b92d267c61de082f56657"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Gharbia",
+     "city_ar": "الغربيه",
+     "_id": "6a0b92d267c61de082f56658"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Kafr Alsheikh",
+     "city_ar": "كفر الشيخ",
+     "_id": "6a0b92d267c61de082f56659"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Monufia",
+     "city_ar": "المنوفيه",
+     "_id": "6a0b92d267c61de082f5665a"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Sharqia",
+     "city_ar": "الشرقيه",
+     "_id": "6a0b92d267c61de082f5665b"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Ismailia",
+     "city_ar": "الاسماعيليه",
+     "_id": "6a0b92d267c61de082f5665c"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Suez",
+     "city_ar": "السويس",
+     "_id": "6a0b92d267c61de082f5665d"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Port Said",
+     "city_ar": "بور سعيد",
+     "_id": "6a0b92d267c61de082f5665e"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Damietta",
+     "city_ar": "دمياط",
+     "_id": "6a0b92d267c61de082f5665f"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Fayoum",
+     "city_ar": "الفيوم",
+     "_id": "6a0b92d267c61de082f56660"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Bani Suif",
+     "city_ar": "بني سويف",
+     "_id": "6a0b92d267c61de082f56661"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Assuit",
+     "city_ar": "اسيوط",
+     "_id": "6a0b92d267c61de082f56662"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Sohag",
+     "city_ar": "سوهاج",
+     "_id": "6a0b92d267c61de082f56663"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Menya",
+     "city_ar": "المنيا",
+     "_id": "6a0b92d267c61de082f56664"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Qena",
+     "city_ar": "قنا",
+     "_id": "6a0b92d267c61de082f56665"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Aswan",
+     "city_ar": "اسوان",
+     "_id": "6a0b92d267c61de082f56666"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Luxor",
+     "city_ar": "الاقصر",
+     "_id": "6a0b92d267c61de082f56667"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Red Sea",
+     "city_ar": "البحر الاحمر",
+     "_id": "6a0b92d267c61de082f56668"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "New Valley",
+     "city_ar": "الوادي الجديد",
+     "_id": "6a0b92d267c61de082f56669"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Giza",
+     "city_ar": "الجيزه",
+     "_id": "6a0b92d267c61de082f5666a"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "South Sinai",
+     "city_ar": "جنوب سيناء",
+     "_id": "6a0b92d267c61de082f5666b"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "North Sinai",
+     "city_ar": "شمال سيناء",
+     "_id": "6a0b92d267c61de082f5666c"
+    },
+    {
+     "country": "Egypt",
+     "country_ar": "مصر",
+     "city": "Matrouh",
+     "city_ar": "مرسي مطروح",
+     "_id": "6a0b92d267c61de082f5666d"
+    }
+   ],
+   "createdAt": "2026-05-14T18:06:14.083Z",
+   "updatedAt": "2026-05-18T22:29:38.998Z",
+   "__v": 4
+  }
+ ],
+ "shippingmethods": [
+  {
+   "_id": "6a05b022898075945d70afe7",
+   "zone_id": "6a060f16aa14dd45788dd972",
+   "name": "Standard delivery",
+   "name_ar": "التوصيل القياسي",
+   "type": "flat",
+   "is_active": true,
+   "sort_order": 0,
+   "delivery_time_min_days": 2,
+   "delivery_time_max_days": 4,
+   "base_cost": 15,
+   "min_fee": 0,
+   "max_fee": null,
+   "flat_config": {
+    "per_item_cost": 0,
+    "per_vendor_cost": 0
+   },
+   "createdAt": "2026-05-14T11:21:06.823Z",
+   "updatedAt": "2026-05-14T18:32:12.482Z",
+   "__v": 0
+  }
+ ],
+ "shippingpolicies": [
+  {
+   "_id": "6a05b022898075945d70afe8",
+   "name": "Free shipping over EGP 500",
+   "name_ar": "شحن مجاني للطلبات فوق 1000 جنيه",
+   "is_active": false,
+   "priority": 0,
+   "scope": "global",
+   "zone_id": null,
+   "applies_to": {
+    "shipping_class_ids": [],
+    "vendor_ids": [],
+    "category_ids": []
+   },
+   "condition_logic": "all",
+   "conditions": [
+    {
+     "field": "cart_total",
+     "operator": "gte",
+     "value": 1000
+    }
+   ],
+   "actions": [
+    {
+     "type": "free_shipping",
+     "value": 0
+    }
+   ],
+   "createdAt": "2026-05-14T11:21:06.831Z",
+   "updatedAt": "2026-06-23T16:53:38.003Z",
+   "__v": 1
+  }
+ ],
+ "shippingclasses": [
+  {
+   "_id": "6a05b022898075945d70afe0",
+   "name": "Light",
+   "name_ar": "خفيف",
+   "description": "Small, lightweight items.",
+   "default_handling_fee": 0,
+   "is_active": true,
+   "createdAt": "2026-05-14T11:21:06.794Z",
+   "updatedAt": "2026-05-14T11:21:06.794Z",
+   "__v": 0
+  },
+  {
+   "_id": "6a05b022898075945d70afe1",
+   "name": "Heavy",
+   "name_ar": "ثقيل",
+   "description": "Bulky or heavy items.",
+   "default_handling_fee": 0,
+   "is_active": true,
+   "createdAt": "2026-05-14T11:21:06.800Z",
+   "updatedAt": "2026-05-14T11:21:06.800Z",
+   "__v": 0
+  },
+  {
+   "_id": "6a05b022898075945d70afe2",
+   "name": "Fragile",
+   "name_ar": "قابل للكسر",
+   "description": "Items needing careful handling.",
+   "default_handling_fee": 0,
+   "is_active": true,
+   "createdAt": "2026-05-14T11:21:06.805Z",
+   "updatedAt": "2026-05-14T11:21:06.805Z",
+   "__v": 0
+  },
+  {
+   "_id": "6a05b022898075945d70afe3",
+   "name": "Perishable",
+   "name_ar": "قابل للتلف",
+   "description": "Items with a limited shelf life.",
+   "default_handling_fee": 0,
+   "is_active": true,
+   "createdAt": "2026-05-14T11:21:06.808Z",
+   "updatedAt": "2026-05-14T11:21:06.808Z",
+   "__v": 0
+  }
+ ]
+}

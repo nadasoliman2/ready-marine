@@ -1,0 +1,15 @@
+{
+  "currency": "QAR",
+  "header_phone": "+974 123 456 789",
+  "footer_phones": ["+974 123 456 789", "+974 987 654 321"],
+  "footer_emails": ["info@sayarty.com", "support@sayarty.com"],
+  "contact_email": "info@tech-oriented.digital",
+  "contact_telephone": "010155661614",
+  "contact_address": "696 El Houria St. Louran-Alexandria,Egypt",
+  "header_text_en": "Welcome to Sayarty",
+  "header_text_ar": "مرحباً بكم في سيارتي",
+  "footer_text_en": "Your trusted source for genuine and aftermarket auto parts. Quality you can count on, delivered fast.",
+  "footer_text_ar": "مصدرك الموثوق لقطع غيار السيارات الأصلية وما بعد البيع. جودة يمكنك الاعتماد عليها وتوصيل سريع.",
+  "locations_en": ["Doha, Qatar"],
+  "locations_ar": ["الدوحة، قطر"]
+}

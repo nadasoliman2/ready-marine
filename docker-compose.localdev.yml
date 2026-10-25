@@ -1,0 +1,4 @@
+# Not needed any more: the database is MongoDB Atlas (MONGO_URI in Backend/.env), which
+# a backend run natively on the host reaches directly. Kept so old commands fail loudly
+# rather than silently starting nothing.
+services: {}

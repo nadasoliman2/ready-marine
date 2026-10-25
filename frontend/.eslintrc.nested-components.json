@@ -1,0 +1,25 @@
+{
+  "root": true,
+  "parser": "next/dist/compiled/babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "sourceType": "module",
+    "allowImportExportEverywhere": true,
+    "babelOptions": { "presets": ["next/babel"], "caller": { "supportsTopLevelAwait": true } }
+  },
+  "plugins": ["react"],
+  "settings": { "react": { "version": "detect" } },
+  "rules": {
+    "react/no-unstable-nested-components": "error",
+    "no-restricted-syntax": ["error",
+      {
+        "selector": "JSXOpeningElement[name.name=/^[a-z]/] > JSXAttribute[name.name='className'] Literal[value=/(^|\\s)fixed\\s([^]*\\s)?inset-0(\\s|$)|(^|\\s)inset-0\\s([^]*\\s)?fixed(\\s|$)/]",
+        "message": "A full-screen `fixed inset-0` layer must be an <Overlay> (src/components/Overlay.jsx), not a plain element: inside a blurred or transformed parent a plain one opens off-screen."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name=/^[a-z]/] > JSXAttribute[name.name='className']:has(TemplateElement[value.raw=/(^|\\s)fixed(\\s|$)/]):has(TemplateElement[value.raw=/(^|\\s)inset-0(\\s|$)/])",
+        "message": "A full-screen `fixed inset-0` layer must be an <Overlay> (src/components/Overlay.jsx), not a plain element: inside a blurred or transformed parent a plain one opens off-screen."
+      }
+    ]
+  }
+}

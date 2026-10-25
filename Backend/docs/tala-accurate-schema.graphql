@@ -1,0 +1,2310 @@
+# Tala / Accurate Logistics — LIVE GraphQL schema (shipping-relevant subset)
+#
+# Endpoint: https://portal.talaxp.com:8443/graphql
+# Retrieved by introspection on 2026-09-13.
+#
+# DO NOT trust the published docs at https://moataz27.github.io/accuratess — they describe
+# an OLDER, SMALLER version of this API. Differences that matter:
+#   * published docs list 2 mutations; the live API has 206 (and 209 queries).
+#   * cancelShipments / savePickup / saveBarcodeBatch / trackShipment all exist live but
+#     appear nowhere in the published docs.
+#   * ShipmentInput.serviceId is REQUIRED live and absent from the published docs entirely.
+#   * ShipmentInput.recipientPhone is required in the docs but optional live; only
+#     recipientMobile is mandatory.
+#
+# TWO LAYERS OF VALIDATION — important. GraphQL `!` is the hard floor, but a Laravel
+# validation layer sits behind it and rejects MORE than the schema admits. Verified:
+# calculateShipmentFees declares customerTypeCode and senderZoneId as optional, yet fails
+# with "field is required" unless both are sent. So an unmarked field here is NOT proof
+# that it may be omitted — only a live call proves that.
+#
+# Open question: there is no waybill/AWB printing operation anywhere in the schema. The
+# only trace is ShippingSettings.waybillCode. See feature-planner/10-tala-shipping-questions.md
+#
+# This file is a filtered subset (shipping, pickups, zones, barcodes, pricing, auth). The
+# full API also carries an entire accounting/ERP module (general ledger, journal entries,
+# vouchers, invoices, manifests) that we do not touch.
+
+type Query {
+  listStatementsDropdown: [DropDownEntry]!
+  listBranchesDropdown(input: ListBranchesFilterInput): [DropDownEntry]!
+  branch(id: Int!): Branch!
+  listIntegrationRemoteZones(integrationId: Int!, parentId: String): [IntegrationRemoteData]!
+  listIntegrationRemoteServices(integrationId: Int!): [IntegrationRemoteData]!
+  lookup(id: Int!): Lookup
+  listLookupEntries(input: ListLookupEntriesFilterInput!): [LookupEntry]
+  listLookupEntriesDropdown(input: ListLookupEntriesFilterInput!): [DropDownEntry]
+  listUsersDropdown(input: ListUsersFilterInput): [DropDownEntry]!
+  user(id: Int!): User!
+  barcode(id: Int, code: String, forPickupId: Int): Barcode
+  barcodeBatch(id: Int!): BarcodeBatch
+  sumBarcodeBatches(input: ListBarcodeBatchesFilterInput!): BarcodeBatchesSum
+  listCancellationReasonsDropdown(input: ListCancellationReasonsFilterInput): [DropDownEntry]!
+  calculateConciergeRequestFees(input: CalculateConciergeRequestFeesInput!): ConciergeRequestFees!
+  listCustomersDropdown(input: ListCustomersFilterInput): [DropDownEntry]!
+  customer(id: Int!): Customer
+  customerRequest(id: Int!): CustomerRequest
+  sumPickups(input: ListPickupsFilterInput): PickupsSum
+  pickup(id: Int!): Pickup
+  pickupEntry(forPickupId: Int!, code: String!): PickupEntry
+  listPriceListsDropdown(input: ListPriceListsFilterInput): [DropDownEntry]!
+  priceList(id: Int!): PriceList
+  shipment(id: Int, code: String): Shipment
+  trackShipment(id: Int, code: String): ShipmentPublic
+  deletedShipment(id: Int): Shipment
+  calculateShipmentFees(input: CalculateShipmentFeesInput!): ShipmentFees!
+  listShipmentTypesDropdown(serviceId: Int, mobileActive: Boolean): [DropDownEntry]
+  sumShipments(input: ListShipmentsFilterInput): ShipmentsSum
+  sumShipmentsWithFilterGroup(filterId: Int!): ShipmentsSum
+  shipmentsByZoneReport(input: ListShipmentsFilterInput): ShipmentsByZoneReportData!
+  shipmentsByFeesReport(input: ListShipmentsFilterInput): ShipmentsByFeesReportData!
+  validateShipmentDeliveryInfoToken(token: String!): Boolean!
+  listShippingServicesDropdown(input: ListShippingServicesFilterInput): [DropDownEntry]!
+  shippingService(id: Int!): ShippingService!
+  listSurcharges(input: ListSurchargesInput): [Surcharge]!
+  surcharge(id: Int!): Surcharge!
+  warehousePickup(id: Int!): WarehousePickup
+  listZonesDropdown(input: ListZonesFilterInput): [DropDownEntry]
+  zone(id: Int!, parentId: Int): Zone
+  listBranches(input: ListBranchesFilterInput, first: Int!, page: Int): BranchPaginator!
+  listLookups(input: ListLookupsFilterInput, first: Int!, page: Int): LookupPaginator!
+  listUsers(input: ListUsersFilterInput, first: Int!, page: Int): UserPaginator!
+  listBarcodeBatches(input: ListBarcodeBatchesFilterInput!, first: Int!, page: Int): BarcodeBatchPaginator!
+  listCancellationReasons(input: ListCancellationReasonsFilterInput, first: Int!, page: Int): CancellationReasonPaginator!
+  listShipmentsForCollection(id: Int!, filter: ListShipmentsFilterInput, first: Int!, page: Int): ShipmentForCollectionPaginator!
+  listCustomers(input: ListCustomersFilterInput, first: Int!, page: Int): CustomerPaginator!
+  listCustomerWithNewShipments(fromDate: Date, toDate: Date, input: ListCustomersFilterInput, first: Int!, page: Int): CustomerPaginator!
+  listCustomerRequests(input: ListCustomerRequestFilterInput!, first: Int!, page: Int): CustomerRequestPaginator!
+  listShipmentsForInvoice(id: Int!, filter: ListShipmentsFilterInput, first: Int!, page: Int): ShipmentForInvoicePaginator!
+  listShipmentsForManifest(id: Int!, filter: ListShipmentsFilterInput, first: Int!, page: Int): ShipmentForManifestPaginator!
+  listShipmentsForPayment(id: Int!, filter: ListShipmentsFilterInput, first: Int!, page: Int): ShipmentForPaymentPaginator!
+  listPickups(input: ListPickupsFilterInput, first: Int!, page: Int): PickupPaginator!
+  listShipmentsForPickup(id: Int!, filter: ListShipmentsFilterInput, first: Int!, page: Int): ShipmentForPickupPaginator!
+  listPriceLists(input: ListPriceListsFilterInput, first: Int!, page: Int): PriceListPaginator!
+  listShipments(input: ListShipmentsFilterInput, first: Int!, page: Int): ShipmentPaginator!
+  listDeletedShipments(search: String, first: Int!, page: Int): ShipmentPaginator!
+  listShipmentsWithFilterGroup(filterId: Int!, first: Int!, page: Int): ShipmentPaginator!
+  listShipmentTransactions(input: ListShipmentTransactionsInput, first: Int!, page: Int): ShipmentTransactionPaginator!
+  listShippingServices(input: ListShippingServicesFilterInput, first: Int!, page: Int): ShippingServicePaginator!
+  listWarehousePickups(input: ListWarehousePickupsFilterInput, first: Int!, page: Int): WarehousePickupPaginator!
+  listZones(input: ListZonesFilterInput, first: Int!, page: Int): ZonePaginator!
+}
+
+type Mutation {
+  login(input: LoginInput!): UserWithToken!
+  disableMyUser: Boolean!
+  saveBranch(input: BranchInput!): Branch!
+  saveIntegrationZone(input: IntegrationZoneInput): Integration!
+  saveIntegrationCancellationReason(input: IntegrationCancellationReasonInput): Integration!
+  saveIntegrationService(input: IntegrationServiceInput): Integration!
+  updateLookup(input: LookupInput!): Lookup!
+  saveUser(input: UserInput!): User!
+  generateUserToken(id: Int!): String!
+  saveBarcodeBatch(input: BarcodeBatchInput!): BarcodeBatch!
+  deleteBarcodeBatch(id: Int!): Boolean!
+  saveCancellationReason(input: CancellationReasonInput!): CancellationReason!
+  exportCancellationReasons(input: ExportCancellationReasonsInput!): Boolean
+  saveCustomer(input: CustomerInput!): Customer!
+  exportCustomers(input: ExportCustomersInput!): Boolean
+  saveCustomerRequest(input: CustomerRequestInput!): CustomerRequest!
+  updateCustomerRequestStatus(input: UpdateCustomerRequestStatusInput!): CustomerRequest!
+  deleteCustomerRequest(id: Int!): CustomerRequest
+  savePickup(input: PickupInput!): Pickup!
+  reviewPickup(input: ReviewPickupInput!): Pickup!
+  updatePickupStatus(input: UpdatePickupStatusInput!): Pickup!
+  deletePickup(id: Int!): Pickup!
+  assignPickupToDeliveryAgent(input: AssignPickupToDeliveryAgentInput!): Pickup!
+  exportPickups(input: ExportPickupsInput!): Boolean
+  savePriceList(input: PriceListInput!): PriceList!
+  clonePriceList(input: ClonePriceListInput!): PriceList!
+  adjustPriceList(input: AdjustPriceListInput!): PriceList!
+  deletePriceList(id: Int!): Boolean!
+  savePriceListDestination(input: PriceListDestinationInput!): PriceListDestination!
+  deletePriceListDestination(id: Int!): Boolean!
+  savePriceListPickup(input: PriceListPickupInput!): PriceListPickup!
+  deletePriceListPickup(id: Int!): Boolean!
+  saveShipment(input: ShipmentInput!): Shipment
+  createShipmentPublic(input: ShipmentPublicInput!): ShipmentPublic
+  updateShipmentStatus(input: UpdateShipmentStatusInput!): Shipment!
+  updateShipmentSecondaryStatus(input: UpdateShipmentSecondaryStatusInput!): [Shipment]!
+  updateShipmentAdminNotes(input: UpdateShipmentAdminNotesInput!): Shipment!
+  deleteLastShipmentAction(id: Int!): Shipment!
+  deleteShipment(id: Int!): Boolean!
+  deleteBulkShipments(id: [Int!]!): Boolean!
+  importShipments(input: ImportShipmentsInput!): [ShipmentImportFields]!
+  receiveNewShipmentsInWarehouse(input: ReceiveNewShipmentInWarehouseInput!): [Shipment!]!
+  receiveUndeliveredShipmentsInWarehouse(input: ReceiveUndeliveredShipmentInWarehouseInput!): [Shipment!]!
+  unpackShipments(input: UnpackShipmentInput!): [Shipment!]!
+  cancelShipments(input: CancelShipmentsInput!): [Shipment!]!
+  exportShipments(input: ExportShipmentsInput!): Boolean
+  exportShipmentsWithFilterGroup(input: ExportShipmentFilterGroupInput!): Boolean
+  updateShipmentDeliveryInfo(input: UpdateShipmentDeliveryInfoInput!): Shipment!
+  saveShipmentFilterGroup(input: ShipmentFilterGroupInput!): FilterGroup!
+  orderDeliveryAgentShipments(ids: [Int!]!): [Shipment]!
+  saveShippingService(input: ShippingServiceInput!): ShippingService!
+  saveShippingServiceBranch(input: ServiceBranchInput!): ShippingService!
+  deleteShippingServiceBranch(id: Int!): Boolean!
+  saveSurcharge(input: SurchargeInput!): Surcharge!
+  updateSurchargeWeight(input: UpdateSurchargeWeightInput!): Surcharge!
+  saveWarehousePickup(input: WarehousePickupInput!): WarehousePickup
+  updateWarehousePickupStatus(input: UpdateWarehousePickupStatusInput!): WarehousePickup!
+  deleteWarehousePickup(id: Int!): WarehousePickup!
+  saveZone(input: ZoneInput!): Zone!
+  exportZones(input: ExportZonesInput!): Boolean
+}
+
+input AdjustPriceListInput {
+  id: Int!
+  maxFractionLength: Int!
+  weightStartFees: Float
+  weightStartFeesType: AdjustPriceListTypeCode
+  weightExtraUnitFees: Float
+  weightExtraUnitFeesType: AdjustPriceListTypeCode
+  collectionStartFees: Float
+  collectionStartFeesType: AdjustPriceListTypeCode
+  collectionExtraUnitFees: Float
+  collectionExtraUnitFeesType: AdjustPriceListTypeCode
+  returnFees: Float
+  returnFeesType: AdjustPriceListTypeCode
+}
+
+enum AdjustPriceListTypeCode {
+  FXD
+  PRCNT
+}
+
+type AlertPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Alert!]!
+}
+
+input AssignPickupToDeliveryAgentInput {
+  id: Int!
+  deliveryAgentId: Int!
+}
+
+type BankPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Bank!]!
+}
+
+type Barcode {
+  id: Int!
+  code: String!
+  batch: BarcodeBatch!
+  shipment: Shipment
+  pickup: Pickup
+  customer: Customer
+  branch: Branch
+  warehouseSection: WarehouseSection
+  createdAt: DateTime!
+  createdBy: User!
+}
+
+type BarcodeBatch {
+  id: Int!
+  date: DateTime!
+  transactionType: TransactionType!
+  customer: Customer
+  branch: Branch
+  barcodesCount: Int
+  editable: Boolean!
+  deletable: Boolean!
+  approved: Boolean!
+  createdAt: DateTime!
+  createdBy: User!
+  updatedBy: User
+  barcodes: [Barcode]
+}
+
+input BarcodeBatchInput {
+  id: Int
+  branchId: Int!
+  customerId: Int
+  transactionTypeId: Int!
+  barcodesCount: Int
+  barcodes: [String]
+}
+
+type BarcodeBatchPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [BarcodeBatch!]!
+}
+
+type BarcodeBatchesSum {
+  barcodesCount: Int!
+}
+
+type Branch {
+  id: Int!
+  code: String!
+  name: String!
+  active: Boolean!
+  main: Boolean!
+  address: String
+  phone: String
+  fax: String
+  country: Country
+  priceList: PriceList
+  warehouseSections: [WarehouseSection]
+}
+
+input BranchInput {
+  id: Int
+  code: String
+  name: String!
+  active: Boolean!
+  main: Boolean!
+  address: String
+  phone: String
+  fax: String
+  countryId: Int
+  priceListId: Int
+}
+
+type BranchPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Branch!]!
+}
+
+type BranchProductBalance {
+  branch: Branch
+  quantity: Int
+}
+
+input CalculateConciergeRequestFeesInput {
+  serviceId: Int!
+  zoneId: Int!
+  subzoneId: Int!
+  customerId: Int
+  amount: Float!
+  currencyId: Int!
+  date: Date
+  deliveryFees: Float
+  collectionFees: Float
+}
+
+input CalculateShipmentFeesInput {
+  customerTypeCode: CustomerTypeCode
+  serviceId: Int!
+  weight: Float!
+  senderZoneId: Int
+  senderSubzoneId: Int
+  recipientZoneId: Int!
+  recipientSubzoneId: Int!
+  size: BoxSizeInput
+  customerId: Int
+  price: Float!
+  priceTypeCode: ShipmentPriceTypeCode
+  paymentTypeCode: ShipmentPaymentTypeCode
+  deliveryFees: Float
+  extraWeightFees: Float
+  collectionFees: Float
+  returnFees: Float
+  surchargeIds: [Int]
+}
+
+input CancelShipmentsInput {
+  id: [Int!]!
+  cancel: Boolean!
+}
+
+type CancellationReason {
+  id: Int!
+  code: String!
+  name: String!
+  active: Boolean!
+  type: LookupEntry!
+}
+
+enum CancellationReasonExportField {
+  CODE
+  NAME
+  ACTIVE
+  TYPE
+}
+
+input CancellationReasonInput {
+  id: Int
+  code: String
+  name: String!
+  active: Boolean!
+  type: CancellationReasonTypeCode!
+}
+
+type CancellationReasonPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [CancellationReason!]!
+}
+
+enum CancellationReasonTypeCode {
+  DEX
+  RJCT
+}
+
+input ClonePriceListInput {
+  id: Int!
+  name: String!
+}
+
+type CollectionEntryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [CollectionEntry!]!
+}
+
+input CollectionEntryShipmentInput {
+  id: Int
+  collectedAmount: Float
+  commission: Float
+}
+
+type CollectionPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Collection!]!
+}
+
+type CommissionListDestinationPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [CommissionListDestination!]!
+}
+
+type CommissionListPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [CommissionList!]!
+}
+
+type ConciergeProviderPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ConciergeProvider!]!
+}
+
+type ConciergeRequestFees {
+  localAmount: Float!
+  delivery: Float!
+  collection: Float!
+  exchangeRate: Float!
+  total: Float!
+}
+
+type ConciergeRequestPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ConciergeRequest!]!
+}
+
+type ConsigneePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Consignee!]!
+}
+
+type ConversationPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Conversation!]!
+}
+
+type Country {
+  id: Int!
+  code: String!
+  name: String!
+}
+
+type CurrencyPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Currency!]!
+}
+
+type Customer {
+  id: Int!
+  code: String!
+  name: String!
+  email: String
+  warehousing: Boolean!
+  payUncollected: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  createdBy: User
+  updatedBy: User
+  postalCode: String
+  mailBox: String
+  sendDeliveryOtp: Boolean
+  active: Boolean!
+  taxable: Boolean!
+  zone: Zone!
+  subzone: Zone!
+  branch: Branch
+  bank: Bank
+  country: Country
+  address: String
+  glAccount: GLAccount
+  priceList: PriceList
+  paymentMethod: LookupEntry
+  defaultShipmentType: LookupEntry
+  defaultPriceType: LookupEntry
+  defaultOpenable: LookupEntry
+  category: LookupEntry
+  type: LookupEntry
+  phone: String
+  mobile: String!
+  accountNumber: String
+  representative: String
+  activityName: String
+  specifyShipmentCode: Boolean!
+  shareCollectedFees: Boolean!
+  latitude: Float
+  longitude: Float
+  paymentDueAmount: Float!
+  idNumber: String
+  idType: String
+  idIssueDate: Date
+  idExpiryDate: Date
+  taxCardNumber: String
+  registrationNumber: String
+  registrationDate: Date
+  identificationType: LookupEntry
+  paymentTypes: [LookupEntry]
+  users: [User]
+  paymentCycle: LookupEntry
+  paymentCycleDays: [Int]
+  newShipmentCount: Int
+  hideMobileFrom: [LookupEntry]
+  isMobileHidden: Boolean!
+  integration: Integration
+}
+
+enum CustomerCategoryCode {
+  MERCHANT
+  COMPANY
+  FACTORY
+  SUPERMARKET
+  STORE
+}
+
+enum CustomerExportField {
+  NAME
+  CODE
+  CUSTOMER_DUE
+  CREATED_AT
+  CUSTOMER_ZONE
+  CUSTOMER_SUBZONE
+  BRANCH
+  PHONE
+  MOBILE
+  EMAIL
+  ACTIVE
+}
+
+input CustomerInput {
+  id: Int
+  code: String
+  name: String!
+  active: Boolean!
+  sendDeliveryOtp: Boolean
+  warehousing: Boolean
+  hideMobileFromCode: [HideSenderMobileCode]
+  payUncollected: Boolean
+  taxable: Boolean!
+  branchId: Int
+  zoneId: Int
+  subzoneId: Int
+  address: String
+  postalCode: String
+  mailBox: String
+  phone: String
+  mobile: String!
+  email: String
+  representative: String
+  activityName: String
+  specifyShipmentCode: Boolean!
+  shareCollectedFees: Boolean!
+  latitude: Float
+  longitude: Float
+  paymentMethodCode: PaymentMethodCode
+  bankId: Int
+  accountNumber: String
+  priceListId: Int!
+  countryId: Int
+  glAccountId: Int
+  idNumber: String
+  idType: String
+  idIssueDate: Date
+  idExpiryDate: Date
+  taxCardNumber: String
+  registrationNumber: String
+  registrationDate: Date
+  identificationTypeCode: IssuerTypeCode
+  categoryCode: CustomerCategoryCode
+  typeCode: CustomerTypeCode!
+  defaultShipmentTypeCode: ShipmentTypeCode
+  defaultPriceTypeCode: ShipmentPriceTypeCode
+  defaultOpenableCode: ShipmentOpenableCode
+  paymentTypes: [ShipmentPaymentTypeCode]
+  paymentCycleCode: PaymentCycleCode
+  paymentCycleDays: [Int]
+}
+
+type CustomerPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Customer!]!
+}
+
+type CustomerRequest {
+  id: Int!
+  date: Date!
+  manifest: Manifest
+  payment: Payment
+  customer: Customer!
+  branch: Branch!
+  deliveryAgent: DeliveryAgent
+  payeeName: String!
+  type: LookupEntry!
+  status: LookupEntry!
+  deliveryType: LookupEntry!
+  notes: String
+  editable: Boolean!
+  deletable: Boolean!
+  paymentBank: Bank
+  paymentAccountNumber: String
+  createdAt: DateTime!
+  createdBy: User!
+  updatedBy: User
+}
+
+enum CustomerRequestDeliveryTypeCode {
+  OFFICE
+  DELIVERYAGENT
+  WALLET
+  BANK
+  INSTPY
+}
+
+input CustomerRequestInput {
+  id: Int
+  date: Date!
+  payeeName: String!
+  typeCode: CustomerRequestTypeCode!
+  deliveryTypeCode: CustomerRequestDeliveryTypeCode!
+  deliveryAgentId: Int
+  branchId: Int
+  customerId: Int
+  manifestId: Int
+  paymentId: Int
+  notes: String
+  paymentBankId: Int
+  paymentAccountNumber: String
+}
+
+type CustomerRequestPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [CustomerRequest!]!
+}
+
+enum CustomerRequestStatusCode {
+  NEW
+  INPROGRESS
+  DELIVERED
+  CANCELLED
+  FINISHED
+}
+
+enum CustomerRequestTypeCode {
+  PMNT
+  RTRN
+  MTRL
+}
+
+enum CustomerTypeCode {
+  MERCHANT
+  INDIVIDUAL
+  CONCIERGE
+}
+
+type DeliveryAgentClearancePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [DeliveryAgentClearance!]!
+}
+
+type DeliveryAgentPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [DeliveryAgent!]!
+}
+
+type DeliveryAgentReportPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [DeliveryAgentReport!]!
+}
+
+type DeliveryAgentReviewPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [DeliveryAgentReview!]!
+}
+
+type EPaymentTransactionPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [EPaymentTransaction!]!
+}
+
+input ExportCancellationReasonsField {
+  label: String!
+  name: CancellationReasonExportField
+}
+
+input ExportCancellationReasonsInput {
+  filters: ListCancellationReasonsFilterInput!
+  fields: [ExportCancellationReasonsField!]!
+}
+
+input ExportCustomersField {
+  label: String!
+  name: CustomerExportField
+}
+
+input ExportCustomersInput {
+  filters: ListCustomersFilterInput!
+  fields: [ExportCustomersField!]!
+}
+
+input ExportPaymentPickupEntriesField {
+  label: String!
+  name: PaymentPickupExportField
+}
+
+input ExportPaymentShipmentEntriesField {
+  label: String!
+  name: PaymentShipmentExportField
+}
+
+input ExportPickupsField {
+  label: String!
+  name: PickupExportField
+}
+
+input ExportPickupsInput {
+  filters: ListPickupsFilterInput!
+  fields: [ExportPickupsField!]!
+}
+
+input ExportShipmentFilterGroupInput {
+  filterId: Int!
+  fields: [ExportShipmentsField!]!
+}
+
+input ExportShipmentsField {
+  label: String!
+  name: ShipmentExportField
+}
+
+input ExportShipmentsInput {
+  filters: ListShipmentsFilterInput!
+  fields: [ExportShipmentsField!]!
+}
+
+input ExportWarehousePickupsField {
+  label: String!
+  name: PickupExportField
+}
+
+input ExportWarehousePickupsInput {
+  filters: ListPickupsFilterInput!
+  fields: [ExportWarehousePickupsField!]!
+}
+
+input ExportZonesField {
+  label: String!
+  name: ZoneExportField
+}
+
+input ExportZonesInput {
+  filters: ListZonesFilterInput!
+  fields: [ExportZonesField!]!
+}
+
+enum FeesChargeTypeCode {
+  SENDER
+  CONSIGNEE
+}
+
+input FilterZonesByServiceInput {
+  serviceId: Int!
+  customerId: Int
+  customerTypeCode: CustomerTypeCode
+  fromZoneId: Int
+  fromSubzoneId: Int
+}
+
+type FinancialSheetPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [FinancialSheet!]!
+}
+
+type FinancialYearPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [FinancialYear!]!
+}
+
+input ForCustomerRequestInput {
+  id: Int
+  customerId: Int!
+}
+
+type GLAccountPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [GLAccount!]!
+}
+
+type Image {
+  path: String!
+  subjectCode: String
+}
+
+input ImageInput {
+  file: Upload!
+  subjectCode: String
+}
+
+input ImportShipmentsInput {
+  file: Upload!
+  date: DateTime
+  branchId: Int
+  transactionTypeId: Int
+}
+
+type IntegrationCancellationReason {
+  integration: Integration!
+  localCancellationReason: CancellationReason!
+  remoteId: String!
+}
+
+input IntegrationCancellationReasonInput {
+  integrationId: Int!
+  localId: Int!
+  remoteId: Int
+}
+
+type IntegrationService {
+  integration: Integration!
+  localService: ShippingService!
+  remoteId: String!
+}
+
+input IntegrationServiceInput {
+  integrationId: Int!
+  localId: Int!
+  remoteId: Int
+}
+
+type IntegrationZone {
+  integration: Integration!
+  localZone: Zone!
+  remoteId: String!
+  parent: Boolean!
+}
+
+input IntegrationZoneInput {
+  integrationId: Int!
+  localId: Int!
+  remoteId: String
+  parent: Boolean
+}
+
+type InvoiceEntryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [InvoiceEntry!]!
+}
+
+type InvoicePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Invoice!]!
+}
+
+type ItemPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Item!]!
+}
+
+type JournalEntryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [JournalEntry!]!
+}
+
+type JournalEntryRecordPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [JournalEntryRecord!]!
+}
+
+type JournalTypePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [JournalType!]!
+}
+
+type LanguagePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Language!]!
+}
+
+input ListBarcodeBatchesFilterInput {
+  transactionTypeCode: [TransactionTypeCode]
+  branchId: Int
+  barcode: [String]
+  customerId: Int
+  fromDate: Date
+  toDate: Date
+  approved: Boolean
+}
+
+input ListBranchesFilterInput {
+  name: String
+  main: Boolean
+  active: Boolean
+  all: Boolean!
+  countryId: Int
+}
+
+input ListCancellationReasonsFilterInput {
+  type: CancellationReasonTypeCode
+  name: String
+  active: Boolean
+}
+
+input ListCustomerRequestFilterInput {
+  payeeName: String
+  statusCode: CustomerRequestStatusCode
+  deliveryTypeCode: CustomerRequestDeliveryTypeCode
+  typeCode: CustomerRequestTypeCode!
+  deliveryAgentId: Int
+  branchId: Int
+  customerId: Int
+  manifestId: Int
+  paymentId: Int
+  fromDate: Date
+  toDate: Date
+  new: Boolean
+}
+
+input ListCustomersFilterInput {
+  code: String
+  name: String
+  phone: String
+  email: String
+  active: Boolean
+  priceListId: Int
+  zoneId: Int
+  subzoneId: Int
+  branchId: IntOrNull
+  withDue: DueTypeCode
+  warehousing: Boolean
+  shareCollectedFees: Boolean
+  createdFrom: Date
+  createdTo: Date
+  paymentTypes: [ShipmentPaymentTypeCode]
+  typeCode: [CustomerTypeCode]
+  paymentCycleCode: PaymentCycleCode
+  paymentCycleDay: Int
+  paymentCycleIn: Date
+  paymentMethodCode: PaymentMethodCode
+  bankId: Int
+  accountNumber: String
+  hasAccountManager: Boolean
+}
+
+input ListLookupEntriesFilterInput {
+  code: String!
+  active: Boolean
+  mobileActive: Boolean
+}
+
+input ListLookupsFilterInput {
+  code: String
+  name: String
+}
+
+input ListPickupsFilterInput {
+  code: String
+  statusCode: PickupStatusCode
+  deliveryAgentId: Int
+  customerId: Int
+  branchId: Int
+  fromDate: Date
+  toDate: Date
+  forPaymentId: Int
+  acceptanceCode: [PickupAcceptanceCode]
+  new: Boolean
+}
+
+input ListPriceListsFilterInput {
+  code: String
+  name: String
+  customerTypeCode: CustomerTypeCode
+  active: Boolean
+}
+
+input ListShipmentTransactionsInput {
+  transactionType: [TransactionTypeCode]
+  deliveryAgentId: Int
+  fromDate: Date
+  toDate: Date
+  shipmentCode: [String]
+  statusCode: TransactionStatusCode
+  customerId: [Int]
+  branchId: Int
+  userId: Int
+}
+
+input ListShipmentsFilterInput {
+  id: [Int]
+  code: [String]
+  search: String
+  refNumber: [String]
+  typeCode: ShipmentTypeCode
+  paymentTypeCode: ShipmentPaymentTypeCode
+  customerTypeCode: CustomerTypeCode
+  branchId: Int
+  originBranchId: Int
+  serviceId: Int
+  customerId: [Int]
+  userId: Int
+  inDeliveryAgentCustody: DeliveryAgentCustodyInput
+  senderZoneId: [Int]
+  senderSubzoneId: [Int]
+  recipientPhone: [String]
+  recipientZoneId: [Int]
+  recipientSubzoneId: [Int]
+  date: DateFilterInput
+  lastTransactionDate: DateFilterInput
+  deliveredOrReturnedDate: DateFilterInput
+  statusCode: [ShipmentStatusCode]
+  secondaryStatusId: [Int]
+  deliveryTypeCode: ShipmentDeliveryTypeCode
+  returnTypeCode: ShipmentReturnTypeCode
+  pendingCustomerAdjusting: Boolean
+  pendingCustomerPayment: Boolean
+  notDelivered: Boolean
+  collected: Boolean
+  paid: Boolean
+  delivered: Boolean
+  inWarehouse: Boolean
+  forUnpacking: Boolean
+  pendingCollection: Boolean
+  lastDeliveryAgentId: Int
+  deliveryBefore: Date
+  sectionId: Int
+  hasProducts: Boolean
+  new: Boolean
+  cancelled: Boolean
+  routeId: [Int]
+  collectionMethod: CollectionMethodCode
+}
+
+input ListShippingServicesFilterInput {
+  customerTypeCode: CustomerTypeCode
+  customerId: Int
+  active: Boolean
+}
+
+input ListSurchargesInput {
+  name: String
+  mandatory: Boolean
+  active: Boolean
+}
+
+input ListUsersFilterInput {
+  username: String
+  active: Boolean
+  roleId: Int
+  accountId: Int
+}
+
+input ListWarehousePickupsFilterInput {
+  code: String
+  statusCode: PickupStatusCode
+  deliveryAgentId: Int
+  customerId: Int
+  branchId: Int
+  fromDate: Date
+  toDate: Date
+}
+
+input ListZonesFilterInput {
+  name: String
+  parentId: Int
+  countryId: Int
+  branchId: Int
+  active: Boolean
+  service: FilterZonesByServiceInput
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+  rememberMe: Boolean!
+  fcmToken: String
+}
+
+type Lookup {
+  id: Int!
+  code: String!
+  name: String!
+  entries: [LookupEntry]
+}
+
+type LookupEntry {
+  id: Int!
+  code: String!
+  name: String!
+  active: Boolean
+  weight: Int!
+  lookup: Lookup!
+  mobileActive: Boolean
+}
+
+input LookupEntryInput {
+  id: Int!
+  name: String!
+  active: Boolean!
+  weight: Int!
+  mobileActive: Boolean!
+}
+
+input LookupInput {
+  id: Int!
+  entries: [LookupEntryInput!]!
+}
+
+type LookupPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Lookup!]!
+}
+
+type ManifestEntryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ManifestEntry!]!
+}
+
+type ManifestPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Manifest!]!
+}
+
+type MessagePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Message!]!
+}
+
+type NotificationPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Notification!]!
+}
+
+type PaginatorInfo {
+  count: Int!
+  currentPage: Int!
+  firstItem: Int
+  hasMorePages: Boolean!
+  lastItem: Int
+  lastPage: Int!
+  perPage: Int!
+  total: Int!
+}
+
+type PaymentEntryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [PaymentEntry!]!
+}
+
+input PaymentEntryPickupInput {
+  id: Int
+  amount: Float
+}
+
+input PaymentEntryShipmentInput {
+  id: Int
+  amount: Float
+}
+
+type PaymentPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Payment!]!
+}
+
+enum PaymentPickupExportField {
+  CODE
+  DATE
+  TIME_FROM
+  TIME_TO
+  CUSTOMER_NOTES
+  DELIVERY_AGENT_NOTES
+  SHIPMENTS_COUNT
+  PICKED_COUNT
+  STATUS
+  VEHICLE
+  BRANCH
+  CUSTOMER
+  DELIVERY_AGENT
+  PAID_AMOUNT
+}
+
+enum PaymentShipmentExportField {
+  CODE
+  DATE
+  STATUS
+  BRANCH
+  ORIGIN_BRANCH
+  SERVICE
+  SENDER_NAME
+  SENDER_ZONE
+  SENDER_SUBZONE
+  REFERENCE_NUMBER
+  RECIPIENT_NAME
+  RECIPIENT_ZONE
+  RECIPIENT_SUBZONE
+  RECIPIENT_ADDRESS
+  RECIPIENT_PHONE
+  RECIPIENT_MOBILE
+  DESCRIPTION
+  WEIGHT
+  PIECES_COUNT
+  PAYMENT_TYPE
+  PRICE
+  PRICE_TYPE
+  FEES
+  NET_AMOUNT
+  TOTAL_AMOUNT
+  DELIVERY_TYPE
+  RETURN_TYPE
+  DELIVERED_AMOUNT
+  COLLECTED_FEES
+  CUSTOMER_DUE
+  DELIVERY_AGENT
+  COLLECTED
+  PAID
+  NOTES
+  OPENABLE
+  CUSTOMER_CODE
+  CUSTOMER_NAME
+  CANCELLATION_REASON
+  RETURN_DUE_FEES
+  PAID_AMOUNT
+  TYPE
+  ATTEMPTS
+  ADMIN_NOTES
+}
+
+type Pickup {
+  id: Int!
+  code: String!
+  date: DateTime!
+  timeFrom: Time
+  timeTo: Time
+  notes: String
+  deliveryAgentNotes: String
+  shipmentsCount: Int
+  pickedCount: Int
+  editable: Boolean!
+  deletable: Boolean!
+  acceptance: LookupEntry!
+  paidToDeliveryAgent: Boolean!
+  createdAt: DateTime
+  updatedAt: DateTime
+  status: LookupEntry!
+  vehicle: LookupEntry
+  branch: Branch!
+  customer: Customer!
+  deliveryAgent: DeliveryAgent
+  transactionType: TransactionType!
+  entries: [PickupEntry]
+  createdBy: User!
+  updatedBy: User
+  deliveryCommission: Float!
+  payment: Payment
+  commissionAmountEditable: Boolean!
+}
+
+enum PickupAcceptanceCode {
+  ACCEPTED
+  PENDING
+  REJECTED
+}
+
+input PickupEntryInput {
+  id: Int!
+  sectionId: Int
+  type: PickupEntryTypeCode!
+}
+
+enum PickupEntryTypeCode {
+  SHIPMENT
+  BARCODE
+}
+
+enum PickupExportField {
+  CODE
+  DATE
+  TIME_FROM
+  TIME_TO
+  CUSTOMER_NOTES
+  DELIVERY_AGENT_NOTES
+  SHIPMENTS_COUNT
+  PICKED_COUNT
+  STATUS
+  VEHICLE
+  BRANCH
+  CUSTOMER
+  DELIVERY_AGENT
+}
+
+input PickupInput {
+  id: Int
+  code: String
+  date: DateTime
+  timeFrom: Time
+  timeTo: Time
+  shipmentsCount: Int
+  notes: String
+  branchId: Int
+  customerId: Int
+  transactionTypeId: Int
+  deliveryAgentId: Int
+  vehicleCode: PickupVehicleCode
+  entries: [PickupEntryInput]
+}
+
+type PickupPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Pickup!]!
+}
+
+enum PickupStatusCode {
+  NEW
+  WRK
+  CXL
+  PKD
+  DON
+}
+
+enum PickupVehicleCode {
+  BIKE
+  CAR
+}
+
+type PickupsSum {
+  shipmentsCount: Float!
+  pickedCount: Int!
+  deliveryCommission: Float!
+}
+
+type PriceList {
+  id: Int!
+  code: String!
+  name: String!
+  description: String
+  active: Boolean!
+  default: Boolean!
+  customerType: LookupEntry
+  pickups: [PriceListPickup]
+  branches: [Branch]
+}
+
+type PriceListDestination {
+  id: Int!
+  zone: Zone!
+  subzone: Zone
+  collectionUpTo: Float!
+  collectionStartFees: Float!
+  collectionExtraUnit: Float!
+  collectionExtraUnitFees: Float!
+  weightStartFees: Float!
+  weightUpTo: Float
+  weightExtraUnit: Float
+  weightExtraUnitFees: Float
+  returnFees: Float
+}
+
+input PriceListDestinationInput {
+  id: Int
+  priceListPickupId: Int!
+  zoneId: Int!
+  subzoneId: Int
+  returnFees: Float
+  weightUpTo: Float
+  weightStartFees: Float!
+  weightExtraUnit: Float
+  weightExtraUnitFees: Float
+  collectionUpTo: Float!
+  collectionStartFees: Float!
+  collectionExtraUnit: Float!
+  collectionExtraUnitFees: Float!
+}
+
+input PriceListInput {
+  id: Int
+  code: String
+  name: String!
+  description: String
+  active: Boolean!
+  default: Boolean!
+  customerTypeCode: CustomerTypeCode!
+}
+
+type PriceListPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [PriceList!]!
+}
+
+type PriceListPickup {
+  id: Int!
+  zone: Zone
+  subzone: Zone
+  services: [ShippingService]!
+  destinations: [PriceListDestination]
+}
+
+input PriceListPickupInput {
+  id: Int
+  priceListId: Int!
+  zoneId: Int
+  subzoneId: Int
+  copyDestinationsFromId: Int
+  serviceIds: [Int!]!
+}
+
+type ProductPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Product!]!
+}
+
+type ProductTransactionPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ProductTransaction!]!
+}
+
+input ReceiveNewShipmentInWarehouseInput {
+  id: [Int!]!
+  sectionId: Int
+  sendWhatsappMessage: Boolean
+}
+
+input ReceiveUndeliveredShipmentInWarehouseInput {
+  id: [Int!]!
+  sectionId: Int
+  sendWhatsappMessage: Boolean
+}
+
+type RegistrationPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Registration!]!
+}
+
+input ReviewPickupInput {
+  id: Int!
+  acceptanceCode: PickupAcceptanceCode
+}
+
+type RolePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Role!]!
+}
+
+type RoutePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Route!]!
+}
+
+type SafePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Safe!]!
+}
+
+type SecondaryStatusPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [SecondaryStatus!]!
+}
+
+type SequencePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Sequence!]!
+}
+
+type ServiceBranch {
+  id: Int!
+  service: ShippingService!
+  originBranch: Branch!
+  originDeliveryAccount: GLAccount
+  originDeliveryShare: Float
+  originCollectionAccount: GLAccount
+  originCollectionShare: Float
+  originCommissionAccount: GLAccount
+  originCommissionShare: Float
+  actionBranch: Branch!
+  actionDeliveryAccount: GLAccount
+  actionDeliveryShare: Float
+  actionCollectionAccount: GLAccount
+  actionCollectionShare: Float
+  actionCommissionAccount: GLAccount
+  actionCommissionShare: Float
+  createdAt: DateTime!
+}
+
+input ServiceBranchInput {
+  id: Int
+  serviceId: Int!
+  originBranchId: Int!
+  originDeliveryAccountId: Int!
+  originDeliveryShare: Float!
+  originCollectionAccountId: Int!
+  originCollectionShare: Float!
+  originCommissionAccountId: Int!
+  originCommissionShare: Float!
+  actionBranchId: Int!
+  actionDeliveryAccountId: Int!
+  actionCollectionAccountId: Int!
+  actionCommissionAccountId: Int!
+}
+
+type Shipment {
+  id: Int!
+  code: String!
+  type: LookupEntry!
+  openable: LookupEntry!
+  date: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deliveryDate: Date
+  deliveredOrReturnedDate: DateTime
+  description: String
+  weight: Float!
+  piecesCount: Int!
+  collected: Boolean!
+  paidToCustomer: Boolean!
+  paidToDeliveryAgent: Boolean!
+  editable: Boolean!
+  trackingUrl: String!
+  deletable: Boolean!
+  hasProducts: Boolean!
+  inWarehouse: Boolean!
+  unpacked: Boolean!
+  refNumber: String
+  notes: String
+  adminNotes: String
+  returnPiecesCount: Int
+  paymentType: LookupEntry!
+  priceType: LookupEntry!
+  deliveryType: LookupEntry
+  returnType: LookupEntry
+  transactionType: TransactionType!
+  branch: Branch!
+  originBranch: Branch!
+  status: LookupEntry!
+  secondaryStatus: SecondaryStatus
+  returnStatus: LookupEntry
+  customer: Customer!
+  lastDeliveryAgent: DeliveryAgent
+  lastTransaction: ShipmentTransaction
+  cancellationReason: CancellationReason
+  size: BoxSize!
+  transactions: [ShipmentTransaction]!
+  service: ShippingService!
+  pickup: Pickup
+  conversation: Conversation
+  manifests: [Manifest]
+  invoice: Invoice
+  deliveryCalls: [DeliveryCall]
+  history: [Shipment!]!
+  createdBy: User
+  updatedBy: User
+  warehouseSection: WarehouseSection
+  shipmentProducts: [ShipmentProduct]
+  customerType: LookupEntry!
+  attempts: Int
+  cancellable: Boolean!
+  cancelled: Boolean!
+  collectionMethod: LookupEntry
+  price: Float!
+  amount: Float!
+  deliveryFees: Float!
+  extraWeightFees: Float!
+  collectionFees: Float!
+  totalAmount: Float!
+  deliveredAmount: Float!
+  returningDueFees: Float!
+  returnedValue: Float!
+  allDueFees: Float!
+  collectedFees: Float!
+  customerDue: Float!
+  collectedAmount: Float!
+  pendingCollectionAmount: Float!
+  returnFees: Float!
+  postFees: Float!
+  tax: Float!
+  deliveryCommission: Float
+  eCollectionAmount: Float!
+  recipientName: String
+  recipientPhone: String
+  recipientMobile: String!
+  recipientZone: Zone!
+  recipientSubzone: Zone!
+  recipientAddress: String!
+  recipientPostalCode: String
+  recipientLatitude: Float
+  recipientLongitude: Float
+  senderName: String
+  senderPhone: String
+  senderMobile: String
+  senderZone: Zone
+  senderSubzone: Zone
+  senderAddress: String
+  senderPostalCode: String
+  senderLatitude: Float
+  senderLongitude: Float
+  deliveryOtp: String
+  hasDeliveryOtp: Boolean!
+  images: [Image]
+  payment: Payment
+  collection: Collection
+  integrationEntries: [IntegrationEntry]!
+  paymentTransaction: EPaymentTransaction
+  shipmentSurcharges: [ShipmentSurcharge]
+}
+
+enum ShipmentDeliveryTypeCode {
+  FD
+  PD
+}
+
+enum ShipmentExportField {
+  CODE
+  DATE
+  STATUS
+  SECONDARY_STATUS
+  BRANCH
+  ORIGIN_BRANCH
+  SERVICE
+  SENDER_NAME
+  SENDER_ZONE
+  SENDER_SUBZONE
+  SENDER_POSTAL_CODE
+  REFERENCE_NUMBER
+  RECIPIENT_NAME
+  RECIPIENT_ZONE
+  RECIPIENT_SUBZONE
+  RECIPIENT_ADDRESS
+  RECIPIENT_POSTAL_CODE
+  RECIPIENT_PHONE
+  RECIPIENT_MOBILE
+  DESCRIPTION
+  WEIGHT
+  PIECES_COUNT
+  PAYMENT_TYPE
+  PRICE
+  PRICE_TYPE
+  FEES
+  NET_AMOUNT
+  TOTAL_AMOUNT
+  DELIVERY_TYPE
+  RETURN_TYPE
+  DELIVERED_AMOUNT
+  COLLECTED_FEES
+  CUSTOMER_DUE
+  DELIVERY_AGENT
+  COLLECTED
+  PAID
+  NOTES
+  ADMIN_NOTES
+  OPENABLE
+  CUSTOMER_CODE
+  CUSTOMER_NAME
+  CANCELLATION_REASON
+  RETURN_DUE_FEES
+  RETURNED_VALUE
+  TYPE
+  DELIVERED_OR_RETURNED_DATE
+  DELIVERY_DATE
+  DELIVERY_COMMISSION
+  COLLECTION_CODE
+  CUSTOMER_PAYMENT_CODE
+  INVOICE_CODE
+  ATTEMPTS
+  CANCELLED
+  LAST_TRANSACTION_DATE
+}
+
+type ShipmentFees {
+  amount: Float!
+  delivery: Float!
+  weight: Float!
+  collection: Float!
+  post: Float
+  tax: Float
+  return: Float!
+  total: Float!
+  surcharges: [ShipmentFeesSurcharge]
+}
+
+type ShipmentFeesSurcharge {
+  surcharge: Surcharge!
+  amount: Float!
+}
+
+input ShipmentFilterGroupInput {
+  groupInput: FilterGroupInput!
+  listInput: ListShipmentsFilterInput!
+}
+
+type ShipmentForCollection {
+  shipment: Shipment!
+  amount: Float!
+  amountEditable: Boolean!
+  commission: Float
+  commissionEditable: Boolean!
+}
+
+type ShipmentForCollectionPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentForCollection!]!
+}
+
+type ShipmentForInvoice {
+  shipment: Shipment!
+  amount: Float!
+}
+
+type ShipmentForInvoicePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentForInvoice!]!
+}
+
+type ShipmentForManifest {
+  shipment: Shipment!
+}
+
+type ShipmentForManifestPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentForManifest!]!
+}
+
+type ShipmentForPayment {
+  shipment: Shipment!
+  amount: Float!
+  amountEditable: Boolean!
+}
+
+type ShipmentForPaymentPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentForPayment!]!
+}
+
+type ShipmentForPickup {
+  shipment: Shipment!
+}
+
+type ShipmentForPickupPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentForPickup!]!
+}
+
+enum ShipmentFormTypeCode {
+  SIMPLE
+  ADVANCED
+}
+
+type ShipmentImportFields {
+  fields: [ImportField!]!
+  products: [[ImportField]]!
+}
+
+input ShipmentInput {
+  id: Int
+  code: String
+  date: DateTime
+  deliveryDate: Date
+  serviceId: Int!
+  customerId: Int
+  transactionTypeId: Int
+  originBranchId: Int
+  branchId: Int
+  description: String
+  refNumber: String
+  weight: Float
+  size: BoxSizeInput
+  piecesCount: Int
+  returnPiecesCount: Int
+  price: Float
+  notes: String
+  typeCode: ShipmentTypeCode
+  priceTypeCode: ShipmentPriceTypeCode
+  paymentTypeCode: ShipmentPaymentTypeCode
+  openableCode: ShipmentOpenableCode
+  shipmentProducts: [ShipmentProductInput]
+  deliveryCommission: Float
+  senderName: String
+  senderZoneId: Int
+  senderSubzoneId: Int
+  senderPhone: String
+  senderMobile: String
+  senderAddress: String
+  senderPostalCode: String
+  senderLatitude: Float
+  senderLongitude: Float
+  recipientName: String
+  recipientZoneId: Int!
+  recipientSubzoneId: Int!
+  recipientPhone: String
+  recipientMobile: String!
+  recipientAddress: String!
+  recipientPostalCode: String
+  recipientLatitude: Float
+  recipientLongitude: Float
+  deliveryFees: Float
+  extraWeightFees: Float
+  collectionFees: Float
+  returnFees: Float
+  surchargeIds: [Int]
+}
+
+enum ShipmentOpenableCode {
+  Y
+  N
+}
+
+type ShipmentPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Shipment!]!
+}
+
+enum ShipmentPaymentTypeCode {
+  COLC
+  PAID
+  CASH
+  CRDT
+  VISA
+}
+
+enum ShipmentPriceTypeCode {
+  EXCLD
+  INCLD
+}
+
+type ShipmentProduct {
+  id: Int!
+  product: Product!
+  shipment: Shipment!
+  price: Float!
+  weight: Float!
+  totalPrice: Float
+  delivered: Int
+  returned: Int
+  quantity: Int!
+  type: ShipmentProductTypeCode
+}
+
+input ShipmentProductInput {
+  id: Int
+  productId: Int!
+  price: Float!
+  quantity: Int!
+  typeCode: ShipmentProductTypeCode
+}
+
+enum ShipmentProductTypeCode {
+  IN
+  OUT
+}
+
+type ShipmentPublic {
+  id: Int!
+  code: String!
+  date: DateTime!
+  weight: Float!
+  description: String
+  piecesCount: Int!
+  eCollectionAmount: Float!
+  collected: Boolean!
+  status: LookupEntry!
+  recipientName: String
+  recipientAddress: String!
+  recipientZone: Zone!
+  recipientSubzone: Zone!
+  transactions: [ShipmentTransactionPublic]!
+}
+
+input ShipmentPublicInput {
+  serviceId: Int!
+  weight: Float
+  size: BoxSizeInput
+  notes: String
+  feesChargeTypeCode: FeesChargeTypeCode!
+  senderName: String
+  senderZoneId: Int
+  senderSubzoneId: Int
+  senderPhone: String
+  senderMobile: String
+  senderAddress: String
+  senderPostalCode: String
+  senderLatitude: Float
+  senderLongitude: Float
+  recipientName: String
+  recipientZoneId: Int!
+  recipientSubzoneId: Int!
+  recipientPhone: String
+  recipientMobile: String!
+  recipientAddress: String!
+  recipientPostalCode: String
+  recipientLatitude: Float
+  recipientLongitude: Float
+}
+
+enum ShipmentReturnTypeCode {
+  FFC
+  FPC
+  WFDF
+  WODF
+  WPDF
+  PRTS
+}
+
+enum ShipmentStatusCode {
+  PKR
+  PKM
+  PKH
+  PKD
+  RJCT
+  BMR
+  BMT
+  PRP
+  PRPD
+  RITS
+  STD
+  OTD
+  DTR
+  DEX
+  HTR
+  RTS
+  RCV
+  OTR
+  RTRN
+}
+
+type ShipmentSurcharge {
+  surcharge: Surcharge!
+  weight: Int!
+  amount: Float!
+}
+
+type ShipmentTransaction {
+  id: Int!
+  code: String
+  status: LookupEntry!
+  createdAt: DateTime!
+  date: DateTime!
+  shipmentStatus: LookupEntry!
+  deliveryType: LookupEntry
+  cancellationReason: CancellationReason
+  trxType: TransactionType
+  branch: Branch!
+  deliveryAgent: DeliveryAgent
+  returnType: LookupEntry
+  fees: Float!
+  deliverdAmount: Float!
+  shipment: Shipment!
+  manifest: Manifest
+  manifestEntry: ManifestEntry
+  createdBy: User
+  position: DeliveryAgentPosition
+}
+
+type ShipmentTransactionPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentTransaction!]!
+}
+
+type ShipmentTransactionPublic {
+  id: Int!
+  date: DateTime!
+  shipmentStatus: LookupEntry!
+}
+
+enum ShipmentTypeCode {
+  FDP
+  PDP
+  PTP
+  RTS
+}
+
+enum ShipmentUpdateBranchCode {
+  ORIGIN
+  CURRENT
+  BOTH
+}
+
+type ShipmentsByFeesReportData {
+  sum: ShipmentsByFeesReportSum!
+  records: ShipmentsByFeesReportEntryPaginator!
+}
+
+type ShipmentsByFeesReportEntry {
+  fees: Float!
+  feesSum: Float!
+  shipmentsCount: Int!
+}
+
+type ShipmentsByFeesReportEntryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentsByFeesReportEntry!]!
+}
+
+type ShipmentsByFeesReportSum {
+  shipmentsCount: String!
+  fees: Float!
+}
+
+type ShipmentsByZoneReportData {
+  sum: ShipmentsByZoneReportSum!
+  records: ShipmentsByZoneReportEntryPaginator!
+}
+
+type ShipmentsByZoneReportEntry {
+  zoneId: Int!
+  zoneName: String
+  shipmentsCount: Int!
+  fees: Float!
+}
+
+type ShipmentsByZoneReportEntryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShipmentsByZoneReportEntry!]!
+}
+
+type ShipmentsByZoneReportSum {
+  shipmentsCount: String!
+  fees: Float!
+}
+
+type ShipmentsSum {
+  price: Float
+  allDueFees: Float
+  deliveredAmount: Float
+  collectedFees: Float
+  pendingCollectionAmount: Float
+  collectedAmount: Float
+  amount: Float
+  totalAmount: Float
+  customerDue: Float
+  customerDueCredit: Float
+  customerDueDebit: Float
+  returningDueFees: Float
+  deliveryCommission: Float
+}
+
+type ShippingService {
+  id: Int!
+  code: String!
+  name: String!
+  days: Int!
+  egsCode: String
+  egsUnitOfMeasure: WeightUnitCode
+  active: Boolean!
+  branch: Branch
+  commissionAccount: GLAccount
+  deliveryAccount: GLAccount
+  collectionAccount: GLAccount
+  shipmentTypes: [LookupEntry]
+  serviceBranches: [ServiceBranch]
+}
+
+input ShippingServiceInput {
+  id: Int
+  code: String
+  name: String!
+  active: Boolean!
+  days: Int!
+  egsCode: String
+  egsUnitOfMeasure: WeightUnitCode
+  branchId: Int
+  deliveryAccountId: Int
+  collectionAccountId: Int
+  commissionAccountId: Int
+  shipmentTypes: [ShipmentTypeCode]
+}
+
+type ShippingServicePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [ShippingService!]!
+}
+
+type SubsidiaryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Subsidiary!]!
+}
+
+type SupportCategoryPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [SupportCategory!]!
+}
+
+type Surcharge {
+  id: Int!
+  weight: Int!
+  name: String!
+  amount: Float!
+  amountType: LookupEntry!
+  mandatory: Boolean!
+  active: Boolean!
+}
+
+enum SurchargeAmountTypeCode {
+  FIXED
+  PERCENT
+  CUMULATIVE
+}
+
+input SurchargeInput {
+  id: Int
+  name: String!
+  amount: Float!
+  amountTypeCode: SurchargeAmountTypeCode!
+  mandatory: Boolean!
+  active: Boolean!
+}
+
+type TeamPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Team!]!
+}
+
+type TicketPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Ticket!]!
+}
+
+type TransactionTypePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [TransactionType!]!
+}
+
+input UnpackShipmentInput {
+  id: [Int!]!
+}
+
+input UpdateCustomerRequestStatusInput {
+  id: Int!
+  statusCode: CustomerRequestStatusCode!
+}
+
+input UpdatePickupStatusInput {
+  id: Int!
+  statusCode: PickupStatusCode!
+  pickedUp: Int
+  notes: String
+  sendWhatsappMessage: Boolean
+}
+
+input UpdateShipmentAdminNotesInput {
+  id: Int!
+  adminNotes: String
+}
+
+input UpdateShipmentDeliveryInfoInput {
+  token: String!
+  recipientLatitude: Float
+  recipientLongitude: Float
+  deliveryDate: Date
+}
+
+input UpdateShipmentSecondaryStatusInput {
+  id: [Int!]!
+  statusId: Int
+}
+
+input UpdateShipmentStatusInput {
+  id: Int
+  remoteShipmentId: String
+  statusCode: ShipmentStatusCode!
+  deliveryTypeCode: ShipmentDeliveryTypeCode
+  fees: Float
+  deliveredAmount: Float
+  deliveredProducts: [DeliveredProduct]
+  cancellationReasonId: Int
+  returnTypeCode: ShipmentReturnTypeCode
+  notes: String
+  deliveryOtp: String
+  latitude: Float
+  longitude: Float
+  deliveryDate: Date
+  images: [ImageInput]
+}
+
+input UpdateSurchargeWeightInput {
+  id: Int!
+  weight: Int!
+}
+
+input UpdateWarehousePickupStatusInput {
+  id: Int!
+  statusCode: PickupStatusCode!
+  products: [ProductsSections]
+  notes: String
+}
+
+type User {
+  id: Int!
+  username: String!
+  active: Boolean!
+  isSuper: Boolean!
+  editable: Boolean!
+  effectiveTo: DateTime
+  userBranches: [UserBranch]!
+  account: Account
+  roles: [Role!]!
+  permissions: [Permission]!
+  preferences: [Preference]!
+}
+
+type UserBranch {
+  user: User!
+  branch: Branch!
+  default: Boolean!
+}
+
+input UserBranchInput {
+  branchId: Int!
+  isDefault: Boolean!
+}
+
+input UserInput {
+  id: Int
+  username: String!
+  password: String
+  effectiveTo: DateTime
+  roles: [Int!]!
+  accountId: Int
+  active: Boolean!
+  branches: [UserBranchInput]
+}
+
+type UserLogin {
+  id: Int!
+  user: User!
+  language: Language!
+  osUser: String
+  device: String
+  ip: String!
+  fcmToken: String
+  loggedInAt: DateTime!
+  expiresAt: DateTime
+}
+
+type UserPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [User!]!
+}
+
+type UserWithToken {
+  user: User!
+  token: String!
+  expiresAt: DateTime
+}
+
+type VoucherPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Voucher!]!
+}
+
+type WarehouseManifestPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [WarehouseManifest!]!
+}
+
+type WarehouseManifestProductPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [WarehouseManifestProduct!]!
+}
+
+type WarehousePickup {
+  id: Int!
+  code: String!
+  date: DateTime!
+  timeFrom: Time
+  timeTo: Time
+  notes: String
+  deliveryAgentNotes: String
+  editable: Boolean!
+  deletable: Boolean!
+  createdAt: DateTime
+  status: LookupEntry!
+  vehicle: LookupEntry
+  branch: Branch!
+  customer: Customer!
+  deliveryAgent: DeliveryAgent
+  manifest: WarehouseManifest
+  transactionType: TransactionType!
+  pickupProducts: [WarehousePickupProduct]
+  productsCount: Int!
+  createdBy: User!
+  updatedBy: User
+}
+
+input WarehousePickupInput {
+  id: Int
+  code: String
+  date: DateTime
+  timeFrom: Time
+  timeTo: Time
+  notes: String
+  branchId: Int
+  customerId: Int
+  transactionTypeId: Int
+  deliveryAgentId: Int
+  vehicleCode: PickupVehicleCode
+  pickupProducts: [WarehousePickupProductInput]
+}
+
+type WarehousePickupPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [WarehousePickup!]!
+}
+
+type WarehousePickupProduct {
+  product: Product!
+  pickup: WarehousePickup!
+  quantity: Int!
+  createdAt: DateTime!
+}
+
+input WarehousePickupProductInput {
+  productId: Int!
+  quantity: Int!
+}
+
+type WarehouseSectionPaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [WarehouseSection!]!
+}
+
+type Zone {
+  id: Int!
+  code: String!
+  name: String!
+  parent: Zone
+  active: Boolean
+  branch: Branch
+  children: [Zone]
+}
+
+enum ZoneExportField {
+  ID
+  CODE
+  NAME
+  ACTIVE
+  PARENT
+}
+
+input ZoneInput {
+  id: Int
+  code: String
+  name: String!
+  active: Boolean!
+  parentId: Int
+  branchId: Int
+}
+
+type ZonePaginator {
+  paginatorInfo: PaginatorInfo!
+  data: [Zone!]!
+}

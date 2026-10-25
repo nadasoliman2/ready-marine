@@ -1,0 +1,1065 @@
+[
+  {
+    "category": "Spare Parts",
+    "brand": "suzuki marine",
+    "title_en": "Suzuki DF140A Four-Stroke Outboard Motor",
+    "title_ar": "موتور أوتبورد سوزوكي DF140A رباعي الأشواط",
+    "subtitle_en": "140 HP • Lean Burn • 20\" Shaft",
+    "subtitle_ar": "140 حصان • احتراق اقتصادي • عمود 20 بوصة",
+    "price": 585000,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Suzuki_outboard_motor%2C_IAA_2017%2C_Frankfurt_%281Y7A2266%29.jpg/960px-Suzuki_outboard_motor%2C_IAA_2017%2C_Frankfurt_%281Y7A2266%29.jpg"
+    ],
+    "compatible": [],
+    "sku": "SZK-DF140A-L",
+    "part_number": "DF140ATL",
+    "discount": null,
+    "description_en": "Fuel-efficient 140 HP four-stroke outboard with Suzuki Lean Burn control, offset driveshaft and direct air intake. Ideal for centre-console and family boats.",
+    "description_ar": "موتور أوتبورد رباعي الأشواط بقوة 140 حصان مع نظام الاحتراق الاقتصادي من سوزوكي وعمود إدارة منزاح. مثالي لمراكب الصيد والمراكب العائلية."
+  },
+  {
+    "category": "Spare Parts",
+    "brand": "honda marine",
+    "title_en": "Honda BF225 Outboard Motor",
+    "title_ar": "موتور أوتبورد هوندا BF225",
+    "subtitle_en": "225 HP • V6 • VTEC",
+    "subtitle_ar": "225 حصان • V6 • نظام VTEC",
+    "price": 742000,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Honda_BF225_outboard_motor_Honda_Collection_Hall.jpg/960px-Honda_BF225_outboard_motor_Honda_Collection_Hall.jpg"
+    ],
+    "compatible": [],
+    "sku": "HND-BF225-XA",
+    "part_number": "BF225XA",
+    "discount": 0.05,
+    "description_en": "3.6L V6 outboard with VTEC and BLAST technology for strong hole-shot and quiet cruising.",
+    "description_ar": "موتور V6 سعة 3.6 لتر بتقنية VTEC وBLAST لتسارع قوي وإبحار هادي."
+  },
+  {
+    "category": "Spare Parts",
+    "brand": "yamaha",
+    "title_en": "Water Pump Impeller Repair Kit",
+    "title_ar": "طقم ريشة طلمبة المياه",
+    "subtitle_en": "For Yamaha F150 / F200 four-strokes",
+    "subtitle_ar": "لمحركات ياماها F150 وF200",
+    "price": 1850,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/14Blatt_Impeller%28Bild1%29.jpg/960px-14Blatt_Impeller%28Bild1%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/d/d6/Impeller.jpg"
+    ],
+    "compatible": [
+      [
+        "Yamaha",
+        [
+          "F150",
+          "F200"
+        ]
+      ]
+    ],
+    "sku": "YMH-IMP-F150",
+    "part_number": "63P-W0078-01",
+    "discount": 0.12,
+    "description_en": "Neoprene impeller, gasket and wear plate — replace every 300 hours or yearly to protect the powerhead from overheating.",
+    "description_ar": "ريشة نيوبرين مع الجوان واللوح — تتغير كل 300 ساعة أو كل سنة لحماية المحرك من السخونة."
+  },
+  {
+    "category": "Spare Parts",
+    "brand": "mercury",
+    "title_en": "Fuel / Water Separating Filter — 10 Micron",
+    "title_ar": "فلتر فصل الماء عن البنزين — 10 ميكرون",
+    "subtitle_en": "Mercury FourStroke & Verado",
+    "subtitle_ar": "لمحركات ميركوري FourStroke وVerado",
+    "price": 890,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Fuel_filter.jpg/960px-Fuel_filter.jpg"
+    ],
+    "compatible": [
+      [
+        "Mercury",
+        [
+          "FourStroke 115",
+          "FourStroke 150",
+          "Verado 250"
+        ]
+      ]
+    ],
+    "sku": "MRC-FWS-10M",
+    "part_number": "35-802893Q01",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spare Parts",
+    "brand": "yanmar",
+    "title_en": "Yanmar Diesel Fuel Filter Element",
+    "title_ar": "فلتر ديزل يانمار",
+    "subtitle_en": "Genuine element for 3YM / 4JH series",
+    "subtitle_ar": "فلتر أصلي لسلسلة 3YM و4JH",
+    "price": 950,
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/77/Yanmar_Fuel_Filter.JPG"
+    ],
+    "compatible": [
+      [
+        "Yanmar",
+        [
+          "3YM30",
+          "4JH57"
+        ]
+      ]
+    ],
+    "sku": "YNM-FF-104500",
+    "part_number": "104500-55710",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spare Parts",
+    "brand": "quicksilver",
+    "title_en": "Sacrificial Zinc Anode Kit",
+    "title_ar": "طقم زنك (أنود) للحماية من التآكل",
+    "subtitle_en": "Saltwater corrosion protection",
+    "subtitle_ar": "حماية من تآكل مياه البحر",
+    "price": 620,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/2022-01-18_sacrificial_galvanic_anode.jpg/960px-2022-01-18_sacrificial_galvanic_anode.jpg"
+    ],
+    "compatible": [
+      [
+        "Mercury",
+        null
+      ],
+      [
+        "Yamaha",
+        null
+      ]
+    ],
+    "sku": "QS-ANODE-KIT",
+    "part_number": "8M0068436",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spare Parts",
+    "brand": "quicksilver",
+    "title_en": "Quicksilver 25W-40 Synthetic Blend Marine Engine Oil 4L",
+    "title_ar": "زيت محرك بحري كويك سيلفر 25W-40 نصف تخليقي 4 لتر",
+    "subtitle_en": "NMMA FC-W certified",
+    "subtitle_ar": "معتمد NMMA FC-W",
+    "price": 2100,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Motor_oil_bottles_variousbrands.jpg/960px-Motor_oil_bottles_variousbrands.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/2/23/Motor_oil.JPG"
+    ],
+    "compatible": [],
+    "sku": "QS-25W40-4L",
+    "part_number": "92-858058Q01",
+    "discount": 0.1,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spare Parts",
+    "brand": "yamaha",
+    "title_en": "Yamalube 4M FC-W 10W-30 Outboard Oil 4L",
+    "title_ar": "زيت ياماليوب 4M FC-W 10W-30 للأوتبورد 4 لتر",
+    "subtitle_en": "Mineral four-stroke marine oil",
+    "subtitle_ar": "زيت معدني لمحركات الأوتبورد الرباعية",
+    "price": 1650,
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/2/23/Motor_oil.JPG"
+    ],
+    "compatible": [
+      [
+        "Yamaha",
+        null
+      ]
+    ],
+    "sku": "YML-4M-1030",
+    "part_number": "LUB-10W30-FC-04",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spare Parts",
+    "brand": null,
+    "title_en": "Deep Cycle Marine Battery 100Ah",
+    "title_ar": "بطارية بحرية ديب سايكل 100 أمبير",
+    "subtitle_en": "Dual purpose: starting & house loads",
+    "subtitle_ar": "للتشغيل وأحمال المركب",
+    "price": 9800,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Super_Start_Premium_Car_Battery.jpg/960px-Super_Start_Premium_Car_Battery.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-BAT-100AH",
+    "part_number": "DC-100",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Propellers",
+    "brand": "yamaha",
+    "title_en": "Stainless Steel 3-Blade Propeller 15.25 x 17",
+    "title_ar": "رفاص ستانلس 3 ريش 15.25 × 17",
+    "subtitle_en": "Yamaha F150 – F250",
+    "subtitle_ar": "لمحركات ياماها F150 – F250",
+    "price": 24500,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Five-Blade-Ship-Propeller.jpg/960px-Five-Blade-Ship-Propeller.jpg"
+    ],
+    "compatible": [
+      [
+        "Yamaha",
+        [
+          "F150",
+          "F200",
+          "F250"
+        ]
+      ]
+    ],
+    "sku": "YMH-SS-1525-17",
+    "part_number": "6E5-45978-02",
+    "discount": null,
+    "description_en": "Polished stainless steel propeller for improved hole-shot, top speed and durability over aluminium.",
+    "description_ar": "رفاص ستانلس مصقول لتسارع وسرعة قصوى أعلى ومتانة أكثر من الألومنيوم."
+  },
+  {
+    "category": "Propellers",
+    "brand": "mercury",
+    "title_en": "Black Max Aluminium Propeller 14 x 19",
+    "title_ar": "رفاص ألومنيوم بلاك ماكس 14 × 19",
+    "subtitle_en": "Mercury FourStroke 75 – 150 HP",
+    "subtitle_ar": "لمحركات ميركوري 75 – 150 حصان",
+    "price": 8900,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Ship_propeller_at_White_Bay_Cruise_Terminal.jpg/960px-Ship_propeller_at_White_Bay_Cruise_Terminal.jpg"
+    ],
+    "compatible": [
+      [
+        "Mercury",
+        [
+          "FourStroke 115",
+          "FourStroke 150"
+        ]
+      ]
+    ],
+    "sku": "MRC-BMX-1419",
+    "part_number": "48-832830A45",
+    "discount": 0.08,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Propellers",
+    "brand": "volvo penta",
+    "title_en": "Bronze Five-Blade Inboard Propeller",
+    "title_ar": "رفاص برونز 5 ريش للمحركات الداخلية",
+    "subtitle_en": "Volvo Penta IPS / D6 drives",
+    "subtitle_ar": "لمحركات فولفو بنتا IPS وD6",
+    "price": 46000,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Five-Blade-Ship-Propeller.jpg/960px-Five-Blade-Ship-Propeller.jpg"
+    ],
+    "compatible": [
+      [
+        "Volvo Penta",
+        [
+          "IPS 600",
+          "D6-440"
+        ]
+      ]
+    ],
+    "sku": "VP-IPS-T5",
+    "part_number": "3888566",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spark Plugs",
+    "brand": "ngk",
+    "title_en": "NGK LFR6A-11 Spark Plug — Set of 6",
+    "title_ar": "طقم بواجي NGK LFR6A-11 — 6 قطع",
+    "subtitle_en": "Yamaha F200 – F250 V6",
+    "subtitle_ar": "لمحركات ياماها F200 – F250 V6",
+    "price": 1950,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Spark_Plug_20180205_110413.jpg/960px-Spark_Plug_20180205_110413.jpg"
+    ],
+    "compatible": [
+      [
+        "Yamaha",
+        [
+          "F200",
+          "F250"
+        ]
+      ]
+    ],
+    "sku": "NGK-LFR6A11-6",
+    "part_number": "LFR6A-11",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spark Plugs",
+    "brand": "ngk",
+    "title_en": "NGK DCPR6E Spark Plug — Set of 4",
+    "title_ar": "طقم بواجي NGK DCPR6E — 4 قطع",
+    "subtitle_en": "Suzuki DF90A / DF140A",
+    "subtitle_ar": "لمحركات سوزوكي DF90A وDF140A",
+    "price": 1120,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Spark_Plug_20180205_110413.jpg/960px-Spark_Plug_20180205_110413.jpg"
+    ],
+    "compatible": [
+      [
+        "Suzuki Marine",
+        [
+          "DF90A",
+          "DF140A"
+        ]
+      ]
+    ],
+    "sku": "NGK-DCPR6E-4",
+    "part_number": "DCPR6E",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Spark Plugs",
+    "brand": "champion",
+    "title_en": "Champion QL77JC4 Spark Plug",
+    "title_ar": "بوجيه شامبيون QL77JC4",
+    "subtitle_en": "Mercury FourStroke 40 – 115",
+    "subtitle_ar": "لمحركات ميركوري FourStroke 40 – 115",
+    "price": 240,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Spark_Plug_20180205_110413.jpg/960px-Spark_Plug_20180205_110413.jpg"
+    ],
+    "compatible": [
+      [
+        "Mercury",
+        [
+          "FourStroke 40",
+          "FourStroke 115"
+        ]
+      ]
+    ],
+    "sku": "CHP-QL77JC4",
+    "part_number": "QL77JC4",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Fuel Pumps",
+    "brand": "yamaha",
+    "title_en": "Low-Pressure Mechanical Fuel Pump",
+    "title_ar": "طلمبة بنزين ميكانيكية ضغط منخفض",
+    "subtitle_en": "Yamaha F115",
+    "subtitle_ar": "لمحرك ياماها F115",
+    "price": 6800,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Bosch_Fuel_Pump_0_580_254_957_-_opened-7460.jpg/960px-Bosch_Fuel_Pump_0_580_254_957_-_opened-7460.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Bosch_Fuel_Pump_0_580_254_957_-_opened-7456.jpg/960px-Bosch_Fuel_Pump_0_580_254_957_-_opened-7456.jpg"
+    ],
+    "compatible": [
+      [
+        "Yamaha",
+        [
+          "F115"
+        ]
+      ]
+    ],
+    "sku": "YMH-LPFP-F115",
+    "part_number": "6D8-24410-00",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Fuel Pumps",
+    "brand": "mercury",
+    "title_en": "Electric High-Pressure Fuel Pump",
+    "title_ar": "طلمبة بنزين كهربائية ضغط عالي",
+    "subtitle_en": "Mercury Verado 250 / 300",
+    "subtitle_ar": "لمحركات ميركوري Verado 250 و300",
+    "price": 12400,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Bosch_Fuel_Pump_0_580_254_957_-_opened-7456.jpg/960px-Bosch_Fuel_Pump_0_580_254_957_-_opened-7456.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Bosch_Fuel_Pump_0_580_254_957_-_opened-7460.jpg/960px-Bosch_Fuel_Pump_0_580_254_957_-_opened-7460.jpg"
+    ],
+    "compatible": [
+      [
+        "Mercury",
+        [
+          "Verado 250",
+          "Verado 300"
+        ]
+      ]
+    ],
+    "sku": "MRC-HPFP-VER",
+    "part_number": "8M0089208",
+    "discount": 0.1,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Waterproof Electrical Connectors",
+    "brand": null,
+    "title_en": "Heat-Shrink Waterproof Butt Connectors — 50 pcs",
+    "title_ar": "وصلات كهربائية مقاومة للماء بالحرارة — 50 قطعة",
+    "subtitle_en": "Marine-grade tinned copper",
+    "subtitle_ar": "نحاس مقصدر بجودة بحرية",
+    "price": 450,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Wago_221-413_splicing_connector_with_stranded_wire.jpg/960px-Wago_221-413_splicing_connector_with_stranded_wire.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-HSBC-50",
+    "part_number": "HS-BUTT-50",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Waterproof Electrical Connectors",
+    "brand": null,
+    "title_en": "IP68 Marine Deck Connector — 4 Pin",
+    "title_ar": "وصلة سطح بحرية IP68 — 4 أطراف",
+    "subtitle_en": "Stainless cap, cable gland",
+    "subtitle_ar": "غطاء ستانلس مع جلاند للكابل",
+    "price": 780,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Wago_221-413_splicing_connector_with_stranded_wire.jpg/960px-Wago_221-413_splicing_connector_with_stranded_wire.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-IP68-4P",
+    "part_number": "DC-IP68-4",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Electronics",
+    "brand": "garmin",
+    "title_en": "Garmin GPSMAP 64st Handheld GPS",
+    "title_ar": "جهاز GPS محمول جارمن GPSMAP 64st",
+    "subtitle_en": "Preloaded TopoActive maps • 16 GB",
+    "subtitle_ar": "خرائط مثبّتة • 16 جيجا",
+    "price": 21500,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Garmin_GPSmap_64st-front_PNr%C2%B00917.jpg/960px-Garmin_GPSmap_64st-front_PNr%C2%B00917.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Garmin_GPSmap_62st-front_PNr%C2%B00421.jpg/960px-Garmin_GPSmap_62st-front_PNr%C2%B00421.jpg"
+    ],
+    "compatible": [],
+    "sku": "GRM-GPSMAP64ST",
+    "part_number": "010-01199-10",
+    "discount": null,
+    "description_en": "Rugged, waterproof handheld GPS with quad-helix antenna, GPS + GLONASS and wireless connectivity — a reliable backup for any helm.",
+    "description_ar": "جهاز GPS محمول ومقاوم للمياه بهوائي رباعي ودعم GPS وGLONASS — بديل احتياطي موثوق لأي مركب."
+  },
+  {
+    "category": "Marine Electronics",
+    "brand": null,
+    "title_en": "Portable Sonar Fishfinder",
+    "title_ar": "جهاز سونار محمول لتحديد أماكن السمك",
+    "subtitle_en": "Depth & fish arches • battery powered",
+    "subtitle_ar": "عمق وأماكن السمك • يعمل بالبطارية",
+    "price": 5400,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Sport_Fishfinder.jpg/960px-Sport_Fishfinder.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-FF-PORT",
+    "part_number": "FF-SONAR-01",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Electronics",
+    "brand": "sailor",
+    "title_en": "Sailor RT144C VHF Marine Radio",
+    "title_ar": "جهاز لاسلكي بحري VHF سيلور RT144C",
+    "subtitle_en": "DSC • International channels",
+    "subtitle_ar": "DSC • القنوات الدولية",
+    "price": 16800,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/Sailor_RT144C_VHF_radio.jpg/960px-Sailor_RT144C_VHF_radio.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/VHF_radio_with_Maritime_Distress_Safety_System.jpg/960px-VHF_radio_with_Maritime_Distress_Safety_System.jpg"
+    ],
+    "compatible": [],
+    "sku": "SLR-RT144C",
+    "part_number": "RT144C",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Electronics",
+    "brand": null,
+    "title_en": "LED Navigation Light — Port & Starboard",
+    "title_ar": "كشاف ملاحة LED — يمين وشمال",
+    "subtitle_en": "2 nm visibility • 12V",
+    "subtitle_ar": "رؤية 2 ميل بحري • 12 فولت",
+    "price": 1350,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Green_navigation_light_on_schooner_%C3%84lva.jpg/960px-Green_navigation_light_on_schooner_%C3%84lva.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-NAVLED-PS",
+    "part_number": "NL-LED-2NM",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Fishing Gear",
+    "brand": null,
+    "title_en": "Saltwater Spinning Reel 4000",
+    "title_ar": "مكنة صيد سبينينج 4000 لمياه البحر",
+    "subtitle_en": "Sealed drag • 6+1 bearings",
+    "subtitle_ar": "فرامل محكمة • 6+1 رولمان",
+    "price": 2350,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Spinning_fishing_reel_without_line.jpg/960px-Spinning_fishing_reel_without_line.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/9/98/Fishing_reel.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-REEL-4000",
+    "part_number": "SR-4000",
+    "discount": 0.15,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Fishing Gear",
+    "brand": null,
+    "title_en": "Carbon Spinning Rod 2.7 m",
+    "title_ar": "سنارة كربون سبينينج 2.7 متر",
+    "subtitle_en": "Medium-heavy • 15–40 g",
+    "subtitle_ar": "متوسطة-ثقيلة • 15–40 جرام",
+    "price": 1900,
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/c/c0/Fishing_rod_at_dusk.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-ROD-270",
+    "part_number": "CR-270-MH",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Fishing Gear",
+    "brand": "rapala",
+    "title_en": "Assorted Fishing Lure Kit — 12 pcs",
+    "title_ar": "طقم طُعم صناعي متنوع — 12 قطعة",
+    "subtitle_en": "Spoons, jigs & minnows",
+    "subtitle_ar": "ملاعق وجيج ومينو",
+    "price": 650,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Fishing_lure.jpg/960px-Fishing_lure.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Rapala_fishing_lure.jpg/960px-Rapala_fishing_lure.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-LURE-12",
+    "part_number": "LK-12",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Fenders",
+    "brand": null,
+    "title_en": "Twin-Eye Boat Fender 8\" x 26\" — Pair",
+    "title_ar": "مصد مركب بعينين 8 × 26 بوصة — زوج",
+    "subtitle_en": "UV-resistant PVC",
+    "subtitle_ar": "بي في سي مقاوم للأشعة",
+    "price": 1800,
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/2/21/Fenders.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Fenders_-_repslagning.JPG/960px-Fenders_-_repslagning.JPG"
+    ],
+    "compatible": [],
+    "sku": "RM-FEND-826-2",
+    "part_number": "TE-826",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Fenders",
+    "brand": null,
+    "title_en": "Round Buoy Fender Ball 18\"",
+    "title_ar": "مصد كروي 18 بوصة",
+    "subtitle_en": "High-visibility orange",
+    "subtitle_ar": "برتقالي عالي الوضوح",
+    "price": 2400,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d7/Orange_buoy_in_water.jpg/960px-Orange_buoy_in_water.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-BUOY-18",
+    "part_number": "RB-18",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Galvanised Boat Anchor 7.5 kg",
+    "title_ar": "مرساة مجلفنة 7.5 كيلو",
+    "subtitle_en": "For boats up to 8 m",
+    "subtitle_ar": "للمراكب حتى 8 متر",
+    "price": 3200,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Boat_Anchor_in_Godavari_river_at_Bhadrachalam.jpg/960px-Boat_Anchor_in_Godavari_river_at_Bhadrachalam.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-ANC-75",
+    "part_number": "GA-7.5",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Double-Braid Nylon Dock Line 15 m",
+    "title_ar": "حبل رباط نايلون مزدوج 15 متر",
+    "subtitle_en": "14 mm • spliced eye",
+    "subtitle_ar": "14 مم • بعين مضفورة",
+    "price": 1100,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Coiled_rope_03235.jpg/960px-Coiled_rope_03235.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-DOCK-15",
+    "part_number": "DL-14-15",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Stainless Steel Boat Cleat 8\"",
+    "title_ar": "كليت ستانلس 8 بوصة",
+    "subtitle_en": "316 marine grade",
+    "subtitle_ar": "ستانلس بحري 316",
+    "price": 520,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/002_Chrome_steel_boat_cleat_with_tied_mooring_rope_-_nautical_vessel_equipment_detail%2C_yacht_cleat.jpg/960px-002_Chrome_steel_boat_cleat_with_tied_mooring_rope_-_nautical_vessel_equipment_detail%2C_yacht_cleat.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-CLEAT-8",
+    "part_number": "SC-316-8",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Telescopic Boat Hook",
+    "title_ar": "خطّاف مركب تلسكوبي",
+    "subtitle_en": "Extends 1.2 – 2.1 m",
+    "subtitle_ar": "يمتد من 1.2 لـ 2.1 متر",
+    "price": 890,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Boat_Hook.png/960px-Boat_Hook.png"
+    ],
+    "compatible": [],
+    "sku": "RM-HOOK-TEL",
+    "part_number": "BH-21",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Marine Binoculars 7x50",
+    "title_ar": "نظارة معظّمة بحرية 7×50",
+    "subtitle_en": "Waterproof • fog-proof",
+    "subtitle_ar": "مقاومة للماء والشبورة",
+    "price": 6500,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Vortex_Diamonback_roof_prism_binoculars.jpg/960px-Vortex_Diamonback_roof_prism_binoculars.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/Navy_binoculars.jpg/960px-Navy_binoculars.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-BINO-750",
+    "part_number": "MB-7X50",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Boat Steering Wheel 13.5\"",
+    "title_ar": "دركسيون مركب 13.5 بوصة",
+    "subtitle_en": "Stainless spokes, soft grip",
+    "subtitle_ar": "أذرع ستانلس ومقبض ناعم",
+    "price": 4800,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Steering_wheel_of_a_Boat.JPG/960px-Steering_wheel_of_a_Boat.JPG"
+    ],
+    "compatible": [],
+    "sku": "RM-WHEEL-135",
+    "part_number": "SW-135",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Inflatable Life Jacket 150N",
+    "title_ar": "سترة نجاة قابلة للنفخ 150 نيوتن",
+    "subtitle_en": "Auto-inflate • ISO 12402",
+    "subtitle_ar": "نفخ تلقائي • ISO 12402",
+    "price": 3400,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Lifejacket_with_PLB_fitted_inside.jpg/960px-Lifejacket_with_PLB_fitted_inside.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Personal_flotation_device.JPG/960px-Personal_flotation_device.JPG"
+    ],
+    "compatible": [],
+    "sku": "RM-LJ-150N",
+    "part_number": "ILJ-150",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Lifebuoy Ring with 30 m Line",
+    "title_ar": "طوق نجاة مع حبل 30 متر",
+    "subtitle_en": "SOLAS approved",
+    "subtitle_ar": "معتمد SOLAS",
+    "price": 1650,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Lifebuoy_in_S%C3%B6dra_Hammarbyhamnen.jpg/960px-Lifebuoy_in_S%C3%B6dra_Hammarbyhamnen.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Lifebuoy_by_the_Drammen_river_02.19.jpg/960px-Lifebuoy_by_the_Drammen_river_02.19.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-RING-30",
+    "part_number": "LR-SOLAS",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Boat Equipment",
+    "brand": null,
+    "title_en": "Navigational Boat Compass",
+    "title_ar": "بوصلة ملاحة للمركب",
+    "subtitle_en": "Bracket mount • illuminated",
+    "subtitle_ar": "تثبيت بحامل • بإضاءة",
+    "price": 2200,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/MT_V.E.B._Console_Marine_Compass.jpg/960px-MT_V.E.B._Console_Marine_Compass.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-COMP-BR",
+    "part_number": "NC-85",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Water Sports",
+    "brand": null,
+    "title_en": "Recreational Sit-On-Top Kayak",
+    "title_ar": "كاياك ترفيهي",
+    "subtitle_en": "1 seat • 3 m",
+    "subtitle_ar": "مقعد واحد • 3 متر",
+    "price": 18500,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Kayak_Playboat_ManchesterNH.jpg/960px-Kayak_Playboat_ManchesterNH.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/2016-08_Kayak_Grandes_Bergeronnes_Saint_Lawrence_River_01.jpg/960px-2016-08_Kayak_Grandes_Bergeronnes_Saint_Lawrence_River_01.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-KYK-300",
+    "part_number": "SOT-300",
+    "discount": 0.07,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Water Sports",
+    "brand": null,
+    "title_en": "Inflatable Stand-Up Paddle Board 10'6\"",
+    "title_ar": "لوح تجديف واقف قابل للنفخ 10.6 قدم",
+    "subtitle_en": "Pump, paddle & bag included",
+    "subtitle_ar": "معاه منفاخ ومجداف وشنطة",
+    "price": 15900,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Paddleboard_6619.jpg/960px-Paddleboard_6619.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Stand-Up_Paddleboard%2C_Anstey%27s_Cove_-_geograph.org.uk_-_7803546.jpg/960px-Stand-Up_Paddleboard%2C_Anstey%27s_Cove_-_geograph.org.uk_-_7803546.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-SUP-106",
+    "part_number": "ISUP-106",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Water Sports",
+    "brand": null,
+    "title_en": "Wakeboard 139 cm with Bindings",
+    "title_ar": "لوح ويك بورد 139 سم مع رباط",
+    "subtitle_en": "Continuous rocker",
+    "subtitle_ar": "انحناء متصل",
+    "price": 9500,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Wakeboard_%2814355587653%29.jpg/960px-Wakeboard_%2814355587653%29.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-WAKE-139",
+    "part_number": "WB-139",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Water Sports",
+    "brand": null,
+    "title_en": "Full-Face Snorkel Mask",
+    "title_ar": "ماسك سنوركل وجه كامل",
+    "subtitle_en": "180° view • anti-fog",
+    "subtitle_ar": "رؤية 180° • ضد الشبورة",
+    "price": 1450,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Decathlon_Easybreath_snorkel_mask.jpg/960px-Decathlon_Easybreath_snorkel_mask.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Snorkel_gear_2017_34799500714.jpg/960px-Snorkel_gear_2017_34799500714.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-SNK-FF",
+    "part_number": "SM-FF",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Water Sports",
+    "brand": null,
+    "title_en": "Stainless Steel Dive Knife",
+    "title_ar": "سكينة غوص ستانلس",
+    "subtitle_en": "Leg strap sheath",
+    "subtitle_ar": "جراب برباط للرجل",
+    "price": 1150,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Blue_Reef_Dive_Knife.JPG/960px-Blue_Reef_Dive_Knife.JPG"
+    ],
+    "compatible": [],
+    "sku": "RM-DKNIFE",
+    "part_number": "DK-304",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Camping & Outdoor",
+    "brand": null,
+    "title_en": "4-Person Dome Camping Tent",
+    "title_ar": "خيمة تخييم قبة 4 أفراد",
+    "subtitle_en": "Waterproof fly • quick pitch",
+    "subtitle_ar": "غطاء مقاوم للمطر • تركيب سريع",
+    "price": 4200,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Large_family_camping_tent.jpg/960px-Large_family_camping_tent.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Topboss_Plastic_Premium_Dome_Camping_Tent_IMG_3635.jpg/960px-Topboss_Plastic_Premium_Dome_Camping_Tent_IMG_3635.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-TENT-4P",
+    "part_number": "DT-4",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Camping & Outdoor",
+    "brand": null,
+    "title_en": "Insulated Cooler Box 45 L",
+    "title_ar": "آيس بوكس معزول 45 لتر",
+    "subtitle_en": "Keeps ice up to 3 days",
+    "subtitle_ar": "يحافظ على التلج لحد 3 أيام",
+    "price": 2900,
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/3/3d/Large_cooler_box.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-COOL-45",
+    "part_number": "CB-45",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Apparel",
+    "brand": null,
+    "title_en": "Waterproof Sailing Jacket",
+    "title_ar": "جاكيت إبحار مقاوم للمياه",
+    "subtitle_en": "Breathable • sealed seams",
+    "subtitle_ar": "يسمح بالتهوية • خياطة محكمة",
+    "price": 5600,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Early_Gore-Tex_hooded_rain_jacket.jpg/960px-Early_Gore-Tex_hooded_rain_jacket.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-JKT-SAIL",
+    "part_number": "SJ-01",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Apparel",
+    "brand": null,
+    "title_en": "Leather Boat Shoes",
+    "title_ar": "حذاء مراكب جلد",
+    "subtitle_en": "Non-marking siped sole",
+    "subtitle_ar": "نعل مانع للانزلاق",
+    "price": 3300,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Boat_shoes_and_jeans_%28Unsplash%29.jpg/960px-Boat_shoes_and_jeans_%28Unsplash%29.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Converse_Jack_Purcell_Boat_Shoes.jpg/960px-Converse_Jack_Purcell_Boat_Shoes.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-SHOE-BOAT",
+    "part_number": "BS-01",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Apparel",
+    "brand": null,
+    "title_en": "Marine Sun Cap",
+    "title_ar": "كاب بحري للشمس",
+    "subtitle_en": "UPF 50 • quick-dry",
+    "subtitle_ar": "حماية UPF 50 • ينشف بسرعة",
+    "price": 450,
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/6/64/Baseball_cap.png"
+    ],
+    "compatible": [],
+    "sku": "RM-CAP-UPF",
+    "part_number": "MC-50",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Decor & Collectibles",
+    "brand": null,
+    "title_en": "Wooden Ship's Wheel Wall Decor 60 cm",
+    "title_ar": "دركسيون سفينة خشب للديكور 60 سم",
+    "subtitle_en": "Hand-finished teak tone",
+    "subtitle_ar": "تشطيب يدوي بلون التيك",
+    "price": 2750,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Brigantine_Breeze_ship%27s_wheel.jpg/960px-Brigantine_Breeze_ship%27s_wheel.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/c/ce/Ship%27s_wheel%2C_Williamson_Art_Gallery.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-DEC-WHL60",
+    "part_number": "DW-60",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Decor & Collectibles",
+    "brand": null,
+    "title_en": "Tall Ship Wooden Model",
+    "title_ar": "مجسم سفينة شراعية خشب",
+    "subtitle_en": "Display-ready, 70 cm",
+    "subtitle_ar": "جاهز للعرض • 70 سم",
+    "price": 6900,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Schiffsmodell_Belem2.jpg/960px-Schiffsmodell_Belem2.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-DEC-SHIP",
+    "part_number": "SM-70",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Marine Decor & Collectibles",
+    "brand": null,
+    "title_en": "Cast Iron Decorative Anchor",
+    "title_ar": "مرساة ديكور حديد زهر",
+    "subtitle_en": "Garden & lobby piece",
+    "subtitle_ar": "للحديقة أو الاستقبال",
+    "price": 3800,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Anchor_at_Nyhavn%2C_Copenhagen%2C_20220618_1739_7363.jpg/960px-Anchor_at_Nyhavn%2C_Copenhagen%2C_20220618_1739_7363.jpg"
+    ],
+    "compatible": [],
+    "sku": "RM-DEC-ANC",
+    "part_number": "DA-CI",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Manuals & Publications",
+    "brand": null,
+    "title_en": "Vintage Admiralty Chart Print — Bosphorus 1871",
+    "title_ar": "طبعة خريطة بحرية قديمة — البوسفور 1871",
+    "subtitle_en": "Archival print, 50 x 70 cm",
+    "subtitle_ar": "طباعة أرشيفية 50 × 70 سم",
+    "price": 850,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/Admiralty_Chart_No_1198_Nautical_chart_of_the_Bosphorus%2C_Published_1871.jpg/960px-Admiralty_Chart_No_1198_Nautical_chart_of_the_Bosphorus%2C_Published_1871.jpg",
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Culebra_Nautical_chart.png/960px-Culebra_Nautical_chart.png"
+    ],
+    "compatible": [],
+    "sku": "RM-PUB-CHART",
+    "part_number": "AC-1198",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  },
+  {
+    "category": "Manuals & Publications",
+    "brand": "suzuki marine",
+    "title_en": "Suzuki DF Series Outboard Service Manual",
+    "title_ar": "كتالوج صيانة محركات سوزوكي DF",
+    "subtitle_en": "Workshop procedures & torque specs",
+    "subtitle_ar": "خطوات الصيانة وقيم العزم",
+    "price": 1200,
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/2017-02-14_Outboard_motor_repair%2C_Olh%C3%A3o_%281%29.JPG/960px-2017-02-14_Outboard_motor_repair%2C_Olh%C3%A3o_%281%29.JPG"
+    ],
+    "compatible": [
+      [
+        "Suzuki Marine",
+        null
+      ]
+    ],
+    "sku": "SZK-MAN-DF",
+    "part_number": "99500-SM-DF",
+    "discount": null,
+    "description_en": "",
+    "description_ar": ""
+  }
+]

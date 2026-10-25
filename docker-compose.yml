@@ -1,0 +1,120 @@
+services:
+  # The database is MongoDB Atlas (the `ready-marine` database): the backend reads its
+  # connection string, MONGO_URI, from Backend/.env. No local mongo container.
+
+  # Who is online right now (Socket.IO presence) and the abandoned-cart run lock. Nothing
+  # in it has to survive a restart — each backend rewrites its entries when Redis returns —
+  # so it keeps no snapshots. No host port: only the backend talks to it.
+  redis:
+    image: redis:7-alpine
+    container_name: readymarine_redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # The product-photo service the image studio calls: cuts the product out onto white at
+  # 1200×1200 and upscales small pictures (imagetools/). Inside the compose network only —
+  # no host port; the backend reaches it at http://imagetools:8000.
+  imagetools:
+    build:
+      context: ./imagetools
+    container_name: readymarine_imagetools
+    cpus: 2.0
+    mem_limit: 2g
+    pids_limit: 128
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: readymarine_backend
+    ports:
+      - "4001:4000"
+    env_file:
+      - ./Backend/.env
+    volumes:
+      - ./Backend/public/uploads:/app/public/uploads
+      - ./readymarine_scrapping:/app/readymarine_scrapping:ro
+      - ./readycar_scrapping:/app/readycar_scrapping:ro
+      - ./carbrands:/carbrands:ro
+    environment:
+      - PORT=4000
+      # MONGO_URI is not set here on purpose: the Atlas string in Backend/.env (env_file
+      # above) is the one used. Listing it here would override it.
+      # Defaulted to production, so the server needs nothing in the root .env.
+      # A local run overrides both there (see .env.example).
+      - FRONTEND_URL=${FRONTEND_URL:-https://readymarine.store}
+      - BACKEND_PUBLIC_URL=${BACKEND_PUBLIC_URL:-https://readymarine.store}
+      - READYMARINE_SCRAPING_DIR=/app/readymarine_scrapping
+      - READYCAR_SCRAPING_DIR=/app/readycar_scrapping
+      - RESEND_FROM=Ready Marine <verify@readymarine.store>
+      - FAWATERAK_MODE=${FAWATERAK_MODE:-live}
+      - FAWATERAK_SANDBOX_BASE_URL=https://staging.fawaterk.com
+      - FAWATERAK_LIVE_BASE_URL=https://app.fawaterk.com
+      - FAWATERAK_CURRENCY=EGP
+      # Paymob, non-secret half only. The keys, the HMAC secret and the
+      # integration ids come from Backend/.env through env_file above —
+      # listing them here would override that with empty values whenever the
+      # shell does not export them (same trap as GOOGLE_CLIENT_ID below).
+      - PAYMOB_BASE_URL=https://accept.paymob.com
+      - PAYMOB_CHECKOUT_URL=https://eg.checkout.paymob.com
+      - PAYMOB_CURRENCY=EGP
+      - BANNER_SHIFT_MINUTES=${BANNER_SHIFT_MINUTES:-60}
+      - REDIS_URL=redis://redis:6379
+      - IMAGETOOLS_URL=http://imagetools:8000
+      # ABANDONED_CART_ENABLED / _CRON / _TIMEZONE / _INACTIVITY_HOURS / _COOLDOWN_DAYS /
+      # _MAX_ATTEMPTS come from Backend/.env (env_file above) — not listed here, for the
+      # same reason as GOOGLE_CLIENT_ID below.
+      # NOTE: GOOGLE_CLIENT_ID is supplied by Backend/.env (env_file above).
+      # Listing it here would override that with an empty value whenever the
+      # shell does not export it, silently disabling Google sign-in.
+      # Add other environment variables from your Backend/.env here if needed
+    depends_on:
+      # Started, not healthy: the app runs without Redis (it just cannot tell who is online).
+      redis:
+        condition: service_started
+      # Started, not healthy: without it the image studio queues its work and retries.
+      imagetools:
+        condition: service_started
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Baked into the bundle at build time, so changing these needs
+        # `docker compose up -d --build frontend`, not a restart.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://readymarine.store/api}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://readymarine.store}
+        # A Google OAuth client ID is public by design (it ships inside the
+        # JS bundle), so it is defaulted here rather than required from .env.
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID:-${GOOGLE_CLIENT_ID:-476300258206-iacviiglue2v8jk2c9v878hrutlho49u.apps.googleusercontent.com}}
+    container_name: readymarine_frontend
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  default:
+    ipam:
+      config:
+        # Not 172.22 — that one is ReadyCar's network on a shared host.
+        - subnet: 172.23.0.0/16
