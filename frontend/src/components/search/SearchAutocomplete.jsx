@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Search, Clock, X, Tag, Layers, Car, Loader2, CornerDownLeft, Sparkles } from 'lucide-react';
+import { Search, Clock, X, Tag, Layers, Ship, Loader2, CornerDownLeft, Sparkles } from 'lucide-react';
 import Link from '../LocaleLink';
 import { useRouter, usePathname } from '../../lib/navigation';
 import { useApp } from '../../context/AppContext';
@@ -21,13 +21,13 @@ const DEBOUNCE_MS = 120;
 
 const COPY = {
   en: {
-    products: 'Products', categories: 'Categories', brands: 'Brands', cars: 'Cars', recent: 'Recent searches',
+    products: 'Products', categories: 'Categories', brands: 'Brands', cars: 'Vessels', recent: 'Recent searches',
     seeAll: (n, q) => `See all ${n} results for “${q}”`, searchFor: (q) => `Search for “${q}”`,
     didYouMean: 'Did you mean', noResults: (q) => `No results for “${q}”. Try another word or a part number.`,
     items: (n) => `${n} item${n === 1 ? '' : 's'}`, clear: 'Remove', allCar: 'All parts',
   },
   ar: {
-    products: 'المنتجات', categories: 'الأقسام', brands: 'الماركات', cars: 'السيارات', recent: 'عمليات البحث الأخيرة',
+    products: 'المنتجات', categories: 'الأقسام', brands: 'الماركات', cars: 'المراكب واليخوت', recent: 'عمليات البحث الأخيرة',
     seeAll: (n, q) => `عرض كل النتائج (${n}) لـ «${q}»`, searchFor: (q) => `ابحث عن «${q}»`,
     didYouMean: 'هل تقصد', noResults: (q) => `مفيش نتائج لـ «${q}». جرّب كلمة تانية أو رقم القطعة.`,
     items: (n) => `${n} منتج`, clear: 'حذف', allCar: 'كل القطع',
@@ -303,7 +303,7 @@ export default function SearchAutocomplete({
         const car = item.car;
         rows.push(
           <OptionRow key={item.key} {...shared} href={item.href} onPick={() => { addRecentSearch(trimmed); setOpen(false); }}>
-            <Car size={16} className="text-marine-outline shrink-0" />
+            <Ship size={16} className="text-marine-outline shrink-0" />
             <span className="min-w-0 flex-1 truncate">
               <Highlight text={[car.brand_name, car.model_name].filter(Boolean).join(' ')} query={trimmed} />
             </span>

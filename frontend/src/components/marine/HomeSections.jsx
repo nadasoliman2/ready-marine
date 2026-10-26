@@ -6,6 +6,7 @@ import {
   Ship, Siren, Sparkles, Star, Truck, Wrench, Zap, MessageCircle, CreditCard,
 } from 'lucide-react';
 import Link from '../LocaleLink';
+import SearchAutocomplete from '../search/SearchAutocomplete';
 import { useApp } from '../../context/AppContext';
 import { resolveAssetUrl, thumbUrl } from '../../lib/assets';
 import useCarFinder from '../carFinder/useCarFinder';
@@ -148,30 +149,101 @@ export function MarineHero() {
   const isAr = language === 'ar';
 
   return (
-    <section className="relative overflow-hidden min-h-[580px] sm:min-h-[640px] lg:min-h-[700px] flex flex-col justify-between">
-      {/* Background image: yacht on the right cruising at sea */}
-      <img
-        src="/images/hero-yacht.png"
-        alt="Ready Marine"
-        fetchPriority="high"
-        className="absolute inset-0 w-full h-full object-cover object-[80%_center] pointer-events-none select-none"
-      />
+    <>
+      {/* 1. Mobile Viewport (md:hidden): ReadyCar style compact hero card & search, NO vehicle form */}
+      <div className="md:hidden bg-slate-50 px-4 pt-3 pb-3 space-y-3">
+        {/* Mobile Search Bar */}
+        <SearchAutocomplete
+          placeholder={isAr ? 'ابحث برقم القطعة، الاسم، الماركة...' : 'Search by part number, name, brand...'}
+          formClassName="relative w-full"
+          inputClassName="w-full bg-white border border-slate-200/90 rounded-xl px-4 py-2.5 pe-11 text-sm text-marine-ink placeholder:text-slate-400 focus:outline-none focus:border-marine-cyan focus:ring-2 focus:ring-marine-cyan/20 shadow-xs"
+          buttonClassName="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-marine-primary"
+        />
 
-      {/* Subtle light overlay to guarantee high-contrast text on the left */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/75 via-white/25 to-transparent pointer-events-none" />
+        {/* ReadyCar-style Banner Card */}
+        <div className="relative rounded-2xl overflow-hidden min-h-[185px] p-5 flex flex-col justify-between shadow-sm bg-[#061d2d]">
+          {/* Yacht Background */}
+          <img
+            src="/images/hero-yacht.png"
+            alt="Ready Marine"
+            fetchPriority="high"
+            className="absolute inset-0 w-full h-full object-cover object-[78%_center] pointer-events-none select-none"
+          />
 
-      {/* Main hero typography and action on the left */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 lg:pt-32 pb-10 w-full">
-        <div className="grid lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 xl:col-span-6 flex flex-col items-center text-center">
-            <h1 className="font-display text-[38px] leading-[48px] sm:text-[54px] sm:leading-[64px] lg:text-[62px] lg:leading-[72px] font-black tracking-[-0.02em] text-[#0a233b] mb-4 sm:mb-5">
+          {/* Dark marine overlay for mobile card readability */}
+          <div className="absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l from-[#061826]/95 via-[#061826]/80 to-transparent pointer-events-none" />
+
+          {/* Card Content */}
+          <div className="relative z-10 max-w-[250px] text-start">
+            <h2 className="text-white font-black text-xl leading-tight mb-2 font-display">
+              {isAr ? (
+                <>كل مستلزمات <span className="text-cyan-400">البحر</span> في مكان واحد</>
+              ) : (
+                <>All Your <span className="text-cyan-400">Marine Gear</span> in One Place</>
+              )}
+            </h2>
+            <p className="text-cyan-100/85 text-xs line-clamp-2 leading-relaxed mb-3.5 font-medium">
+              {isAr
+                ? 'مستلزمات قوارب ويخوت ومعدات بحرية مختارة بعناية.'
+                : 'Boat, yacht, and marine essentials carefully curated for you.'}
+            </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-1.5 bg-[#0099b8] hover:bg-[#00829e] text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-colors"
+            >
+              <span>{isAr ? 'تسوق الآن' : 'Shop Now'}</span>
+              <ArrowRight size={13} className="rtl:rotate-180" />
+            </Link>
+          </div>
+        </div>
+
+        {/* 3 Compact Trust Badges (mobile) */}
+        <div className="grid grid-cols-3 gap-2 pt-1">
+          <div className="bg-white border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-2xs">
+            <ShieldCheck size={18} className="text-[#0099b8] mb-1" />
+            <span className="text-[11px] font-bold text-slate-800 leading-tight text-center">
+              {isAr ? '100% أصلي معتمد' : '100% Genuine'}
+            </span>
+          </div>
+          <div className="bg-white border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-2xs">
+            <Truck size={18} className="text-[#0099b8] mb-1" />
+            <span className="text-[11px] font-bold text-slate-800 leading-tight text-center">
+              {isAr ? 'توصيل سريع' : 'Fast Delivery'}
+            </span>
+          </div>
+          <div className="bg-white border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-2xs">
+            <Headphones size={18} className="text-[#0099b8] mb-1" />
+            <span className="text-[11px] font-bold text-slate-800 leading-tight text-center">
+              {isAr ? 'دعم متخصص' : 'Marine Support'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Desktop Viewport (hidden md:flex): Fixed 650px height, balanced & un-stretched */}
+      <section className="hidden md:flex relative overflow-hidden h-[650px] flex-col justify-between">
+        {/* Yacht Background */}
+        <img
+          src="/images/hero-yacht.png"
+          alt="Ready Marine"
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover object-[78%_center] pointer-events-none select-none"
+        />
+
+        {/* Subtle light overlay to guarantee high-contrast text on text side */}
+        <div className="absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l from-white/90 via-white/45 to-transparent pointer-events-none" />
+
+        {/* Main hero typography and action - vertically centered */}
+        <div className="relative z-10 flex-1 flex items-center max-w-7xl mx-auto px-6 lg:px-8 w-full">
+          <div className="max-w-xl text-start">
+            <h1 className="font-display text-[42px] leading-[52px] lg:text-[54px] lg:leading-[64px] font-black tracking-[-0.02em] text-[#0a233b] mb-4">
               <span>{isAr ? 'كل مستلزمات' : 'All Your'} </span>
               <span className="text-marine-cyan">{isAr ? 'البحر' : 'Marine Gear'}</span>
               <br />
               <span>{isAr ? 'في مكان واحد' : 'In One Place'}</span>
             </h1>
 
-            <p className="text-slate-700/95 text-base sm:text-lg sm:leading-relaxed max-w-lg mb-8 font-medium">
+            <p className="text-slate-700/95 text-base lg:text-lg leading-relaxed max-w-lg mb-8 font-medium">
               {isAr
                 ? 'مستلزمات قوارب ويخوت ومعدات بحرية مختارة بعناية لتجربة أكثر أماناً ومتعة.'
                 : 'Boat, yacht, and marine essentials carefully curated for a safer and more enjoyable experience on the water.'}
@@ -185,75 +257,73 @@ export function MarineHero() {
               <ArrowRight size={18} className="rtl:rotate-180" />
             </Link>
           </div>
-
-          <div className="hidden lg:block lg:col-span-5 xl:col-span-6" />
         </div>
-      </div>
 
-      {/* Bottom Features Strip with 3 badges and wave accent */}
-      <div className="relative z-10 w-full overflow-hidden bg-gradient-to-t from-[#061d2d]/90 via-[#061d2d]/60 to-transparent pt-8 pb-5 sm:pb-6">
-        {/* Subtle decorative wave curves on the bottom left */}
-        <svg
-          className="absolute -bottom-2 -start-6 w-80 sm:w-[480px] h-28 pointer-events-none opacity-40 text-cyan-400"
-          viewBox="0 0 500 120"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path d="M-20 90 C 100 30, 240 120, 520 50" stroke="currentColor" strokeWidth="2.5" />
-          <path d="M-10 105 C 130 45, 270 130, 540 65" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.6" />
-          <path d="M0 120 C 150 60, 300 140, 560 80" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" />
-        </svg>
+        {/* Bottom Features Strip with 3 badges and wave accent */}
+        <div className="relative z-10 w-full overflow-hidden bg-gradient-to-t from-[#061d2d]/90 via-[#061d2d]/65 to-transparent pt-6 pb-5">
+          {/* Subtle decorative wave curves */}
+          <svg
+            className="absolute -bottom-2 -start-6 w-80 sm:w-[480px] h-24 pointer-events-none opacity-40 text-cyan-400"
+            viewBox="0 0 500 120"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M-20 90 C 100 30, 240 120, 520 50" stroke="currentColor" strokeWidth="2.5" />
+            <path d="M-10 105 C 130 45, 270 130, 540 65" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.6" />
+            <path d="M0 120 C 150 60, 300 140, 560 80" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" />
+          </svg>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 items-center">
-            {/* Feature 1 */}
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
-                <ShieldCheck size={24} />
+          <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="grid grid-cols-3 gap-6 items-center">
+              {/* Feature 1 */}
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                  <ShieldCheck size={24} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-white font-bold text-sm lg:text-base leading-snug">
+                    {isAr ? '100% قطع أصلية معتمدة' : '100% Genuine Certified'}
+                  </h3>
+                  <p className="text-cyan-100/75 text-xs lg:text-[13px] mt-0.5 truncate">
+                    {isAr ? 'من أفضل الماركات العالمية' : 'From the finest global brands'}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h3 className="text-white font-bold text-sm sm:text-base leading-snug">
-                  {isAr ? '100% قطع أصلية معتمدة' : '100% Genuine Certified'}
-                </h3>
-                <p className="text-cyan-100/75 text-xs sm:text-[13px] mt-0.5 truncate">
-                  {isAr ? 'من أفضل الماركات العالمية' : 'From the finest global brands'}
-                </p>
-              </div>
-            </div>
 
-            {/* Feature 2 */}
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
-                <Truck size={24} />
+              {/* Feature 2 */}
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                  <Truck size={24} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-white font-bold text-sm lg:text-base leading-snug">
+                    {isAr ? 'توصيل سريع في مصر' : 'Fast Delivery in Egypt'}
+                  </h3>
+                  <p className="text-cyan-100/75 text-xs lg:text-[13px] mt-0.5 truncate">
+                    {isAr ? 'للمدن الرئيسية والموانئ' : 'To major cities and ports'}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h3 className="text-white font-bold text-sm sm:text-base leading-snug">
-                  {isAr ? 'توصيل سريع في مصر' : 'Fast Delivery in Egypt'}
-                </h3>
-                <p className="text-cyan-100/75 text-xs sm:text-[13px] mt-0.5 truncate">
-                  {isAr ? 'للمدن الرئيسية والموانئ' : 'To major cities and ports'}
-                </p>
-              </div>
-            </div>
 
-            {/* Feature 3 */}
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
-                <Headphones size={24} />
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-white font-bold text-sm sm:text-base leading-snug">
-                  {isAr ? 'دعم متخصص للبحرية' : 'Dedicated Marine Support'}
-                </h3>
-                <p className="text-cyan-100/75 text-xs sm:text-[13px] mt-0.5 truncate">
-                  {isAr ? 'نساعدك في اختيار المناسب' : 'Helping you choose the right fit'}
-                </p>
+              {/* Feature 3 */}
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                  <Headphones size={24} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-white font-bold text-sm lg:text-base leading-snug">
+                    {isAr ? 'دعم متخصص للبحرية' : 'Dedicated Marine Support'}
+                  </h3>
+                  <p className="text-cyan-100/75 text-xs lg:text-[13px] mt-0.5 truncate">
+                    {isAr ? 'نساعدك في اختيار المناسب' : 'Helping you choose the right fit'}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 
