@@ -197,8 +197,8 @@ function ProductCard({ product, showBadge }) {
                 : 'bg-marine-cyan hover:bg-marine-cyan-dark text-white'
             }`}
           >
-            <ShoppingCart size={14} />
-            <span > {isAr ? 'أضف' : 'Add'}</span>
+     
+            <span > {isAr ? 'أضف إلي السلة' : 'Add to cart'}</span>
           </button>
           {/* <button
             type="button"
