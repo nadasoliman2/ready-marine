@@ -1514,7 +1514,9 @@ export default function CheckoutPage() {
               <h1 className="font-display text-2xl sm:text-[32px] sm:leading-10 font-semibold tracking-tight text-marine-ink">
                 {isAr ? 'السلة ومراجعة توافق المركب' : 'Procurement Cart & Vessel Fit Review'}
               </h1>
+           
             </div>
+            
             <div className="flex flex-wrap gap-2">
               <span className="flex items-center gap-1.5 bg-marine-mist border border-marine-cyan/20 text-marine-primary font-display text-[10px] font-bold uppercase tracking-[0.06em] px-2.5 py-1.5 rounded-sm"><ShieldCheck size={12} />{isAr ? 'توافق مضمون' : 'Fitment Guaranteed'}</span>
               <span className="flex items-center gap-1.5 bg-marine-mist border border-marine-cyan/20 text-marine-primary font-display text-[10px] font-bold uppercase tracking-[0.06em] px-2.5 py-1.5 rounded-sm"><Anchor size={12} />{isAr ? 'شحن بحري سريع' : 'Maritime Fast-Track'}</span>

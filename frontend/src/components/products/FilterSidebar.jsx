@@ -220,14 +220,15 @@ export default function FilterSidebar({ filters, setFilters, language, t, metada
 
       {/* Car Compatibility Filter */}
       <div className="space-y-4">
-        <h3 className="text-xs font-bold text-marine-outline uppercase tracking-widest flex items-center gap-2">
+        {/* <h3 className="text-xs font-bold text-marine-outline uppercase tracking-widest flex items-center gap-2">
           <Car size={14} />
           {t.carCompatibility || 'Vehicle Fitment'}
-        </h3>
+        </h3> */}
+        
         <div className="space-y-3">
           {/* Garage car, make, model, year: searchable, the makes with their logos — the same
               dropdowns as the home page's search (SearchableSelect, lib/pickerOptions). */}
-          <SearchableSelect
+          {/* <SearchableSelect
             value={filters.garage_car_id || ''}
             onChange={handleGarageCarChange}
             options={garageCars.map(car => ({ value: car._id, label: garageCarLabel(car, isAr) }))}
@@ -265,8 +266,10 @@ export default function FilterSidebar({ filters, setFilters, language, t, metada
             disabled={!filters.car_model_id}
             isAr={isAr}
             buttonClassName={`${PICKER} bg-marine-canvas`}
-          />
+          /> */}
         </div>
+      
+      
       </div>
 
       {/* Price Filter */}

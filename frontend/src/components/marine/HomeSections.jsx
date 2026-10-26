@@ -152,7 +152,7 @@ export function MarineHero() {
   return (
     <section className="relative overflow-hidden bg-marine-mist h-[560px] sm:h-[600px]">
       <img
-        src="/images/hero-yacht.jpg"
+        src="/images/hero-yacht.png"
         alt=""
         fetchPriority="high"
         className="absolute inset-0 w-full h-full object-cover object-[72%_center]"
