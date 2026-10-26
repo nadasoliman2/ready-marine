@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Anchor, ArrowRight, BadgeCheck, ChevronLeft, ChevronRight, Cog, Droplets, Filter, Gauge, LifeBuoy, Search, ShieldCheck,
-  Ship, Siren, Sparkles, Star, Wrench, Zap, MessageCircle, CreditCard,
+  Anchor, ArrowRight, BadgeCheck, ChevronLeft, ChevronRight, Cog, Droplets, Filter, Gauge, Headphones, LifeBuoy, Search, ShieldCheck,
+  Ship, Siren, Sparkles, Star, Truck, Wrench, Zap, MessageCircle, CreditCard,
 } from 'lucide-react';
 import Link from '../LocaleLink';
 import { useApp } from '../../context/AppContext';
@@ -33,14 +33,14 @@ export function AnnouncementBar() {
         <span className="bg-marine-cyan px-1.5 py-0.5 rounded-sm font-bold flex-shrink-0">{isAr ? 'جديد' : 'New'}</span>
         <span className="truncate flex-1">
           {isAr
-            ? 'أول منصة متعددة التجار لقطع غيار اليخوت والمراكب في مصر — توصيل في نفس اليوم للمراسي والموانئ'
+            ? 'أول منصة متعددة التجار لقطع غيار اليخوت والمراكب في مصر — توصيل في نفس اليوم للرئيسية والموانئ'
             : "Egypt's first multi-vendor yacht & marine spare parts platform — same-day marina & port delivery"}
         </span>
         <span className="hidden lg:flex items-center gap-1.5 flex-shrink-0 normal-case tracking-normal">
           <ShieldCheck size={14} className="text-marine-cyan" />{isAr ? '100% قطع أصلية معتمدة' : '100% Genuine Certified'}
         </span>
         <span className="hidden lg:flex items-center gap-1.5 flex-shrink-0 normal-case tracking-normal">
-          <Anchor size={14} className="text-marine-cyan" />{isAr ? 'توصيل للمرسى والورشة' : 'Direct Dock & Workshop Dispatch'}
+          <Anchor size={14} className="text-marine-cyan" />{isAr ? 'توصيل للمرسى والموانئ' : 'Direct Dock & Port Dispatch'}
         </span>
       </div>
     </div>
@@ -147,32 +147,111 @@ export function MarineHero() {
   const { language } = useApp();
   const isAr = language === 'ar';
 
-
-  // The yacht sails in the lower right of the photo, so the copy sits centred in the sky above it.
   return (
-    <section className="relative overflow-hidden bg-marine-mist h-[560px] sm:h-[600px]">
+    <section className="relative overflow-hidden min-h-[580px] sm:min-h-[640px] lg:min-h-[700px] flex flex-col justify-between">
+      {/* Background image: yacht on the right cruising at sea */}
       <img
         src="/images/hero-yacht.png"
-        alt=""
+        alt="Ready Marine"
         fetchPriority="high"
-        className="absolute inset-0 w-full h-full object-cover object-[72%_center]"
+        className="absolute inset-0 w-full h-full object-cover object-[80%_center] pointer-events-none select-none"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/20 to-transparent" />
-      <div className="relative max-w-3xl mx-auto px-4 pt-14 sm:pt-24 text-center">
-        <h1 className="font-display text-[32px] leading-[42px] sm:text-[52px] sm:leading-[62px] font-bold tracking-[-0.02em] text-marine-navy mb-4">
-          {isAr ? <>كل مستلزمات <span className="text-marine-cyan">البحر</span> في مكان واحد</> : <>Everything for the <span className="text-marine-cyan">Sea</span>, in One Place</>}
-        </h1>
-        <p className="text-marine-ink/80 text-base sm:text-lg leading-relaxed max-w-xl mx-auto mb-8">
-          {isAr
-            ? 'مستلزمات قوارب وصيد ورياضات مائية مختارة بعناية لتجربة أكثر أماناً ومتعة.'
-            : 'Boating, fishing and water-sports essentials, carefully selected for a safer, more enjoyable time on the water.'}
-        </p>
-        <Link
-          href="/products"
-          className="inline-flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-display text-sm font-bold tracking-[0.04em] px-8 py-3.5 rounded shadow-aura transition-colors"
+
+      {/* Subtle light overlay to guarantee high-contrast text on the left */}
+      <div className="absolute inset-0 bg-gradient-to-r from-white/75 via-white/25 to-transparent pointer-events-none" />
+
+      {/* Main hero typography and action on the left */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 lg:pt-32 pb-10 w-full">
+        <div className="grid lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-7 xl:col-span-6 flex flex-col items-center text-center">
+            <h1 className="font-display text-[38px] leading-[48px] sm:text-[54px] sm:leading-[64px] lg:text-[62px] lg:leading-[72px] font-black tracking-[-0.02em] text-[#0a233b] mb-4 sm:mb-5">
+              <span>{isAr ? 'كل مستلزمات' : 'All Your'} </span>
+              <span className="text-marine-cyan">{isAr ? 'البحر' : 'Marine Gear'}</span>
+              <br />
+              <span>{isAr ? 'في مكان واحد' : 'In One Place'}</span>
+            </h1>
+
+            <p className="text-slate-700/95 text-base sm:text-lg sm:leading-relaxed max-w-lg mb-8 font-medium">
+              {isAr
+                ? 'مستلزمات قوارب ويخوت ومعدات بحرية مختارة بعناية لتجربة أكثر أماناً ومتعة.'
+                : 'Boat, yacht, and marine essentials carefully curated for a safer and more enjoyable experience on the water.'}
+            </p>
+
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center gap-2.5 bg-[#0099b8] hover:bg-[#00829e] text-white font-display text-base font-bold px-9 py-3.5 rounded-lg shadow-lg shadow-[#0099b8]/25 hover:shadow-[#0099b8]/40 hover:-translate-y-0.5 transition-all"
+            >
+              <span>{isAr ? 'تسوق الآن' : 'Shop Now'}</span>
+              <ArrowRight size={18} className="rtl:rotate-180" />
+            </Link>
+          </div>
+
+          <div className="hidden lg:block lg:col-span-5 xl:col-span-6" />
+        </div>
+      </div>
+
+      {/* Bottom Features Strip with 3 badges and wave accent */}
+      <div className="relative z-10 w-full overflow-hidden bg-gradient-to-t from-[#061d2d]/90 via-[#061d2d]/60 to-transparent pt-8 pb-5 sm:pb-6">
+        {/* Subtle decorative wave curves on the bottom left */}
+        <svg
+          className="absolute -bottom-2 -start-6 w-80 sm:w-[480px] h-28 pointer-events-none opacity-40 text-cyan-400"
+          viewBox="0 0 500 120"
+          fill="none"
+          aria-hidden="true"
         >
-          {isAr ? 'تسوّق الآن' : 'Shop Now'}<ArrowRight size={16} className="rtl:rotate-180" />
-        </Link>
+          <path d="M-20 90 C 100 30, 240 120, 520 50" stroke="currentColor" strokeWidth="2.5" />
+          <path d="M-10 105 C 130 45, 270 130, 540 65" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.6" />
+          <path d="M0 120 C 150 60, 300 140, 560 80" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" />
+        </svg>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 items-center">
+            {/* Feature 1 */}
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                <ShieldCheck size={24} />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-white font-bold text-sm sm:text-base leading-snug">
+                  {isAr ? '100% قطع أصلية معتمدة' : '100% Genuine Certified'}
+                </h3>
+                <p className="text-cyan-100/75 text-xs sm:text-[13px] mt-0.5 truncate">
+                  {isAr ? 'من أفضل الماركات العالمية' : 'From the finest global brands'}
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                <Truck size={24} />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-white font-bold text-sm sm:text-base leading-snug">
+                  {isAr ? 'توصيل سريع في مصر' : 'Fast Delivery in Egypt'}
+                </h3>
+                <p className="text-cyan-100/75 text-xs sm:text-[13px] mt-0.5 truncate">
+                  {isAr ? 'للمدن الرئيسية والموانئ' : 'To major cities and ports'}
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                <Headphones size={24} />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-white font-bold text-sm sm:text-base leading-snug">
+                  {isAr ? 'دعم متخصص للبحرية' : 'Dedicated Marine Support'}
+                </h3>
+                <p className="text-cyan-100/75 text-xs sm:text-[13px] mt-0.5 truncate">
+                  {isAr ? 'نساعدك في اختيار المناسب' : 'Helping you choose the right fit'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -14,10 +14,10 @@ import styles from './trunk.module.css';
 import { MobileListingTop, MobileListingTools } from '../../components/products/MobileListingHeader';
 
 const ESSENTIAL_GROUPS = [
-  { icon: ShieldCheck, ar: 'الأمان أولًا', en: 'Safety first', detailAr: 'مثلث تحذير وشنطة إسعافات وطفاية', detailEn: 'Warning triangle, first aid & extinguisher' },
-  { icon: BatteryCharging, ar: 'طاقة تكمل بيها', en: 'Keep moving', detailAr: 'كابلات شحن وكشاف للطوارئ', detailEn: 'Jump leads & an emergency torch' },
-  { icon: Wrench, ar: 'جاهز لأي عطل', en: 'Handle the unexpected', detailAr: 'كوريك ومفتاح عجل وحبل سحب', detailEn: 'Jack, wheel brace & tow rope' },
-  { icon: PackageCheck, ar: 'كل حاجة في مكانها', en: 'A place for everything', detailAr: 'منظم شنطة وأدوات العناية بالعربية', detailEn: 'Trunk organizers & car care essentials' },
+  { icon: ShieldCheck, ar: 'الأمان أولًا', en: 'Safety first', detailAr: 'أطواق نجاة وشنطة إسعافات وطفاية حريق', detailEn: 'Lifebuoys, first aid & fire extinguisher' },
+  { icon: BatteryCharging, ar: 'طاقة تكمل بيها', en: 'Keep moving', detailAr: 'كابلات شحن وبطاريات وكشاف للطوارئ', detailEn: 'Jump leads, batteries & emergency torch' },
+  { icon: Wrench, ar: 'جاهز لأي طارئ', en: 'Handle the unexpected', detailAr: 'عدة صيانة وحبال رسو وأدوات طوارئ', detailEn: 'Tools, docking lines & emergency gear' },
+  { icon: PackageCheck, ar: 'كل حاجة في مكانها', en: 'A place for everything', detailAr: 'منظمات كابينة وأدوات العناية بالمركب', detailEn: 'Cabin organizers & boat care essentials' },
 ];
 
 function TrunkProductsContent() {
@@ -118,17 +118,17 @@ function TrunkProductsContent() {
               {isAr ? 'أساسيات كل مشوار' : 'THE EVERYDAY ESSENTIALS'}
             </div>
             <h1 id="trunk-title" className={styles.title}>
-              {isAr ? 'جهّز شنطتك.' : 'Pack your trunk.'}
+              {isAr ? 'جهّز مركبك.' : 'Pack your boat.'}
               <br />
-              <span>{isAr ? 'وسوق مطمّن.' : 'Drive with confidence.'}</span>
+              <span>{isAr ? 'وأبحر مطمّن.' : 'Cruise with confidence.'}</span>
             </h1>
             <p className={styles.description}>
               {isAr
-                ? 'من أول مشوار لآخر الطريق، خلي كل اللي ممكن تحتاجه معاك. أدوات للطوارئ، أساسيات للعربية، وراحة بال في كل رحلة.'
-                : 'From the everyday commute to the open road. Keep the tools, emergency essentials, and peace of mind you need within reach.'}
+                ? 'من أول المرسى لآخر البحر، خلي كل اللي ممكن تحتاجه معاك. أدوات للطوارئ، أساسيات للمركب، وراحة بال في كل رحلة.'
+                : 'From the marina to the open sea. Keep the tools, emergency essentials, and peace of mind you need within reach.'}
             </p>
             <a href="#trunk-products" className={styles.primaryAction}>
-              {isAr ? 'جهّز شنطة عربيتك' : 'Explore the essentials'}
+              {isAr ? 'جهّز مستلزمات مركبك' : 'Explore the essentials'}
               <ArrowUpRight size={19} className={isAr ? '-rotate-90' : ''} aria-hidden="true" />
             </a>
             <div className={styles.heroNote}>
@@ -140,8 +140,8 @@ function TrunkProductsContent() {
             <Image
               src="/images/trunk/road-ready-hero.jpg"
               alt={isAr
-                ? 'شنطة عربية مفتوحة فيها منظم أدوات وكابلات شحن وكوريك وكمبروسر وشنطة إسعافات ومثلث تحذير'
-                : 'An open car trunk neatly packed with an organizer, jump leads, jack, tire inflator, first-aid kit and warning triangle'}
+                ? 'مستلزمات بحرية وقوارب مع أدوات طوارئ وصيانة وشنطة إسعافات'
+                : 'Marine and boat essentials packed with emergency tools and first-aid gear'}
               fill
               priority
               sizes="(max-width: 767px) 100vw, (max-width: 1280px) 56vw, 700px"
@@ -184,9 +184,9 @@ function TrunkProductsContent() {
         <div className="hidden sm:block">
         <div className={styles.catalogHeading}>
           <div>
-            <div className={styles.sectionLabel}>{isAr ? 'جاهز للطريق' : 'READY FOR THE ROAD'}<ArrowDown size={12} aria-hidden="true" /></div>
-            <h2 id="products-title">{isAr ? 'كمّل أساسيات شنطتك' : 'A little preparation. A better journey.'}</h2>
-            <p>{isAr ? 'اختار اللي ناقص عربيتك، وخليك مستعد للمشوار الجاي.' : 'Find what your car is missing, and be ready for the next trip.'}</p>
+            <div className={styles.sectionLabel}>{isAr ? 'جاهز للإبحار' : 'READY FOR THE SEA'}<ArrowDown size={12} aria-hidden="true" /></div>
+            <h2 id="products-title">{isAr ? 'كمّل أساسيات مركبك' : 'A little preparation. A better journey.'}</h2>
+            <p>{isAr ? 'اختار اللي ناقص مركبك، وخليك مستعد للرحلة الجاية.' : 'Find what your boat is missing, and be ready for the next voyage.'}</p>
           </div>
           <form onSubmit={handleKeywordSearch} className={styles.search} role="search">
             <label htmlFor="trunk-search" className="sr-only">{isAr ? 'ابحث في أساسيات الشنطة' : 'Search trunk essentials'}</label>

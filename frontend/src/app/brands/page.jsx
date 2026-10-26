@@ -42,10 +42,10 @@ export default function BrandsPage() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-5 sm:mb-12 text-center max-w-2xl mx-auto">
           <h1 className="text-2xl sm:text-5xl font-bold text-marine-ink mb-2 sm:mb-4">
-            {isAr ? 'كل ماركات السيارات' : 'All Car Brands'}
+            {isAr ? 'العلامات التجارية والشركات المصنعة' : 'Brands & Manufacturers'}
           </h1>
           <p className="text-marine-outline text-sm sm:text-lg">
-            {isAr ? 'تصفح منتجاتنا حسب ماركة سيارتك المفضلة' : 'Browse our products by your favorite car brand'}
+            {isAr ? 'تصفح منتجاتنا حسب علامتك التجارية البحرية المفضلة' : 'Browse our products by your favorite marine brand'}
           </p>
         </div>
 

@@ -496,10 +496,6 @@ function ProductsContent() {
               {...categoryCards}
             />
 
-            {/* Save the searched car to the garage — here, after the visitor has seen what
-                fits it, rather than in the home page's search box. */}
-            <GarageSaveCard car={searchedCar} />
-
             {/* Toolbar */}
             <div className="hidden sm:flex flex-wrap items-center justify-between gap-4 mb-6 bg-white px-4 py-3 rounded-lg border border-marine-teal/15">
               <div className="flex items-center gap-4">

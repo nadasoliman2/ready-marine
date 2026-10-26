@@ -16,6 +16,7 @@ import {
   Truck,
   Loader2,
   Car,
+  Ship,
   RotateCcw,
   Eye,
   EyeOff,
@@ -384,7 +385,7 @@ function ProfilePageContent() {
       setProfile({ ...profile, cars: res.cars });
       login({ ...user, cars: res.cars });
       setCarForm({ car_brand_id: '', car_model_id: '', year: '' });
-      setMessage({ type: 'success', text: isAr ? 'تم حفظ السيارة بنجاح' : 'Car added successfully' });
+      setMessage({ type: 'success', text: isAr ? 'تم حفظ المركب بنجاح' : 'Vessel added successfully' });
     } catch (err) {
       setMessage({ type: 'error', text: err.message });
     } finally {
@@ -393,7 +394,7 @@ function ProfilePageContent() {
   };
 
   const deleteCarById = async (id) => {
-    if (!confirm(isAr ? 'هل أنت متأكد من حذف هذه السيارة؟' : 'Are you sure you want to delete this car?')) return;
+    if (!confirm(isAr ? 'هل أنت متأكد من حذف هذا المركب؟' : 'Are you sure you want to delete this vessel?')) return;
     try {
       const res = await userApi.deleteCar(id);
       setProfile({ ...profile, cars: res.cars });
@@ -449,7 +450,7 @@ function ProfilePageContent() {
   ] : [
     { id: 'info', label: t.personalInfo, icon: User },
     { id: 'addresses', label: t.addresses, icon: MapPin },
-    { id: 'garage', label: isAr ? 'جراجي' : 'My Garage', icon: Car },
+    { id: 'garage', label: isAr ? 'أسطولي' : 'My Fleet', icon: Ship },
     { id: 'recommendations', label: isAr ? 'ترشيحات ريدي مارين' : 'Ready Marine Recommendations', icon: Sparkles },
     { id: 'orders', label: isAr ? 'الطلبات الجارية' : 'Active Orders', icon: Package },
     { id: 'orders-history', label: isAr ? 'سجل الطلبات' : 'Order History', icon: History },
@@ -811,19 +812,19 @@ function ProfilePageContent() {
                     </div>
                   ) : (profile?.cars?.length ?? 0) === 0 ? (
                     <div className="bg-white/5 rounded-3xl p-12 text-center border border-dashed border-white/10">
-                      <Car size={48} className="text-zinc-600 mx-auto mb-4" />
+                      <Ship size={48} className="text-zinc-600 mx-auto mb-4" />
                       <p className="text-zinc-400 font-bold">
-                        {isAr ? 'أضف سيارة إلى جراجك لعرض الترشيحات المناسبة لها.' : 'Add a car to your garage to get recommendations tailored to it.'}
+                        {isAr ? 'أضف مركب إلى أسطولك لعرض الترشيحات المناسبة له.' : 'Add a vessel to your fleet to get recommendations tailored to it.'}
                       </p>
                       <Link href="/profile?tab=garage" className="text-marine-primary mt-2 inline-block hover:underline font-bold">
-                        {isAr ? 'الذهاب إلى جراجي' : 'Go to My Garage'}
+                        {isAr ? 'الذهاب إلى أسطولي' : 'Go to My Fleet'}
                       </Link>
                     </div>
                   ) : recommendations.length === 0 ? (
                     <div className="bg-white/5 rounded-3xl p-12 text-center border border-dashed border-white/10">
                       <Sparkles size={48} className="text-zinc-600 mx-auto mb-4" />
                       <p className="text-zinc-400 font-bold">
-                        {isAr ? 'لا توجد ترشيحات متاحة لسياراتك حاليًا.' : 'No recommendations available for your cars right now.'}
+                        {isAr ? 'لا توجد ترشيحات متاحة لمراكبك حاليًا.' : 'No recommendations available for your vessels right now.'}
                       </p>
                       <Link href="/products" className="text-marine-primary mt-2 inline-block hover:underline font-bold">
                         {isAr ? 'تصفّح كل المنتجات' : 'Browse all products'}
@@ -842,11 +843,11 @@ function ProfilePageContent() {
               {activeTab === 'garage' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
                   <h3 className="text-2xl font-black text-white flex items-center gap-3">
-                    <Car className="text-marine-primary" /> {isAr ? 'جراجي' : 'My Garage'}
+                    <Ship className="text-marine-primary" /> {isAr ? 'أسطولي' : 'My Fleet'}
                   </h3>
                   
                   <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
-                    <h4 className="text-lg font-bold text-white mb-4">{isAr ? 'إضافة سيارة جديدة' : 'Add a New Vehicle'}</h4>
+                    <h4 className="text-lg font-bold text-white mb-4">{isAr ? 'إضافة مركب جديد' : 'Add a New Vessel'}</h4>
                     <form onSubmit={handleAddCar} className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-2">
                        {/* Searchable, the makes with their logos, as everywhere a car is picked. */}
                        <SearchableSelect
@@ -877,7 +878,7 @@ function ProfilePageContent() {
                        />
                        <div className="sm:col-span-3 pt-2">
                          <button disabled={submitting || !carForm.year} type="submit" className="bg-marine-cyan text-white font-bold py-3 px-6 rounded-xl hover:bg-marine-cyan-dark transition-all disabled:opacity-50">
-                            {isAr ? 'حفظ السيارة' : 'Save Vehicle'}
+                            {isAr ? 'حفظ المركب' : 'Save Vessel'}
                          </button>
                        </div>
                     </form>
@@ -888,7 +889,7 @@ function ProfilePageContent() {
                       <div key={car._id} className="flex flex-wrap items-center justify-between gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl hover:border-marine-cyan/30 transition-all shadow-xl">
                          <div>
                             <div className="flex items-center gap-2 mb-1">
-                               <Car size={16} className="text-marine-primary" />
+                               <Ship size={16} className="text-marine-primary" />
                                <h4 className="text-white font-bold text-lg">{car.car_brand_name} {car.car_model_name}</h4>
                             </div>
                             <p className="text-zinc-400 text-sm font-medium">{car.year}</p>
@@ -899,7 +900,7 @@ function ProfilePageContent() {
                       </div>
                     ))}
                     {profile?.cars?.length === 0 && (
-                      <p className="text-zinc-500 text-center py-6">{isAr ? 'جراجك فارغ.' : 'Your garage is empty.'}</p>
+                      <p className="text-zinc-500 text-center py-6">{isAr ? 'أسطولك فارغ.' : 'Your fleet is empty.'}</p>
                     )}
                   </div>
                 </div>

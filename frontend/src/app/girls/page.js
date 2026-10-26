@@ -88,7 +88,7 @@ function GirlsProductsContent() {
         banner={{
           className: 'bg-gradient-to-br from-fuchsia-950 via-purple-800 to-pink-700',
           eyebrow: isAr ? 'مجموعة البنات' : 'The girls collection',
-          heading: isAr ? 'تفاصيلك في عربيتك' : 'Your touch, in your car',
+          heading: isAr ? 'تفاصيلك وأناقتك على المركب' : 'Your style onboard',
           text: isAr ? 'إكسسوارات وعناية مختارة لأسلوبك.' : 'Accessories and care picked for your style.',
         }}
       />

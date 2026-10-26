@@ -949,17 +949,6 @@ export default function ProductDetailsPage({ params }) {
               ))}
             </div>
 
-            {/* ── GARAGE FITMENT SECTION ───────────────────────────────────── */}
-            {isMounted && !isStaffAccount && (
-              <GarageFitmentSection
-                garageCompatibility={garageCompatibility}
-                t={t}
-                isAr={isAr}
-                user={user}
-              />
-            )}
-
-
             {/* Technical Specs */}
             <div className="space-y-3 sm:space-y-6 sm:pt-4">
               <h3 className="font-display text-marine-ink font-semibold text-lg sm:text-2xl flex items-center gap-2 sm:gap-3">
@@ -997,9 +986,6 @@ export default function ProductDetailsPage({ params }) {
                 </p>
               </div>
             </div>
-
-            {/* ── GENERAL COMPATIBILITY SECTION ────────────────────────────── */}
-            <GeneralCompatibilitySection product={product} t={t} isAr={isAr} />
 
             {/* ── CUSTOMER REVIEWS ─────────────────────────────────────────── */}
             <ProductReviews productId={product._id} />

@@ -488,7 +488,7 @@ export default function VendorOrderDetailsPage({ params }) {
                       </span>
                       {item.vendor_status === 'declined' && item.vendor_note && (
                         <p className="mt-2 text-sm text-zinc-500 italic bg-zinc-50 dark:bg-white/5 p-2 rounded-lg border border-zinc-100 dark:border-white/5">
-                          "{item.vendor_note}"
+                          &quot;{item.vendor_note}&quot;
                         </p>
                       )}
                     </div>

@@ -1,4 +1,3 @@
-import CarRecommendations from '../components/CarRecommendations';
 import ServiceBannerAdSlider from '../components/services/ServiceBannerAdSlider';
 import MostSoldProducts from '../components/MostSoldProducts';
 import PromotedProducts from '../components/PromotedProducts';
@@ -22,7 +21,6 @@ export default function Home() {
       <MarineHero />
       <CoreCategories />
       <ServiceSpotlight />
-      <CarRecommendations />
       <ServiceBannerAdSlider />
       <MostSoldProducts />
       <PromotedProducts />
