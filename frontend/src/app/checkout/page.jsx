@@ -24,22 +24,7 @@ import { resolveAssetUrl } from "../../lib/assets";
 import { orgTerms } from '../../lib/orgTerms';
 import { useActiveOrgType } from '../../components/company/OrgTermsContext';
 
-const META_CURRENCY = 'EGP';
 const getCartItemKey = (item) => String(item?.key || item?.product?._id || '');
-const getMetaContentId = (item) => String(item?.product?._id || item?.product?.id || item?.product_id || '');
-
-const buildMetaCommerceData = (items, value, currency) => ({
-  value: Number(value || 0),
-  currency: String(currency || 'QAR').toUpperCase(),
-  content_type: 'product',
-  content_ids: items.map(getMetaContentId).filter(Boolean),
-  contents: items.map((item) => ({
-    id: getMetaContentId(item),
-    quantity: Number(item.quantity || 1),
-    item_price: Number(item.product?.price || 0),
-  })).filter((item) => item.id),
-  num_items: items.reduce((total, item) => total + Number(item.quantity || 1), 0),
-});
 
 const clearCheckoutSelectionStorage = () => {
   sessionStorage.removeItem('checkout_mode');
@@ -347,33 +332,6 @@ export default function CheckoutPage() {
     clearCart();
   };
 
-  const trackPurchase = (order) => {
-    const orderId = String(order?._id || order?.id || '');
-    const storageKey = orderId ? `readycar_meta_purchase_${orderId}` : '';
-    const eventData = buildMetaCommerceData(checkoutItems, order?.total_price ?? finalTotal, META_CURRENCY);
-    const sendPurchase = () => {
-      if (typeof window.fbq !== 'function') return;
-      try {
-        if (storageKey && localStorage.getItem(storageKey)) return;
-        if (orderId) {
-          window.fbq('track', 'Purchase', eventData, { eventID: `purchase_${orderId}` });
-        } else {
-          window.fbq('track', 'Purchase', eventData);
-        }
-        if (storageKey) localStorage.setItem(storageKey, '1');
-      } catch (err) {
-        // Analytics must never interrupt a completed order.
-        console.warn('Meta Purchase tracking failed', err);
-      }
-    };
-
-    if (typeof window.fbq === 'function') {
-      sendPurchase();
-    } else {
-      window.addEventListener('readycar:meta-pixel-ready', sendPurchase, { once: true });
-    }
-  };
-
   useEffect(() => {
     if (!isMounted || !user || user.role === 'vendor' || user.role === 'admin') return;
     if (!checkoutMode) return;
@@ -409,7 +367,6 @@ export default function CheckoutPage() {
       orderApi.confirmPayment({ paymentId, invoice_id: invoiceId })
         .then((res) => {
           if (res.status === 'paid') {
-            trackPurchase(res.order);
             setSuccess(true);
             completeCartAfterOrder();
             // A company order paid its difference by card: the limit moved.
@@ -990,29 +947,6 @@ export default function CheckoutPage() {
     }
   };
 
-  // Track a populated checkout once its real payable total is available. This
-  // includes product discounts, coupon discounts, quantities, and shipping.
-  useEffect(() => {
-    if (!isMounted || !user || checkoutItems.length === 0 || !canPlaceOrder) return;
-
-    const eventKey = checkoutItemsSignature;
-    const sendInitiateCheckout = () => {
-      if (typeof window.fbq !== 'function') return;
-      if (window.__readyCarLastInitiateCheckout === eventKey) return;
-
-      try {
-        window.fbq('track', 'InitiateCheckout', buildMetaCommerceData(checkoutItems, finalTotal, META_CURRENCY));
-        window.__readyCarLastInitiateCheckout = eventKey;
-      } catch (err) {
-        console.warn('Meta InitiateCheckout tracking failed', err);
-      }
-    };
-
-    window.addEventListener('readycar:meta-pixel-ready', sendInitiateCheckout);
-    sendInitiateCheckout();
-    return () => window.removeEventListener('readycar:meta-pixel-ready', sendInitiateCheckout);
-  }, [isMounted, user, checkoutItems, checkoutItemsSignature, finalTotal, canPlaceOrder]);
-
   // Fetch a shipping quote whenever the destination is ready.
   useEffect(() => {
     // The quote endpoint is authenticated. A visitor who picks a city before
@@ -1212,7 +1146,6 @@ export default function CheckoutPage() {
       // exists and there is nothing to redirect to — confirm it here exactly
       // as a normal wallet checkout would.
       if (result?.requiresPayment === false) {
-        trackPurchase(result?.order);
         setSuccess(true);
         completeCartAfterOrder();
         setTimeout(() => { router.push("/profile?tab=orders"); }, 3000);
@@ -1352,7 +1285,6 @@ export default function CheckoutPage() {
         window.location.href = result.paymentUrl;
         return;
       }
-      trackPurchase(result?.order);
       // The header's "X left" and the My company tab move with the order.
       if (companyMode) refreshMyCompany();
       for (const item of checkoutItems) {

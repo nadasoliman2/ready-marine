@@ -3,8 +3,6 @@ import './globals.css';
 import Providers from './providers';
 import { cookies, headers } from 'next/headers';
 import AppChrome from '../components/AppChrome';
-import AnalyticsHead from '../components/AnalyticsHead';
-import AnalyticsRouteTracker from '../components/AnalyticsRouteTracker';
 
 // Inter for body text, Space Grotesk for headings, prices, labels and part numbers
 // (Tailwind's `font-sans` / `font-display`).
@@ -45,8 +43,6 @@ const metadata = {
   other: {
     'geo.region': 'QA',
     'geo.placename': 'Qatar',
-    // Meta domain verification — must be static in the server-delivered <head> source.
-    'facebook-domain-verification': 'in6pbkimcdss22q2y8nbnqai5xeiuj',
   },
 };
 
@@ -127,23 +123,9 @@ export default function RootLayout({ children }) {
         }} />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
-        {/* Marketing tracking tags (GA4, Microsoft Clarity, Meta Pixel) via next/script */}
-        <AnalyticsHead />
-        {/* Meta Pixel <noscript> fallback (invalid inside <head>, valid here) */}
-        <noscript>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=1447711580456108&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
         <Providers initialLanguage={initialLanguage} initialTheme={initialTheme}>
           <AppChrome>{children}</AppChrome>
         </Providers>
-        <AnalyticsRouteTracker />
       </body>
     </html>
   );

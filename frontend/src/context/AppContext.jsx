@@ -373,34 +373,6 @@ export function AppProvider({ children, initialLanguage = 'en', initialTheme = '
     });
     if (openDrawer) setIsCartOpen(true);
 
-    // Fire only after the cart mutation is accepted. newItem.product.price is
-    // already the effective variant/product price after any product discount.
-    if (typeof window !== 'undefined') {
-      const sendAddToCart = () => {
-        if (typeof window.fbq !== 'function') return;
-        try {
-          const unitPrice = Number(newItem.product.price || 0);
-          const contentId = product.slug_en || product.slug_ar || String(product._id || product.id);
-          window.fbq('track', 'AddToCart', {
-            value: unitPrice * addedQuantity,
-            currency: 'EGP',
-            content_ids: [contentId],
-            content_type: 'product',
-            content_name: product.title_en || product.title_ar || product.title || '',
-            contents: [{ id: contentId, quantity: addedQuantity, item_price: unitPrice }],
-          });
-        } catch (error) {
-          // Analytics must never prevent a product from being added.
-          console.warn('Meta AddToCart tracking failed', error);
-        }
-      };
-
-      if (typeof window.fbq === 'function') {
-        sendAddToCart();
-      } else {
-        window.addEventListener('readycar:meta-pixel-ready', sendAddToCart, { once: true });
-      }
-    }
     return true;
   };
 
