@@ -1,11 +1,13 @@
 'use client';
 
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Anchor, ArrowRight, BadgeCheck, Cog, Droplets, Filter, Gauge, LifeBuoy, Search, ShieldCheck,
+  Anchor, ArrowRight, BadgeCheck, ChevronLeft, ChevronRight, Cog, Droplets, Filter, Gauge, LifeBuoy, Search, ShieldCheck,
   Ship, Siren, Sparkles, Star, Wrench, Zap, MessageCircle, CreditCard,
 } from 'lucide-react';
 import Link from '../LocaleLink';
 import { useApp } from '../../context/AppContext';
+import { resolveAssetUrl, thumbUrl } from '../../lib/assets';
 import useCarFinder from '../carFinder/useCarFinder';
 
 /*
@@ -144,37 +146,33 @@ function VesselSelector() {
 export function MarineHero() {
   const { language } = useApp();
   const isAr = language === 'ar';
-  const stats = [
-    { value: '45,000+', label: isAr ? 'قطعة معروضة' : 'Listed Parts' },
-    { value: '24-48h', label: isAr ? 'توصيل للميناء' : 'Port Delivery' },
-    { value: '100%', label: isAr ? 'ضمان التوافق' : 'Fit Guarantee' },
-  ];
 
+
+  // The yacht sails in the lower right of the photo, so the copy sits centred in the sky above it.
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-marine-mist to-marine-canvas">
-      <div className="max-w-7xl mx-auto px-4 py-10 sm:py-16 grid lg:grid-cols-[1fr_440px] gap-10 items-center">
-        <div>
-          <span className="inline-flex items-center gap-1.5 bg-white border border-marine-teal/15 text-marine-teal font-display text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-sm mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-marine-cyan" />{isAr ? 'شبكة تجار موثّقة' : 'Multi-Vendor Verified Network'}
-          </span>
-          <h1 className="font-display text-[36px] leading-[44px] sm:text-[56px] sm:leading-[64px] font-bold tracking-[-0.03em] text-marine-ink mb-5">
-            {isAr ? <>مصدرك الموثوق لقطع غيار <span className="text-marine-cyan">اليخوت والمراكب</span></> : <>Your Trusted Source for <span className="text-marine-cyan">Yacht &amp; Marine</span> Spare Parts</>}
-          </h1>
-          <p className="text-marine-muted text-base leading-relaxed max-w-xl mb-8">
-            {isAr
-              ? 'أكبر منصة متعددة التجار لقطع غيار اليخوت والمراكب في مصر. من محركات الأوتبورد لأنظمة التوجيه والإلكترونيات البحرية — توصيل سريع، جودة معتمدة، وأسعار منافسة.'
-              : "Explore Egypt's premier multi-vendor marine parts platform. From outboard engines to steering systems and marine electronics — fast delivery, certified quality, and competitive prices guaranteed."}
-          </p>
-          <div className="grid grid-cols-3 gap-3 max-w-lg">
-            {stats.map((s) => (
-              <div key={s.label} className="bg-white border border-marine-teal/15 rounded-lg px-4 py-3">
-                <div className="font-display text-xl sm:text-2xl font-semibold text-marine-primary">{s.value}</div>
-                <div className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-marine-muted mt-1">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <VesselSelector />
+    <section className="relative overflow-hidden bg-marine-mist h-[560px] sm:h-[600px]">
+      <img
+        src="/images/hero-yacht.jpg"
+        alt=""
+        fetchPriority="high"
+        className="absolute inset-0 w-full h-full object-cover object-[72%_center]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/20 to-transparent" />
+      <div className="relative max-w-3xl mx-auto px-4 pt-14 sm:pt-24 text-center">
+        <h1 className="font-display text-[32px] leading-[42px] sm:text-[52px] sm:leading-[62px] font-bold tracking-[-0.02em] text-marine-navy mb-4">
+          {isAr ? <>كل مستلزمات <span className="text-marine-cyan">البحر</span> في مكان واحد</> : <>Everything for the <span className="text-marine-cyan">Sea</span>, in One Place</>}
+        </h1>
+        <p className="text-marine-ink/80 text-base sm:text-lg leading-relaxed max-w-xl mx-auto mb-8">
+          {isAr
+            ? 'مستلزمات قوارب وصيد ورياضات مائية مختارة بعناية لتجربة أكثر أماناً ومتعة.'
+            : 'Boating, fishing and water-sports essentials, carefully selected for a safer, more enjoyable time on the water.'}
+        </p>
+        <Link
+          href="/products"
+          className="inline-flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-display text-sm font-bold tracking-[0.04em] px-8 py-3.5 rounded shadow-aura transition-colors"
+        >
+          {isAr ? 'تسوّق الآن' : 'Shop Now'}<ArrowRight size={16} className="rtl:rotate-180" />
+        </Link>
       </div>
     </section>
   );
@@ -185,7 +183,33 @@ const CATEGORY_ICONS = [Cog, Droplets, Filter, Gauge, Zap, Anchor, Sparkles, Wre
 export function CoreCategories() {
   const { language, categories } = useApp();
   const isAr = language === 'ar';
-  const list = (categories || []).slice(0, 7);
+  const list = categories || [];
+  const trackRef = useRef(null);
+  const [edges, setEdges] = useState({ left: false, right: false });
+
+  // Which arrows still have somewhere to go. In RTL scrollLeft runs from 0 down to
+  // -max, so the start of the row is on the right instead of the left.
+  const updateEdges = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    const fromStart = Math.abs(track.scrollLeft);
+    const atStart = fromStart < 8;
+    const atEnd = fromStart > max - 8;
+    setEdges(isAr ? { left: !atEnd, right: !atStart } : { left: !atStart, right: !atEnd });
+  }, [isAr]);
+
+  useEffect(() => {
+    updateEdges();
+    window.addEventListener('resize', updateEdges);
+    return () => window.removeEventListener('resize', updateEdges);
+  }, [updateEdges, list.length]);
+
+  const scrollBy = (dir) => {
+    const track = trackRef.current;
+    if (track) track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: 'smooth' });
+  };
+
   if (!list.length) return null;
 
   return (
@@ -196,11 +220,31 @@ export function CoreCategories() {
             <p className={SECTION_EYEBROW}>{isAr ? 'مكونات هندسية' : 'Engineered Components'}</p>
             <h2 className={SECTION_TITLE}>{isAr ? 'تصفّح حسب القسم' : 'Explore by Core Category'}</h2>
           </div>
-          <Link href="/products" className="font-display text-[11px] font-bold uppercase tracking-[0.08em] text-marine-primary hover:underline flex items-center gap-1 flex-shrink-0">
-            {isAr ? `كل الأقسام (${categories.length})` : `All ${categories.length} Categories`}<ArrowRight size={12} className="rtl:rotate-180" />
-          </Link>
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <Link href="/products" className="font-display text-[11px] font-bold uppercase tracking-[0.08em] text-marine-primary hover:underline flex items-center gap-1">
+              {isAr ? `كل الأقسام (${categories.length})` : `All ${categories.length} Categories`}<ArrowRight size={12} className="rtl:rotate-180" />
+            </Link>
+            <div className="hidden sm:flex gap-2" dir="ltr">
+              {[[-1, ChevronLeft, edges.left], [1, ChevronRight, edges.right]].map(([dir, Arrow, enabled]) => (
+                <button
+                  key={dir}
+                  type="button"
+                  onClick={() => scrollBy(dir)}
+                  disabled={!enabled}
+                  aria-label={dir < 0 ? 'Scroll left' : 'Scroll right'}
+                  className="w-9 h-9 rounded-full border border-marine-teal/20 bg-white text-marine-primary flex items-center justify-center hover:bg-marine-cyan hover:text-white hover:border-marine-cyan disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                >
+                  <Arrow size={18} />
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+        <div
+          ref={trackRef}
+          onScroll={updateEdges}
+          className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-4 scroll-px-4 pb-2"
+        >
           {list.map((cat, i) => {
             const Icon = CATEGORY_ICONS[i % CATEGORY_ICONS.length];
             const subs = (cat.subcategories || []).slice(0, 2).map((s) => (isAr ? (s.name_ar || s.name) : s.name)).join(' / ');
@@ -208,13 +252,26 @@ export function CoreCategories() {
               <Link
                 key={cat._id}
                 href={`/products?category_id=${cat._id}`}
-                className="group bg-white border border-marine-teal/15 rounded-lg p-4 text-center hover:border-marine-cyan hover:shadow-aura hover:-translate-y-0.5 transition-all"
+                className="group flex-none w-[150px] sm:w-[170px] snap-start bg-white border border-marine-teal/15 rounded-lg overflow-hidden text-center hover:border-marine-cyan hover:shadow-aura hover:-translate-y-0.5 transition-all"
               >
-                <span className="mx-auto mb-3 w-12 h-12 rounded bg-marine-mist text-marine-primary flex items-center justify-center group-hover:bg-marine-cyan group-hover:text-white transition-colors">
-                  <Icon size={22} />
-                </span>
-                <div className="text-sm font-semibold text-marine-ink line-clamp-1">{isAr ? (cat.name_ar || cat.name) : cat.name}</div>
-                {subs && <div className="text-[11px] text-marine-outline mt-0.5 line-clamp-1">{subs}</div>}
+                {cat.image ? (
+                  <span className="block aspect-square overflow-hidden bg-gradient-to-b from-white to-marine-mist p-4">
+                    <img
+                      src={thumbUrl(resolveAssetUrl(cat.image), 320)}
+                      alt=""
+                      loading="lazy"
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </span>
+                ) : (
+                  <span className="aspect-square bg-marine-mist text-marine-primary flex items-center justify-center group-hover:bg-marine-cyan group-hover:text-white transition-colors">
+                    <Icon size={32} />
+                  </span>
+                )}
+                <div className="p-3">
+                  <div className="text-sm font-semibold text-marine-ink line-clamp-1">{isAr ? (cat.name_ar || cat.name) : cat.name}</div>
+                  {subs && <div className="text-[11px] text-marine-outline mt-0.5 line-clamp-1">{subs}</div>}
+                </div>
               </Link>
             );
           })}
