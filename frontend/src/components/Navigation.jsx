@@ -91,7 +91,7 @@ export function useNavItems() {
   return [
     { label: t.home, href: '/' },
     { label: t.allProducts, href: '/products' },
-    { label: t.trunkProducts || (language === 'ar' ? 'مستلزمات على المركب' : 'Onboard Essentials'), href: '/trunk' },
+    { label: language === 'ar' ? 'مجموعات ريدي مارين' : 'Marine Hubs', href: '/#marine-hubs' },
     { label: t.services || (language === 'ar' ? 'الخدمات' : 'Services'), href: '/services' },
     { label: language === 'ar' ? 'التجار' : 'Vendors', href: '/vendors' },
     { label: t.deliveryReturn, href: '/delivery' },

@@ -221,7 +221,7 @@ export function MarineHero() {
       </div>
 
       {/* 2. Desktop Viewport (hidden md:flex): Fixed 650px height, balanced & un-stretched */}
-      <section className="hidden md:flex relative overflow-hidden h-[650px] flex-col justify-between">
+      <section className="hidden md:flex relative overflow-hidden h-[600px] flex-col justify-between">
         {/* Yacht Background */}
         <img
           src="/images/hero-yacht.png"

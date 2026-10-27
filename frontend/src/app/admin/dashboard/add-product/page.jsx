@@ -8,6 +8,7 @@ import {
 import { adminApi } from '../../../../lib/api';
 import { searchOptions } from '../../../../lib/searchSuggest';
 import { useApp } from '../../../../context/AppContext';
+import AudiencePicker from '../../../../components/dashboard/AudiencePicker';
 import NestedCategorySelector from '../../../../components/dashboard/NestedCategorySelector';
 import ImageUploader from '../../../../components/dashboard/ImageUploader';
 import CompatibilityBuilder from '../../../../components/dashboard/CompatibilityBuilder';
@@ -49,7 +50,7 @@ export default function AdminAddProductPage() {
     part_type: '',
     price: '', discount_type: '', discount_value: '',
     category_id: '', product_brand_id: '',
-    is_universal: true, for_girls: false, for_trunk: false, stock_management: true, quantity: 1,
+    is_universal: true, for_girls: false, for_trunk: false, target_audiences: [], stock_management: true, quantity: 1,
     images: [],
     compatible_cars: [],
     variation_types: [],
@@ -397,6 +398,18 @@ export default function AdminAddProductPage() {
             </div>
           </div>
         </section>
+
+        {/* Audience hubs (lib/marineHubs): where the product shows on the home page */}
+        <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02]">
+            <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'المجموعات المخصصة' : 'Audience Hubs'}</h3>
+            <p className="text-xs text-zinc-500 mt-0.5">{isAr ? 'اختار المجموعات اللي المنتج يظهر فيها على الصفحة الرئيسية، بغض النظر عن القسم بتاعه.' : 'Pick the hubs this product appears in on the home page, whatever its category.'}</p>
+          </div>
+          <div className="p-6">
+            <AudiencePicker value={form.target_audiences} onChange={(v) => setForm(prev => ({ ...prev, target_audiences: v }))} isAr={isAr} />
+          </div>
+        </section>
+
 
         {/* Section 6: Vehicle Compatibility */}
         <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">

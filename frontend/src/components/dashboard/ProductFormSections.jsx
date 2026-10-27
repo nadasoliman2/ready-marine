@@ -12,6 +12,7 @@ import { useApp } from '../../context/AppContext';
 import { useLinkedBrandCategory } from '../../lib/brandCategoryLink';
 import SearchableSelect from '../SearchableSelect';
 import { brandOptions } from '../../lib/pickerOptions';
+import AudiencePicker from './AudiencePicker';
 
 /**
  * The full product form, section by section.
@@ -22,7 +23,7 @@ import { brandOptions } from '../../lib/pickerOptions';
  * "Edit the rest of the details" — same fields, same component.
  *
  * `only` / `except` pick which sections render. Sections are keyed:
- *   core · media · organization · pricing · shipping · variations · girls · trunk · compatibility
+ *   core · media · organization · pricing · shipping · variations · girls · trunk · audiences · compatibility
  *
  * The required part type sits in "organization". A page that shows it elsewhere (the
  * condensed catalog form keeps it up top, beside price and stock) passes `hidePartType`.
@@ -223,6 +224,15 @@ export default function ProductFormSections({
                         </div>
                     }
                 />
+            )}
+
+            {shows('audiences') && (
+                <Section
+                    title={isAr ? 'المجموعات المخصصة' : 'Audience Hubs'}
+                    hint={isAr ? 'اختار المجموعات اللي المنتج يظهر فيها على الصفحة الرئيسية، بغض النظر عن القسم بتاعه.' : 'Pick the hubs this product appears in on the home page, whatever its category.'}
+                >
+                    <AudiencePicker value={form.target_audiences} onChange={(v) => setForm(prev => ({ ...prev, target_audiences: v }))} isAr={isAr} />
+                </Section>
             )}
 
             {shows('compatibility') && (

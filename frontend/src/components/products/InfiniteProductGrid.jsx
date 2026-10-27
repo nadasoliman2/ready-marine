@@ -19,7 +19,7 @@ import { PRODUCT_PAGE_SIZE } from '../../lib/productListPreload';
  * @param onRestart       called by "Show products from the start", on a list opened at `?page=N`
  */
 export default function InfiniteProductGrid({
-  list,
+  list = {},
   isAr,
   moreHref,
   empty,
@@ -29,28 +29,29 @@ export default function InfiniteProductGrid({
   buttonClassName = 'bg-marine-navy hover:bg-marine-cyan',
   accentClassName = 'text-marine-primary',
 }) {
-  const { products } = list;
+  const safeList = list || {};
+  const products = safeList.products || [];
   const retry = (
-    <button type="button" onClick={list.loadMore} className={`font-bold hover:underline ${accentClassName}`}>
+    <button type="button" onClick={safeList.loadMore} className={`font-bold hover:underline ${accentClassName}`}>
       {isAr ? 'إعادة المحاولة' : 'Try again'}
     </button>
   );
 
   return (
     <>
-      {onRestart && list.startPage > 1 && (
+      {onRestart && safeList.startPage > 1 && (
         <button type="button" onClick={onRestart} className={`mb-4 text-sm font-bold hover:underline ${accentClassName}`}>
           {isAr ? 'عرض المنتجات من الأول' : 'Show products from the start'}
         </button>
       )}
 
-      {list.initialLoading ? (
+      {safeList.initialLoading ? (
         <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
           {[1, 2, 3, 4, 5, 6].map(i => (
             <div key={i} className={`aspect-[4/5] animate-pulse ${skeletonClassName}`} />
           ))}
         </div>
-      ) : list.failed && !products.length ? (
+      ) : safeList.failed && !products.length ? (
         failed || (
           <div role="alert" className="text-center py-20 space-y-3">
             <p className="text-red-500 font-bold">{isAr ? 'معرفناش نحمّل المنتجات.' : "We couldn't load the products."}</p>
@@ -65,13 +66,13 @@ export default function InfiniteProductGrid({
             {products.map(product => (
               <ProductCard key={product._id} product={product} />
             ))}
-            {list.loadingMore && [1, 2, 3].map(i => (
+            {safeList.loadingMore && [1, 2, 3].map(i => (
               <div key={`more-${i}`} className={`aspect-[4/5] animate-pulse ${skeletonClassName}`} aria-hidden="true" />
             ))}
           </div>
 
           {/* Reaching this marker loads the next page (it starts well before it shows). */}
-          <div ref={list.sentinelRef} aria-hidden="true" className="h-px" />
+          <div ref={safeList.sentinelRef} aria-hidden="true" className="h-px" />
 
           {list.showMoreButton && (
             <div className="flex justify-center pt-10">

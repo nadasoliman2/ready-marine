@@ -121,7 +121,7 @@ function MorePage({ onClose, openCategory }) {
                 : <p className="p-5 text-center text-sm text-marine-outline">{isAr ? 'مفيش أقسام' : 'No categories yet'}</p>}
             </div>
           )}
-          {row('/trunk', Briefcase, labelOf['/trunk'])}
+          {row('/#marine-hubs', Anchor, isAr ? 'مجموعات ريدي مارين' : 'Marine Hubs')}
           {row('/vendors', Store, labelOf['/vendors'])}
           {row('/services', Wrench, labelOf['/services'])}
           {row('/articles', Newspaper, labelOf['/articles'])}

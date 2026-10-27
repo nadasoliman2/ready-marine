@@ -5,6 +5,7 @@ import { useRouter } from '../../../../../lib/navigation';
 import { ArrowLeft, Save, Send, Loader2, Info, X, CheckCircle2 } from 'lucide-react';
 import { adminApi, vendorApi } from '../../../../../lib/api';
 import { useApp } from '../../../../../context/AppContext';
+import AudiencePicker from '../../../../../components/dashboard/AudiencePicker';
 import NestedCategorySelector from '../../../../../components/dashboard/NestedCategorySelector';
 import ImageUploader from '../../../../../components/dashboard/ImageUploader';
 import CompatibilityBuilder from '../../../../../components/dashboard/CompatibilityBuilder';
@@ -69,6 +70,7 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
           is_universal: prod.is_universal ?? true,
           for_girls: prod.for_girls ?? false,
           for_trunk: prod.for_trunk ?? false,
+          target_audiences: prod.target_audiences || [],
           stock_management: prod.stock_management ?? true,
           stock_status: prod.stock_status || 'instock',
           quantity: prod.quantity || 0,
@@ -369,6 +371,18 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
             </div>
           </div>
         </section>
+
+        {/* Audience hubs (lib/marineHubs): where the product shows on the home page */}
+        <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02]">
+            <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'المجموعات المخصصة' : 'Audience Hubs'}</h3>
+            <p className="text-xs text-zinc-500 mt-0.5">{isAr ? 'اختار المجموعات اللي المنتج يظهر فيها على الصفحة الرئيسية، بغض النظر عن القسم بتاعه.' : 'Pick the hubs this product appears in on the home page, whatever its category.'}</p>
+          </div>
+          <div className="p-6">
+            <AudiencePicker value={form.target_audiences} onChange={(v) => setForm(prev => ({ ...prev, target_audiences: v }))} isAr={isAr} />
+          </div>
+        </section>
+
 
         {/* Section 6: Vehicle Compatibility */}
         <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">

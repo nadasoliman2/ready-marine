@@ -72,24 +72,25 @@ export default function CategoriesSlider() {
       </div>
 
       <div className="px-4 mt-6 grid grid-cols-2 gap-3">
-        <Link href="/trunk" className="relative h-36 rounded-2xl overflow-hidden bg-zinc-900 shadow-sm">
-          <img src="/images/trunk/road-ready-hero.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-          <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+        <Link href="/hub/diy-maintenance" className="relative h-36 rounded-2xl overflow-hidden bg-slate-900 shadow-sm">
+          <img src="/images/hubs/diy-maintenance.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+          <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
           <span className="absolute bottom-0 inset-x-0 p-3 text-white">
-            <span className="block text-[10px] font-bold text-white/70">{isAr ? 'جاهز للطريق' : 'Road ready'}</span>
-            <span className="block text-base font-black leading-tight">{t.trunkProducts || (isAr ? 'مستلزمات على المركب' : 'Onboard Essentials')}</span>
-            <span className="block text-[10px] text-white/70 mt-0.5">{isAr ? 'كل الأساسيات' : 'All the essentials'}</span>
+            <span className="block text-[10px] font-bold text-white/70">{isAr ? 'وفر التكاليف' : 'Hands-on'}</span>
+            <span className="block text-base font-black leading-tight">{isAr ? 'صيانتك بنفسك' : 'DIY Maintenance'}</span>
+            <span className="block text-[10px] text-white/70 mt-0.5">{isAr ? 'باقات وزيوت معتمدة' : 'Kits & Genuine oils'}</span>
           </span>
           <Briefcase size={18} className="absolute top-3 end-3 text-white/80" />
         </Link>
-        <Link href="/girls" className="relative h-36 rounded-2xl overflow-hidden bg-gradient-to-br from-fuchsia-900 via-purple-800 to-pink-700 shadow-sm">
-          <span className="absolute -top-6 -start-6 w-24 h-24 rounded-full bg-pink-400/30 blur-2xl" />
+        <Link href="/hub/yacht-luxury" className="relative h-36 rounded-2xl overflow-hidden bg-slate-900 shadow-sm">
+          <img src="/images/hubs/yacht-luxury.png" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+          <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
           <span className="absolute bottom-0 inset-x-0 p-3 text-white">
-            <span className="block text-[10px] font-bold text-white/70">{isAr ? 'مختارة ليكي' : 'Picked for you'}</span>
-            <span className="block text-base font-black leading-tight">{t.girlsProducts || (isAr ? 'منتجات البنات' : 'Girls Products')}</span>
-            <span className="block text-[10px] text-white/70 mt-0.5">{isAr ? 'اكتشفي المجموعة' : 'Explore the collection'}</span>
+            <span className="block text-[10px] font-bold text-cyan-300">{isAr ? 'فخامة ورفاهية' : 'VIP Elite'}</span>
+            <span className="block text-base font-black leading-tight">{isAr ? 'اليخوت الفاخرة' : 'Yacht Luxury'}</span>
+            <span className="block text-[10px] text-white/70 mt-0.5">{isAr ? 'إضاءة وشاشات ذكية' : 'Lighting & displays'}</span>
           </span>
-          <Sparkles size={18} className="absolute top-3 end-3 text-white/80" />
+          <Sparkles size={18} className="absolute top-3 end-3 text-cyan-300" />
         </Link>
       </div>
     </section>
