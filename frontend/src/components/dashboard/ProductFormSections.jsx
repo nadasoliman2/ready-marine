@@ -23,7 +23,7 @@ import AudiencePicker from './AudiencePicker';
  * "Edit the rest of the details" — same fields, same component.
  *
  * `only` / `except` pick which sections render. Sections are keyed:
- *   core · media · organization · pricing · shipping · variations · girls · trunk · audiences · compatibility
+ *   core · media · organization · pricing · shipping · variations · trunk · audiences · compatibility
  *
  * The required part type sits in "organization". A page that shows it elsewhere (the
  * condensed catalog form keeps it up top, beside price and stock) passes `hidePartType`.
@@ -194,21 +194,6 @@ export default function ProductFormSections({
                 </Section>
             )}
 
-            {shows('girls') && (
-                <Section
-                    title={isAr ? 'مجموعة البنات' : 'Girls Collection'}
-                    hint={t.forGirlsDesc || (isAr ? 'حدد هذا المنتج كجزء من مجموعة البنات' : 'Mark this product as part of the Girls collection')}
-                    right={
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{t.forGirls || (isAr ? 'للبنات' : 'For Girls')}</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" checked={form.for_girls} onChange={e => setForm({ ...form, for_girls: e.target.checked })} />
-                                <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-pink-500"></div>
-                            </label>
-                        </div>
-                    }
-                />
-            )}
 
             {shows('trunk') && (
                 <Section

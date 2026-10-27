@@ -229,8 +229,9 @@ const getAllProducts = async (filters = {}, { user = null } = {}) => {
         car_year,
         min_price,
         max_price,
-        for_girls,
-        for_trunk
+        for_trunk,
+        audience,
+        target_audience,
     } = filters;
     // Unless a sort was asked for: a search by how well each product matches, anything else
     // in the shop's own order — best sellers, then the categories in turn
@@ -281,13 +282,15 @@ const getAllProducts = async (filters = {}, { user = null } = {}) => {
         query.product_brand_id = product_brand_id;
     }
 
-    // 3a. Girls Collection Filter
-    if (for_girls === 'true' || for_girls === true) {
-        query.for_girls = true;
-    }
     // 3b. Car Trunk essentials
     if (for_trunk === 'true' || for_trunk === true) {
         query.for_trunk = true;
+    }
+    // 3c. Marine audience hubs: one key, or several comma-separated for a hub that
+    // gathers two audiences (saltwater,freshwater).
+    const audiences = String(audience || target_audience || '').split(',').map((a) => a.trim()).filter(Boolean);
+    if (audiences.length) {
+        query.target_audiences = { $in: audiences };
     }
 
     const minPrice = min_price !== undefined && min_price !== '' ? Number(min_price) : null;

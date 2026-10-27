@@ -5,7 +5,7 @@ import { AUDIENCE_OPTIONS } from '../../lib/marineHubs';
 
 /**
  * The audience hubs a product shows up in (Product.target_audiences), independent of its
- * category — the same idea as the Girls / Onboard flags, but several at once. Each chip
+ * category — the same idea as the Onboard Essentials flag, but several at once. Each chip
  * toggles one key in `value`.
  */
 export default function AudiencePicker({ value, onChange, isAr }) {

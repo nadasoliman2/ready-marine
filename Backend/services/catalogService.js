@@ -248,7 +248,7 @@ const getCatalogFacets = async ({ status = null, category_id = null, product_bra
             // The brand may be a hand-entered one or a car make (brandRef.js): look in both
             // and take whichever answered.
             { $lookup: { from: 'brands', localField: '_id', foreignField: '_id', as: 'b' } },
-            { $lookup: { from: 'carbrands', localField: '_id', foreignField: '_id', as: 'cb' } },
+            { $lookup: { from: 'vesselbrands', localField: '_id', foreignField: '_id', as: 'cb' } },
             { $addFields: { b: { $ifNull: [{ $first: '$b' }, { $first: '$cb' }] } } },
             { $match: { b: { $ne: null } } },
             // Brands carry a single lowercase `name`, not a bilingual pair like categories.
@@ -1145,7 +1145,7 @@ const getUnlinkedProductFacets = async ({ status = 'all', category_id = null, pr
             // The brand may be a hand-entered one or a car make (brandRef.js): look in both
             // and take whichever answered.
             { $lookup: { from: 'brands', localField: '_id', foreignField: '_id', as: 'b' } },
-            { $lookup: { from: 'carbrands', localField: '_id', foreignField: '_id', as: 'cb' } },
+            { $lookup: { from: 'vesselbrands', localField: '_id', foreignField: '_id', as: 'cb' } },
             { $addFields: { b: { $ifNull: [{ $first: '$b' }, { $first: '$cb' }] } } },
             { $match: { b: { $ne: null } } },
             // Brands carry a single lowercase `name`, unlike categories.

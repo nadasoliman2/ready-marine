@@ -195,8 +195,6 @@ function Row({ row, idx, refs, language, selected, onSelect, onChange, onDuplica
                     <option value="published">{L(language, 'Publish', 'نشر')}</option>
                 </select>
             </td>
-            {/* For girls */}
-            <td className={`${td} text-center`}><Toggle checked={row.for_girls} onChange={(v) => set({ for_girls: v })} pink /></td>
             {/* Trunk essential */}
             <td className={`${td} text-center`}><Toggle checked={row.for_trunk} onChange={(v) => set({ for_trunk: v })} amber /></td>
             {/* Images */}
@@ -487,7 +485,6 @@ export default function BulkEntryGrid({ submit, disabled, disabledHint, storageK
                             <Th w={70}>{L(language, 'Qty', 'الكمية')}</Th>
                             <Th w={120}>{L(language, 'Stock status', 'حالة المخزون')}</Th>
                             <Th w={110}>{L(language, 'Status', 'الحالة')}</Th>
-                            <Th w={70}>{L(language, 'Girls', 'بنات')}</Th>
                             <Th w={70}>{L(language, 'Trunk', 'شنطة')}</Th>
                             <Th w={110} req>{L(language, 'Images', 'الصور')}</Th>
                             <Th w={150}>{L(language, 'Options', 'الخيارات')}</Th>

@@ -192,7 +192,7 @@ export function MarineHero() {
               className="inline-flex items-center gap-1.5 bg-[#0099b8] hover:bg-[#00829e] text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-colors"
             >
               <span>{isAr ? 'تسوق الآن' : 'Shop Now'}</span>
-              <ArrowRight size={13} className="rtl:rotate-180" />
+              {/* <ArrowRight size={13} className="rtl:rotate-180" /> */}
             </Link>
           </div>
         </div>
@@ -220,9 +220,9 @@ export function MarineHero() {
         </div>
       </div>
 
-      {/* 2. Desktop Viewport (hidden md:flex): Fixed 650px height, balanced & un-stretched */}
-      <section className="hidden md:flex relative overflow-hidden h-[600px] flex-col justify-between">
-        {/* Yacht Background */}
+      {/* 2. Desktop Viewport (hidden md:flex): Fixed balanced height matching design */}
+      <section className="hidden md:flex relative overflow-hidden h-[580px] flex-col justify-between">
+        {/* Yacht Background - clear in natural sunlight without white overlay */}
         <img
           src="/images/hero-yacht.png"
           alt="Ready Marine"
@@ -230,58 +230,85 @@ export function MarineHero() {
           className="absolute inset-0 w-full h-full object-cover object-[78%_center] pointer-events-none select-none"
         />
 
-        {/* Subtle light overlay to guarantee high-contrast text on text side */}
-        <div className="absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l from-white/90 via-white/45 to-transparent pointer-events-none" />
-
-        {/* Main hero typography and action - vertically centered */}
+        {/* Main hero typography and action - positioned on the left over the sea/mountains, text-centered */}
         <div className="relative z-10 flex-1 flex items-center max-w-7xl mx-auto px-6 lg:px-8 w-full">
-          <div className="max-w-xl text-start">
-            <h1 className="font-display text-[42px] leading-[52px] lg:text-[54px] lg:leading-[64px] font-black tracking-[-0.02em] text-[#0a233b] mb-4">
-              <span>{isAr ? 'كل مستلزمات' : 'All Your'} </span>
-              <span className="text-marine-cyan">{isAr ? 'البحر' : 'Marine Gear'}</span>
-              <br />
-              <span>{isAr ? 'في مكان واحد' : 'In One Place'}</span>
-            </h1>
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-center w-full">
+            {/* Right side spacer in RTL / Left side spacer in LTR so yacht is fully clear */}
+            <div className="hidden lg:block rtl:order-1 ltr:order-2" aria-hidden="true" />
 
-            <p className="text-slate-700/95 text-base lg:text-lg leading-relaxed max-w-lg mb-8 font-medium">
-              {isAr
-                ? 'مستلزمات قوارب ويخوت ومعدات بحرية مختارة بعناية لتجربة أكثر أماناً ومتعة.'
-                : 'Boat, yacht, and marine essentials carefully curated for a safer and more enjoyable experience on the water.'}
-            </p>
+            {/* Text column: on the left side of the screen, with content centered within its block */}
+            <div className="rtl:order-2 ltr:order-1 flex flex-col items-center text-center max-w-md mx-auto">
+              <h1 className="font-display text-[40px] leading-[50px] lg:text-[48px] lg:leading-[58px] font-black tracking-tight text-[#0a2540] mb-3 text-center">
+                <span>{isAr ? 'كل مستلزمات ' : 'All Your '}</span>
+                <span className="text-[#009bb3]">{isAr ? 'البحر' : 'Marine Gear'}</span>
+                <br />
+                <span>{isAr ? 'في مكان واحد' : 'In One Place'}</span>
+              </h1>
 
-            <Link
-              href="/products"
-              className="inline-flex items-center justify-center gap-2.5 bg-[#0099b8] hover:bg-[#00829e] text-white font-display text-base font-bold px-9 py-3.5 rounded-lg shadow-lg shadow-[#0099b8]/25 hover:shadow-[#0099b8]/40 hover:-translate-y-0.5 transition-all"
-            >
-              <span>{isAr ? 'تسوق الآن' : 'Shop Now'}</span>
-              <ArrowRight size={18} className="rtl:rotate-180" />
-            </Link>
+              <p className="text-slate-700/90 text-sm lg:text-[15px] leading-relaxed max-w-[420px] mb-7 font-medium text-center">
+                {isAr ? (
+                  <>
+                    مستلزمات قوارب ويخوت ومعدات بحرية مختارة بعناية
+                    <br className="hidden sm:inline" />
+                    لتجربة أكثر أماناً ومتعة.
+                  </>
+                ) : (
+                  <>
+                    Boat, yacht, and marine essentials carefully curated
+                    <br className="hidden sm:inline" />
+                    for a safer and more enjoyable experience on the water.
+                  </>
+                )}
+              </p>
+
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center gap-2 bg-[#008ea6] hover:bg-[#007a90] text-white font-display text-sm font-bold px-8 py-3 rounded-md shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all mx-auto"
+              >
+                <span>{isAr ? 'تسوق الآن' : 'Shop Now'}</span>
+                {/* <ArrowRight size={16} className="rtl:rotate-180" /> */}
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Bottom Features Strip with 3 badges and wave accent */}
-        <div className="relative z-10 w-full overflow-hidden bg-gradient-to-t from-[#061d2d]/90 via-[#061d2d]/65 to-transparent pt-6 pb-5">
-          {/* Subtle decorative wave curves */}
-          <svg
-            className="absolute -bottom-2 -start-6 w-80 sm:w-[480px] h-24 pointer-events-none opacity-40 text-cyan-400"
-            viewBox="0 0 500 120"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path d="M-20 90 C 100 30, 240 120, 520 50" stroke="currentColor" strokeWidth="2.5" />
-            <path d="M-10 105 C 130 45, 270 130, 540 65" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.6" />
-            <path d="M0 120 C 150 60, 300 140, 560 80" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" />
-          </svg>
+        <div className="relative z-10 w-full overflow-hidden bg-gradient-to-t from-[#041624]/95 via-[#061d2d]/70 to-transparent pt-6 pb-5">
+          {/* Subtle flowing wave curves on bottom-left */}
+          <div className="absolute -bottom-2 left-0 w-[440px] sm:w-[540px] h-28 pointer-events-none overflow-hidden select-none" aria-hidden="true">
+            <svg
+              className="w-full h-full text-cyan-400"
+              viewBox="0 0 540 120"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="waveG1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#00b4d8" stopOpacity="0.45" />
+                  <stop offset="60%" stopColor="#0077b6" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#023e8a" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="waveG2" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.35" />
+                  <stop offset="70%" stopColor="#0284c7" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#0369a1" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path d="M-20 100 C 120 30, 260 130, 540 50" stroke="url(#waveG1)" strokeWidth="2.5" />
+              <path d="M-30 115 C 140 45, 300 140, 560 65" stroke="url(#waveG2)" strokeWidth="1.5" />
+              <path d="M-10 85 C 160 20, 320 120, 520 40" stroke="#38bdf8" strokeOpacity="0.25" strokeWidth="1" />
+            </svg>
+          </div>
 
           <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid grid-cols-3 gap-6 items-center">
-              {/* Feature 1 */}
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
-                  <ShieldCheck size={24} />
+            <div className="flex items-center justify-between gap-4 [direction:ltr]">
+              {/* Feature 1 (Left): Shield */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-11 h-11 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                  <ShieldCheck size={22} />
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-white font-bold text-sm lg:text-base leading-snug">
+                <div className="min-w-0 text-start" dir={isAr ? 'rtl' : 'ltr'}>
+                  <h3 className="text-white font-bold text-sm lg:text-[15px] leading-snug">
                     {isAr ? '100% قطع أصلية معتمدة' : '100% Genuine Certified'}
                   </h3>
                   <p className="text-cyan-100/75 text-xs lg:text-[13px] mt-0.5 truncate">
@@ -290,13 +317,16 @@ export function MarineHero() {
                 </div>
               </div>
 
-              {/* Feature 2 */}
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
-                  <Truck size={24} />
+              {/* Vertical divider */}
+              <div className="hidden md:block w-px h-8 bg-white/15 shrink-0" aria-hidden="true" />
+
+              {/* Feature 2 (Center): Truck */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-11 h-11 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                  <Truck size={22} />
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-white font-bold text-sm lg:text-base leading-snug">
+                <div className="min-w-0 text-start" dir={isAr ? 'rtl' : 'ltr'}>
+                  <h3 className="text-white font-bold text-sm lg:text-[15px] leading-snug">
                     {isAr ? 'توصيل سريع في مصر' : 'Fast Delivery in Egypt'}
                   </h3>
                   <p className="text-cyan-100/75 text-xs lg:text-[13px] mt-0.5 truncate">
@@ -305,13 +335,16 @@ export function MarineHero() {
                 </div>
               </div>
 
-              {/* Feature 3 */}
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
-                  <Headphones size={24} />
+              {/* Vertical divider */}
+              <div className="hidden md:block w-px h-8 bg-white/15 shrink-0" aria-hidden="true" />
+
+              {/* Feature 3 (Right): Headphones */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-11 h-11 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                  <Headphones size={22} />
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-white font-bold text-sm lg:text-base leading-snug">
+                <div className="min-w-0 text-start" dir={isAr ? 'rtl' : 'ltr'}>
+                  <h3 className="text-white font-bold text-sm lg:text-[15px] leading-snug">
                     {isAr ? 'دعم متخصص للبحرية' : 'Dedicated Marine Support'}
                   </h3>
                   <p className="text-cyan-100/75 text-xs lg:text-[13px] mt-0.5 truncate">
@@ -592,7 +625,7 @@ export function PaymentPartners() {
   return (
     <section className="pb-10 sm:pb-14">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="bg-white border border-marine-teal/15 rounded-lg p-5 flex flex-col md:flex-row md:items-center gap-4">
+        {/* <div className="bg-white border border-marine-teal/15 rounded-lg p-5 flex flex-col md:flex-row md:items-center gap-4">
           <div className="flex items-center gap-3 flex-1">
             <span className="w-10 h-10 rounded bg-marine-cyan text-white flex items-center justify-center flex-shrink-0"><CreditCard size={18} /></span>
             <div>
@@ -610,7 +643,7 @@ export function PaymentPartners() {
               );
             })}
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

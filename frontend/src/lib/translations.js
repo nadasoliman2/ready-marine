@@ -301,13 +301,6 @@ export const translations = {
     users: 'Users',
     vendors: 'Vendors',
 
-    // Girls Products
-    girlsProducts: 'Girls Products',
-    girlsProductsTitle: 'Girls Collection',
-    girlsProductsSubtitle: 'Explore our curated collection of marine accessories and parts',
-    forGirls: 'For Girls',
-    forGirlsDesc: 'Mark this product as part of the Girls collection',
-
     // Car Trunk essentials
     trunkProducts: 'Onboard Essentials',
     trunkProductsTitle: 'What every boat should carry onboard',
@@ -706,13 +699,6 @@ export const translations = {
     defaultLocationRequirement: '* يجب تحديد فرع واحد كفرع افتراضي لاستخدامه في الطلبات الجديدة.',
     saveChanges: 'حفظ التغييرات',
     profileUpdated: 'تم تحديث البيانات بنجاح',
-
-    // Girls Products
-    girlsProducts: 'منتجات البنات',
-    girlsProductsTitle: 'مجموعة البنات',
-    girlsProductsSubtitle: 'استكشفي مجموعتنا المختارة من الإكسسوارات والقطع البحرية',
-    forGirls: 'للبنات',
-    forGirlsDesc: 'حدد هذا المنتج كجزء من مجموعة البنات',
 
     // Car Trunk essentials
     trunkProducts: 'مستلزمات على المركب',

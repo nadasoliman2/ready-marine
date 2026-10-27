@@ -382,7 +382,7 @@ function ProductsContent() {
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-3 bg-white border border-marine-teal/15 rounded-lg px-4 py-2.5">
+            {/* <div className="flex items-center gap-3 bg-white border border-marine-teal/15 rounded-lg px-4 py-2.5">
               <span className="w-9 h-9 rounded bg-marine-mist text-marine-primary flex items-center justify-center"><Anchor size={18} /></span>
               <div>
                 <div className="flex items-center gap-1.5 font-display text-[10px] font-bold uppercase tracking-[0.08em] text-marine-primary">
@@ -390,7 +390,7 @@ function ProductsContent() {
                 </div>
                 <div className="text-[11px] text-marine-outline">{isAr ? 'متوسط الشحن: 3.5 ساعة للسويس وموانئ الإسكندرية' : 'Avg. dispatch: 3.5 hrs to Suez & Alex docks'}</div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="max-w-2xl mt-5">
             <SearchAutocomplete

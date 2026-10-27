@@ -27,7 +27,7 @@ export function blankRow() {
         status: 'draft',
         price: '', discount_type: '', discount_value: '',
         category_id: '', product_brand_id: '',
-        is_universal: true, for_girls: false, for_trunk: false, stock_management: true,
+        is_universal: true, for_trunk: false, stock_management: true,
         stock_status: 'instock', quantity: 1,
         images: [], compatible_cars: [], variation_types: [], variants: [],
         weight: '', dimensions: { length: '', width: '', height: '' }, shipping_class_id: '',

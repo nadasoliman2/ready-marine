@@ -26,7 +26,6 @@ export default async function sitemap() {
   const staticPages = [
     ['', 'daily', 1.0],
     ['/products', 'daily', 0.9],
-    ['/girls', 'daily', 0.8],
     ['/trunk', 'daily', 0.8],
     ['/articles', 'daily', 0.8],
     ['/services', 'weekly', 0.7],

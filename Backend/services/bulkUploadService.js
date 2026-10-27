@@ -685,7 +685,6 @@ async function processRows(coercedRows, vendorId, refs, { bypassApproval = false
                     weight: r.weight,
                     dimensions: r.dimensions,
                     shipping_class_id: r.shipping_class_id || null,
-                    for_girls: !!r.for_girls,
                     for_trunk: !!r.for_trunk,
                 });
 
@@ -723,7 +722,6 @@ async function processRows(coercedRows, vendorId, refs, { bypassApproval = false
                 const draftData = {
                     vendor_id: vendorId,
                     status: 'draft',
-                    for_girls: !!r.for_girls,
                     for_trunk: !!r.for_trunk,
                     // NO slug generation for drafts
                 };
@@ -904,7 +902,6 @@ async function parseWorkbook(fileBuffer, vendorId) {
             dimensions: parseDimensions(cellStr(row, C.DIMENSIONS)),
             shipping_class_id: ship.id,
             shipping_class_raw: ship.raw,
-            for_girls: false,
             for_trunk: false,
         };
 
@@ -1070,7 +1067,6 @@ async function processBulkJsonUpload(products, vendorId, { maxProducts = 200, ..
             dimensions: normalizeDimensions(p.dimensions),
             shipping_class_id: validId(p.shipping_class_id),
             shipping_class_raw: str(p.shipping_class_id) || '',
-            for_girls: !!p.for_girls,
             for_trunk: !!p.for_trunk,
             // The catalog entry this row was matched to (Excel review screen) or
             // picked from (grid popup). Null means "the vendor authored this from

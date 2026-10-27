@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ShoppingCart, User, Users, Phone, LogOut, LifeBuoy } from 'lucide-react';
+import { ShoppingCart, User, Users, Phone, LogOut, LifeBuoy, Globe, ChevronDown, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { usePathname } from '../lib/navigation';
 import Link from './LocaleLink';
@@ -13,26 +13,64 @@ import { familyCopy } from '../lib/familyLocalization';
 import { resolveAssetUrl } from '../lib/assets';
 import BrandMark from './marine/BrandMark';
 
-/** EN · العربية side by side in the top bar, the current one highlighted. */
+const LANGUAGES = [
+  { code: 'ar', label: 'العربية' },
+  { code: 'en', label: 'English' },
+];
+
+/** The top bar's language dropdown: the current language, the other one in the menu. */
 function LanguagePicker() {
   const { language, setLanguage } = useApp();
-  const option = (lang, label) => (
-    <button
-      type="button"
-      onClick={() => setLanguage(lang)}
-      aria-pressed={language === lang}
-      className={`px-1.5 py-0.5 rounded-sm transition-colors ${language === lang ? 'text-marine-primary font-bold' : 'text-marine-muted hover:text-marine-primary'}`}
-    >
-      {label}
-    </button>
-  );
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const current = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
+
+  // Closes on a click anywhere else or on Escape.
+  useEffect(() => {
+    if (!open) return undefined;
+    const onClick = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
 
   return (
-    <div className="flex items-center gap-1 font-display text-[11px] tracking-[0.08em] uppercase">
-      <span className="text-marine-outline hidden sm:inline">Lang:</span>
-      {option('en', 'EN')}
-      <span className="text-marine-line">|</span>
-      {option('ar', 'العربية')}
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex items-center gap-1.5 px-2 py-1 rounded font-bold text-marine-primary hover:bg-white/70 transition-colors"
+      >
+        <Globe size={13} />
+        {current.label}
+        <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <ul role="listbox" className="absolute top-full mt-1 end-0 min-w-[130px] bg-white border border-marine-teal/15 rounded-lg shadow-lg py-1 z-[70]">
+          {LANGUAGES.map((l) => (
+            <li key={l.code}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={l.code === language}
+                onClick={() => { setLanguage(l.code); setOpen(false); }}
+                className={`w-full flex items-center justify-between gap-3 px-3 py-2 text-xs text-start transition-colors ${
+                  l.code === language ? 'text-marine-primary font-bold bg-marine-mist' : 'text-marine-ink hover:bg-marine-canvas'
+                }`}
+              >
+                {l.label}
+                {l.code === language && <Check size={13} />}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -70,8 +108,7 @@ export function TopBar() {
 
 /** The site's logo from its settings, or Ready Marine's own when none is uploaded. */
 function SiteLogo({ siteSettings, compact = false }) {
-  if (siteSettings === null) return null;
-  if (siteSettings.logo_light_url || siteSettings.logo_url) {
+  if (siteSettings?.logo_light_url || siteSettings?.logo_url) {
     return (
       <img
         src={siteSettings.logo_light_url || siteSettings.logo_url}

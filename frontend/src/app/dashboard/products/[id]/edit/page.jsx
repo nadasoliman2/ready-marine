@@ -68,7 +68,6 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
           category_id: typeof prod.category_id === 'object' ? prod.category_id?._id : prod.category_id,
           product_brand_id: (typeof prod.product_brand_id === 'object' ? prod.product_brand_id?._id : prod.product_brand_id) || '',
           is_universal: prod.is_universal ?? true,
-          for_girls: prod.for_girls ?? false,
           for_trunk: prod.for_trunk ?? false,
           target_audiences: prod.target_audiences || [],
           stock_management: prod.stock_management ?? true,
@@ -335,23 +334,6 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
               baseDiscountValue={form.discount_value}
               onChange={({ variation_types, variants }) => setForm(f => ({ ...f, variation_types, variants }))}
             />
-          </div>
-        </section>
-
-        {/* Girls Collection Toggle */}
-        <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02] flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'مجموعة البنات' : 'Girls Collection'}</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">{t.forGirlsDesc || (isAr ? 'حدد هذا المنتج كجزء من مجموعة البنات' : 'Mark this product as part of the Girls collection')}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{t.forGirls || (isAr ? 'للبنات' : 'For Girls')}</span>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" checked={form.for_girls} onChange={e => setForm({ ...form, for_girls: e.target.checked })} />
-                <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-pink-500"></div>
-              </label>
-            </div>
           </div>
         </section>
 

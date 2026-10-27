@@ -49,7 +49,7 @@ export default function CategoriesSlider() {
   return (
     <>
     {/* ── A phone: the app design — small square tiles in a row, the name under each, and the
-        two collections (Car Trunk, Girls) as cards. The slider below is the wide screens'. ── */}
+        Onboard Essentials collection as a card. The slider below is the wide screens'. ── */}
     <section className="sm:hidden bg-white pt-5 pb-6">
       <div className="px-4 flex items-center justify-between mb-3">
         <h2 className="text-xl font-black text-[#09090b]">{t.shopByCategory || (isAr ? 'تسوق حسب الفئة' : 'Shop by Category')}</h2>

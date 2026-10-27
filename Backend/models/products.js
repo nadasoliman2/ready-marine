@@ -220,11 +220,15 @@ const productSchema = new Schema(
         // Compatibility — is_universal OR compatible_cars must be set (enforced below)
         is_universal: { type: Boolean, default: false },
 
-        // Flag to include product in the "Girls" collection page
-        for_girls: { type: Boolean, default: false },
         // Flag to include product in the "Car Trunk" page — the things every car should
         // carry (jack, warning triangle, first-aid kit, jump leads, ...).
         for_trunk: { type: Boolean, default: false },
+
+        // Marine target audience hubs (from the strategic marketing plan):
+        // 'family_safety', 'next_gen', 'pro_angler', 'diy_maintenance',
+        // 'yacht_luxury', 'lifestyle_comfort', 'saltwater', 'freshwater',
+        // 'smart_gear', 'eco_friendly'
+        target_audiences: [{ type: String, trim: true, index: true }],
 
         sold_count: { type: Number, default: 0 },
         rating: { type: Number, default: 0 },

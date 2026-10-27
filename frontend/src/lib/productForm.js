@@ -12,7 +12,7 @@ export function blankProductForm() {
         part_type: '',
         price: '', discount_type: '', discount_value: '',
         category_id: '', product_brand_id: '',
-        is_universal: true, for_girls: false, for_trunk: false, target_audiences: [], stock_management: true,
+        is_universal: true, for_trunk: false, target_audiences: [], stock_management: true,
         stock_status: 'instock',
         quantity: 1,
         images: [],

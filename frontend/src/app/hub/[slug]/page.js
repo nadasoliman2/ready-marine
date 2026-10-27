@@ -16,7 +16,7 @@ function HubDetailContent({ slug }) {
   const hub = getHubBySlug(slug);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { language, isMounted } = useApp();
+  const { language, t, isMounted } = useApp();
   const isAr = language === 'ar';
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -186,11 +186,12 @@ function HubDetailContent({ slug }) {
             {/* Desktop Filter Sidebar */}
             <aside className="hidden lg:block w-64 shrink-0">
               <FilterSidebar
-                isAr={isAr}
+                filters={filters}
+                setFilters={setFilters}
+                language={language}
+                t={t}
                 metadata={metadata}
                 loading={loadingMetadata}
-                filters={filters}
-                onFilterChange={(newFilters) => setFilters(prev => ({ ...prev, ...newFilters, page: 1 }))}
               />
             </aside>
 

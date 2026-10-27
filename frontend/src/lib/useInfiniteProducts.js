@@ -17,7 +17,7 @@ import { stripLocale } from './locale';
  * The list is remembered for a few minutes, with how far down the visitor was: opening a
  * product and coming back returns to the same products at the same place, not to the top.
  *
- * Used by every page that lists products (the shop, the girls' and trunk collections, a
+ * Used by every page that lists products (the shop, the trunk collection, a
  * store), with components/products/InfiniteProductGrid.jsx drawing the list.
  */
 
@@ -80,7 +80,7 @@ const hasMoreOf = (s) => s.pages === null || s.nextPage <= s.pages;
 
 /**
  * @param {string|null} filtersQuery the filters as a query string for `/api/products`, without
- *   the page (`for_girls=true&search=…`). `null` while it is not known yet — a store's id
+ *   the page (`for_trunk=true&search=…`). `null` while it is not known yet — a store's id
  *   arrives with the store — and nothing loads until it is.
  * @param {number} startPage the page the list starts at (1, unless a `?page=` link was opened)
  */
