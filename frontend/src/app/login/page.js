@@ -34,7 +34,7 @@ const updateRoleInUrl = (nextRole) => {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { language, isMounted, login, t, siteSettings } = useApp();
+  const { language, isMounted, login, t } = useApp();
   const isAr = language === 'ar';
   
   const [role, setRole] = useState('customer'); // 'customer' | 'vendor'
@@ -136,7 +136,6 @@ export default function LoginPage() {
   // From `sm` up, and while Google's second step owns the card (it is drawn for the dark
   // card), the dark page as before.
   const light = !googleStep;
-  const logo = siteSettings?.logo_light_url || siteSettings?.logo_url;
 
   return (
     <div className={`min-h-screen flex justify-center relative overflow-hidden ${light ? 'bg-white sm:bg-zinc-50 sm:items-center sm:py-12 sm:px-4' : 'bg-[#111315] items-center py-12 px-4'}`} dir={isAr ? 'rtl' : 'ltr'}>
@@ -158,9 +157,8 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mb-6 sm:mb-8">
-          {logo && <img src={logo} alt="Ready Marine" className="mx-auto h-11 w-auto max-w-[200px] object-contain mb-5" />}
           <h1 className="text-xl sm:text-2xl font-bold text-zinc-900">{isAr ? 'أهلاً بيك في Ready Marine' : 'Welcome to Ready Marine'}</h1>
-          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm">{isAr ? 'سجل دخولك لمتابعة الطلبات والعناوين وعربياتك.' : 'Sign in to follow your orders, addresses and cars.'}</p>
+          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm">{isAr ? 'سجل دخولك لمتابعة طلباتك وعناوينك.' : 'Sign in to follow your orders and addresses.'}</p>
         </div>
 
         {/* Tab Toggle */}

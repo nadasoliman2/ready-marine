@@ -37,7 +37,7 @@ export default function RegisterPage() {
   useEffect(() => { setLoginRedirect(safeRedirect('')); }, []);
 
   const router = useRouter();
-  const { language, isMounted, t, login, siteSettings } = useApp();
+  const { language, isMounted, t, login } = useApp();
   const isAr = language === 'ar';
   const vc = verificationCopy(isAr);
 
@@ -254,7 +254,6 @@ export default function RegisterPage() {
   // A phone: a plain white page, as the sign-in. From `sm` up — and for the code step and
   // Google's second step, whose parts are drawn for the dark card — the dark page as before.
   const light = !googleStep && !otpStage;
-  const logo = siteSettings?.logo_light_url || siteSettings?.logo_url;
 
   return (
     <div className={`min-h-screen flex justify-center relative overflow-hidden ${light ? 'bg-white sm:bg-zinc-50 sm:items-center sm:py-12 sm:px-4' : 'bg-[#111315] items-center py-12 px-4'}`} dir={isAr ? 'rtl' : 'ltr'}>
@@ -343,9 +342,8 @@ export default function RegisterPage() {
         </div>
 
         <div className="text-center mb-6 sm:mb-8">
-          {logo && <img src={logo} alt="Ready Marine" className="mx-auto h-11 w-auto max-w-[200px] object-contain mb-5" />}
           <h1 className="text-xl sm:text-2xl font-bold text-zinc-900">{isAr ? 'انضم لـ Ready Marine' : 'Join Ready Marine'}</h1>
-          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm">{isAr ? 'اعمل حسابك عشان تطلب وتتابع طلباتك وتحفظ عربياتك.' : 'Create your account to order, follow your orders and save your cars.'}</p>
+          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm">{isAr ? 'اعمل حسابك عشان تطلب وتتابع طلباتك.' : 'Create your account to order and follow your orders.'}</p>
         </div>
 
         {/* Tab Toggle */}
