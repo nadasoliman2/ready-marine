@@ -66,8 +66,8 @@ const MAX_PENDING_EMAIL_INVITES = 20;
 const friendsTabUrl = () => `${getFrontendUrl()}/profile?tab=friends`;
 
 const WHATSAPP_FRIEND_CONTEXT = {
-    ar: 'عايز يضيفك كصديق على ريدي كار عشان تقدروا تشتروا قطع لبعض',
-    en: 'wants to connect with you on ReadyCar so you can buy parts for each other',
+    ar: 'عايز يضيفك كصديق على ريدي مارين عشان تقدروا تشتروا قطع لبعض',
+    en: 'wants to connect with you on Ready Marine so you can buy parts for each other',
 };
 
 /**
@@ -239,8 +239,8 @@ const convertPendingEmailInvites = async (user) => {
                 {
                     title_en: 'New friend request',
                     title_ar: 'طلب صداقة جديد',
-                    message_en: `${sender.name} wants to connect with you on ReadyCar so you can buy parts for each other.`,
-                    message_ar: `يريد ${sender.name} إضافتك كصديق على ReadyCar حتى تتمكنا من شراء القطع لبعضكما.`,
+                    message_en: `${sender.name} wants to connect with you on Ready Marine so you can buy parts for each other.`,
+                    message_ar: `يريد ${sender.name} إضافتك كصديق على Ready Marine حتى تتمكنا من شراء القطع لبعضكما.`,
                 },
                 { link: '/profile?tab=friends', data: { invitation_id: invitation._id } }
             );
@@ -715,8 +715,8 @@ const inviteFriend = async (userId, { identifier, shared_address_ids = [] }, { l
                 phone: recipient.phone,
                 inviterName: me.name,
                 contextLine: language === 'ar'
-                    ? 'عايز يضيفك كصديق على ريدي كار عشان تقدروا تشتروا قطع لبعض'
-                    : 'wants to connect with you on ReadyCar so you can buy parts for each other',
+                    ? 'عايز يضيفك كصديق على ريدي مارين عشان تقدروا تشتروا قطع لبعض'
+                    : 'wants to connect with you on Ready Marine so you can buy parts for each other',
                 url: buildFriendInvitationUrl(token),
                 campaignLabel: `Friend invitation from ${me.name}`,
             });
@@ -753,8 +753,8 @@ const inviteFriend = async (userId, { identifier, shared_address_ids = [] }, { l
             {
                 title_en: 'New friend request',
                 title_ar: 'طلب صداقة جديد',
-                message_en: `${me.name} wants to connect with you on ReadyCar so you can buy parts for each other.`,
-                message_ar: `يريد ${me.name} إضافتك كصديق على ReadyCar حتى تتمكنا من شراء القطع لبعضكما.`,
+                message_en: `${me.name} wants to connect with you on Ready Marine so you can buy parts for each other.`,
+                message_ar: `يريد ${me.name} إضافتك كصديق على Ready Marine حتى تتمكنا من شراء القطع لبعضكما.`,
             },
             { link: '/profile?tab=friends', data: { invitation_id: invitation._id } }
         );
@@ -988,8 +988,8 @@ const removeFriend = async (userId, friendUserId) => {
         {
             title_en: 'A friend removed you',
             title_ar: 'قام أحد الأصدقاء بإزالتك',
-            message_en: `${me.name} is no longer connected with you on ReadyCar.`,
-            message_ar: `لم يعد ${me.name} على قائمة أصدقائك في ReadyCar.`,
+            message_en: `${me.name} is no longer connected with you on Ready Marine.`,
+            message_ar: `لم يعد ${me.name} على قائمة أصدقائك في Ready Marine.`,
         },
         { link: '/profile?tab=friends' }
     );

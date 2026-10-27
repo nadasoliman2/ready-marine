@@ -27,8 +27,8 @@ let syncRunning = false;
 
 // EVERYSECOND_SITE_URL only matters on a development machine, where FRONTEND_URL is
 // http://localhost and the menu still needs public https links (EverySecond drops the rest).
-const siteUrl = () => (process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readycar.store').replace(/\/+$/, '');
-const assetBase = () => (process.env.BACKEND_PUBLIC_URL || process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readycar.store').replace(/\/+$/, '');
+const siteUrl = () => (process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readymarine.store').replace(/\/+$/, '');
+const assetBase = () => (process.env.BACKEND_PUBLIC_URL || process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readymarine.store').replace(/\/+$/, '');
 
 /** An absolute URL for a stored image — older rows keep "/uploads/…" paths. */
 const absoluteImageUrl = (url) => {

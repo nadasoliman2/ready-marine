@@ -746,7 +746,7 @@ const sendViaPaymob = async (payoutId, actor = {}) => {
     client_reference_id: claimed.gateway.client_reference_id,
     // Ready Car bears Paymob's fee and VAT: the vendor receives the whole amount.
     customer_bears_fees: false,
-    comment: `Ready Car payout ${claimed.withdrawal_number}`,
+    comment: `Ready Marine payout ${claimed.withdrawal_number}`,
   };
 
   let answer;
@@ -1191,7 +1191,7 @@ const setPayoutMethod = async (vendorId, input, password) => {
   notify(vendorId, "payout_method_changed", "Payout method changed",
     `Your payouts will now go to ${after.label.en} ${after.account}.` +
     (before ? ` (was ${before.label.en} ${before.account})` : "") +
-    " If this was not you, contact Ready Car immediately.",
+    " If this was not you, contact Ready Marine immediately.",
     { issuer: clean.issuer });
   return getPayoutMethod(vendorId);
 };

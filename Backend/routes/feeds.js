@@ -13,7 +13,7 @@ router.get('/meta-catalog.csv', async (req, res) => {
         const lang = req.query.lang === 'en' ? 'en' : 'ar';
         const { csv, count } = await getMetaCatalogCsv(lang);
         res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-        res.setHeader('Content-Disposition', `inline; filename="readycar-meta-catalog-${lang}.csv"`);
+        res.setHeader('Content-Disposition', `inline; filename="readymarine-meta-catalog-${lang}.csv"`);
         res.setHeader('Cache-Control', 'public, max-age=900');
         res.setHeader('X-Feed-Items', String(count));
         res.send(csv);

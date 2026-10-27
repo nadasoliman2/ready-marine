@@ -32,7 +32,7 @@ import { ISSUE_LABELS, issueLabel, categoryParents, isUnder, inType, flattenTree
  */
 
 const SELECT = 'bg-white dark:bg-[#14171A] border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-zinc-800 dark:text-white focus:border-marine-cyan focus:outline-none';
-const VIEW_KEY = 'readycar.review.view';
+const VIEW_KEY = 'readymarine.review.view';
 
 const DEFAULT_FILTERS = { search: '', vendor: '', category: '', type: '', fitment: 'all', issue: 'all', uploaded: 'all', sort: 'newest' };
 

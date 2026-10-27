@@ -12,11 +12,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'readycar.store',
+        hostname: 'readymarine.store',
       },
       {
         protocol: 'https',
-        hostname: 'www.readycar.store',
+        hostname: 'www.readymarine.store',
       },
     ],
   },

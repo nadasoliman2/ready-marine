@@ -60,7 +60,7 @@ const EPSILON = 0.005;
  *  seconds finish being written first. Still the first day of the next month. */
 const ISSUE_DELAY_HOURS = 1;
 const STORE_TIMEZONE = process.env.STORE_TIMEZONE || 'Africa/Cairo';
-const SYSTEM = { role: 'system', label: 'ReadyCar' };
+const SYSTEM = { role: 'system', label: 'Ready Marine' };
 
 /* ------------------------------------------------------------------ */
 /* Dates in the store's time zone                                      */
@@ -553,8 +553,8 @@ const settleEndedCompany = async (companyId) => {
             note: 'The company\'s credit (returns and savings), set against this invoice when the contract ended.',
             kind: 'credit',
             status: 'confirmed',
-            submitted_by: { kind: 'admin', label: 'ReadyCar' },
-            confirmed_by: 'ReadyCar',
+            submitted_by: { kind: 'admin', label: 'Ready Marine' },
+            confirmed_by: 'Ready Marine',
             confirmed_at: new Date(),
         });
         await settleInvoice(inv);
@@ -648,8 +648,8 @@ const recordRefund = async (companyId, input = {}, actor) => {
         target_snapshot: { name: company.name, amount, reference: cleanText(input.reference, 120), still_due: refundDue(company) },
     }).catch(() => {});
     await notifyManagers(company._id, 'company_refund_sent', {
-        title_en: `ReadyCar transferred ${amount.toFixed(2)} to you`,
-        title_ar: `ReadyCar حوّلتلكم ${amount.toFixed(2)} ج`,
+        title_en: `Ready Marine transferred ${amount.toFixed(2)} to you`,
+        title_ar: `Ready Marine حوّلتلكم ${amount.toFixed(2)} ج`,
         message_en: 'The credit left on your account when the contract ended.',
         message_ar: 'الرصيد اللي كان ليكم لما العقد انتهى.',
     }, { link: '/company/invoices' }).catch(() => {});
@@ -990,7 +990,7 @@ const runCollectionSweep = async (now = new Date()) => {
             reason: 'overdue',
             note: `Invoice ${late.map((i) => i.number).join(', ')} unpaid past the grace period`,
             at: now,
-            by: 'ReadyCar',
+            by: 'Ready Marine',
         };
         await company.save();
         await recordAuditLog({
@@ -1094,7 +1094,7 @@ const tellManagers = async (invoice, what, extra = {}) => {
 
 const EMAIL_COPY = {
     issued: (inv) => ({
-        subject: `فاتورة ${arMonth(inv.month)} — ReadyCar`,
+        subject: `فاتورة ${arMonth(inv.month)} — Ready Marine`,
         eyebrow: `حساب ${oaI(inv).the}`,
         title: `فاتورة ${arMonth(inv.month)} جاهزة`,
         body: inv.amount_due > EPSILON

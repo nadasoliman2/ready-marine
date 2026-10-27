@@ -264,7 +264,7 @@ const approveProducts = async (ids, actor = {}) => {
     for (const [vendorId, v] of byVendor) {
         const fixed = Object.entries(v.fixes).map(([k, n]) => `${FIXES[k]?.en || k}${v.count > 1 ? ` (${n})` : ''}`);
         const title = v.count === 1 ? 'Your product is live' : `${v.count} of your products are live`;
-        const message = (v.count === 1 ? `"${v.titles[0]}" is now published on ReadyCar.` : `${v.count} products are now published on ReadyCar.`)
+        const message = (v.count === 1 ? `"${v.titles[0]}" is now published on Ready Marine.` : `${v.count} products are now published on Ready Marine.`)
             + (fixed.length ? ` We corrected the ${fixed.join(', ')} for you before publishing.` : '');
         await createNotification(vendorId, 'products_published', title, message, {
             count: v.count, titles: v.titles, fixes: v.fixes, product_ids: v.product_ids,

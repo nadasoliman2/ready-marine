@@ -125,7 +125,7 @@ async function insertCategories(nodes, parentId = null, scrapingDir = null) {
 
 async function seedCategories() {
   const MONGO_URI =
-    process.env.MONGO_URI || 'mongodb://localhost:27017/readycar';
+    process.env.MONGO_URI || 'mongodb://localhost:27017/readymarine';
 
   console.log('🔌 Connecting to MongoDB…');
   await connectToDatabase(MONGO_URI);

@@ -21,7 +21,7 @@ async function labelForShipment(order, sub, shipment) {
       waybill: shipment.tracking_number,
       qrCode: shipment.provider_payload?.qr_code || null,
       sender: {
-        name: vendor?.store_name || vendor?.name || "Ready Car vendor",
+        name: vendor?.store_name || vendor?.name || "Ready Marine vendor",
         phone: vendor?.phone || "",
         address: [shipment.pickup_address?.address, shipment.pickup_address?.city].filter(Boolean).join(", "),
       },

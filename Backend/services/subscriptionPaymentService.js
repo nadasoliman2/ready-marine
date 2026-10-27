@@ -188,7 +188,7 @@ const buildPaymentRequest = ({ payment, vendor, pkg }) => {
             unique_id: vendor._id.toString(),
         },
         items: [{
-            name: `ReadyCar subscription - ${pkg.name}`,
+            name: `Ready Marine subscription - ${pkg.name}`,
             price: Number(payment.amount),
             quantity: 1,
         }],

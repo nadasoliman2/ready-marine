@@ -392,7 +392,7 @@ const buildNewOrderMessage = ({ vendorId, order, subOrders }) => {
 
     return {
         vendorId,
-        headline: `وصلك أوردر جديد رقم #${reference} على ReadyCar`,
+        headline: `وصلك أوردر جديد رقم #${reference} على Ready Marine`,
         detail: `فيه: ${itemsSummary || 'منتجات من متجرك'} — بإجمالي ${total} ج.م، ومستني تأكيدك`,
         path: single ? vendorParcelPath(order._id, single._id) : '/dashboard/orders',
         campaignName: `Vendor new order #${reference}`,

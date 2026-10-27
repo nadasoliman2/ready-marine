@@ -9,7 +9,7 @@ import AppChrome from '../components/AppChrome';
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-space-grotesk' });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://readycar.store';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://readymarine.store';
 
 // Detail pages whose slug differs per language (`/en/product/brake-pads`,
 // `/ar/product/تيل-فرامل`): the same path in the other language is not the same page, so

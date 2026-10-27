@@ -8,12 +8,12 @@ async function connectToDatabase(customUri = null) {
         return mongoose.connection;
     }
 
-    const primaryUri = customUri || process.env.MONGO_URI || 'mongodb://localhost:27017/readycar';
+    const primaryUri = customUri || process.env.MONGO_URI || 'mongodb://localhost:27017/readymarine';
     try {
         await mongoose.connect(primaryUri);
     } catch (err) {
         const isAuthError = err && (err.code === 18 || err.codeName === 'AuthenticationFailed' || String(err.message || '').includes('Authentication failed'));
-        const localFallback = process.env.LOCAL_MONGO_URI || (primaryUri.includes('@') ? primaryUri.replace(/\/\/[^@]+@/, '//').replace(/\?authSource=[^&]*&?/, '').replace(/\?$/, '') : 'mongodb://localhost:27017/readycar');
+        const localFallback = process.env.LOCAL_MONGO_URI || (primaryUri.includes('@') ? primaryUri.replace(/\/\/[^@]+@/, '//').replace(/\?authSource=[^&]*&?/, '').replace(/\?$/, '') : 'mongodb://localhost:27017/readymarine');
         if (isAuthError && localFallback) {
             console.warn(`⚠️  Auth failed for MONGO_URI. Retrying with local unauthenticated fallback: ${localFallback}`);
             await mongoose.connect(localFallback);

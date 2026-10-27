@@ -40,7 +40,7 @@ const ONLY = (process.argv.find((a) => a.startsWith('--only=')) || '--only=all')
 // --sample=N prints N built documents instead of a count, for eyeballing a dry run.
 const SAMPLE = Number((process.argv.find((a) => a.startsWith('--sample=')) || '--sample=0').split('=')[1]);
 
-const IMG_BASE = (process.env.BACKEND_PUBLIC_URL || 'https://readycar.store').replace(/\/+$/, '');
+const IMG_BASE = (process.env.BACKEND_PUBLIC_URL || 'https://readymarine.store').replace(/\/+$/, '');
 const BATCH = 500;
 
 const norm = (s) => (s || '').toString().toLowerCase().replace(/[^a-z0-9؀-ۿ]+/g, ' ').trim();

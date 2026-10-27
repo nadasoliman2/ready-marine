@@ -235,7 +235,7 @@ const createIntention = async ({
     // single balance line is always truthful about what is being charged.
     const normalizedItems = items
         .map((item) => ({
-            name: String(item.name || 'ReadyCar').slice(0, 50),
+            name: String(item.name || 'Ready Marine').slice(0, 50),
             amount: toMinor(item.price),
             quantity: Math.max(1, parseInt(item.quantity, 10) || 1),
             ...(item.description ? { description: String(item.description).slice(0, 255) } : {}),
@@ -249,11 +249,11 @@ const createIntention = async ({
         payment_methods: integrationIds,
         items: itemsTotal === amount && normalizedItems.length
             ? normalizedItems
-            : [{ name: 'ReadyCar', amount, quantity: 1 }],
+            : [{ name: 'Ready Marine', amount, quantity: 1 }],
         billing_data: {
-            first_name: String(billing.first_name || 'ReadyCar').slice(0, 50),
+            first_name: String(billing.first_name || 'Ready Marine').slice(0, 50),
             last_name: String(billing.last_name || 'Customer').slice(0, 50),
-            email: billing.email || 'no-reply@readycar.com',
+            email: billing.email || 'no-reply@readymarine.store',
             // Paymob rejects the intention outright without a phone number, so
             // a placeholder beats a 400 the customer would see as "payment
             // unavailable". Every one of our flows has a real phone in practice.

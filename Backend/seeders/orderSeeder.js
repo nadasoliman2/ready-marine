@@ -9,7 +9,7 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const seedOrder = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/readycar');
+        await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/readymarine');
         console.log('Connected to MongoDB');
 
         const user = await User.findOne({ email: 'ziad.abdelkader@test.com' }) || await User.findOne();

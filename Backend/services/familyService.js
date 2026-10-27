@@ -370,8 +370,8 @@ const inviteFamilyMember = async (organizerId, { email, identifier, relationship
                 phone: parsed.normalized,
                 inviterName: organizer.name,
                 contextLine: language === 'ar'
-                    ? `ضامّك لعيلته على ريدي كار كـ${relationshipLabel(invitation.relationship, 'ar')} — هو اللي بيدفع`
-                    : `is adding you to their ReadyCar family as their ${relationshipLabel(invitation.relationship, 'en')} — they pay`,
+                    ? `ضامّك لعيلته على ريدي مارين كـ${relationshipLabel(invitation.relationship, 'ar')} — هو اللي بيدفع`
+                    : `is adding you to their Ready Marine family as their ${relationshipLabel(invitation.relationship, 'en')} — they pay`,
                 url: buildInviteLandingUrl(token),
                 campaignLabel: `Family invitation from ${organizer.name}`,
             });
@@ -492,8 +492,8 @@ const deliverFamilyInviteExtras = async ({ invitation, organizerName, token, fal
                 phone: target.phone,
                 inviterName: organizerName,
                 contextLine: lang === 'ar'
-                    ? `ضامّك لعيلته على ريدي كار كـ${relationshipLabel(invitation.relationship, 'ar')} — هو اللي بيدفع`
-                    : `is adding you to their ReadyCar family as their ${relationshipLabel(invitation.relationship, 'en')} — they pay`,
+                    ? `ضامّك لعيلته على ريدي مارين كـ${relationshipLabel(invitation.relationship, 'ar')} — هو اللي بيدفع`
+                    : `is adding you to their Ready Marine family as their ${relationshipLabel(invitation.relationship, 'en')} — they pay`,
                 url: buildInviteLandingUrl(token),
                 campaignLabel: `Family invitation from ${organizerName}`,
             });
@@ -530,8 +530,8 @@ const resendInvitation = async (organizerId, invitationId, { language = 'en' } =
             phone: invitation.phone,
             inviterName: organizer?.name || 'Your family organizer',
             contextLine: language === 'ar'
-                ? `ضامّك لعيلته على ريدي كار كـ${relationshipLabel(invitation.relationship, 'ar')} — هو اللي بيدفع`
-                : `is adding you to their ReadyCar family as their ${relationshipLabel(invitation.relationship, 'en')} — they pay`,
+                ? `ضامّك لعيلته على ريدي مارين كـ${relationshipLabel(invitation.relationship, 'ar')} — هو اللي بيدفع`
+                : `is adding you to their Ready Marine family as their ${relationshipLabel(invitation.relationship, 'en')} — they pay`,
             url: buildInviteLandingUrl(token),
             campaignLabel: `Family invitation from ${organizer?.name || 'organizer'}`,
         });
@@ -659,7 +659,7 @@ const getInvitationPreview = async (token, currentUser = null) => {
             expires_at: invitation.expires_at,
             shared_address_count: (invitation.shared_address_ids || []).length,
         },
-        organizer: { name: organizer?.name || 'A ReadyCar customer', profile_image: organizer?.profile_image || null },
+        organizer: { name: organizer?.name || 'A Ready Marine customer', profile_image: organizer?.profile_image || null },
         // Lets the landing page choose between "sign in", "create account",
         // "confirm with a code", and "wrong account" without a second round trip.
         invited_account_exists: invitedAccountExists,
@@ -1010,8 +1010,8 @@ const removeMember = async (organizerId, membershipId) => {
         {
             title_en: 'You were removed from a family',
             title_ar: 'تمت إزالتك من العائلة',
-            message_en: `${organizer.name} removed you from their ReadyCar family. You can no longer use their shared addresses.`,
-            message_ar: `قام ${organizer.name} بإزالتك من عائلته على ReadyCar. لم يعد بإمكانك استخدام عناوينه المشتركة.`,
+            message_en: `${organizer.name} removed you from their Ready Marine family. You can no longer use their shared addresses.`,
+            message_ar: `قام ${organizer.name} بإزالتك من عائلته على Ready Marine. لم يعد بإمكانك استخدام عناوينه المشتركة.`,
         },
         { link: '/profile?tab=family', data: { cancelled_requests: cancelled } }
     );
@@ -1039,8 +1039,8 @@ const leaveFamily = async (userId) => {
         {
             title_en: 'A family member left',
             title_ar: 'غادر أحد أفراد العائلة',
-            message_en: `${user?.name || 'A member'} left your ReadyCar family.`,
-            message_ar: `غادر ${user?.name || 'أحد الأفراد'} عائلتك على ReadyCar.`,
+            message_en: `${user?.name || 'A member'} left your Ready Marine family.`,
+            message_ar: `غادر ${user?.name || 'أحد الأفراد'} عائلتك على Ready Marine.`,
         },
         { link: '/profile?tab=family' }
     );

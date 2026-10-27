@@ -15,7 +15,7 @@ const getBackendUrl = () => (
 const splitName = (name = '') => {
     const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
     return {
-        first_name: parts[0] || 'ReadyCar',
+        first_name: parts[0] || 'Ready Marine',
         last_name: parts.slice(1).join(' ') || 'Customer',
     };
 };
@@ -81,7 +81,7 @@ const buildPaymentRequest = ({ payment, user }) => {
             city: shippingAddress.city || '',
             unique_id: user._id.toString(),
         },
-        items: [{ name: 'ReadyCar order', price: Number(payment.amount), quantity: 1 }],
+        items: [{ name: 'Ready Marine order', price: Number(payment.amount), quantity: 1 }],
         returnUrls: {
             success: buildReturnUrl(payment, 'success'),
             fail: buildReturnUrl(payment, 'failed'),

@@ -20,8 +20,8 @@ const ctx = {
     isActiveVendor: (id) => String(id) === 'vendor-ok',
     categoryName: () => 'Brakes',
     brandName: () => 'Bosch',
-    imageUrl: (u) => (u ? `https://readycar.store${u}` : ''),
-    productUrl: (p) => `https://readycar.store/ar/product/${p.slug_ar}`,
+    imageUrl: (u) => (u ? `https://readymarine.store${u}` : ''),
+    productUrl: (p) => `https://readymarine.store/ar/product/${p.slug_ar}`,
     maxQtyPerOrder: null,
 };
 
@@ -71,8 +71,8 @@ test('a published product becomes one menu item with its link, photo, fitment an
     assert.equal(item.offer_price, 420);
     assert.equal(item.available, true);
     assert.equal(item.stock_qty, 4);
-    assert.equal(item.image_url, 'https://readycar.store/uploads/products/x.jpg');
-    assert.equal(item.product_url, 'https://readycar.store/ar/product/تيل-فرامل');
+    assert.equal(item.image_url, 'https://readymarine.store/uploads/products/x.jpg');
+    assert.equal(item.product_url, 'https://readymarine.store/ar/product/تيل-فرامل');
     assert.deepEqual(item.name, { en: 'Brake pads', ar: 'تيل فرامل' });
     assert.match(item.description.en, /Fits: Toyota Corolla 2015–2020/);
     assert.match(item.description.ar, /يناسب/);

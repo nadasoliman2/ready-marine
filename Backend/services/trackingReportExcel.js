@@ -21,7 +21,7 @@ const DATE = "yyyy-mm-dd";
 const HEADERS = [
     "م", "رقم الطلب", "اسم العميل", "تاريخ الطلب", "تاريخ اخر استلام", "حاله الطلب",
     "مبلغ الطلب", "خصم", "ولاء العملاء", "صافي الطلب", "قيمة الشحن", "الاجمالي ",
-    "عمولة ريدي كار", "صافي التاجر", "تكلفة الشحن", "هامش الشحن", "اجمالي ربح ريدي كار",
+    "عمولة ريدي مارين", "صافي التاجر", "تكلفة الشحن", "هامش الشحن", "اجمالي ربح ريدي مارين",
     "طريقة الدفع", "الشركة المسؤولة عن التحصيل", "المبلغ المحصل", "عمولة التحصيل",
     "مبلغ التحويل للبنك ", "مبلغ التحويل للتاجر ",
 ];
@@ -35,7 +35,7 @@ const f = (formula, result) => ({ formula, result: Math.round((Number(result) ||
 
 const buildTrackingReportWorkbook = async (report, analysis = null) => {
     const wb = new ExcelJS.Workbook();
-    wb.creator = "ReadyCar";
+    wb.creator = "Ready Marine";
     wb.created = new Date();
     // Recalculate on open: a zero result is not stored with its formula, and the sheet
     // must add up in Excel whatever the viewer that wrote it cached.
@@ -47,7 +47,7 @@ const buildTrackingReportWorkbook = async (report, analysis = null) => {
     ws.columns = WIDTHS.map((width) => ({ width }));
 
     // ---- Row 1: title ----
-    ws.getCell("A1").value = "READYCAR TRACKING REPORT";
+    ws.getCell("A1").value = "READY MARINE TRACKING REPORT";
     ws.getCell("A1").font = { name: FONT, size: 14, bold: true, color: { argb: RED } };
 
     // ---- Row 2: the period, and the rule for which orders are in it ----
@@ -98,7 +98,7 @@ const buildTrackingReportWorkbook = async (report, analysis = null) => {
         row.getCell(14).value = r.vendor_net;                           // N
         row.getCell(15).value = r.shipping_cost;                        // O
         row.getCell(16).value = f(`K${n}-O${n}`, r.shipping_margin);    // P هامش الشحن
-        row.getCell(17).value = f(`L${n}-N${n}-O${n}-U${n}`, r.profit); // Q ربح ريدي كار
+        row.getCell(17).value = f(`L${n}-N${n}-O${n}-U${n}`, r.profit); // Q ربح ريدي مارين
         row.getCell(18).value = r.payment_method;                       // R
         row.getCell(19).value = r.collector;                            // S
         row.getCell(20).value = r.collected;                            // T
@@ -134,7 +134,7 @@ const buildTrackingReportWorkbook = async (report, analysis = null) => {
         c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFEF2F2" } };
     }
     const bankLines = (report.transfers?.to_bank?.breakdown || []).map((b) => `${b.label}: ${b.amount} (${b.count})`);
-    bank.note = ["يعرض فقط الاموال المحولة لريدي كار خلال فترة التقرير", ...bankLines].join("\n");
+    bank.note = ["يعرض فقط الاموال المحولة لريدي مارين خلال فترة التقرير", ...bankLines].join("\n");
     vend.note = `يعرض فقط الاموال المحولة للتاجر خلال فترة التقرير${report.transfers?.to_vendors?.count ? `\n${report.transfers.to_vendors.count} تحويل` : ""}`;
 
     // ---- Totals ----
@@ -162,11 +162,11 @@ const buildTrackingReportWorkbook = async (report, analysis = null) => {
         "طريقة الحساب:",
         "• الطلبات المعروضة: الطلبات اللي كل طرودها وصلت لحالة نهائية (مسلم / ملغي / مرتجع) وآخر حدث فيها داخل الفترة.",
         "• المبالغ محسوبة على الطرود المسلّمة فقط. الطلب الملغي يظهر بتكلفته الفعلية فقط (مثل رسوم إلغاء Arrive)، والطرد المرفوض بتكلفة الذهاب والرجوع.",
-        "• الخصم = إجمالي خصم الكوبون. نصيب التاجر منه داخل في صافي التاجر، ونصيب ريدي كار داخل في الربح.",
+        "• الخصم = إجمالي خصم الكوبون. نصيب التاجر منه داخل في صافي التاجر، ونصيب ريدي مارين داخل في الربح.",
         "• صافي التاجر والعمولة = المسجلين وقت التسليم. المرتجعات بعد التسليم تظهر في شاشة المرتجعات.",
         "• تكلفة الشحن لا تشمل رسوم التحصيل النقدي لبوسطة؛ دي في عمولة التحصيل.",
         "• عمولة التحصيل: الدفع عند الاستلام = رسوم بوسطة على التحصيل، البطاقة = عمولة بوابة الدفع (2% + 2 جنيه + ضريبة لو مش مسجلة)، المحفظة = صفر.",
-        "• اجمالي ربح ريدي كار = الاجمالي − صافي التاجر − تكلفة الشحن − عمولة التحصيل.",
+        "• اجمالي ربح ريدي مارين = الاجمالي − صافي التاجر − تكلفة الشحن − عمولة التحصيل.",
         "• مبلغ التحويل للبنك = تحويلات بوابات الدفع وشركات الشحن المسجلة في الخزنة خلال الفترة. مبلغ التحويل للتاجر = مدفوعات التجار المدفوعة خلال الفترة.",
     ];
     if (report.truncated) notes.push("• تنبيه: التقرير اتقصّ عند 5000 طلب — ضيّق الفترة.");

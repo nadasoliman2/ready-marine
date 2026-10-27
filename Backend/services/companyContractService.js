@@ -67,7 +67,7 @@ const endContract = async (companyId, { note = '' } = {}, actor) => {
         await m.save();
         await notifyCustomer(m.user_id, 'company_contract_ended', {
             title_en: `${company.name}'s ${oe.one} account has ended`,
-            title_ar: `حساب ${company.name} على ReadyCar انتهى`,
+            title_ar: `حساب ${company.name} على Ready Marine انتهى`,
             message_en: `You can no longer order on the ${oe.one} account. Orders you already placed continue as normal.`,
             message_ar: `مابقاش ينفع تطلب على حساب ${oa.the}. الأوردرات اللي طلبتها قبل كده بتكمل عادي.`,
         }, { link: '/profile?tab=company' }).catch(() => {});
@@ -109,15 +109,15 @@ const endContract = async (companyId, { note = '' } = {}, actor) => {
         ? `فاضل عليكم ${money(settlement.outstanding)} ج.`
         : settlement?.refund_due > 0 ? `ليكم عندنا ${money(settlement.refund_due)} ج وهنحوّلهالكم.` : 'مفيش مبالغ متبقية.';
     await notifyManagers(company._id, 'company_contract_ended', {
-        title_en: `${company.name}'s contract with ReadyCar has ended`,
-        title_ar: `العقد بين ${company.name} و ReadyCar انتهى`,
+        title_en: `${company.name}'s contract with Ready Marine has ended`,
+        title_ar: `العقد بين ${company.name} و Ready Marine انتهى`,
         message_en: settlement?.outstanding > 0
             ? `The final invoice is ready — ${money(settlement.outstanding)} is left to pay.`
             : 'The final invoice is ready in the portal.',
         message_ar: `آخر فاتورة جاهزة في لوحة ${oa.the}. ${owed}`,
     }, { link: '/company/invoices' }).catch(() => {});
     await emailManagers(company._id, {
-        subject: `العقد بين ${company.name} و ReadyCar انتهى`,
+        subject: `العقد بين ${company.name} و Ready Marine انتهى`,
         eyebrow: `حساب ${oa.the}`,
         title: 'العقد انتهى وآخر فاتورة جاهزة',
         body: `مابقاش ينفع حد يطلب على حساب ${oa.the}، والأوردرات اللي اتطلبت قبل كده بتكمل عادي. ${owed} أي مرتجع بييجي بعد كده بيتخصم من المتبقي أو بيرجعلكم.`,

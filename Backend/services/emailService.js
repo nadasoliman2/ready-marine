@@ -91,31 +91,31 @@ const getEmailCopy = (language, role, verificationUrl) => {
             dir: "rtl",
             lang: "ar",
             align: "right",
-            subject: "تأكيد بريدك الإلكتروني في ReadyCar",
+            subject: "تأكيد بريدك الإلكتروني في Ready Marine",
             fallbackName: "مرحباً",
             eyebrow: "تأكيد البريد الإلكتروني",
             title: "أكمل إنشاء حسابك",
             greeting: "مرحباً",
-            body: `يرجى تأكيد بريدك الإلكتروني لإكمال إنشاء حساب ${accountLabel} في ReadyCar.`,
+            body: `يرجى تأكيد بريدك الإلكتروني لإكمال إنشاء حساب ${accountLabel} في Ready Marine.`,
             button: "تأكيد البريد الإلكتروني",
             expiry: "سينتهي هذا الرابط قريباً. إذا لم تطلب إنشاء هذا الحساب، يمكنك تجاهل هذه الرسالة.",
             fallback: "إذا لم يعمل الزر، افتح هذا الرابط في المتصفح:",
-            text: (plainName) => `مرحباً${plainName ? ` ${plainName}` : ""}، أكد حساب ${accountLabel} في ReadyCar: ${verificationUrl}`,
+            text: (plainName) => `مرحباً${plainName ? ` ${plainName}` : ""}، أكد حساب ${accountLabel} في Ready Marine: ${verificationUrl}`,
         }
         : {
             dir: "ltr",
             lang: "en",
             align: "left",
-            subject: "Verify your ReadyCar email",
+            subject: "Verify your Ready Marine email",
             fallbackName: "there",
             eyebrow: "Email verification",
             title: "Finish creating your account",
             greeting: "Hello",
-            body: `Please verify your email to finish creating your ReadyCar ${accountLabel} account.`,
+            body: `Please verify your email to finish creating your Ready Marine ${accountLabel} account.`,
             button: "Verify email",
             expiry: "This link will expire soon. If you did not request this, you can ignore this email.",
             fallback: "If the button does not work, open this link in your browser:",
-            text: (plainName) => `Hello${plainName ? ` ${plainName}` : ""}, verify your ReadyCar ${accountLabel} account: ${verificationUrl}`,
+            text: (plainName) => `Hello${plainName ? ` ${plainName}` : ""}, verify your Ready Marine ${accountLabel} account: ${verificationUrl}`,
         };
 };
 
@@ -130,31 +130,31 @@ const getPasswordResetCopy = (language, role, resetUrl) => {
             dir: "rtl",
             lang: "ar",
             align: "right",
-            subject: "إعادة تعيين كلمة مرور ReadyCar",
+            subject: "إعادة تعيين كلمة مرور Ready Marine",
             fallbackName: "مرحباً",
             eyebrow: "أمان الحساب",
             title: "إعادة تعيين كلمة المرور",
             greeting: "مرحباً",
-            body: `تلقينا طلباً لإعادة تعيين كلمة مرور حساب ${accountLabel} في ReadyCar. اضغط الزر أدناه لاختيار كلمة مرور جديدة.`,
+            body: `تلقينا طلباً لإعادة تعيين كلمة مرور حساب ${accountLabel} في Ready Marine. اضغط الزر أدناه لاختيار كلمة مرور جديدة.`,
             button: "اختيار كلمة مرور جديدة",
             expiry: "سينتهي هذا الرابط قريباً ويمكن استخدامه مرة واحدة فقط. إذا لم تطلب إعادة التعيين، تجاهل هذه الرسالة وسيظل حسابك آمناً.",
             fallback: "إذا لم يعمل الزر، افتح هذا الرابط في المتصفح:",
-            text: (plainName) => `مرحباً${plainName ? ` ${plainName}` : ""}، أعد تعيين كلمة مرور حساب ${accountLabel} في ReadyCar: ${resetUrl}`,
+            text: (plainName) => `مرحباً${plainName ? ` ${plainName}` : ""}، أعد تعيين كلمة مرور حساب ${accountLabel} في Ready Marine: ${resetUrl}`,
         }
         : {
             dir: "ltr",
             lang: "en",
             align: "left",
-            subject: "Reset your ReadyCar password",
+            subject: "Reset your Ready Marine password",
             fallbackName: "there",
             eyebrow: "Account security",
             title: "Reset your password",
             greeting: "Hello",
-            body: `We received a request to reset the password for your ReadyCar ${accountLabel} account. Use the button below to choose a new password.`,
+            body: `We received a request to reset the password for your Ready Marine ${accountLabel} account. Use the button below to choose a new password.`,
             button: "Choose a new password",
             expiry: "This link expires soon and can only be used once. If you did not request a reset, ignore this email and your account will remain secure.",
             fallback: "If the button does not work, open this link in your browser:",
-            text: (plainName) => `Hello${plainName ? ` ${plainName}` : ""}, reset your ReadyCar ${accountLabel} password: ${resetUrl}`,
+            text: (plainName) => `Hello${plainName ? ` ${plainName}` : ""}, reset your Ready Marine ${accountLabel} password: ${resetUrl}`,
         };
 };
 
@@ -173,12 +173,12 @@ const sendBrandedActionEmail = async ({ to, name, actionUrl, copy }) => {
         throw new Error("RESEND_TOKEN is not configured");
     }
 
-    const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || "ReadyCar <onboarding@resend.dev>";
+    const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || "Ready Marine <onboarding@resend.dev>";
     const safeName = escapeHtml(name || copy.fallbackName);
     const safeActionUrl = escapeHtml(actionUrl);
     const logoUrl = await getSiteLogoUrl(actionUrl);
     const logoHtml = logoUrl
-        ? `<img src="${escapeHtml(logoUrl)}" alt="ReadyCar" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`
+        ? `<img src="${escapeHtml(logoUrl)}" alt="Ready Marine" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`
         : `<div style="font-size:24px;font-weight:900;color:#111827;letter-spacing:.02em;margin-bottom:18px;text-align:center;">Ready<span style="color:#DC2626;">Car</span></div>`;
 
     return await postJson({
@@ -257,7 +257,7 @@ const sendReturnStatusEmail = async ({ to, name, returnNumber, status, details, 
 
     const copy = isAr ? {
         dir: "rtl", lang: "ar", align: "right",
-        subject: `ReadyCar — ${statusLabel} (${returnNumber})`,
+        subject: `Ready Marine — ${statusLabel} (${returnNumber})`,
         fallbackName: "العميل",
         eyebrow: "تحديث طلب الإرجاع",
         title: statusLabel,
@@ -269,7 +269,7 @@ const sendReturnStatusEmail = async ({ to, name, returnNumber, status, details, 
         text: (n) => `مرحباً${n ? ` ${n}` : ""}, تم تحديث طلب الإرجاع ${returnNumber}: ${statusLabel}. ${actionUrl}`,
     } : {
         dir: "ltr", lang: "en", align: "left",
-        subject: `ReadyCar — ${statusLabel} (${returnNumber})`,
+        subject: `Ready Marine — ${statusLabel} (${returnNumber})`,
         fallbackName: "there",
         eyebrow: "Return Update",
         title: statusLabel,
@@ -295,7 +295,7 @@ const sendRefundCompletedEmail = async ({ to, name, refundNumber, amount, method
 
     const copy = isAr ? {
         dir: "rtl", lang: "ar", align: "right",
-        subject: `ReadyCar — تم استرداد ${amount} ج.م (${refundNumber})`,
+        subject: `Ready Marine — تم استرداد ${amount} ج.م (${refundNumber})`,
         fallbackName: "العميل",
         eyebrow: "تم الاسترداد",
         title: `تم استرداد ${amount} ج.م`,
@@ -307,7 +307,7 @@ const sendRefundCompletedEmail = async ({ to, name, refundNumber, amount, method
         text: (n) => `مرحباً${n ? ` ${n}` : ""}, تم استرداد ${amount} ج.م عبر ${methodLabel}. ${actionUrl}`,
     } : {
         dir: "ltr", lang: "en", align: "left",
-        subject: `ReadyCar — ${amount} EGP Refunded (${refundNumber})`,
+        subject: `Ready Marine — ${amount} EGP Refunded (${refundNumber})`,
         fallbackName: "there",
         eyebrow: "Refund Completed",
         title: `${amount} EGP Refunded`,
@@ -334,28 +334,28 @@ const sendFamilyInvitationEmail = async ({ to, organizerName, relationshipLabel,
 
     const copy = isAr ? {
         dir: "rtl", lang: "ar", align: "right",
-        subject: `${organizerName} يدعوك للانضمام إلى عائلته على ReadyCar`,
+        subject: `${organizerName} يدعوك للانضمام إلى عائلته على Ready Marine`,
         fallbackName: "مرحباً",
         eyebrow: "دعوة العائلة",
         title: `${organizerName} يدعوك للانضمام إلى عائلته`,
         greeting: "مرحباً",
-        body: `دعاك ${organizerName} للانضمام إلى عائلته على ReadyCar بصفتك ${relationshipLabel}. بعد القبول يمكنك تجهيز طلبات الشراء وإرسالها إلى ${organizerName} للموافقة عليها. سيرى ${organizerName} كل طلب ويختار طريقة الدفع بنفسه. ستتمكن من استخدام العناوين التي شاركها معك فقط، ولن تتم مشاركة أي معلومات دفع.`,
+        body: `دعاك ${organizerName} للانضمام إلى عائلته على Ready Marine بصفتك ${relationshipLabel}. بعد القبول يمكنك تجهيز طلبات الشراء وإرسالها إلى ${organizerName} للموافقة عليها. سيرى ${organizerName} كل طلب ويختار طريقة الدفع بنفسه. ستتمكن من استخدام العناوين التي شاركها معك فقط، ولن تتم مشاركة أي معلومات دفع.`,
         button: "مراجعة الدعوة",
         expiry: expiryDate ? `تنتهي صلاحية هذه الدعوة في ${expiryDate}. إذا لم تكن تتوقع هذه الرسالة يمكنك تجاهلها.` : "إذا لم تكن تتوقع هذه الرسالة يمكنك تجاهلها.",
         fallback: "إذا لم يعمل الزر، افتح هذا الرابط في المتصفح:",
-        text: () => `دعاك ${organizerName} للانضمام إلى عائلته على ReadyCar: ${invitationUrl}`,
+        text: () => `دعاك ${organizerName} للانضمام إلى عائلته على Ready Marine: ${invitationUrl}`,
     } : {
         dir: "ltr", lang: "en", align: "left",
-        subject: `${organizerName} invited you to join their ReadyCar family`,
+        subject: `${organizerName} invited you to join their Ready Marine family`,
         fallbackName: "there",
         eyebrow: "Family invitation",
         title: `${organizerName} invited you to join their family`,
         greeting: "Hello",
-        body: `${organizerName} invited you to join their ReadyCar family as their ${relationshipLabel}. Once you accept, you can prepare purchases and send them to ${organizerName} for approval. ${organizerName} reviews every request and chooses how to pay. You will only be able to use the delivery addresses they share with you, and no payment information is ever shared.`,
+        body: `${organizerName} invited you to join their Ready Marine family as their ${relationshipLabel}. Once you accept, you can prepare purchases and send them to ${organizerName} for approval. ${organizerName} reviews every request and chooses how to pay. You will only be able to use the delivery addresses they share with you, and no payment information is ever shared.`,
         button: "Review invitation",
         expiry: expiryDate ? `This invitation expires on ${expiryDate}. If you were not expecting it, you can ignore this email.` : "If you were not expecting this email, you can ignore it.",
         fallback: "If the button does not work, open this link in your browser:",
-        text: () => `${organizerName} invited you to join their ReadyCar family: ${invitationUrl}`,
+        text: () => `${organizerName} invited you to join their Ready Marine family: ${invitationUrl}`,
     };
 
     return await sendBrandedActionEmail({ to, name: "", actionUrl: invitationUrl, copy });
@@ -380,32 +380,32 @@ const sendCompanyInvitationEmail = async ({ to, companyName, orgType = "company"
 
     const copy = isAr ? {
         dir: "rtl", lang: "ar", align: "right",
-        subject: manager ? `دعوة لإدارة حساب ${companyName} على ReadyCar` : `${companyName} ${added} لحساب ${t.the} على ReadyCar`,
+        subject: manager ? `دعوة لإدارة حساب ${companyName} على Ready Marine` : `${companyName} ${added} لحساب ${t.the} على Ready Marine`,
         fallbackName: "مرحباً",
         eyebrow: manager ? "دعوة مدير حساب" : `دعوة ${t.member}`,
-        title: manager ? `إدارة حساب ${company} على ReadyCar` : `${company} ${added} لحساب ${t.the}`,
+        title: manager ? `إدارة حساب ${company} على Ready Marine` : `${company} ${added} لحساب ${t.the}`,
         greeting: "مرحباً",
         body: manager
-            ? `تمت دعوتك كمدير لحساب ${company} على ReadyCar. من لوحة ${t.the} هتقدر تضيف ${t.members} وتحدد ليميت كل واحد وتتابع المشتريات والفواتير.`
-            : `${company} ${added} لحساب ${t.the} على ReadyCar. بعد ما تنضم هتقدر تطلب قطع غيار لعربيتك على حساب ${t.the} في حدود الليميت الشهري بتاعك. ${t.the} ${t.fem ? "هتشوف" : "هيشوف"} الأوردرات اللي بتطلبها على ${its} بس — مشترياتك الشخصية مش ${t.fem ? "هتظهرلها" : "هتظهرله"}.`,
+            ? `تمت دعوتك كمدير لحساب ${company} على Ready Marine. من لوحة ${t.the} هتقدر تضيف ${t.members} وتحدد ليميت كل واحد وتتابع المشتريات والفواتير.`
+            : `${company} ${added} لحساب ${t.the} على Ready Marine. بعد ما تنضم هتقدر تطلب قطع غيار لعربيتك على حساب ${t.the} في حدود الليميت الشهري بتاعك. ${t.the} ${t.fem ? "هتشوف" : "هيشوف"} الأوردرات اللي بتطلبها على ${its} بس — مشترياتك الشخصية مش ${t.fem ? "هتظهرلها" : "هتظهرله"}.`,
         button: "مراجعة الدعوة",
         expiry: expiryDate ? `الدعوة دي صالحة لحد ${expiryDate}. لو مكنتش مستني الرسالة دي تقدر تتجاهلها.` : "لو مكنتش مستني الرسالة دي تقدر تتجاهلها.",
         fallback: "لو الزرار مش شغال، افتح الرابط ده في المتصفح:",
-        text: () => `${companyName} ${added} لحساب ${t.the} على ReadyCar: ${invitationUrl}`,
+        text: () => `${companyName} ${added} لحساب ${t.the} على Ready Marine: ${invitationUrl}`,
     } : {
         dir: "ltr", lang: "en", align: "left",
-        subject: manager ? `You're invited to manage ${companyName} on ReadyCar` : `${companyName} added you to its ReadyCar ${e.one} account`,
+        subject: manager ? `You're invited to manage ${companyName} on Ready Marine` : `${companyName} added you to its Ready Marine ${e.one} account`,
         fallbackName: "there",
         eyebrow: manager ? "Account manager invitation" : `${e.Member} invitation`,
-        title: manager ? `Manage ${company} on ReadyCar` : `${company} added you to its ${e.one} account`,
+        title: manager ? `Manage ${company} on Ready Marine` : `${company} added you to its ${e.one} account`,
         greeting: "Hello",
         body: manager
-            ? `You've been invited to manage ${company}'s ReadyCar account. From the ${e.one} portal you can add ${e.members}, set each one's limit, and follow purchases and invoices.`
-            : `${company} added you to its ReadyCar ${e.one} account. Once you join, you can order car parts for your own car on the ${e.one}'s account, within your monthly limit. The ${e.one} will see only the orders you place on its account — your personal purchases stay private.`,
+            ? `You've been invited to manage ${company}'s Ready Marine account. From the ${e.one} portal you can add ${e.members}, set each one's limit, and follow purchases and invoices.`
+            : `${company} added you to its Ready Marine ${e.one} account. Once you join, you can order car parts for your own car on the ${e.one}'s account, within your monthly limit. The ${e.one} will see only the orders you place on its account — your personal purchases stay private.`,
         button: "Review invitation",
         expiry: expiryDate ? `This invitation expires on ${expiryDate}. If you were not expecting it, you can ignore this email.` : "If you were not expecting this email, you can ignore it.",
         fallback: "If the button does not work, open this link in your browser:",
-        text: () => `${companyName} invited you to its ReadyCar ${e.one} account: ${invitationUrl}`,
+        text: () => `${companyName} invited you to its Ready Marine ${e.one} account: ${invitationUrl}`,
     };
 
     return await sendBrandedActionEmail({ to, name: "", actionUrl: invitationUrl, copy });
@@ -433,38 +433,38 @@ const sendFriendInvitationEmail = async ({ to, inviterName, actionUrl, mode = "a
         ? {
             account: "سجّل دخولك وهتلاقي الطلب مستنيك في تاب الأصدقاء في حسابك.",
             claim: "افتح الدعوة وأكّد بالكود اللي هيوصلك على واتساب على رقمك.",
-            signup: `اعمل حساب على ReadyCar بالإيميل ده (${escapeHtml(to)}) وهتلاقي الطلب مستنيك في تاب الأصدقاء.`,
+            signup: `اعمل حساب على Ready Marine بالإيميل ده (${escapeHtml(to)}) وهتلاقي الطلب مستنيك في تاب الأصدقاء.`,
         }
         : {
             account: "Sign in and you will find the request waiting in the Friends tab of your account.",
             claim: "Open the invitation and confirm with the code we send to your phone on WhatsApp.",
-            signup: `Create a ReadyCar account with this email address (${escapeHtml(to)}) and the request will be waiting in your Friends tab.`,
+            signup: `Create a Ready Marine account with this email address (${escapeHtml(to)}) and the request will be waiting in your Friends tab.`,
         };
 
     const copy = isAr ? {
         dir: "rtl", lang: "ar", align: "right",
-        subject: `${inviterName || "صديقك"} عايز يضيفك كصديق على ReadyCar`,
+        subject: `${inviterName || "صديقك"} عايز يضيفك كصديق على Ready Marine`,
         fallbackName: "",
         eyebrow: "دعوة صداقة",
         title: `${name} عايز يضيفك كصديق`,
         greeting: "أهلاً",
-        body: `${name} عايز يضيفك كصديق على ReadyCar عشان تقدروا تشتروا قطع غيار لبعض وتبعتوها على عناوين بعض. ${how[mode] || how.account}`,
+        body: `${name} عايز يضيفك كصديق على Ready Marine عشان تقدروا تشتروا قطع غيار لبعض وتبعتوها على عناوين بعض. ${how[mode] || how.account}`,
         button: mode === "signup" ? "إنشاء حساب" : mode === "claim" ? "مراجعة الدعوة" : "فتح طلبات الصداقة",
         expiry: expiryDate ? `الدعوة صالحة لحد ${expiryDate}. لو مش متوقع الرسالة دي تقدر تتجاهلها.` : "لو مش متوقع الرسالة دي تقدر تتجاهلها.",
         fallback: "لو الزرار مش شغال، افتح اللينك ده في المتصفح:",
-        text: () => `${inviterName || "صديقك"} عايز يضيفك كصديق على ReadyCar: ${actionUrl}`,
+        text: () => `${inviterName || "صديقك"} عايز يضيفك كصديق على Ready Marine: ${actionUrl}`,
     } : {
         dir: "ltr", lang: "en", align: "left",
-        subject: `${inviterName || "A friend"} wants to connect with you on ReadyCar`,
+        subject: `${inviterName || "A friend"} wants to connect with you on Ready Marine`,
         fallbackName: "there",
         eyebrow: "Friend invitation",
         title: `${name} wants to connect with you`,
         greeting: "Hello",
-        body: `${name} wants to connect with you on ReadyCar so you can buy parts for each other and send them to each other's addresses. ${how[mode] || how.account}`,
+        body: `${name} wants to connect with you on Ready Marine so you can buy parts for each other and send them to each other's addresses. ${how[mode] || how.account}`,
         button: mode === "signup" ? "Create your account" : mode === "claim" ? "Review invitation" : "Open friend requests",
         expiry: expiryDate ? `This invitation is valid until ${expiryDate}. If you were not expecting it, you can ignore this email.` : "If you were not expecting this email, you can ignore it.",
         fallback: "If the button does not work, open this link in your browser:",
-        text: () => `${inviterName || "A friend"} wants to connect with you on ReadyCar: ${actionUrl}`,
+        text: () => `${inviterName || "A friend"} wants to connect with you on Ready Marine: ${actionUrl}`,
     };
 
     return await sendBrandedActionEmail({ to, name: "", actionUrl, copy });
@@ -586,7 +586,7 @@ const sendOtpEmail = async ({ to, name, code, expiryMinutes = 10, language = "en
     }
 
     const isAr = language === "ar";
-    const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || "ReadyCar <onboarding@resend.dev>";
+    const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || "Ready Marine <onboarding@resend.dev>";
     const logoUrl = await getSiteLogoUrl("");
     const safeName = escapeHtml(name || (isAr ? "مرحباً" : "there"));
     const safeCode = escapeHtml(code);
@@ -600,7 +600,7 @@ const sendOtpEmail = async ({ to, name, code, expiryMinutes = 10, language = "en
             greeting: "مرحباً",
             body: "استخدم الرمز التالي لتأكيد بريدك الإلكتروني:",
             expiry: `ينتهي هذا الرمز خلال ${expiryMinutes} دقائق ويُستخدم مرة واحدة فقط.`,
-            warning: "لن يطلب منك فريق ReadyCar هذا الرمز أبداً. إذا لم تطلبه، تجاهل هذه الرسالة.",
+            warning: "لن يطلب منك فريق Ready Marine هذا الرمز أبداً. إذا لم تطلبه، تجاهل هذه الرسالة.",
         }
         : {
             dir: "ltr", lang: "en", align: "left",
@@ -610,11 +610,11 @@ const sendOtpEmail = async ({ to, name, code, expiryMinutes = 10, language = "en
             greeting: "Hello",
             body: "Use the following code to confirm your email address:",
             expiry: `This code expires in ${expiryMinutes} minutes and can be used only once.`,
-            warning: "ReadyCar staff will never ask you for this code. If you did not request it, ignore this email.",
+            warning: "Ready Marine staff will never ask you for this code. If you did not request it, ignore this email.",
         };
 
     const logoHtml = logoUrl
-        ? `<img src="${escapeHtml(logoUrl)}" alt="ReadyCar" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`
+        ? `<img src="${escapeHtml(logoUrl)}" alt="Ready Marine" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`
         : `<div style="font-size:24px;font-weight:900;color:#111827;letter-spacing:.02em;margin-bottom:18px;text-align:center;">Ready<span style="color:#DC2626;">Car</span></div>`;
 
     return await postJson({
@@ -650,7 +650,7 @@ const sendOtpEmail = async ({ to, name, code, expiryMinutes = 10, language = "en
             `,
             text: isAr
                 ? `رمز التحقق الخاص بك: ${code} — ينتهي خلال ${expiryMinutes} دقائق.`
-                : `Your ReadyCar verification code is ${code}. It expires in ${expiryMinutes} minutes.`,
+                : `Your Ready Marine verification code is ${code}. It expires in ${expiryMinutes} minutes.`,
         },
     });
 };
@@ -809,7 +809,7 @@ const sendAbandonedCartEmail = async ({ to, idempotencyKey, ...content }) => {
             ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
         },
         body: {
-            from: process.env.RESEND_FROM || process.env.EMAIL_FROM || "ReadyCar <onboarding@resend.dev>",
+            from: process.env.RESEND_FROM || process.env.EMAIL_FROM || "Ready Marine <onboarding@resend.dev>",
             to: [to],
             subject: email.subject,
             ...(email.headers ? { headers: email.headers } : {}),

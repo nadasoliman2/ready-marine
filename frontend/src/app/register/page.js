@@ -185,7 +185,7 @@ export default function RegisterPage() {
       // whichever contact detail the code did not prove.
       if (res.role === 'vendor' && res.vendor) {
         login({ ...res.vendor, role: 'vendor' });
-        sessionStorage.setItem('readycar_show_vendor_education', '1');
+        sessionStorage.setItem('readymarine_show_vendor_education', '1');
         router.push('/dashboard');
       } else {
         login({ ...res.user, role: 'user' });
@@ -234,7 +234,7 @@ export default function RegisterPage() {
 
     if (res.role === 'vendor' && res.vendor) {
       login({ ...res.vendor, role: 'vendor' });
-      if (created) sessionStorage.setItem('readycar_show_vendor_education', '1');
+      if (created) sessionStorage.setItem('readymarine_show_vendor_education', '1');
       router.push('/dashboard');
     } else {
       login({ ...res.user, role: 'user' });

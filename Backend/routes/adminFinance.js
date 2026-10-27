@@ -920,7 +920,7 @@ router.get('/tracking-report/export', protect('admin'), async (req, res) => {
         const analysis = await getSalesPaymentsAnalysis({ to: req.query.to, sales: req.query.from ? null : report });
         const wb = await buildTrackingReportWorkbook(report, analysis);
         const safe = (v) => String(v || '').replace(/[^0-9-]/g, '');
-        const name = `readycar-tracking-report_${safe(req.query.from) || 'start'}_${safe(req.query.to) || 'today'}.xlsx`;
+        const name = `readymarine-tracking-report_${safe(req.query.from) || 'start'}_${safe(req.query.to) || 'today'}.xlsx`;
         // Built in memory and sent whole, with its length: the page now NAVIGATES here
         // (see the tracking page), and a phone's browser decides how to handle a download
         // from these headers alone.

@@ -77,13 +77,13 @@ function useColumns(storageKey, isAdmin) {
   const [shown, setShown] = useState(defaults);
   useEffect(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem(`readycar.columns.${storageKey}`) || 'null');
+      const saved = JSON.parse(localStorage.getItem(`readymarine.columns.${storageKey}`) || 'null');
       if (Array.isArray(saved)) setShown(saved.filter((k) => available.some((c) => c.key === k)));
     } catch (_) { /* private mode */ }
   }, [storageKey, available]);
   const save = (next) => {
     setShown(next);
-    try { localStorage.setItem(`readycar.columns.${storageKey}`, JSON.stringify(next)); } catch (_) { /* private mode */ }
+    try { localStorage.setItem(`readymarine.columns.${storageKey}`, JSON.stringify(next)); } catch (_) { /* private mode */ }
   };
   const toggle = (key) => save(shown.includes(key) ? shown.filter((k) => k !== key) : [...shown, key]);
   return { available, shown, toggle, reset: () => save(defaults) };

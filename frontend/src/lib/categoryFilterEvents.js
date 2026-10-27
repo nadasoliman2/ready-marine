@@ -1,4 +1,4 @@
-export const CATEGORY_FILTER_EVENT = 'readycar:category-filter';
+export const CATEGORY_FILTER_EVENT = 'readymarine:category-filter';
 
 export function publishCategoryFilter(categoryId) {
   if (typeof window === 'undefined' || !categoryId) return;
@@ -13,7 +13,7 @@ export function publishCategoryFilter(categoryId) {
  * at once — keeping the ones already chosen — instead of waiting for a navigation that a
  * quick click on a filter could overtake.
  */
-export const SEARCH_FILTER_EVENT = 'readycar:search-filter';
+export const SEARCH_FILTER_EVENT = 'readymarine:search-filter';
 
 export function publishSearchFilter(query) {
   if (typeof window === 'undefined' || !query) return;

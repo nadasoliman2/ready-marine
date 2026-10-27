@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
-const STORAGE_PREFIX = 'readycar.pageSize.';
+const STORAGE_PREFIX = 'readymarine.pageSize.';
 
 export default function usePageSize(key, fallback = 10) {
     // Starts at the fallback on both server and first client render, then corrects from

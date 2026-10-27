@@ -270,7 +270,7 @@ const createHostedPayment = async ({
         cartTotal: Number(amount).toFixed(2),
         currency: currency || fawaterak.getCurrency(),
         customer: {
-            first_name: customer.first_name || 'ReadyCar',
+            first_name: customer.first_name || 'Ready Marine',
             last_name: customer.last_name || 'Customer',
             email: customer.email,
             phone: customer.phone,
@@ -289,7 +289,7 @@ const createHostedPayment = async ({
                 price: Number(item.price).toFixed(2),
                 quantity: item.quantity || 1,
             }))
-            : [{ name: 'ReadyCar', price: Number(amount).toFixed(2), quantity: 1 }],
+            : [{ name: 'Ready Marine', price: Number(amount).toFixed(2), quantity: 1 }],
         payLoad: { ...extras, reference },
         sendEmail: false,
         sendSMS: false,

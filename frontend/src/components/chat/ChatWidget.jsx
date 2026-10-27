@@ -39,7 +39,7 @@ import {
 const MAX_LENGTH = 1000;
 const HANDOFF_POLL_MS = 10_000;
 const MAX_RECORDING_MS = 120_000;
-const TEASER_KEY = 'readycar-chat-teaser-seen';
+const TEASER_KEY = 'readymarine-chat-teaser-seen';
 
 const toLine = (m) => ({
     key: m.id != null ? `m-${m.id}` : `x-${Math.random().toString(36).slice(2)}`,

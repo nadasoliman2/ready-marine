@@ -33,7 +33,7 @@ const startMongo = async (dbName) => {
         url.pathname = `/${dbName}`;
         return { uri: url.toString(), stop: async () => {} };
     }
-    const directory = await mkdtemp(join(tmpdir(), `readycar-${dbName}-`));
+    const directory = await mkdtemp(join(tmpdir(), `readymarine-${dbName}-`));
     const port = await freePort();
     const child = await spawnUntil(process.env.TEST_MONGOD_BINARY || 'mongod',
         ['--dbpath', directory, '--bind_ip', '127.0.0.1', '--port', String(port), '--quiet'],

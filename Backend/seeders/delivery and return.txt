@@ -1,8 +1,8 @@
 Returns and Refunds Policy
 Last updated: July 28, 2026
-At Ready Car, we aim to provide high-quality products and reliable service. Should you need to exchange or return a product, please review the following policy, which is an integral part of the site's Terms and Conditions.
+At Ready Marine, we aim to provide high-quality products and reliable service. Should you need to exchange or return a product, please review the following policy, which is an integral part of the site's Terms and Conditions.
 1. Scope of Application
-This policy applies to all orders purchased through the readycar.store website.
+This policy applies to all orders purchased through the readymarine.store website.
 2. Return and Exchange Conditions
 A return or exchange request can be accepted if all the following conditions are met:
 • The request is submitted within 14 days of the delivery date, or within the period specified by applicable law if longer.
@@ -10,9 +10,9 @@ A return or exchange request can be accepted if all the following conditions are
 • The product has not been installed, used, modified, or repaired.
 • The product is free from any damage, scratches, breaks, or signs of use.
 • All original accessories, packaging, labels, and the invoice or proof of purchase are included.
-Ready Car reserves the right to inspect the product before finalizing the return or exchange approval.
+Ready Marine reserves the right to inspect the product before finalizing the return or exchange approval.
 3. Non-Returnable and Non-Exchangeable Products
-Products cannot be returned or exchanged in the following cases, unless there is a manufacturing defect or an error on Ready Car's part:
+Products cannot be returned or exchanged in the following cases, unless there is a manufacturing defect or an error on Ready Marine's part:
 • Products that have been installed or used.
 • Products damaged due to misuse or incorrect installation.
 • Special orders or items custom-sourced at the customer's request.
@@ -21,11 +21,11 @@ Products cannot be returned or exchanged in the following cases, unless there is
 • Products with removed labels or original packaging.
 • Any product that does not meet the return and exchange conditions outlined in this policy.
 4. Damaged or Incorrectly Sent Products
-• If the customer receives a different product than ordered, or if the product arrives damaged due to a packing or shipping error, they must contact Ready Car within 48 hours of receipt, providing clear photos of the product and packaging.
-• Upon verification of the error, Ready Car will cover the return or exchange costs, including related shipping fees.
+• If the customer receives a different product than ordered, or if the product arrives damaged due to a packing or shipping error, they must contact Ready Marine within 48 hours of receipt, providing clear photos of the product and packaging.
+• Upon verification of the error, Ready Marine will cover the return or exchange costs, including related shipping fees.
 5. Incompatible Vehicle Parts
 • The customer is responsible for ensuring part compatibility with their vehicle before completing the purchase, including checking the VIN (Vehicle Identification Number) or Part Number, or any other technical data as needed.
-• Incompatibility with the vehicle is not considered grounds for a return or exchange if the product matches the specifications ordered by the customer, unless the incompatibility is due to an error by Ready Car.
+• Incompatibility with the vehicle is not considered grounds for a return or exchange if the product matches the specifications ordered by the customer, unless the incompatibility is due to an error by Ready Marine.
 6. Return or Exchange Request Procedures
 To request a return or exchange, please contact customer service and provide:
 • Order number.
@@ -34,29 +34,29 @@ To request a return or exchange, please contact customer service and provide:
 • Clear photos of the product when necessary.
 The request will be reviewed, and the customer will be notified of the decision within a reasonable time.
 7. Shipping Fees
-• If the return or exchange is due to a Ready Car error or a proven manufacturing defect, Ready Car will bear the related shipping fees.
-• If the request is based on the customer's preference or for a reason not attributable to Ready Car, the customer will bear all two-way shipping fees and any additional resulting charges, to the extent permitted by law.
+• If the return or exchange is due to a Ready Marine error or a proven manufacturing defect, Ready Marine will bear the related shipping fees.
+• If the request is based on the customer's preference or for a reason not attributable to Ready Marine, the customer will bear all two-way shipping fees and any additional resulting charges, to the extent permitted by law.
 8. Refunds
 • Upon receipt, inspection, and approval of the returned product, the eligible amount will be refunded using the original payment method whenever possible, or through any other agreed-upon method.
 • Refunds are processed within a reasonable time, though the timeframe for the funds to appear in the customer's account may vary depending on the payment provider or bank's procedures.
 9. Rejection of Return or Exchange Requests
-Ready Car reserves the right to reject any request if:
+Ready Marine reserves the right to reject any request if:
 • The conditions stated in this policy are not met.
 • There is evidence of use, installation, or damage to the product.
 • Incorrect or misleading information was provided.
-• It is proven that the reason for the request is not due to a Ready Car error or a product defect.
+• It is proven that the reason for the request is not due to a Ready Marine error or a product defect.
 10. Warranty
 • If the product is covered by a manufacturer's or supplier's warranty, claims will be processed according to those warranty terms. This policy does not affect any rights granted by the warranty or guaranteed by consumer protection laws.
 11. Contact Us
 • For any inquiries related to returns or exchanges, you can contact us via:
-Email: support@readycar.store
+Email: support@readymarine.store
 
 arabic :
 سياسة الاستبدال والاسترجاع
 آخر تحديث: 28 يوليو 2026
-في Ready Car، نسعى إلى تقديم منتجات عالية الجودة وخدمة موثوقة. وفي حال احتجت إلى استبدال أو استرجاع أحد المنتجات، يرجى مراجعة السياسة التالية، والتي تُعد جزءًا لا يتجزأ من الشروط والأحكام الخاصة بالموقع.
+في Ready Marine، نسعى إلى تقديم منتجات عالية الجودة وخدمة موثوقة. وفي حال احتجت إلى استبدال أو استرجاع أحد المنتجات، يرجى مراجعة السياسة التالية، والتي تُعد جزءًا لا يتجزأ من الشروط والأحكام الخاصة بالموقع.
 1. نطاق التطبيق
-تسري هذه السياسة على جميع الطلبات التي يتم شراؤها من خلال موقع readycar.store.
+تسري هذه السياسة على جميع الطلبات التي يتم شراؤها من خلال موقع readymarine.store.
 2. شروط الاستبدال والاسترجاع
 يمكن قبول طلب الاستبدال أو الاسترجاع إذا توفرت جميع الشروط التالية:
 • تقديم طلب الاستبدال أو الاسترجاع خلال 14 يومًا من تاريخ استلام المنتج، أو خلال المدة التي يحددها القانون الواجب التطبيق إذا كانت أطول.
@@ -64,9 +64,9 @@ arabic :
 • ألا يكون قد تم تركيبه أو استخدامه أو تعديله أو إصلاحه.
 • أن يكون المنتج خاليًا من أي تلف أو خدوش أو كسور أو آثار استخدام.
 • أن تكون جميع الملحقات والتغليف الأصلي والملصقات والفواتير أو إثبات الشراء مرفقة مع المنتج.
-ويحتفظ Ready Car بحق فحص المنتج قبل الموافقة النهائية على طلب الاستبدال أو الاسترجاع.
+ويحتفظ Ready Marine بحق فحص المنتج قبل الموافقة النهائية على طلب الاستبدال أو الاسترجاع.
 3. المنتجات غير القابلة للاستبدال أو الاسترجاع
-لا يمكن استبدال أو استرجاع المنتجات في الحالات التالية، ما لم يكن هناك عيب مصنعي أو خطأ من جانب Ready Car:
+لا يمكن استبدال أو استرجاع المنتجات في الحالات التالية، ما لم يكن هناك عيب مصنعي أو خطأ من جانب Ready Marine:
 • المنتجات التي تم تركيبها أو استخدامها.
 • المنتجات التي تعرضت للتلف بسبب سوء الاستخدام أو التركيب غير الصحيح.
 • الطلبات الخاصة أو المنتجات التي تم توفيرها خصيصًا بناءً على طلب العميل.
@@ -75,11 +75,11 @@ arabic :
 • المنتجات التي أزيلت عنها الملصقات أو العبوات الأصلية.
 • أي منتج لا يطابق شروط الاستبدال والاسترجاع المذكورة في هذه السياسة.
 4. المنتجات التالفة أو المرسلة بالخطأ
-• إذا استلم العميل منتجًا مختلفًا عن الطلب، أو وصل المنتج تالفًا بسبب خطأ في التجهيز أو الشحن، فيجب التواصل مع Ready Car خلال 48 ساعة من تاريخ الاستلام، مع إرسال صور واضحة للمنتج والتغليف.
-• في حال ثبوت الخطأ، يتحمل Ready Car تكاليف الاستبدال أو الاسترجاع، بما في ذلك رسوم الشحن المرتبطة بذلك.
+• إذا استلم العميل منتجًا مختلفًا عن الطلب، أو وصل المنتج تالفًا بسبب خطأ في التجهيز أو الشحن، فيجب التواصل مع Ready Marine خلال 48 ساعة من تاريخ الاستلام، مع إرسال صور واضحة للمنتج والتغليف.
+• في حال ثبوت الخطأ، يتحمل Ready Marine تكاليف الاستبدال أو الاسترجاع، بما في ذلك رسوم الشحن المرتبطة بذلك.
 5. القطع غير المناسبة للمركبة
 • يتحمل العميل مسؤولية التأكد من توافق القطعة مع سيارته قبل إتمام عملية الشراء، بما في ذلك التأكد من رقم الهيكل (VIN) أو رقم القطعة (Part Number) أو أي بيانات فنية أخرى عند الحاجة.
-• لا يعتبر عدم توافق القطعة مع المركبة سببًا للاستبدال أو الاسترجاع إذا كان المنتج مطابقًا للمواصفات التي طلبها العميل، ما لم يكن سبب عدم التوافق ناتجًا عن خطأ من Ready Car.
+• لا يعتبر عدم توافق القطعة مع المركبة سببًا للاستبدال أو الاسترجاع إذا كان المنتج مطابقًا للمواصفات التي طلبها العميل، ما لم يكن سبب عدم التوافق ناتجًا عن خطأ من Ready Marine.
 6. إجراءات طلب الاستبدال أو الاسترجاع
 لطلب الاستبدال أو الاسترجاع، يرجى التواصل مع خدمة العملاء وتقديم:
 • رقم الطلب.
@@ -88,19 +88,19 @@ arabic :
 • صور واضحة للمنتج عند الحاجة.
 وسيتم مراجعة الطلب وإبلاغ العميل بالقرار خلال مدة معقولة.
 7. رسوم الشحن
-• إذا كان سبب الاستبدال أو الاسترجاع يعود إلى خطأ من Ready Car أو وجود عيب مصنعي مثبت، يتحمل Ready Car رسوم الشحن المتعلقة بالاستبدال أو الاسترجاع.
-• إذا كان الطلب للاستبدال أو الاسترجاع بناءً على رغبة العميل أو لسبب لا يرجع إلى خطأ من Ready Car، يتحمل العميل جميع رسوم الشحن ذهابًا وإيابًا، وأي رسوم إضافية تترتب على ذلك، وذلك بالقدر الذي يسمح به القانون.
+• إذا كان سبب الاستبدال أو الاسترجاع يعود إلى خطأ من Ready Marine أو وجود عيب مصنعي مثبت، يتحمل Ready Marine رسوم الشحن المتعلقة بالاستبدال أو الاسترجاع.
+• إذا كان الطلب للاستبدال أو الاسترجاع بناءً على رغبة العميل أو لسبب لا يرجع إلى خطأ من Ready Marine، يتحمل العميل جميع رسوم الشحن ذهابًا وإيابًا، وأي رسوم إضافية تترتب على ذلك، وذلك بالقدر الذي يسمح به القانون.
 8. استرداد المبالغ
 • بعد استلام المنتج وفحصه والموافقة على طلب الاسترجاع، يتم رد المبلغ المستحق إلى العميل باستخدام وسيلة الدفع الأصلية متى كان ذلك ممكنًا، أو بأي وسيلة أخرى يتفق عليها الطرفان.
 • يتم تنفيذ عملية الاسترداد خلال مدة معقولة، وقد يختلف موعد ظهور المبلغ في حساب العميل وفقًا لإجراءات مزود خدمة الدفع أو البنك.
 9. رفض طلب الاستبدال أو الاسترجاع
-يحتفظ Ready Car بحق رفض أي طلب استبدال أو استرجاع إذا:
+يحتفظ Ready Marine بحق رفض أي طلب استبدال أو استرجاع إذا:
 • لم تستوفِ الشروط الواردة في هذه السياسة.
 • تبين وجود استخدام أو تركيب أو تلف في المنتج.
 • تم تقديم معلومات غير صحيحة أو مضللة.
-• ثبت أن سبب الطلب لا يرجع إلى خطأ من Ready Car أو إلى عيب في المنتج.
+• ثبت أن سبب الطلب لا يرجع إلى خطأ من Ready Marine أو إلى عيب في المنتج.
 10. الضمان
 • إذا كان المنتج مشمولًا بضمان من الشركة المصنعة أو المورد، فإن المطالبة تتم وفقًا لشروط ذلك الضمان، ولا تؤثر هذه السياسة على الحقوق التي يمنحها الضمان أو التي يكفلها القانون للمستهلك.
 11. التواصل معنا
 • لأي استفسار يتعلق بالاستبدال أو الاسترجاع، يمكنكم التواصل معنا عبر:
-البريد الإلكتروني: support@readycar.store
+البريد الإلكتروني: support@readymarine.store

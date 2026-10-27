@@ -247,7 +247,7 @@ const today = () => new Date().toISOString().slice(0, 10);
 const buildCartReportWorkbook = async (query = {}) => {
     const report = await buildCartReport(query);
     const wb = new ExcelJS.Workbook();
-    wb.creator = 'ReadyCar';
+    wb.creator = 'Ready Marine';
     wb.created = new Date();
     const ws = wb.addWorksheet('منتجات في السلة', { views: [{ rightToLeft: true, state: 'frozen', ySplit: 1 }] });
     ws.columns = [6, 44, 24, 8, 24, 16, 28, 16, 14].map((width) => ({ width }));
@@ -270,13 +270,13 @@ const buildCartReportWorkbook = async (query = {}) => {
     const t = report.totals;
     const total = ws.addRow(['', `الإجمالي: ${t.lines} منتج في سلال ${t.customers} عميل`, '', t.quantity]);
     total.font = { bold: true };
-    return { workbook: wb, filename: `readycar-cart-products-${today()}.xlsx` };
+    return { workbook: wb, filename: `readymarine-cart-products-${today()}.xlsx` };
 };
 
 const buildCarsReportWorkbook = async (query = {}) => {
     const report = await buildCarsReport(query);
     const wb = new ExcelJS.Workbook();
-    wb.creator = 'ReadyCar';
+    wb.creator = 'Ready Marine';
     wb.created = new Date();
     const ws = wb.addWorksheet('عربيات العملاء', { views: [{ rightToLeft: true, state: 'frozen', ySplit: 1 }] });
     const COLS = 9;
@@ -300,7 +300,7 @@ const buildCarsReportWorkbook = async (query = {}) => {
     const total = ws.addRow([`الإجمالي: ${t.cars} عربية — ${t.customers} عميل — ${t.brands} ماركة`]);
     ws.mergeCells(total.number, 1, total.number, COLS);
     total.font = { bold: true };
-    return { workbook: wb, filename: `readycar-customer-cars-${today()}.xlsx` };
+    return { workbook: wb, filename: `readymarine-customer-cars-${today()}.xlsx` };
 };
 
 /* ------------------------------------------------------------------ *
@@ -414,7 +414,7 @@ const REMINDER_STATUS_AR = { sent: 'اتبعت', failed: 'فشل', outcome_unkno
 const buildCartReminderReportWorkbook = async (query = {}) => {
     const report = await buildCartReminderReport(query);
     const wb = new ExcelJS.Workbook();
-    wb.creator = 'ReadyCar';
+    wb.creator = 'Ready Marine';
     wb.created = new Date();
     const ws = wb.addWorksheet('إيميلات تذكير السلة', { views: [{ rightToLeft: true, state: 'frozen', ySplit: 1 }] });
     ws.columns = [18, 24, 28, 16, 12, 60, 14, 18, 14, 40].map((width) => ({ width }));
@@ -440,7 +440,7 @@ const buildCartReminderReportWorkbook = async (query = {}) => {
     const t = report.totals;
     const total = ws.addRow(['', `الإجمالي: ${t.sent} إيميل اتبعت لـ ${t.customers} عميل — ${t.ordered_after} طلبوا بعدها`]);
     total.font = { bold: true };
-    return { workbook: wb, filename: `readycar-cart-reminders-${today()}.xlsx` };
+    return { workbook: wb, filename: `readymarine-cart-reminders-${today()}.xlsx` };
 };
 
 module.exports = {

@@ -11,7 +11,7 @@ import useCarFinder from './useCarFinder';
 
 // Closed (or used) once, it stays away this long: a welcome, not a wall on every visit.
 const QUIET_FOR_MS = 7 * 24 * 60 * 60 * 1000;
-const STORAGE_KEY = 'readycar.carFinderPopup.closedAt';
+const STORAGE_KEY = 'readymarine.carFinderPopup.closedAt';
 // Long enough for the page to show first, so the popup reads as an offer, not a block.
 const SHOW_AFTER_MS = 1200;
 

@@ -40,7 +40,7 @@ router.get('/unsubscribe', async (req, res) => {
             <html lang="ar" dir="rtl">
             <head>
                 <meta charset="utf-8">
-                <title>تم إلغاء الاشتراك - ReadyCar</title>
+                <title>تم إلغاء الاشتراك - Ready Marine</title>
                 <style>
                     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f4f5; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
                     .card { background: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); max-width: 480px; text-align: center; }
@@ -54,9 +54,9 @@ router.get('/unsubscribe', async (req, res) => {
                 <div class="card">
                     <div class="icon">✓</div>
                     <h1>تم إلغاء الاشتراك بنجاح</h1>
-                    <p>لن تتلقى بعد الآن رسائل البريد الإلكتروني التسويقية المخصصة لسيارتك من ReadyCar على <strong>${email}</strong>.</p>
+                    <p>لن تتلقى بعد الآن رسائل البريد الإلكتروني التسويقية المخصصة لسيارتك من Ready Marine على <strong>${email}</strong>.</p>
                     <p style="font-size: 13px; margin-top: 10px;">ستظل تتلقى فقط إشعارات الطلبات الهامة وتأكيد الحسابات.</p>
-                    <a href="/">العودة إلى ReadyCar</a>
+                    <a href="/">العودة إلى Ready Marine</a>
                 </div>
             </body>
             </html>

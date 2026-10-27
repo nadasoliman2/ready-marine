@@ -117,7 +117,7 @@ export default function TrackingReportPage() {
                 </div>
                 <a
                     href={exportUrl}
-                    download={`readycar-tracking-report_${range.from || 'start'}_${range.to || 'today'}.xlsx`}
+                    download={`readymarine-tracking-report_${range.from || 'start'}_${range.to || 'today'}.xlsx`}
                     className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shrink-0"
                 >
                     <Download size={16} />

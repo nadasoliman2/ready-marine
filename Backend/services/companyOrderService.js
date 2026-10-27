@@ -903,7 +903,7 @@ const buildPurchasesWorkbook = async (company, data) => {
     // Sheet and column names in the account's own words (shared/orgTerms).
     const oa = require('./shared/orgTerms').flatTerms(company.org_type, true);
     const wb = new ExcelJS.Workbook();
-    wb.creator = 'ReadyCar';
+    wb.creator = 'Ready Marine';
     wb.created = new Date();
     const header = (ws, titles, widths) => {
         ws.columns = widths.map((width) => ({ width }));
@@ -955,7 +955,7 @@ const buildPurchasesWorkbook = async (company, data) => {
         }
     }
 
-    return { workbook: wb, filename: `readycar-${String(company.name).replace(/[^\w-]+/g, '-')}-${data.month}.xlsx` };
+    return { workbook: wb, filename: `readymarine-${String(company.name).replace(/[^\w-]+/g, '-')}-${data.month}.xlsx` };
 };
 
 const exportPortalPurchases = async (userId, query = {}) => {

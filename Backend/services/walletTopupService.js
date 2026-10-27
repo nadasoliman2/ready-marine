@@ -30,7 +30,7 @@ const getBackendUrl = () => (
 const splitName = (name = '') => {
     const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
     return {
-        first_name: parts[0] || 'ReadyCar',
+        first_name: parts[0] || 'Ready Marine',
         last_name: parts.slice(1).join(' ') || 'Customer',
     };
 };
@@ -105,7 +105,7 @@ const buildPaymentRequest = ({ topup, user }) => {
             city: user.addresses?.[0]?.city || '',
             unique_id: user._id.toString(),
         },
-        items: [{ name: topup.company_id ? 'ReadyCar company wallet top-up' : 'ReadyCar wallet top-up', price: amount, quantity: 1 }],
+        items: [{ name: topup.company_id ? 'Ready Marine company wallet top-up' : 'Ready Marine wallet top-up', price: amount, quantity: 1 }],
         returnUrls: {
             success: buildReturnUrl(topup, 'success'),
             fail: buildReturnUrl(topup, 'failed'),

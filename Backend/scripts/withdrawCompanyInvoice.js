@@ -61,7 +61,7 @@ const confirmed = flag === '--confirm';
 
     await recordAuditLog({
         action: 'company_invoice_withdrawn',
-        actor: { role: 'system', label: 'ReadyCar' },
+        actor: { role: 'system', label: 'Ready Marine' },
         target_type: 'company_invoice',
         target_id: inv._id,
         target_snapshot: { number: inv.number, month: inv.month, amount_due: inv.amount_due, reason: 'Issued for orders not delivered yet' },

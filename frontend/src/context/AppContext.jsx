@@ -252,7 +252,7 @@ export function AppProvider({ children, initialLanguage = 'en', initialTheme = '
     // The guest-checkout address draft is device-local and belongs to whoever
     // was just signed in. On a shared browser, leaving it behind would pre-fill
     // the next person's checkout with the last person's address.
-    localStorage.removeItem('readycar_guest_address_draft');
+    localStorage.removeItem('readymarine_guest_address_draft');
     fetch(logoutEndpoint, { method: 'POST', credentials: 'include' });
   };
 

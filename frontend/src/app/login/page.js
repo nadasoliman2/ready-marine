@@ -64,7 +64,7 @@ export default function LoginPage() {
           .then((res) => {
             if (res.role === 'vendor' && res.vendor) {
               login({ ...res.vendor, role: 'vendor' });
-              sessionStorage.setItem('readycar_show_vendor_education', '1');
+              sessionStorage.setItem('readymarine_show_vendor_education', '1');
               router.replace('/dashboard');
               router.refresh();
               return;
@@ -123,7 +123,7 @@ export default function LoginPage() {
 
     if (res.role === 'vendor' && res.vendor) {
       login({ ...res.vendor, role: 'vendor' }, { rememberMe });
-      if (created) sessionStorage.setItem('readycar_show_vendor_education', '1');
+      if (created) sessionStorage.setItem('readymarine_show_vendor_education', '1');
       router.push(created ? '/dashboard' : getVendorRedirect());
     } else {
       login({ ...res.user, role: 'user' }, { rememberMe });

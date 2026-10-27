@@ -25,7 +25,7 @@ const TEMPLATE_ID = Number(process.env.WHATSAPP_TEMPLATE_ID || 19);
 const COUNTRY_CODE = String(process.env.WHATSAPP_DEFAULT_COUNTRY_CODE || "20");
 const ACCOUNT_ID = process.env.WHATSAPP_ACCOUNT_ID ? Number(process.env.WHATSAPP_ACCOUNT_ID) : null;
 // Prefix for the campaign name shown in the provider dashboard.
-const CAMPAIGN_PREFIX = process.env.WHATSAPP_SENDER_NAME || "ReadyCar";
+const CAMPAIGN_PREFIX = process.env.WHATSAPP_SENDER_NAME || "Ready Marine";
 
 const API_PREFIX = "/api/v1/whatsapp";
 /** Provider cap on the campaign `name` field. */

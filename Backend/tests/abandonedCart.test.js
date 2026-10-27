@@ -15,8 +15,8 @@ let sellerId, productId, variantProductId, variantId;
 before(async () => {
     [mongo, redisServer] = await Promise.all([startMongo('abandoned_cart_tests'), startRedis(2)]);
     process.env.REDIS_URL = redisServer.url;
-    process.env.FRONTEND_URL = 'https://readycar.store';
-    process.env.BACKEND_PUBLIC_URL = 'https://readycar.store';
+    process.env.FRONTEND_URL = 'https://readymarine.store';
+    process.env.BACKEND_PUBLIC_URL = 'https://readymarine.store';
     redisClient = require('../services/redisClient');
     presenceService = require('../services/presenceService');
     svc = require('../services/abandonedCartService');
@@ -188,7 +188,7 @@ test('a disconnected customer with an eligible cart is reminded once, with what 
     const email = mailer.sent[0];
     assert.match(email.to, /^mona-/);
     assert.equal(email.name, 'Mona');
-    assert.equal(email.cartUrl, 'https://readycar.store/en/checkout');
+    assert.equal(email.cartUrl, 'https://readymarine.store/en/checkout');
     assert.match(email.unsubscribeUrl, /\/api\/admin\/car-campaigns\/unsubscribe\?uid=.+&token=[0-9a-f]{64}$/);
     assert.deepEqual(email.items.map((i) => [i.title, i.quantity, i.price]), [['Oil filter', 2, 399]]);
     assert.match(email.idempotencyKey, new RegExp(`^abandoned-cart/${id}/[0-9a-f]{32}/1$`));

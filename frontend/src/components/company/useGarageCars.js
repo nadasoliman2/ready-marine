@@ -5,7 +5,7 @@ import { useApp } from '../../context/AppContext';
 import useMyCompany from './useMyCompany';
 
 /** The company car the manager is shopping for, so checkout can pick it for them. */
-export const COMPANY_CAR_KEY = 'readycar_company_car';
+export const COMPANY_CAR_KEY = 'readymarine_company_car';
 
 /**
  * The cars a customer can shop for: their own garage, and — for someone who manages a

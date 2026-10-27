@@ -316,7 +316,7 @@ export default function CheckoutPage() {
     // The draft existed to survive an abandoned checkout. This one was not
     // abandoned, so keeping it would mean the next visitor to this browser
     // opens checkout pre-filled with the last customer's address.
-    try { localStorage.removeItem('readycar_guest_address_draft'); } catch (err) { /* nothing to clean up */ }
+    try { localStorage.removeItem('readymarine_guest_address_draft'); } catch (err) { /* nothing to clean up */ }
     // The chat assistant closes the basket it holds for these products, so it
     // does not offer them again (components/chat).
     markOrdered();
@@ -421,7 +421,7 @@ export default function CheckoutPage() {
    * only what the customer typed themselves, and is dropped the moment the order
    * it belongs to is placed.
    */
-  const GUEST_DRAFT_KEY = 'readycar_guest_address_draft';
+  const GUEST_DRAFT_KEY = 'readymarine_guest_address_draft';
 
   useEffect(() => {
     if (!isMounted || !isAnonymous) return;

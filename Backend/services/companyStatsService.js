@@ -470,7 +470,7 @@ const companyStats = async (companyId, query = {}) => {
 
 const buildStatsWorkbook = async (data) => {
     const wb = new ExcelJS.Workbook();
-    wb.creator = 'ReadyCar';
+    wb.creator = 'Ready Marine';
     wb.created = new Date();
     const MONEY = '#,##0.00';
     const PCT = '0.0"%"';
@@ -532,12 +532,12 @@ const buildStatsWorkbook = async (data) => {
 
 const exportOverall = async (query = {}) => {
     const data = await overallStats(query);
-    return { workbook: await buildStatsWorkbook(data), filename: `readycar-companies-${data.from}-to-${data.to}.xlsx` };
+    return { workbook: await buildStatsWorkbook(data), filename: `readymarine-companies-${data.from}-to-${data.to}.xlsx` };
 };
 
 const exportCompany = async (companyId, query = {}) => {
     const data = await companyStats(companyId, query);
-    return { workbook: await buildStatsWorkbook(data), filename: `readycar-company-stats-${data.from}-to-${data.to}.xlsx` };
+    return { workbook: await buildStatsWorkbook(data), filename: `readymarine-company-stats-${data.from}-to-${data.to}.xlsx` };
 };
 
 /** For the companies list: this month's orders and active employees, per company. */

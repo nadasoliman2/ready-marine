@@ -62,9 +62,9 @@ export default function DashboardLayout({ children }) {
 
   useEffect(() => {
     if (!isMounted || !user || user.role !== 'vendor') return;
-    if (sessionStorage.getItem('readycar_show_vendor_education') !== '1') return;
+    if (sessionStorage.getItem('readymarine_show_vendor_education') !== '1') return;
 
-    sessionStorage.removeItem('readycar_show_vendor_education');
+    sessionStorage.removeItem('readymarine_show_vendor_education');
     setEducationOpen(true);
   }, [isMounted, user]);
 

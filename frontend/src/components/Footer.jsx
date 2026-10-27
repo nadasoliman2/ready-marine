@@ -147,7 +147,7 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-                  <div>
+                  {/* <div>
             <h3 className="font-display font-bold text-marine-ink mb-5 text-xs uppercase tracking-[0.08em]">{language === 'ar' ? 'الدفع واللوجستيات' : 'Payment & Logistics'}</h3>
             <p className="text-sm text-marine-muted mb-4">
               {language === 'ar' ? 'دفع آمن وفوري في كل مصر عبر بوابات موثوقة.' : 'Secured instant settlements across Egypt and regional waters via trusted gateways.'}
@@ -161,7 +161,7 @@ export default function Footer() {
             <p className="text-sm text-marine-muted">
               {language === 'ar' ? 'القاهرة • ميناء الإسكندرية • المنطقة الحرة ببورسعيد • مارينا الغردقة' : 'Cairo HQ • Alexandria Port • Port Said Freezone • Hurghada Marina'}
             </p>
-          </div>
+          </div> */}
         </div>
 
         <div className="border-t border-marine-teal/10 pt-6 flex flex-col lg:flex-row items-center justify-between gap-4 text-xs text-marine-outline">

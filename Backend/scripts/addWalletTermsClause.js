@@ -31,22 +31,22 @@ const EN_MARKER = '7.1 Wallet (Store Credit)';
 const AR_MARKER = '7.1 المحفظة (رصيد المتجر)';
 
 const EN_CLAUSE = `7.1 Wallet (Store Credit)
-• The customer's account includes a wallet that holds store credit, which may be funded by the customer through the approved payment gateways or credited by Ready Car as a refund.
-• Wallet credit may be used only to pay for products and services purchased through Ready Car. It is not cash, it is not a deposit, and it does not earn any interest or return.
+• The customer's account includes a wallet that holds store credit, which may be funded by the customer through the approved payment gateways or credited by Ready Marine as a refund.
+• Wallet credit may be used only to pay for products and services purchased through Ready Marine. It is not cash, it is not a deposit, and it does not earn any interest or return.
 • Wallet credit is NOT redeemable for cash, is NOT transferable to another account or person, and CANNOT be withdrawn to a bank account, card, or any other means. By adding credit to the wallet, the customer accepts this condition.
 • Wallet credit does not expire.
 • Where an order is cancelled or returned, the refunded amount is credited to the customer's wallet and becomes available for immediate use on a subsequent purchase, regardless of the method originally used to pay.
-• Ready Car may temporarily suspend activity on a wallet where fraud or unauthorised use is reasonably suspected, or where required by law. A suspension does not affect the customer's entitlement to the balance held.
+• Ready Marine may temporarily suspend activity on a wallet where fraud or unauthorised use is reasonably suspected, or where required by law. A suspension does not affect the customer's entitlement to the balance held.
 • On closure of an account holding a balance, the customer must be given the opportunity to use the remaining credit, or it will be settled in accordance with applicable law.
 `;
 
 const AR_CLAUSE = `7.1 المحفظة (رصيد المتجر)
-• يتضمن حساب العميل محفظة تحتوي على رصيد للمتجر، يقوم العميل بشحنه عبر بوابات الدفع المعتمدة، أو يقوم Ready Car بإضافته كمبلغ مسترد.
-• يُستخدم رصيد المحفظة حصرياً في شراء المنتجات والخدمات من Ready Car. وهو ليس نقداً وليس وديعة ولا يترتب عليه أي فائدة أو عائد.
+• يتضمن حساب العميل محفظة تحتوي على رصيد للمتجر، يقوم العميل بشحنه عبر بوابات الدفع المعتمدة، أو يقوم Ready Marine بإضافته كمبلغ مسترد.
+• يُستخدم رصيد المحفظة حصرياً في شراء المنتجات والخدمات من Ready Marine. وهو ليس نقداً وليس وديعة ولا يترتب عليه أي فائدة أو عائد.
 • رصيد المحفظة غير قابل للاستبدال نقداً، وغير قابل للتحويل إلى حساب أو شخص آخر، ولا يمكن سحبه إلى حساب بنكي أو بطاقة أو بأي وسيلة أخرى. وبشحن المحفظة يقر العميل بقبوله هذا الشرط.
 • رصيد المحفظة لا تنتهي صلاحيته.
 • في حالة إلغاء الطلب أو إرجاعه، يُضاف المبلغ المسترد إلى محفظة العميل ويصبح متاحاً للاستخدام الفوري في عملية شراء لاحقة، بغض النظر عن وسيلة الدفع المستخدمة في الأصل.
-• يجوز لـ Ready Car إيقاف النشاط على المحفظة مؤقتاً عند وجود اشتباه معقول في احتيال أو استخدام غير مصرح به، أو عند الاقتضاء القانوني. ولا يمس هذا الإيقاف حق العميل في الرصيد المستحق له.
+• يجوز لـ Ready Marine إيقاف النشاط على المحفظة مؤقتاً عند وجود اشتباه معقول في احتيال أو استخدام غير مصرح به، أو عند الاقتضاء القانوني. ولا يمس هذا الإيقاف حق العميل في الرصيد المستحق له.
 • عند إغلاق حساب يحتوي على رصيد، يجب تمكين العميل من استخدام الرصيد المتبقي، أو تتم تسويته وفقاً للقانون المعمول به.
 `;
 

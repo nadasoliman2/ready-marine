@@ -83,7 +83,7 @@ const getEmailLogos = (settings) => ({
  * the dark-mode logo (white CAR) takes its place and the plate goes — see EMAIL_DARK_MODE_STYLE.
  */
 const buildEmailLogoHtml = ({ logoUrl, logoDarkUrl }) => {
-    const logoImg = (src, cls) => `<img class="${cls}" src="${escapeHtml(src)}" alt="ReadyCar" width="200" style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 auto;" />`;
+    const logoImg = (src, cls) => `<img class="${cls}" src="${escapeHtml(src)}" alt="Ready Marine" width="200" style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 auto;" />`;
     return logoUrl
         ? `<div style="margin:0 0 10px;">
                     <div class="rc-logo-plate" style="display:inline-block;padding:8px 12px;border-radius:12px;background-color:#ffffff;background-image:linear-gradient(#ffffff,#ffffff);">
@@ -106,7 +106,7 @@ const EMAIL_DARK_MODE_STYLE = `<!-- Its own block: Gmail drops a whole block it 
 
 /** Generate a secure unsubscribe token based on user email and ID */
 const generateUnsubscribeToken = (userId, email) => {
-    const secret = process.env.JWT_SECRET || 'readycar-secret-salt';
+    const secret = process.env.JWT_SECRET || 'readymarine-secret-salt';
     return crypto.createHmac('sha256', secret).update(`${userId}:${email}`).digest('hex');
 };
 
@@ -163,7 +163,7 @@ const getTargetAudience = async ({ brand_id, brand_name, model_id, model_name, y
             seenEmails.add(u.email.toLowerCase());
             matchedUsers.push({
                 user_id: u._id,
-                name: u.name || 'عميل ReadyCar',
+                name: u.name || 'عميل Ready Marine',
                 email: u.email,
                 preferred_language: u.preferred_language || 'ar',
                 car: {
@@ -212,10 +212,10 @@ const getPickedProducts = async (productIds = []) => {
  */
 const formatProductForEmail = (product, lang = 'ar') => {
     const isAr = lang === 'ar';
-    const title = (isAr ? product.title_ar : product.title_en) || product.title_ar || product.title_en || 'منتج ReadyCar';
+    const title = (isAr ? product.title_ar : product.title_en) || product.title_ar || product.title_en || 'منتج Ready Marine';
     const slug = (isAr ? product.slug_ar : product.slug_en) || product.slug_ar || product.slug_en || String(product._id);
     const primaryImg = (product.images || []).find((img) => img.is_primary) || (product.images || [])[0];
-    const imageUrl = primaryImg ? resolveAbsoluteUrl(primaryImg.url) : 'https://placehold.co/400x400/f4f4f5/991b1b?text=ReadyCar';
+    const imageUrl = primaryImg ? resolveAbsoluteUrl(primaryImg.url) : 'https://placehold.co/400x400/f4f4f5/991b1b?text=Ready Marine';
     const effectivePrice = product.discount_price ?? product.price ?? 0;
     const hasDiscount = Boolean(product.discount_price && product.discount_price < product.price);
     const link = `${getFrontendUrl()}/${isAr ? 'ar' : 'en'}/product/${encodeURIComponent(slug)}`;
@@ -450,7 +450,7 @@ ${EMAIL_DARK_MODE_STYLE}
             <!-- Footer -->
             <div style="padding:16px 14px;background:#fafafa;border-top:1px solid #f4f4f5;text-align:center;font-size:12px;line-height:1.8;color:#71717a;">
                 <p style="margin:0 0 6px;">
-                    ${isAr ? `تصلك هذه الرسالة لأنك قمت بتسجيل سيارة (${carName}) في حسابك لدى ReadyCar.` : `You are receiving this email because you registered (${carName}) in your ReadyCar account.`}
+                    ${isAr ? `تصلك هذه الرسالة لأنك قمت بتسجيل سيارة (${carName}) في حسابك لدى Ready Marine.` : `You are receiving this email because you registered (${carName}) in your Ready Marine account.`}
                 </p>
                 <p style="margin:0;">
                     ${unsubscribeUrl ? `<a href="${escapeHtml(unsubscribeUrl)}" target="_blank" style="color:#a1a1aa;text-decoration:underline;">${isAr ? 'إلغاء الاشتراك من الرسائل التسويقية' : 'Unsubscribe from marketing emails'}</a>` : ''}
@@ -514,7 +514,7 @@ const sendTestEmail = async ({
         lang: language,
     });
 
-    const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || 'ReadyCar <onboarding@resend.dev>';
+    const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || 'Ready Marine <onboarding@resend.dev>';
 
     return await postJson({
         hostname: 'api.resend.com',
@@ -567,7 +567,7 @@ const executeCampaign = async (campaignId) => {
             const products = await getPickedProducts(campaign.product_ids);
 
             const { logoUrl, logoDarkUrl } = getEmailLogos(await SiteSettings.findOne().lean());
-            const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || 'ReadyCar <onboarding@resend.dev>';
+            const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || 'Ready Marine <onboarding@resend.dev>';
 
             let sentCount = 0;
             let failedCount = 0;

@@ -66,12 +66,12 @@ const whatsappContextLine = (role, language, orgType = 'company') => {
     const { ar: t, en: e } = orgTerms(orgType);
     if (role === 'manager') {
         return language === 'ar'
-            ? `${t.fem ? 'بتدعوك' : 'بيدعوك'} تدير حساب ${t.the} على ريدي كار`
-            : `invites you to manage its ${e.one} account on ReadyCar`;
+            ? `${t.fem ? 'بتدعوك' : 'بيدعوك'} تدير حساب ${t.the} على ريدي مارين`
+            : `invites you to manage its ${e.one} account on Ready Marine`;
     }
     return language === 'ar'
-        ? `${t.fem ? 'ضافتك' : 'ضافك'} لحساب ${t.the} على ريدي كار — اطلب قطع غيار عربيتك على حساب ${t.the}`
-        : `added you to its ReadyCar ${e.one} account — order parts for your car on the ${e.one}`;
+        ? `${t.fem ? 'ضافتك' : 'ضافك'} لحساب ${t.the} على ريدي مارين — اطلب قطع غيار عربيتك على حساب ${t.the}`
+        : `added you to its Ready Marine ${e.one} account — order parts for your car on the ${e.one}`;
 };
 
 const invitationShape = (invitation) => ({
@@ -407,7 +407,7 @@ const adminInviteManager = async (companyId, input = {}, actor, { language = 'en
         role: 'manager',
         name: input.name,
         identifier: input.identifier,
-        invitedBy: { kind: 'admin', label: actor?.label || 'ReadyCar' },
+        invitedBy: { kind: 'admin', label: actor?.label || 'Ready Marine' },
         language,
     });
 };

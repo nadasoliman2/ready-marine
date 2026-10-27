@@ -367,8 +367,8 @@ const CUSTOMER_MESSAGES = {
         en: "Sorry, we don't deliver to that area right now.",
     },
     failed: {
-        ar: 'معلش، معرفناش نأكد الطلب. ممكن تكمّله من الموقع readycar.store أو تكلم خدمة العملاء وهنساعدك.',
-        en: "Sorry, we couldn't place this order. You can complete it on readycar.store or contact customer service and we'll help.",
+        ar: 'معلش، معرفناش نأكد الطلب. ممكن تكمّله من الموقع readymarine.store أو تكلم خدمة العملاء وهنساعدك.',
+        en: "Sorry, we couldn't place this order. You can complete it on readymarine.store or contact customer service and we'll help.",
     },
 };
 

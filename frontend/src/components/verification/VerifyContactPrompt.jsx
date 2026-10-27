@@ -11,7 +11,7 @@ import OtpInput from './OtpInput';
 import Overlay from '../Overlay';
 
 /** Remembered per browser so the modal does not reappear on every page change. */
-const SNOOZE_KEY = 'readycar_verify_prompt_snoozed_at';
+const SNOOZE_KEY = 'readymarine_verify_prompt_snoozed_at';
 const SNOOZE_HOURS = 24;
 
 const isSnoozed = () => {

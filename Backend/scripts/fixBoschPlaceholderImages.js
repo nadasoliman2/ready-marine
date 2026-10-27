@@ -33,7 +33,7 @@ const { Brand } = require('../models/product_brands');
 const MAPPING = require('./boschLineImages.json');
 
 const APPLY = process.argv.includes('--apply');
-const BASE = (process.env.BACKEND_PUBLIC_URL || 'https://readycar.store').replace(/\/+$/, '');
+const BASE = (process.env.BACKEND_PUBLIC_URL || 'https://readymarine.store').replace(/\/+$/, '');
 const PLACEHOLDER = /\/uploads\/catalog\/bosch\/image\.png$/;
 
 (async () => {

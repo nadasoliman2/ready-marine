@@ -34,7 +34,7 @@ const get = async (path) => {
     console.log(`  WHATSAPP_API_KEY:    ${tail((process.env.WHATSAPP_API_KEY || '').trim())}  (live agent — WhatsApp templates)`);
     console.log(`  webhook secret:      ${process.env.EVERYSECOND_WEBHOOK_SECRET ? 'set' : 'not set'}`);
     console.log(`  sync every:          ${process.env.EVERYSECOND_SYNC_MINUTES ?? 10} min`);
-    console.log(`  product links:       ${(process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readycar.store')}/${process.env.EVERYSECOND_PRODUCT_LOCALE === 'en' ? 'en' : 'ar'}/product/<slug>`);
+    console.log(`  product links:       ${(process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readymarine.store')}/${process.env.EVERYSECOND_PRODUCT_LOCALE === 'en' ? 'en' : 'ar'}/product/<slug>`);
     console.log(`  cart two-way:        ${process.env.EVERYSECOND_CART_TWO_WAY !== 'false'}`);
 
     console.log('\nChecks');
@@ -46,8 +46,8 @@ const get = async (path) => {
     const reason = unsafeReason();
     if (reason) bad(`${reason}. The backend keeps the feature OFF in this state.`);
     else ok(isLocalDatabase() ? 'the key is not the live agent\'s key — safe to sync a local database' : 'server database — the live agent\'s key is expected here');
-    if (!/^https:\/\//.test(process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readycar.store')) {
-        warn('FRONTEND_URL is not https — product links would be dropped. Set EVERYSECOND_SITE_URL=https://readycar.store');
+    if (!/^https:\/\//.test(process.env.EVERYSECOND_SITE_URL || process.env.FRONTEND_URL || 'https://readymarine.store')) {
+        warn('FRONTEND_URL is not https — product links would be dropped. Set EVERYSECOND_SITE_URL=https://readymarine.store');
     }
 
     const agent = await get('/agent');

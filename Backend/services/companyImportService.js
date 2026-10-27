@@ -39,7 +39,7 @@ const buildTemplateWorkbook = async (userId) => {
     const offices = activeOffices(company).map((o) => o.name);
 
     const wb = new ExcelJS.Workbook();
-    wb.creator = 'ReadyCar';
+    wb.creator = 'Ready Marine';
     wb.created = new Date();
 
     const ws = wb.addWorksheet(SHEET, { views: [{ state: 'frozen', ySplit: 1, rightToLeft: true }] });
@@ -94,7 +94,7 @@ const buildTemplateWorkbook = async (userId) => {
         `At most ${MAX_IMPORT_ROWS} ${oe.members} per file.`,
     ].forEach((line, i) => { help.getCell(`A${i + 1}`).value = line; });
 
-    return { workbook: wb, filename: `readycar-employees-${company._id}.xlsx` };
+    return { workbook: wb, filename: `readymarine-employees-${company._id}.xlsx` };
 };
 
 const normalizeName = (value) => cleanText(value, 120).toLowerCase();

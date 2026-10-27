@@ -507,7 +507,7 @@ const notifyVendorOfBatch = async (batch, live) => {
     // The lead parcel's page is where the vendor works the whole combined order from.
     sendVendorOrderWhatsapp({
         vendorId: batch.vendor_id,
-        headline: `وصلك أوردر مجمّع جديد على ReadyCar: ${live.length} أوردرات${company?.name ? ` لشركة ${company.name}` : ''}`,
+        headline: `وصلك أوردر مجمّع جديد على Ready Marine: ${live.length} أوردرات${company?.name ? ` لشركة ${company.name}` : ''}`,
         detail: 'راجع كل أوردر وجهّز حاجة كل شخص لوحده بالملصق بتاعه، وبعدين حطّهم كلهم في طرد واحد',
         path: vendorParcelPath(batch.lead?.order_id || live[0].order._id, batch.lead?.sub_order_id || live[0].sub._id),
         campaignName: `Vendor combined order — batch ${batch._id}`,

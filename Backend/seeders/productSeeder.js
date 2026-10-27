@@ -47,10 +47,10 @@ const seedData = async () => {
            1. SELLER
            ==================================================== */
         const seller = await Seller.create({
-            name: 'ReadyCar Official Store',
-            store_name: 'ReadyCar Premium Parts',
-            store_username: 'readycar_official',
-            email: 'info@readycar.store',
+            name: 'Ready Marine Official Store',
+            store_name: 'Ready Marine Premium Parts',
+            store_username: 'readymarine_official',
+            email: 'info@readymarine.store',
             phone: '920001234',
             // Seeded vendors need a real Egyptian city, otherwise they can never be linked to
             // Bosta and show up forever in the unlinked-locations sweep.

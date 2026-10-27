@@ -36,7 +36,7 @@ async function getStatus() {
 }
 
 /** Register the endpoint EverySecond delivers to. The answer carries the whsec_ secret. */
-const registerWebhook = (url) => api('POST', '/webhooks', { name: 'ReadyCar store backend', url, events: WEBHOOK_EVENTS });
+const registerWebhook = (url) => api('POST', '/webhooks', { name: 'Ready Marine store backend', url, events: WEBHOOK_EVENTS });
 const listWebhooks = () => api('GET', '/webhooks');
 
 module.exports = {

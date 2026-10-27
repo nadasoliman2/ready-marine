@@ -35,7 +35,7 @@ const { Product } = require('../models/products');
 const { NO_CATALOG_MATCH, MERGE } = require('./vendorCatalogLinks');
 
 const APPLY = process.argv.includes('--apply');
-const SNAPSHOT_DB = 'readycar_prelink';
+const SNAPSHOT_DB = 'readymarine_prelink';
 
 /* Fields the merge touched. Restored from the snapshot exactly as they were. */
 const RESTORE_FIELDS = ['title_ar', 'title_en', 'compatible_cars', 'is_universal', 'status', 'merged_into'];

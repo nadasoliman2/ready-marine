@@ -131,7 +131,7 @@ const buildSalesReport = async (vendorId, { from, to, status = 'all' } = {}) => 
 const buildSalesReportWorkbook = async (vendorId, query = {}) => {
     const report = await buildSalesReport(vendorId, query);
     const wb = new ExcelJS.Workbook();
-    wb.creator = 'ReadyCar';
+    wb.creator = 'Ready Marine';
     wb.created = new Date();
     const ws = wb.addWorksheet('تقرير المبيعات', { views: [{ rightToLeft: true, state: 'frozen', ySplit: 1 }] });
     const withDeductions = report.rows.some((r) => Math.abs(r.deductions) > 0.004);
@@ -167,7 +167,7 @@ const buildSalesReportWorkbook = async (vendorId, query = {}) => {
     moneyCols.forEach((c) => { total.getCell(c).numFmt = MONEY; });
 
     const period = [report.from, report.to].filter(Boolean).join('_to_') || 'all';
-    return { workbook: wb, filename: `readycar-sales-${period}.xlsx` };
+    return { workbook: wb, filename: `readymarine-sales-${period}.xlsx` };
 };
 
 module.exports = { buildSalesReport, buildSalesReportWorkbook, STATUS_GROUPS };

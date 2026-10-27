@@ -7,7 +7,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
  * gone (the cookie expired, or the phone cleared it); AppContext listens, asks the server
  * who is signed in, and signs out here too when no one is.
  */
-export const UNAUTHORIZED_EVENT = 'readycar:unauthorized';
+export const UNAUTHORIZED_EVENT = 'readymarine:unauthorized';
 
 function formatApiMessage(value, fallback = 'Something went wrong') {
     if (!value) return fallback;
@@ -32,7 +32,7 @@ function formatApiMessage(value, fallback = 'Something went wrong') {
  * companies picks one, and every /company/* request says which. The server only uses it to
  * choose among the caller's own companies.
  */
-export const COMPANY_SCOPE_KEY = 'readycar_company_portal_id';
+export const COMPANY_SCOPE_KEY = 'readymarine_company_portal_id';
 const companyScopeHeaders = (endpoint) => {
     if (typeof window === 'undefined' || !String(endpoint).startsWith('/company/')) return {};
     try {

@@ -96,7 +96,7 @@ async function renderLabelHtml(p) {
 <button class="print" onclick="window.print()">Print / اطبع</button>
 <div class="label">
   <div class="head">
-    <div class="brand">ARRIVE<small>arrive-shipping.com · Ready Car</small></div>
+    <div class="brand">ARRIVE<small>arrive-shipping.com · Ready Marine</small></div>
     <div class="svc">${cod > 0 ? "تسليم وتحصيل · COD" : "تسليم · مدفوع مسبقاً"}</div>
   </div>
   <div class="codes">

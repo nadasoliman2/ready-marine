@@ -95,7 +95,7 @@ export function addedLines(previous, next) {
 
 /* ---------- the guest's chat session ---------- */
 
-const SESSION_KEY = 'readycar-chat-session';
+const SESSION_KEY = 'readymarine-chat-session';
 
 export function storedSession() {
     try {

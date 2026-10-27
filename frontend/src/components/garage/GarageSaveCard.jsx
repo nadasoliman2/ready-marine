@@ -10,7 +10,7 @@ import useGarageCars from '../company/useGarageCars';
 
 /* A guest who pressed "Save it" signs up first; the car waits here and goes into their
    garage when they come back to the results signed in. */
-const PENDING_GARAGE_KEY = 'readycar_pending_garage_car';
+const PENDING_GARAGE_KEY = 'readymarine_pending_garage_car';
 const PENDING_GARAGE_TTL = 24 * 60 * 60 * 1000;
 
 const readPendingCar = () => {

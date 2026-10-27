@@ -120,7 +120,7 @@ const toRow = (p, { lang, brandNames, categoryPath }) => {
         link: `${siteUrl()}/${lang}/product/${encodeURIComponent(slug)}`,
         image_link: images[0],
         additional_image_link: images.slice(1, 1 + MAX_EXTRA_IMAGES).join(','),
-        brand: brandNames.get(String(p.product_brand_id)) || 'ReadyCar',
+        brand: brandNames.get(String(p.product_brand_id)) || 'Ready Marine',
         mpn: String(p.part_number || '').trim(),
         gtin: validGtin(p.gtin),
         product_type: categoryPath.get(String(p.category_id)) || '',

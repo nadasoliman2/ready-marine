@@ -279,7 +279,7 @@ const getTrackingReport = async ({ from, to, language = "ar" } = {}) => {
                 : method === "company_account"
                     // Billed to the employer on its monthly invoice (feature 14).
                     ? `${isAr ? "فاتورة شركة" : "Company invoice"}${order.company?.company_name ? ` — ${order.company.company_name}` : ""}`
-                    : (isAr ? "ريدي كار (المحفظة)" : "ReadyCar (wallet)");
+                    : (isAr ? "ريدي مارين (المحفظة)" : "Ready Marine (wallet)");
 
         const statusKey = delivered > 0
             ? (cancelled > 0 || refused > 0 ? "partial" : "delivered")

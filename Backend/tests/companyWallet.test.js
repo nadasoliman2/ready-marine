@@ -21,7 +21,7 @@ const topups = require('../services/walletTopupService');
 const id = () => new mongoose.Types.ObjectId();
 let mongo, directory;
 before(async () => {
-    directory = await mkdtemp(join(tmpdir(), 'readycar-company-wallet-test-'));
+    directory = await mkdtemp(join(tmpdir(), 'readymarine-company-wallet-test-'));
     const server = net.createServer();
     await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
     const port = server.address().port;

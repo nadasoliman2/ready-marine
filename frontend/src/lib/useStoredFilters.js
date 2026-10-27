@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const STORAGE_PREFIX = 'readycar.filters.';
+const STORAGE_PREFIX = 'readymarine.filters.';
 
 /**
  * A list's search and filters, kept while the tab is open: opening a row and coming back

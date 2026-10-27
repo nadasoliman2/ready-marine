@@ -636,7 +636,7 @@ const createCompany = async (payload = {}, actor, { language = 'en' } = {}) => {
             role: 'manager',
             name: managerName,
             identifier: managerIdentifier,
-            invitedBy: { kind: 'admin', label: actor?.label || 'ReadyCar' },
+            invitedBy: { kind: 'admin', label: actor?.label || 'Ready Marine' },
             language,
         });
     } catch (err) {

@@ -2630,7 +2630,7 @@ router.post('/orders/:id/sub-orders/:subOrderId/cancel', protect('admin'), async
 const couriersMod = require('../services/couriers');
 
 const arriveWebhookUrl = () => {
-    const base = (process.env.PUBLIC_API_URL || `${(process.env.FRONTEND_URL || 'https://readycar.store').replace(/\/+$/, '')}/api`).replace(/\/+$/, '');
+    const base = (process.env.PUBLIC_API_URL || `${(process.env.FRONTEND_URL || 'https://readymarine.store').replace(/\/+$/, '')}/api`).replace(/\/+$/, '');
     const secret = process.env.ARRIVE_WEBHOOK_SECRET || '';
     return `${base}/webhooks/arrive/${secret}`;
 };
