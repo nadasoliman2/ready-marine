@@ -1,13 +1,14 @@
 'use client';
 
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { FolderTree, Layers, Loader2, Pencil, Plus, Save, Search, Trash2, X } from 'lucide-react';
+import { FolderTree, ImageOff, Layers, Loader2, Pencil, Plus, Save, Search, Trash2, X } from 'lucide-react';
 import { adminApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import SingleImageUploader from '../../../../components/dashboard/SingleImageUploader';
 import PaginationControls from '../../../../components/dashboard/PaginationControls';
 import usePageSize from '../../../../lib/usePageSize';
 import Overlay from '../../../../components/Overlay';
+import SearchableSelect from '../../../../components/SearchableSelect';
 
 
 const emptyForm = {
@@ -49,6 +50,7 @@ export default function AdminCategoriesPage() {
   const [deletingId, setDeletingId] = useState('');
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const [onlyMissingImage, setOnlyMissingImage] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = usePageSize('admin.categories', 12);
   const [showModal, setShowModal] = useState(false);
@@ -66,7 +68,7 @@ export default function AdminCategoriesPage() {
       setTree(data.tree || []);
       setTypes(typeData.types || []);
     } catch (err) {
-      setError(err.message || 'Failed to load categories');
+      setError(err.message || (isAr ? 'تعذر تحميل التصنيفات' : 'Failed to load categories'));
     } finally {
       setLoading(false);
     }
@@ -78,15 +80,37 @@ export default function AdminCategoriesPage() {
 
   const flat = useMemo(() => flattenTree(tree), [tree]);
 
+  const parentNameOf = (cat) => {
+    const parent = flat.find(c => String(c._id) === String(cat.parent_id || ''));
+    return parent ? ((isAr && parent.name_ar) || parent.name) : '';
+  };
+
+  // Where each category shows among the ones beside it (same parent), in the shop's order.
+  const positionById = useMemo(() => {
+    const groups = new Map();
+    flat.forEach(cat => {
+      const key = String(cat.parent_id || '');
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(cat);
+    });
+    const positions = new Map();
+    groups.forEach(list => {
+      [...list].sort(byShopOrder).forEach((cat, i) => positions.set(String(cat._id), { at: i + 1, of: list.length }));
+    });
+    return positions;
+  }, [flat]);
+
+  const missingImageCount = useMemo(() => flat.filter(cat => !String(cat.image || '').trim()).length, [flat]);
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return flat;
-    return flat.filter(cat => [cat.name, cat.name_ar].some(v => String(v || '').toLowerCase().includes(q)));
-  }, [flat, search]);
+    return flat.filter(cat => (!onlyMissingImage || !String(cat.image || '').trim())
+      && (!q || [cat.name, cat.name_ar].some(v => String(v || '').toLowerCase().includes(q))));
+  }, [flat, search, onlyMissingImage]);
 
   useEffect(() => {
     setPage(1);
-  }, [search]);
+  }, [search, onlyMissingImage]);
 
   const paginated = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -170,7 +194,7 @@ export default function AdminCategoriesPage() {
       setTypeForm(null);
       await load();
     } catch (err) {
-      setError(err.message || 'Failed to save type');
+      setError(err.message || (isAr ? 'تعذر حفظ النوع' : 'Failed to save type'));
     } finally {
       setSavingType(false);
     }
@@ -186,7 +210,7 @@ export default function AdminCategoriesPage() {
       await adminApi.deleteProductTypeAdmin(type._id);
       await load();
     } catch (err) {
-      setError(err.message || 'Failed to delete type');
+      setError(err.message || (isAr ? 'تعذر حذف النوع' : 'Failed to delete type'));
     }
   };
 
@@ -219,7 +243,7 @@ export default function AdminCategoriesPage() {
       closeModal();
       await load();
     } catch (err) {
-      setError(err.message || 'Failed to save category');
+      setError(err.message || (isAr ? 'تعذر حفظ التصنيف' : 'Failed to save category'));
     } finally {
       setSaving(false);
     }
@@ -235,13 +259,41 @@ export default function AdminCategoriesPage() {
       await adminApi.deleteCategoryAdmin(cat._id);
       await load();
     } catch (err) {
-      setError(err.message || 'Failed to delete category');
+      setError(err.message || (isAr ? 'تعذر حذف التصنيف' : 'Failed to delete category'));
     } finally {
       setDeletingId('');
     }
   };
 
-  const parentOptions = flat.filter(cat => cat._id !== editingId);
+  // The parent picker: every category by its full path ("Boat Equipment › Boat Cleaning"),
+  // searchable in both languages. Not the category itself nor anything under it — a category
+  // under its own child drops out of the tree with everything below it.
+  const parentOptions = useMemo(() => {
+    const byId = new Map(flat.map(cat => [String(cat._id), cat]));
+    const pathOf = (cat, key) => {
+      const names = [];
+      for (let at = cat, guard = 0; at && guard < 20; at = byId.get(String(at.parent_id || '')), guard += 1) {
+        names.unshift(at[key] || at.name);
+      }
+      return names.join(' › ');
+    };
+    const blocked = new Set();
+    if (editingId) {
+      blocked.add(String(editingId));
+      flat.forEach(cat => {
+        for (let at = cat, guard = 0; at && guard < 20; at = byId.get(String(at.parent_id || '')), guard += 1) {
+          if (blocked.has(String(at.parent_id || ''))) { blocked.add(String(cat._id)); break; }
+        }
+      });
+    }
+    return flat
+      .filter(cat => !blocked.has(String(cat._id)))
+      .map(cat => ({
+        value: cat._id,
+        label: isAr && cat.name_ar ? pathOf(cat, 'name_ar') : pathOf(cat, 'name'),
+        keywords: [cat.name, cat.name_ar, pathOf(cat, 'name'), pathOf(cat, 'name_ar')].filter(Boolean).join(' '),
+      }));
+  }, [flat, editingId, isAr]);
 
   if (loading) {
     return (
@@ -300,8 +352,8 @@ export default function AdminCategoriesPage() {
       />
 
       <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-zinc-100 dark:border-white/5">
-          <div className="relative max-w-xl">
+        <div className="p-4 border-b border-zinc-100 dark:border-white/5 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="relative flex-1 max-w-xl">
             <Search size={18} className="absolute start-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               value={search}
@@ -310,6 +362,20 @@ export default function AdminCategoriesPage() {
               className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl ps-10 pe-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
             />
           </div>
+          <button
+            type="button"
+            onClick={() => setOnlyMissingImage(v => !v)}
+            aria-pressed={onlyMissingImage}
+            className={`inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold border transition-colors ${
+              onlyMissingImage
+                ? 'bg-marine-cyan/10 border-marine-cyan text-marine-cyan'
+                : 'bg-zinc-50 dark:bg-[#0E1012] border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300 hover:border-marine-cyan'
+            }`}
+          >
+            <ImageOff size={16} />
+            {isAr ? 'بدون صورة' : 'No image'}
+            <span className="text-xs font-black opacity-70">({missingImageCount})</span>
+          </button>
         </div>
 
         <div className="divide-y divide-zinc-100 dark:divide-white/5">
@@ -325,16 +391,26 @@ export default function AdminCategoriesPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <h3 className="font-black text-zinc-900 dark:text-white">
-                        {cat.name}
+                        {(isAr && cat.name_ar) || cat.name}
                       </h3>
-                      {cat.name_ar && <span className="text-xs text-zinc-500">{cat.name_ar}</span>}
+                      {isAr ? <span className="text-xs text-zinc-500" dir="ltr">{cat.name}</span> : (cat.name_ar && <span className="text-xs text-zinc-500">{cat.name_ar}</span>)}
+                      <span className="px-2 py-0.5 text-[10px] font-bold bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 rounded-full border border-zinc-200 dark:border-white/10">
+                        {cat.parent_id
+                          ? (isAr ? `جوه: ${parentNameOf(cat)}` : `Inside: ${parentNameOf(cat)}`)
+                          : (isAr ? 'تصنيف رئيسي' : 'Main category')}
+                      </span>
                       {cat.is_active === false && (
                         <span className="px-2 py-0.5 text-[10px] font-bold bg-zinc-100 dark:bg-white/10 text-zinc-500 dark:text-zinc-400 rounded-full border border-zinc-200 dark:border-white/10 uppercase">
                           {isAr ? 'مخفي' : 'Hidden'}
                         </span>
                       )}
-                      <span className="px-2 py-0.5 text-[10px] font-bold bg-marine-cyan/10 text-marine-primary rounded-full border border-marine-cyan/20">
-                        {isAr ? 'ترتيب: ' : 'Order: '}{cat.sort_order || 0}
+                      <span
+                        title={isAr ? `رقم الترتيب: ${cat.sort_order || 0}` : `Sort number: ${cat.sort_order || 0}`}
+                        className="px-2 py-0.5 text-[10px] font-bold bg-marine-cyan/10 text-marine-primary rounded-full border border-marine-cyan/20"
+                      >
+                        {isAr
+                          ? `بيظهر رقم ${positionById.get(String(cat._id))?.at || 1} من ${positionById.get(String(cat._id))?.of || 1}`
+                          : `Shows ${positionById.get(String(cat._id))?.at || 1} of ${positionById.get(String(cat._id))?.of || 1}`}
                       </span>
                       {(cat.type_ids || []).map((id) => typeById.get(String(id))).filter(Boolean).map((type) => (
                         <span key={type._id} className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full border border-sky-500/20">
@@ -400,44 +476,62 @@ export default function AdminCategoriesPage() {
             </div>
 
             <form onSubmit={submit} className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto">
-              <Field label={isAr ? 'الاسم' : 'Name'} required>
-                <input
-                  required
-                  value={form.name}
-                  onChange={e => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
-                />
-              </Field>
-
-              <Field label={isAr ? 'الاسم بالعربية' : 'Arabic Name'}>
-                <input
-                  value={form.name_ar}
-                  onChange={e => setForm({ ...form, name_ar: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
-                />
-              </Field>
+              {(() => {
+                const english = (
+                  <Field key="en" label={isAr ? 'الاسم بالإنجليزي' : 'English name'} required>
+                    <input
+                      required
+                      dir="ltr"
+                      value={form.name}
+                      onChange={e => setForm({ ...form, name: e.target.value })}
+                      className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
+                    />
+                  </Field>
+                );
+                const arabic = (
+                  <Field key="ar" label={isAr ? 'الاسم بالعربي' : 'Arabic name'}>
+                    <input
+                      dir="rtl"
+                      value={form.name_ar}
+                      onChange={e => setForm({ ...form, name_ar: e.target.value })}
+                      className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
+                    />
+                  </Field>
+                );
+                return isAr ? [arabic, english] : [english, arabic];
+              })()}
 
               <Field label={isAr ? 'التصنيف الأب' : 'Parent Category'}>
-                <select
+                <SearchableSelect
                   value={form.parent_id}
-                  onChange={e => setForm({ ...form, parent_id: e.target.value })}
-                  className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
-                >
-                  <option value="">{isAr ? 'بدون (تصنيف رئيسي)' : 'None (Root Category)'}</option>
-                  {parentOptions.map(cat => (
-                    <option key={cat._id} value={cat._id}>{cat.name}</option>
-                  ))}
-                </select>
+                  onChange={value => setForm(prev => ({ ...prev, parent_id: value }))}
+                  options={parentOptions}
+                  placeholder={isAr ? 'مالوش أب: تصنيف رئيسي' : 'No parent: a main category'}
+                  isAr={isAr}
+                  buttonClassName="bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl ps-4 pe-9 py-3 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-marine-cyan"
+                />
+                <span className="block text-[11px] text-zinc-400 mt-1.5 leading-relaxed">
+                  {form.parent_id
+                    ? (isAr ? 'التصنيف ده هيظهر جوه التصنيف اللي اخترته.' : 'This category shows inside the one you picked.')
+                    : (isAr
+                      ? 'فاضي = تصنيف رئيسي، يعني أول مستوى في الموقع (زي «أدوات الصيد» و«معدات القوارب»). اختار تصنيف لو عايزه يبقى فرعي جواه.'
+                      : 'Empty = a main category, the top level of the shop (like “Fishing Gear”). Pick one to put this inside it.')}
+                </span>
               </Field>
 
-              <Field label={isAr ? 'ترتيب العرض' : 'Sort Order'}>
-                <input
-                  type="number"
+              <div className="md:col-span-2">
+                <SortOrderField
                   value={form.sort_order}
-                  onChange={e => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })}
-                  className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
+                  onChange={(sort_order) => setForm(prev => ({ ...prev, sort_order }))}
+                  name={(isAr ? form.name_ar : '') || form.name}
+                  siblings={flat.filter(cat => String(cat.parent_id || '') === String(form.parent_id || '') && String(cat._id) !== String(editingId))}
+                  parentName={(() => {
+                    const parent = flat.find(cat => String(cat._id) === String(form.parent_id || ''));
+                    return parent ? ((isAr && parent.name_ar) || parent.name) : '';
+                  })()}
+                  isAr={isAr}
                 />
-              </Field>
+              </div>
 
               <div className="flex items-center gap-3 h-full pt-6">
                 <label className="flex items-center gap-2 cursor-pointer group">
@@ -623,6 +717,76 @@ function TypeModal({ form, setForm, saving, isAr, onSubmit, onClose }) {
         </form>
       </div>
     </Overlay>
+  );
+}
+
+// The shop's order (Backend: sort by sort_order, then name): smaller number first, a tie by name.
+function byShopOrder(a, b) {
+  const diff = (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0);
+  if (diff) return diff;
+  const an = String(a.name || '');
+  const bn = String(b.name || '');
+  return an < bn ? -1 : an > bn ? 1 : 0;
+}
+
+/**
+ * The sort number, explained by showing it: the categories beside this one (same parent) in
+ * the order the shop shows them, with this one marked where the number puts it.
+ */
+function SortOrderField({ value, onChange, name, siblings, parentName, isAr }) {
+  const me = { _id: '__me__', name: name || (isAr ? 'التصنيف ده' : 'This category'), sort_order: value };
+  const ordered = [...siblings, me].sort(byShopOrder);
+  const at = ordered.findIndex(cat => cat._id === '__me__') + 1;
+  const where = parentName
+    ? (isAr ? `جوه «${parentName}»` : `inside “${parentName}”`)
+    : (isAr ? 'في التصنيفات الرئيسية' : 'among the main categories');
+
+  return (
+    <div className="rounded-xl border border-zinc-200 dark:border-white/10 p-4 space-y-3">
+      <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+        <label className="block sm:w-40 shrink-0">
+          <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+            {isAr ? 'رقم الترتيب' : 'Sort number'}
+          </span>
+          <input
+            type="number"
+            min="0"
+            value={value}
+            onChange={e => onChange(parseInt(e.target.value, 10) || 0)}
+            className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
+          />
+        </label>
+        <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+          {isAr
+            ? <>الرقم الأصغر بيظهر الأول. التصنيف ده هيظهر <b className="text-marine-primary">رقم {at} من {ordered.length}</b> {where}. لو رقمين زي بعض، بيترتبوا بالاسم.</>
+            : <>Smaller numbers show first. This category will show <b className="text-marine-primary">{at} of {ordered.length}</b> {where}. Equal numbers go by name.</>}
+        </p>
+      </div>
+
+      <div>
+        <span className="block text-[11px] font-bold text-zinc-400 mb-1.5">
+          {isAr ? 'كده هيبان الترتيب في الموقع:' : 'How the shop will list them:'}
+        </span>
+        <ol className="max-h-48 overflow-y-auto rounded-lg bg-zinc-50 dark:bg-[#0E1012] divide-y divide-zinc-100 dark:divide-white/5">
+          {ordered.map((cat, i) => {
+            const mine = cat._id === '__me__';
+            return (
+              <li
+                key={cat._id}
+                className={`flex items-center gap-3 px-3 py-2 text-sm ${mine ? 'bg-marine-cyan/10 font-bold text-marine-primary' : 'text-zinc-700 dark:text-zinc-300'}`}
+              >
+                <span className="w-6 text-center text-xs font-black text-zinc-400">{i + 1}</span>
+                <span className="flex-1 min-w-0 truncate">
+                  {mine ? cat.name : ((isAr && cat.name_ar) || cat.name)}
+                  {mine && <span className="ms-2 text-[11px]">{isAr ? '← ده اللي بتعدّله' : '← this one'}</span>}
+                </span>
+                <span className="text-[11px] text-zinc-400">{isAr ? `رقم ${Number(cat.sort_order) || 0}` : `#${Number(cat.sort_order) || 0}`}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
   );
 }
 

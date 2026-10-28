@@ -40,7 +40,14 @@ const startMongo = async (dbName) => {
         'Waiting for connections', 'MongoDB');
     return {
         uri: `mongodb://127.0.0.1:${port}/${dbName}`,
-        stop: async () => { child.kill('SIGTERM'); await rm(directory, { recursive: true, force: true }); },
+        // mongod still writes to its directory while it shuts down: removing it before the
+        // process is gone fails with ENOTEMPTY.
+        stop: async () => {
+            const exited = child.exitCode !== null ? Promise.resolve() : new Promise((resolve) => child.once('exit', resolve));
+            child.kill('SIGTERM');
+            await exited;
+            await rm(directory, { recursive: true, force: true });
+        },
     };
 };
 

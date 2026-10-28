@@ -36,20 +36,43 @@ async function seed() {
             }
         }
 
-        // Default zone: Qatar (Doha + rest of Qatar wildcard)
-        let zone = await ShippingZone.findOne({ name: 'Qatar' });
+        // Default zone: Egypt (All Egyptian cities + rest of Egypt wildcard)
+        const { City } = require('../models/cities');
+        let zone = await ShippingZone.findOne({ name: { $in: ['Egypt', 'Qatar'] } });
         if (!zone) {
+            const dbCities = await City.find({}).sort({ name: 1 }).lean();
+            const cityLocations = dbCities.map(c => ({
+                country: 'Egypt',
+                country_ar: 'مصر',
+                city: c.name,
+                city_ar: c.name_ar,
+            }));
             zone = await ShippingZone.create({
-                name: 'Qatar',
-                name_ar: 'قطر',
+                name: 'Egypt',
+                name_ar: 'مصر',
                 is_active: true,
                 priority: 0,
                 locations: [
-                    { country: 'Qatar', country_ar: 'قطر', city: 'Doha', city_ar: 'الدوحة' },
-                    { country: 'Qatar', country_ar: 'قطر', city: null, city_ar: '' },
+                    { country: 'Egypt', country_ar: 'مصر', city: null, city_ar: '' },
+                    ...cityLocations,
                 ],
             });
-            console.log('✅ Seeded shipping zone: Qatar');
+            console.log('✅ Seeded shipping zone: Egypt');
+        } else if (zone.name === 'Qatar') {
+            const dbCities = await City.find({}).sort({ name: 1 }).lean();
+            zone.name = 'Egypt';
+            zone.name_ar = 'مصر';
+            zone.locations = [
+                { country: 'Egypt', country_ar: 'مصر', city: null, city_ar: '' },
+                ...dbCities.map(c => ({
+                    country: 'Egypt',
+                    country_ar: 'مصر',
+                    city: c.name,
+                    city_ar: c.name_ar,
+                })),
+            ];
+            await zone.save();
+            console.log('✅ Updated shipping zone from Qatar to Egypt');
         }
 
         // Default flat method in that zone
@@ -69,15 +92,15 @@ async function seed() {
                 max_fee: null,
                 flat_config: { per_item_cost: 0, per_vendor_cost: 0 },
             });
-            console.log('✅ Seeded shipping method: Standard delivery (Qatar)');
+            console.log('✅ Seeded shipping method: Standard delivery (Egypt)');
         }
 
-        // Sample (inactive) global policy: free shipping over QAR 500
-        const hasSamplePolicy = await ShippingPolicy.findOne({ name: 'Free shipping over QAR 500' });
+        // Sample (inactive) global policy: free shipping over EGP 500
+        const hasSamplePolicy = await ShippingPolicy.findOne({ name: { $in: ['Free shipping over EGP 500', 'Free shipping over QAR 500'] } });
         if (!hasSamplePolicy) {
             await ShippingPolicy.create({
-                name: 'Free shipping over QAR 500',
-                name_ar: 'شحن مجاني للطلبات فوق ٥٠٠ ريال',
+                name: 'Free shipping over EGP 500',
+                name_ar: 'شحن مجاني للطلبات فوق ٥٠٠ جنيه',
                 is_active: false,
                 priority: 0,
                 scope: 'global',
@@ -87,7 +110,7 @@ async function seed() {
                 conditions: [{ field: 'cart_total', operator: 'gte', value: 500 }],
                 actions: [{ type: 'free_shipping', value: 0 }],
             });
-            console.log('✅ Seeded sample shipping policy (inactive): Free shipping over QAR 500');
+            console.log('✅ Seeded sample shipping policy (inactive): Free shipping over EGP 500');
         }
 
         // Settings (singleton) — created last so a partial run stays re-triggerable.

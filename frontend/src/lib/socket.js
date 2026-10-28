@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { SESSION_REFRESHED_EVENT } from './api';
 
 // Derive the socket origin from the API base URL (strip the trailing /api).
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
@@ -18,6 +19,14 @@ export function getSocket() {
         });
     }
     return socket;
+}
+
+// A socket authenticates with the access token when it connects, and a server refusal is not
+// retried on its own: after a refresh, a socket that dropped while the token was stale tries again.
+if (typeof window !== 'undefined') {
+    window.addEventListener(SESSION_REFRESHED_EVENT, () => {
+        if (socket && !socket.connected) socket.connect();
+    });
 }
 
 /**

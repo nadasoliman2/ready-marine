@@ -489,34 +489,49 @@ router.post('/verifications/:id/verify', protect('admin'), async (req, res) => {
  */
 router.get('/vendors', protect('admin'), async (req, res) => {
     try {
-        const vendors = await Seller.find()
-            .select([
-                'name',
-                'store_name',
-                'store_username',
-                'email',
-                'phone',
-                'locations',
-                'store_image',
-                'status',
-                'subscription_status',
-                'subscription_reason',
-                'subscription_date',
-                'suspension_reason',
-                'suspension_date',
-                'suspended_by',
-                'commission_settings',
-                'auto_publish_products',
-                'public_show_on_vendors_page',
-                'public_vendors_page_order',
-                'public_show_on_home',
-                'public_home_order',
-                'created_at',
-            ].join(' '))
-            .sort({ created_at: -1 })
-            .lean();
+        const [vendors, productCounts] = await Promise.all([
+            Seller.find()
+                .select([
+                    'name',
+                    'store_name',
+                    'store_username',
+                    'email',
+                    'phone',
+                    'locations',
+                    'store_image',
+                    'status',
+                    'subscription_status',
+                    'subscription_reason',
+                    'subscription_date',
+                    'suspension_reason',
+                    'suspension_date',
+                    'suspended_by',
+                    'commission_settings',
+                    'auto_publish_products',
+                    'public_show_on_vendors_page',
+                    'public_vendors_page_order',
+                    'public_show_on_home',
+                    'public_home_order',
+                    'created_at',
+                ].join(' '))
+                .sort({ created_at: -1 })
+                .lean(),
+            Product.aggregate([
+                { $group: { _id: '$vendor_id', count: { $sum: 1 } } }
+            ])
+        ]);
 
-        res.json({ success: true, vendors });
+        const countMap = {};
+        for (const item of productCounts) {
+            if (item._id) countMap[String(item._id)] = item.count;
+        }
+
+        const enrichedVendors = vendors.map(v => ({
+            ...v,
+            products_count: countMap[String(v._id)] || 0
+        }));
+
+        res.json({ success: true, vendors: enrichedVendors });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
@@ -1722,6 +1737,13 @@ router.put('/categories/:id', protect('admin'), invalidateFiltersOnWrite, async 
         if (parent_id) {
             const parentExists = await Category.exists({ _id: parent_id });
             if (!parentExists) return res.status(404).json({ success: false, message: 'Parent category not found' });
+            // Under its own child, a category and everything below it drop out of the tree.
+            for (let at = parent_id, guard = 0; at && guard < 50; guard += 1) {
+                if (String(at) === String(req.params.id)) {
+                    return res.status(400).json({ success: false, message: 'A category cannot go under one of its own subcategories' });
+                }
+                at = (await Category.findById(at).select('parent_id').lean())?.parent_id;
+            }
         }
 
         const updateData = {

@@ -94,8 +94,8 @@ const initSocket = (server) => {
 
         // Online status for the abandoned-cart reminders: one Redis member per open socket.
         if (user.role === 'user' && user.id) {
-            presence.trackSocket(socket.id, user.id);
-            socket.on('disconnect', () => presence.untrackSocket(socket.id));
+            presence.track(socket.id, user.id);
+            socket.on('disconnect', () => presence.untrack(socket.id));
         }
 
         // Client requests to join a ticket conversation room

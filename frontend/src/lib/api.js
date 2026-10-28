@@ -76,11 +76,62 @@ const proxyErrorMessage = (status) => {
 };
 
 /**
+ * Fired when the server says the session is over for good (expired, password changed, account
+ * gone). AppContext signs out and opens the login page; the request that hit it never settles,
+ * so the page behind shows no "Not authorized" on the way out.
+ */
+export const SESSION_ENDED_EVENT = 'readymarine:session-ended';
+const SESSION_ENDED = /^Not authorized, (session expired|token failed|password was changed|user not found)$/;
+// The admin's own session (admin_token, 7 days, no refresh) ending on an admin route.
+const ADMIN_SESSION_ENDED = /^Not authorized, (session expired|token failed|no token provided|password was changed|admin credentials changed|this admin account is no longer active)$/;
+const storedRole = () => {
+    try {
+        return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || 'null')?.role || null;
+    } catch (_) {
+        return null;
+    }
+};
+const sessionEndedMessage = () => {
+    const ar = typeof document !== 'undefined' && document.documentElement.lang === 'ar';
+    return ar ? 'انتهت جلستك. سجّل الدخول تاني.' : 'Your session has ended. Please sign in again.';
+};
+
+/**
+ * The access token lasts minutes (Backend/services/sessionService.js). When a request answers
+ * 401 ACCESS_EXPIRED, this swaps in a fresh one with the refresh cookie and the request is
+ * repeated, so the customer never sees it. One refresh at a time: requests that hit the
+ * expiry together all wait for the same one. Resolves false when the session is over.
+ */
+export const SESSION_REFRESHED_EVENT = 'readymarine:session-refreshed';
+let refreshing = null;
+let lastRefreshAt = 0;
+export const msSinceRefresh = () => Date.now() - lastRefreshAt;
+export function refreshAccess() {
+    if (!refreshing) {
+        refreshing = fetch(`${BASE_URL}/auth/refresh`, { method: 'POST', credentials: 'include' })
+            .then((response) => {
+                if (!response.ok) return false;
+                lastRefreshAt = Date.now();
+                if (typeof window !== 'undefined') window.dispatchEvent(new Event(SESSION_REFRESHED_EVENT));
+                return true;
+            })
+            .catch(() => false)
+            .finally(() => { refreshing = null; });
+    }
+    return refreshing;
+}
+
+// A 401 that a refresh can fix: the access token ran out, or the browser dropped it while the
+// refresh cookie lives on.
+const accessExpired = (status, data) => status === 401
+    && (data?.code === 'ACCESS_EXPIRED' || data?.message === 'Not authorized, no token provided');
+
+/**
  * Custom fetch wrapper to handle authentication and base URL.
  */
 async function apiRequest(endpoint, options = {}) {
     const url = `${BASE_URL}${endpoint}`;
-    const { timeoutMs = 30000, ...requestOptions } = options;
+    const { timeoutMs = 30000, _retried = false, ...requestOptions } = options;
     const controller = typeof AbortController !== 'undefined' && !requestOptions.signal
         ? new AbortController()
         : null;
@@ -122,7 +173,23 @@ async function apiRequest(endpoint, options = {}) {
         }
         
         if (!response.ok) {
-            const err = new Error((!isJson && proxyErrorMessage(response.status)) || formatApiMessage(data.message || data.error));
+            const signedIn = typeof window !== 'undefined' && ['user', 'vendor'].includes(storedRole());
+            if (!_retried && signedIn && accessExpired(response.status, data)) {
+                if (await refreshAccess()) return apiRequest(endpoint, { ...options, _retried: true });
+                window.dispatchEvent(new Event(SESSION_ENDED_EVENT));
+                return new Promise(() => {});
+            }
+            const sessionEnded = response.status === 401 && SESSION_ENDED.test(data.message || '');
+            const adminEnded = response.status === 401 && endpoint.startsWith('/admin')
+                && typeof window !== 'undefined' && storedRole() === 'admin'
+                && ADMIN_SESSION_ENDED.test(data.message || '');
+            if ((sessionEnded && signedIn) || adminEnded) {
+                window.dispatchEvent(new Event(SESSION_ENDED_EVENT));
+                return new Promise(() => {});
+            }
+            const err = new Error(sessionEnded
+                ? sessionEndedMessage()
+                : (!isJson && proxyErrorMessage(response.status)) || formatApiMessage(data.message || data.error));
             err.status = response.status;
             if (response.status === 401 && typeof window !== 'undefined') window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
             if (data.code) err.code = data.code;
@@ -162,7 +229,9 @@ async function apiRequest(endpoint, options = {}) {
  * Errors still come back as JSON, so those are parsed out for the message.
  */
 async function apiRequestBlob(endpoint) {
-    const response = await fetch(`${BASE_URL}${endpoint}`, { credentials: 'include', headers: companyScopeHeaders(endpoint) });
+    const request = () => fetch(`${BASE_URL}${endpoint}`, { credentials: 'include', headers: companyScopeHeaders(endpoint) });
+    let response = await request();
+    if (response.status === 401 && await refreshAccess()) response = await request();
     if (!response.ok) {
         let message = 'Something went wrong';
         try {
@@ -369,6 +438,11 @@ export const userApi = {
         method: 'DELETE',
     }).then((res) => { forgetProductLists(); return res; }),
     getRecommendations: (limit) => apiRequest(`/users/recommendations${limit ? `?limit=${limit}` : ''}`),
+    // The audience hubs the customer is into (lib/marineHubs AUDIENCE_OPTIONS keys).
+    updateInterests: (interests) => apiRequest('/users/interests', {
+        method: 'PUT',
+        body: JSON.stringify({ interests }),
+    }),
     getCart: () => apiRequest('/users/cart'),
     syncCart: (items) => apiRequest('/users/cart', {
         method: 'POST',

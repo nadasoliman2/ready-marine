@@ -224,11 +224,13 @@ const productSchema = new Schema(
         // carry (jack, warning triangle, first-aid kit, jump leads, ...).
         for_trunk: { type: Boolean, default: false },
 
-        // Marine target audience hubs (from the strategic marketing plan):
-        // 'family_safety', 'next_gen', 'pro_angler', 'diy_maintenance',
-        // 'yacht_luxury', 'lifestyle_comfort', 'saltwater', 'freshwater',
-        // 'smart_gear', 'eco_friendly'
-        target_audiences: [{ type: String, trim: true, index: true }],
+        // The marine audience hubs the product shows in — the ten keys of
+        // services/shared/audiences.js; anything else is dropped on save.
+        target_audiences: {
+            type: [{ type: String, trim: true }],
+            index: true,
+            set: (v) => require('../services/shared/audiences').cleanAudiences(v),
+        },
 
         sold_count: { type: Number, default: 0 },
         rating: { type: Number, default: 0 },

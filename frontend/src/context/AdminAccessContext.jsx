@@ -14,6 +14,7 @@
  */
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import { SESSION_ENDED_EVENT } from '../lib/api';
 
 const AdminAccessContext = createContext(null);
 
@@ -33,6 +34,9 @@ export function AdminAccessProvider({ children }) {
     const load = useCallback(async () => {
         try {
             const res = await fetch(`${API_BASE}/admin/me`, { credentials: 'include' });
+            // The admin session is over (expired, or the account was turned off): AppContext
+            // signs out and opens the admin login instead of an empty dashboard.
+            if (res.status === 401) window.dispatchEvent(new Event(SESSION_ENDED_EVENT));
             if (!res.ok) throw new Error('Not signed in');
             const data = await res.json();
             setState({

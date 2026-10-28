@@ -151,6 +151,13 @@ const userSchema = new Schema(
         addresses: [addressSchema], // embedded
         cart: cartSchema, // embedded
         cars: [userCarSchema], // embedded
+        // The audience hubs the customer picked (services/shared/audiences.js): what their
+        // recommendations lean to, with or without a vessel in the garage.
+        interests: {
+            type: [{ type: String, trim: true }],
+            default: [],
+            set: (v) => require('../services/shared/audiences').cleanAudiences(v),
+        },
         marketing_emails_unsubscribed: { type: Boolean, default: false, index: true },
 
         /*

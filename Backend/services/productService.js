@@ -716,32 +716,69 @@ const getFilterMetadata = async (parts = null, { detail = 'slim' } = {}) => {
 };
 
 /**
- * ReadyCar recommendations for a user: the home page's "for your car" row and the profile's
- * recommendations tab.
+ * Recommendations for a signed-in customer: the profile's recommendations tab.
  *
- * Parts made for the cars in their garage and products that fit any car, mixed 60/40
- * (services/carFitService.js), best sellers first and then the newest in each. Nothing the
- * customer bought in the last 30 days. Only published products from active vendors.
+ * Works with or without a vessel in the garage. Several sources, taken in turn so each
+ * gets a share of the list, each product once:
+ *   vessel    parts made for a garage vessel (services/carFitService.js) — only with one
+ *   cart      the categories of what is in the cart
+ *   interest  the audience hubs the customer picked, plus those of their cart's products
+ *   new       the newest arrivals
+ *   popular   best sellers
+ * Never what is already in the cart or was bought in the last 30 days. Only published
+ * products from active vendors.
  *
- * @returns {{ products, cars }}  `cars`: the garage cars, named; empty with no garage.
+ * @returns {{ products, cars }}  each product with `reason` (and `fit: 'car'` for a vessel
+ *          part); `cars`: the garage vessels used, named — empty with none.
  */
 const getRecommendationsForUser = async (userId, limit = 5) => {
     const { User } = require('../models/users');
+    const { cleanAudiences } = require('./shared/audiences');
     const safeLimit = Math.min(Math.max(Number(limit) || 5, 1), 20);
 
-    const user = await User.findById(userId).select('cars').lean();
-    const fit = user && await carFit.tiersFor({}, user);
-    if (!fit) return { products: [], cars: [] };
+    const user = await User.findById(userId).select('cars cart.items.product_id interests').lean();
+    if (!user) return { products: [], cars: [] };
 
-    const base = { ...publicProductStatusQuery, vendor_id: { $in: await getActiveVendorIds() } };
-    const pick = (cond) => Product.find({ $and: [base, cond] })
-        .sort({ sold_count: -1, created_at: -1 })
+    const cartIds = (user.cart?.items || []).map((i) => i.product_id).filter(Boolean);
+    const [recent, cartProducts, fit, vendorIds] = await Promise.all([
+        carFit.recentlyBoughtIds(user._id),
+        cartIds.length ? Product.find({ _id: { $in: cartIds } }).select('category_id target_audiences').lean() : [],
+        carFit.tiersFor({}, user),
+        getActiveVendorIds(),
+    ]);
+    const cartCategories = [...new Map(cartProducts.filter((p) => p.category_id).map((p) => [String(p.category_id), p.category_id])).values()];
+    const interests = cleanAudiences([...(user.interests || []), ...cartProducts.flatMap((p) => p.target_audiences || [])]);
+
+    const exclude = [...cartIds, ...recent];
+    const base = { ...publicProductStatusQuery, vendor_id: { $in: vendorIds }, ...(exclude.length ? { _id: { $nin: exclude } } : {}) };
+    const bestFirst = { sold_count: -1, created_at: -1 };
+    const sources = [
+        fit && { reason: 'vessel', cond: fit.car, sort: bestFirst },
+        cartCategories.length && { reason: 'cart', cond: { category_id: { $in: cartCategories } }, sort: bestFirst },
+        interests.length && { reason: 'interest', cond: { target_audiences: { $in: interests } }, sort: bestFirst },
+        { reason: 'new', cond: {}, sort: { created_at: -1 } },
+        { reason: 'popular', cond: {}, sort: bestFirst },
+    ].filter(Boolean);
+
+    const lists = await Promise.all(sources.map((s) => Product.find({ $and: [base, s.cond] })
+        .sort(s.sort)
         .limit(safeLimit)
         .populate(productListPopulate)
-        .lean();
-    const [onCar, onAny] = await Promise.all([pick(fit.car), pick(fit.universal)]);
-    const products = carFit.blendLists(onCar, onAny, safeLimit).map((row) => ({ ...row.item, fit: row.fit }));
-    return { products, cars: fit.cars };
+        .lean()));
+
+    const seen = new Set();
+    const products = [];
+    for (let i = 0; products.length < safeLimit && lists.some((list) => i < list.length); i += 1) {
+        for (const [k, list] of lists.entries()) {
+            const item = list[i];
+            if (!item || seen.has(String(item._id))) continue;
+            seen.add(String(item._id));
+            const { reason } = sources[k];
+            products.push({ ...item, reason, ...(reason === 'vessel' ? { fit: 'car' } : {}) });
+            if (products.length >= safeLimit) break;
+        }
+    }
+    return { products, cars: fit?.cars || [] };
 };
 
 const getProductById = async (id, options = {}) => {

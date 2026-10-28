@@ -3,6 +3,19 @@ const { User } = require('../models/users');
 const { Seller } = require('../models/sellers');
 const adminAccess = require('../services/adminAccessService');
 
+/**
+ * A token from before refresh sessions (no `sid`, services/sessionService.js) that is still
+ * valid is moved onto a session, so the switch signs no one out. It must never fail the request.
+ */
+const moveLegacyToken = async (req, res, decoded) => {
+    if (decoded?.sid) return;
+    try {
+        await require('../services/sessionService').upgradeLegacyToken(req, res, decoded);
+    } catch (error) {
+        console.warn('[auth] could not move a legacy token onto a session:', error.message);
+    }
+};
+
 const isTokenStaleAfterPasswordChange = (account, decoded) => {
     if (!account?.password_changed_at || !decoded?.iat) return false;
     return Math.floor(account.password_changed_at.getTime() / 1000) > decoded.iat;
@@ -104,6 +117,36 @@ const resolveAdmin = async (decoded, req) => {
 };
 
 /**
+ * The access token ran out (or the browser dropped it) but the refresh cookie lives: refresh
+ * the session right here (services/sessionService.js) and let the request through. Every caller
+ * gets this, a page on old code or a plain fetch alike, so no one sees "Not authorized" for a
+ * session that is still alive.
+ *
+ * @returns {'ok' | 'wrong_role' | 'ended' | 'none'} what happened ('none': no refresh cookie)
+ */
+const continueWithRefresh = async (req, res, roles) => {
+    if (!req.cookies?.refresh_token) return 'none';
+    let session;
+    try {
+        session = await require('../services/sessionService').refreshSession(req, res);
+    } catch (_) {
+        return 'ended';
+    }
+    if (!roles.includes(session.role)) return 'wrong_role';
+    const Model = session.role === 'vendor' ? Seller : User;
+    req.user = await Model.findById(session.account_id).select('-password');
+    if (!req.user) return 'ended';
+    req.userRole = session.role;
+    markGuestDisclosure(req);
+    return 'ok';
+};
+
+const refreshAnswer = (res, outcome) => {
+    if (outcome === 'wrong_role') return res.status(403).json({ message: 'Not authorized for this role' });
+    return res.status(401).json({ message: 'Not authorized, session expired' });
+};
+
+/**
  * Middleware to protect routes and verify the JWT from cookies.
  * role: single string ('admin'|'vendor'|'user') OR array ['vendor', 'user'] for multi-role routes.
  */
@@ -123,6 +166,9 @@ const protect = (...args) => {
         }
 
         if (!token) {
+            const outcome = roles.some((r) => r !== 'admin') ? await continueWithRefresh(req, res, roles) : 'none';
+            if (outcome === 'ok') return next();
+            if (outcome !== 'none') return refreshAnswer(res, outcome);
             return res.status(401).json({ message: 'Not authorized, no token provided' });
         }
 
@@ -170,6 +216,7 @@ const protect = (...args) => {
                 return res.status(401).json({ message: 'Not authorized, password was changed' });
             }
 
+            await moveLegacyToken(req, res, decoded);
             markGuestDisclosure(req);
             next();
         } catch (error) {
@@ -203,13 +250,33 @@ const protect = (...args) => {
                             if (isTokenStaleAfterPasswordChange(req.user, decoded)) {
                                 return res.status(401).json({ message: 'Not authorized, password was changed' });
                             }
+                            await moveLegacyToken(req, res, decoded);
                             markGuestDisclosure(req);
                             return next();
                         }
                     } catch (_) { /* try next role */ }
                 }
             }
-            res.status(401).json({ message: 'Not authorized, token failed' });
+            // A live session of another role (a vendor on a customer route) is a wrong page, not
+            // a dead session: it keeps its cookie and gets the role answer.
+            const otherSecrets = [process.env.JWT_SECRET_USER, process.env.JWT_SECRET_VENDOR, process.env.JWT_SECRET_ADMIN];
+            const liveElsewhere = otherSecrets.some((s) => {
+                try { return s && jwt.verify(token, s); } catch (_) { return false; }
+            });
+            if (liveElsewhere) return res.status(403).json({ message: 'Not authorized for this role' });
+            // A session's access token lasts minutes: when it has run out, refresh it here and go
+            // on. ACCESS_EXPIRED (the site refreshes and repeats) only when that could not run.
+            const decodedAnyway = jwt.decode(token);
+            if (decodedAnyway?.sid && token !== req.cookies.admin_token) {
+                const outcome = await continueWithRefresh(req, res, roles);
+                if (outcome === 'ok') return next();
+                if (outcome !== 'none') return refreshAnswer(res, outcome);
+                return res.status(401).json({ code: 'ACCESS_EXPIRED', message: 'Not authorized, access expired' });
+            }
+            // Expired or unverifiable (another app's cookie, a rotated secret): it never comes back
+            // to life, so drop it and let the site sign the browser out.
+            res.clearCookie(token === req.cookies.admin_token ? 'admin_token' : 'token', { httpOnly: true });
+            res.status(401).json({ message: 'Not authorized, session expired' });
         }
     };
 };
@@ -240,8 +307,13 @@ const optionalUser = async (req, res, next) => {
         req.user = user;
         req.userRole = 'user';
         markGuestDisclosure(req);
-    } catch (_) {
-        // Not a customer session (vendor/admin/expired) — continue anonymously.
+    } catch (error) {
+        // A customer whose access token ran out is still that customer: refresh and go on.
+        // Anything else (vendor/admin/dead session) continues anonymously.
+        if (error?.name === 'TokenExpiredError' && jwt.decode(token)?.sid) {
+            const outcome = await continueWithRefresh(req, res, ['user']).catch(() => 'ended');
+            if (outcome !== 'ok') { req.user = null; req.userRole = null; }
+        }
     }
 
     return next();

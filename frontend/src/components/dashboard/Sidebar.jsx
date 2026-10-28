@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from '../LocaleLink';
 import { usePathname } from '../../lib/navigation';
-import { LayoutDashboard, Package, PackageOpen, ShoppingCart, Settings, LogOut, X, Ticket, CreditCard, Bell, RotateCcw, Wallet, Megaphone, Boxes, FileBarChart } from 'lucide-react';
+import { LayoutDashboard, Package, PackageOpen, ShoppingCart, Settings, LogOut, X, Ticket, CreditCard, Bell, RotateCcw, Wallet, Megaphone, Boxes, FileBarChart, ExternalLink } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { vendorApi } from '../../lib/api';
 
@@ -52,12 +52,19 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
   return (
     <aside className={`
-      fixed inset-y-0 z-50 w-72 shrink-0 bg-white dark:bg-[#14171A] border-e border-zinc-200 dark:border-white/5 flex flex-col transition-transform duration-300 ease-in-out lg:static lg:translate-x-0
-      ${isOpen ? 'translate-x-0' : (isAr ? 'translate-x-full' : '-translate-x-full')}
+      fixed lg:static inset-y-0 ${isAr ? 'right-0' : 'left-0'} z-50
+      w-72 shrink-0 bg-white dark:bg-[#14171A] border-${isAr ? 'l' : 'r'} border-zinc-200 dark:border-white/5
+      flex flex-col transition-transform duration-300 ease-in-out
+      ${isOpen ? 'translate-x-0' : (isAr ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0')}
     `}>
       {/* Logo Area */}
       <div className="h-16 flex items-center justify-between px-6 border-b border-zinc-100 dark:border-white/5">
-        <Link href="/dashboard" className="flex items-center gap-2 min-h-[40px]">
+        <Link
+          href="/dashboard"
+          onClick={() => setIsOpen(false)}
+          title={isAr ? 'لوحة البائع' : 'Vendor Dashboard'}
+          className="flex items-center gap-2 min-h-[40px] hover:opacity-85 transition-opacity"
+        >
           {siteSettings === null ? null : (siteSettings.logo_url || siteSettings.logo_light_url) ? (
             <img src={siteSettings.logo_url || siteSettings.logo_light_url} alt={isAr ? 'شعار الموقع' : 'Site logo'} className="h-8 w-auto object-contain" />
           ) : (
@@ -114,13 +121,25 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       </nav>
 
       {/* User Area / Footer */}
-      <div className="p-4 border-t border-zinc-100 dark:border-white/5">
+      <div className="p-4 border-t border-zinc-100 dark:border-white/5 space-y-1">
+        <Link
+          href="/"
+          onClick={() => setIsOpen(false)}
+          className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-marine-primary hover:bg-marine-cyan/10 rounded-xl transition-all duration-200 group"
+        >
+          <div className="p-1 rounded-lg group-hover:bg-marine-cyan/20 transition-colors">
+            <ExternalLink size={18} />
+          </div>
+          <span>{isAr ? 'الرجوع للمتجر' : 'Back to Store'}</span>
+        </Link>
         <button 
           onClick={logout}
-          className="flex w-full items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-200"
+          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-200 group"
         >
-          <LogOut size={20} />
-          {t.logout || 'Log Out'}
+          <div className="p-1 rounded-lg group-hover:bg-red-400/20 transition-colors">
+            <LogOut size={18} />
+          </div>
+          <span>{t.logout || 'Log Out'}</span>
         </button>
       </div>
     </aside>

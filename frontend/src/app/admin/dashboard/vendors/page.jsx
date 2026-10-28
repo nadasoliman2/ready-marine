@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Calendar, CheckCircle2, Eye, EyeOff, Hash, Image as ImageIcon, Loader2, Mail, MapPin, Pencil, Phone, Plus, Search, ShieldOff, Store, User, X, CreditCard, Trash2 } from 'lucide-react';
+import { AlertTriangle, Calendar, CheckCircle2, Eye, EyeOff, Hash, Image as ImageIcon, Loader2, Mail, MapPin, Package, Pencil, Phone, Plus, Search, ShieldOff, Store, User, X, CreditCard, Trash2 } from 'lucide-react';
 import { adminApi, adminSubscriptionApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import PaginationControls from '../../../../components/dashboard/PaginationControls';
@@ -41,6 +41,7 @@ export default function AdminVendorsPage() {
   const [statusId, setStatusId] = useState(null);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterProducts, setFilterProducts] = useState('');
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState(emptyVendor);
   const [error, setError] = useState('');
@@ -154,17 +155,22 @@ export default function AdminVendorsPage() {
       const matchesStatus = !filterStatus
         || (filterStatus === 'active' ? vendor.status !== 'suspended' : vendor.status === filterStatus);
 
-      return matchesSearch && matchesStatus;
+      const matchesProducts = !filterProducts
+        || (filterProducts === 'has_products' ? (vendor.products_count || 0) > 0 : (vendor.products_count || 0) === 0);
+
+      return matchesSearch && matchesStatus && matchesProducts;
     });
-  }, [vendors, search, filterStatus]);
+  }, [vendors, search, filterStatus, filterProducts]);
 
   const activeCount = vendors.filter(v => v.status !== 'suspended').length;
   const suspendedCount = vendors.filter(v => v.status === 'suspended').length;
+  const withProductsCount = vendors.filter(v => (v.products_count || 0) > 0).length;
+  const withoutProductsCount = vendors.filter(v => (v.products_count || 0) === 0).length;
 
   useEffect(() => {
     setPage(1);
     setExpandedVendorId('');
-  }, [search, filterStatus]);
+  }, [search, filterStatus, filterProducts]);
 
   const paginatedVendors = useMemo(() => {
     const start = (page - 1) * pageSize;
@@ -436,10 +442,11 @@ export default function AdminVendorsPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard icon={Store} label={isAr ? 'كل التجار' : 'Total Vendors'} value={vendors.length} />
             <StatCard icon={CheckCircle2} label={isAr ? 'نشط' : 'Active'} value={activeCount} tone="green" />
-            <StatCard icon={ShieldOff} label={isAr ? 'معلق' : 'Suspended'} value={suspendedCount} tone="red" />
+            <StatCard icon={Package} label={isAr ? 'لديهم منتجات' : 'With Products'} value={withProductsCount} tone="blue" />
+            <StatCard icon={ShieldOff} label={isAr ? 'بدون منتجات' : 'Without Products'} value={withoutProductsCount} tone="amber" />
           </div>
 
           <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
@@ -456,11 +463,20 @@ export default function AdminVendorsPage() {
               <select
                 value={filterStatus}
                 onChange={e => setFilterStatus(e.target.value)}
-                className="w-full md:w-56 bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-marine-cyan"
+                className="w-full md:w-48 bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-marine-cyan"
               >
                 <option value="">{isAr ? 'كل حالات التجار' : 'All Vendor Statuses'}</option>
                 <option value="active">{isAr ? 'نشط' : 'Active'}</option>
                 <option value="suspended">{isAr ? 'معلق' : 'Suspended'}</option>
+              </select>
+              <select
+                value={filterProducts}
+                onChange={e => setFilterProducts(e.target.value)}
+                className="w-full md:w-56 bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-marine-cyan"
+              >
+                <option value="">{isAr ? 'حسب المنتجات (الكل)' : 'Products (All)'}</option>
+                <option value="has_products">{isAr ? 'تجار لديهم منتجات' : 'With Products'}</option>
+                <option value="no_products">{isAr ? 'تجار بدون منتجات' : 'Without Products'}</option>
               </select>
             </div>
 
@@ -470,6 +486,7 @@ export default function AdminVendorsPage() {
                   <tr className={isAr ? 'text-right' : 'text-left'}>
                     <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'المتجر' : 'Store'}</th>
                     <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'التواصل' : 'Contact'}</th>
+                    <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'المنتجات' : 'Products'}</th>
                     <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'الحالة' : 'Status'}</th>
                     <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px] hidden lg:table-cell">{isAr ? 'تاريخ الإنشاء' : 'Created'}</th>
                     <th className={`px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px] ${isAr ? 'text-left' : 'text-right'}`}>{isAr ? 'إجراءات' : 'Actions'}</th>
@@ -513,6 +530,16 @@ export default function AdminVendorsPage() {
                               <p className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300"><Mail size={14} className="text-zinc-400" /> {vendor.email}</p>
                               <p className="flex items-center gap-2 text-zinc-500"><Phone size={14} className="text-zinc-400" /> <span dir="ltr">{vendor.phone}</span></p>
                             </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+                              (vendor.products_count || 0) > 0
+                                ? 'bg-marine-cyan/10 text-marine-primary dark:text-marine-cyan border border-marine-cyan/20'
+                                : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
+                            }`}>
+                              <Package size={13} />
+                              <span>{vendor.products_count || 0} {isAr ? 'منتج' : 'products'}</span>
+                            </span>
                           </td>
                           <td className="px-6 py-4">
                             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${suspended ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'}`}>
@@ -1189,12 +1216,16 @@ function formatDate(value, withTime = false) {
   });
 }
 
-function StatCard({ icon: Icon, label, value, tone = 'orange' }) {
+function StatCard({ icon: Icon, label, value, tone = 'cyan' }) {
   const color = tone === 'green'
     ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400'
     : tone === 'red'
       ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400'
-      : 'bg-marine-mist text-marine-primary dark:bg-marine-cyan/10';
+      : tone === 'blue'
+        ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400'
+        : tone === 'amber'
+          ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400'
+          : 'bg-marine-mist text-marine-primary dark:bg-marine-cyan/10';
 
   return (
     <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 p-5 shadow-sm">

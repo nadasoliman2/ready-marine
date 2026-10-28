@@ -9,6 +9,7 @@
  * and accepting grants read access to the inviter's saved addresses.
  */
 const express = require('express');
+const { startSession } = require('../services/sessionService');
 const router = express.Router();
 const { rateLimit } = require('../middleware/rateLimit');
 const friendService = require('../services/friendService');
@@ -22,15 +23,8 @@ const fail = (res, error) => {
     });
 };
 
-const setAuthCookie = (res, token, rememberMe = true) => {
-    const options = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-    };
-    if (rememberMe) options.maxAge = 30 * 24 * 60 * 60 * 1000;
-    res.cookie('token', token, options);
-};
+// A refresh session (services/sessionService.js), as every sign-in.
+const setAuthCookie = (req, res, token) => startSession(req, res, token, { persistent: true });
 
 /**
  * @desc    Invitation preview for the landing page
@@ -93,7 +87,7 @@ router.post(
                 language: req.body?.language === 'ar' ? 'ar' : 'en',
             });
             const { token, ...safe } = result;
-            setAuthCookie(res, token);
+            await setAuthCookie(req, res, token);
             res.json({ success: true, ...safe });
         } catch (error) {
             fail(res, error);

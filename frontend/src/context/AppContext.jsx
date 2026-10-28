@@ -3,9 +3,9 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { translations } from '../lib/translations';
-import { userApi, authApi, UNAUTHORIZED_EVENT } from '../lib/api';
+import { userApi, authApi, UNAUTHORIZED_EVENT, SESSION_ENDED_EVENT, refreshAccess, msSinceRefresh } from '../lib/api';
 import { isDashboardPath } from '../lib/dashboardRoute';
-import { localeOfPath, switchLocale } from '../lib/locale';
+import { localeOfPath, switchLocale, stripLocale, localizePath, DEFAULT_LOCALE } from '../lib/locale';
 import { forgetProductLists } from '../lib/productListPreload';
 import { getSocket, disconnectSocket } from '../lib/socket';
 import { apiOrigin } from '../lib/assets';
@@ -275,6 +275,54 @@ export function AppProvider({ children, initialLanguage = 'en', initialTheme = '
     };
     window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
     return () => window.removeEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
+  }, [user?.role]);
+
+  // The server said the session is over for good: sign out and open the login page, coming
+  // back here after. No error is shown — the request that hit it never settles (lib/api).
+  const sessionEnding = useRef(false);
+  useEffect(() => {
+    const onSessionEnded = () => {
+      if (sessionEnding.current) return;
+      sessionEnding.current = true;
+      const role = user?.role;
+      logoutRef.current();
+      const here = stripLocale(window.location.pathname);
+      const back = `${here}${window.location.search}`;
+      const locale = localeOfPath(window.location.pathname) || DEFAULT_LOCALE;
+      if (role === 'admin') {
+        const adminBack = here.startsWith('/admin/') && !here.startsWith('/admin/login') ? `?redirect=${encodeURIComponent(back)}` : '';
+        window.location.replace(localizePath(`/admin/login${adminBack}`, locale));
+        return;
+      }
+      const query = role === 'vendor'
+        ? `?role=vendor${isDashboardPath(here) ? `&redirect=${encodeURIComponent(back)}` : ''}`
+        : (here.startsWith('/login') ? '' : `?redirect=${encodeURIComponent(back)}`);
+      window.location.replace(localizePath(`/login${query}`, locale));
+    };
+    window.addEventListener(SESSION_ENDED_EVENT, onSessionEnded);
+    return () => window.removeEventListener(SESSION_ENDED_EVENT, onSessionEnded);
+  }, [user?.role]);
+
+  // While the site is open, refresh the session before its access token (15 minutes) runs out,
+  // and on coming back to the tab: the refresh token rotates, and the session's end moves out,
+  // so a customer on the site is never signed out under them. A request that still finds the
+  // token expired refreshes on its own (lib/api); a dead session ends through SESSION_ENDED_EVENT.
+  useEffect(() => {
+    if (user?.role !== 'user' && user?.role !== 'vendor') return undefined;
+    const REFRESH_EVERY = 10 * 60 * 1000;
+    const touch = () => {
+      if (document.visibilityState !== 'visible' || msSinceRefresh() < REFRESH_EVERY) return;
+      // No refresh cookie yet (signed in before sessions): /auth/me moves the old token onto a
+      // session, and a session that is really over ends from there.
+      refreshAccess().then((ok) => { if (!ok) authApi.me().catch(() => {}); });
+    };
+    touch();
+    const timer = setInterval(touch, 60 * 1000);
+    document.addEventListener('visibilitychange', touch);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', touch);
+    };
   }, [user?.role]);
 
   // A signed-in customer keeps one socket open on every page: the server counts them as

@@ -1,4 +1,5 @@
 const express = require('express');
+const { startSession, refreshSession, endSession } = require('../services/sessionService');
 const router = express.Router();
 const {
     registerUser,
@@ -36,19 +37,10 @@ const {
 } = require('../services/guestCheckoutService');
 
 /**
- * Helper to set auth cookie
+ * Sign the browser in on a refresh session (services/sessionService.js) of the token's own
+ * length. `rememberMe` keeps the cookies after the browser closes.
  */
-const setAuthCookie = (res, token, rememberMe = false) => {
-    const options = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-    };
-    if (rememberMe) {
-        options.maxAge = 30 * 24 * 60 * 60 * 1000;
-    }
-    res.cookie('token', token, options);
-};
+const setAuthCookie = (req, res, token, rememberMe = false) => startSession(req, res, token, { persistent: rememberMe });
 
 const getErrorStatus = (error) => {
     if (
@@ -122,7 +114,7 @@ router.post(
                 code: req.body?.code,
             });
 
-            setAuthCookie(res, result.token, false);
+            await setAuthCookie(req, res, result.token, false);
             const { token, ...safeResult } = result;
             res.json({
                 message: result.role === 'vendor'
@@ -172,7 +164,7 @@ router.post('/login-user', loginValidation, async (req, res) => {
         const rememberMe = remember_me === true || remember_me === 'true';
         const { token, user } = await authenticateUser(identifier, password, { rememberMe });
         
-        setAuthCookie(res, token, rememberMe);
+        await setAuthCookie(req, res, token, rememberMe);
         
         res.json({
             message: 'Login successful',
@@ -255,7 +247,7 @@ router.post('/register-vendor', registerVendorValidation, async (req, res) => {
 router.get('/verify-email', async (req, res) => {
     try {
         const result = await verifyEmailRegistration(req.query.token);
-        setAuthCookie(res, result.token, false);
+        await setAuthCookie(req, res, result.token, false);
         res.redirect(getFrontendLoginUrl(true, result.role));
     } catch (error) {
         res.redirect(getFrontendLoginUrl(false));
@@ -269,7 +261,7 @@ router.get('/verify-email', async (req, res) => {
 router.post('/verify-email', async (req, res) => {
     try {
         const result = await verifyEmailRegistration(req.body.token);
-        setAuthCookie(res, result.token, false);
+        await setAuthCookie(req, res, result.token, false);
         const { token, ...safeResult } = result;
         res.json({
             message: 'Email verified successfully. Your account has been created.',
@@ -368,7 +360,7 @@ router.post('/login-vendor', loginValidation, async (req, res) => {
         const rememberMe = remember_me === true || remember_me === 'true';
         const { token, vendor } = await authenticateVendor(identifier, password, { rememberMe });
         
-        setAuthCookie(res, token, rememberMe);
+        await setAuthCookie(req, res, token, rememberMe);
         
         res.json({
             message: 'Login successful',
@@ -423,7 +415,7 @@ router.post(
                 return res.json(result);
             }
 
-            setAuthCookie(res, result.token, rememberMe);
+            await setAuthCookie(req, res, result.token, rememberMe);
             const { token, ...safeResult } = result;
             res.json({ message: 'Login successful', ...safeResult });
         } catch (error) {
@@ -455,7 +447,7 @@ router.post(
                 shipping_city: req.body?.shipping_city,
             });
 
-            setAuthCookie(res, result.token, false);
+            await setAuthCookie(req, res, result.token, false);
             const { token, ...safeResult } = result;
             res.status(201).json({
                 message: 'Your account has been created.',
@@ -534,7 +526,7 @@ router.post(
             });
             // Persistent on purpose: the confirmation code arrives on WhatsApp,
             // and answering it often means leaving the tab and coming back.
-            setAuthCookie(res, result.token, true);
+            await setAuthCookie(req, res, result.token, true);
             res.status(201).json({ success: true, user: result.user });
         } catch (error) {
             sendGuestError(res, error);
@@ -645,7 +637,7 @@ router.post(
                 code: req.body?.code,
                 rememberMe: !!req.body?.remember_me,
             });
-            setAuthCookie(res, result.token, !!req.body?.remember_me);
+            await setAuthCookie(req, res, result.token, !!req.body?.remember_me);
             res.json({ success: true, user: result.user });
         } catch (error) {
             sendGuestError(res, error);
@@ -657,12 +649,27 @@ router.post(
  * @desc    Logout post
  * @route   POST /api/auth/logout
  */
-router.post('/logout', (req, res) => {
-    res.cookie('token', '', {
-        httpOnly: true,
-        expires: new Date(0)
-    });
+router.post('/logout', async (req, res) => {
+    await endSession(req, res);
     res.status(200).json({ message: 'Logged out successfully' });
 });
+
+/**
+ * @desc    New access token (and a new refresh token) for the signed-in browser. The site calls
+ *          it when a request answers 401 ACCESS_EXPIRED, and now and then while it is open.
+ * @route   POST /api/auth/refresh
+ */
+router.post(
+    '/refresh',
+    rateLimit({ name: 'session_refresh', windowMs: 60 * 1000, max: 60 }),
+    async (req, res) => {
+        try {
+            const session = await refreshSession(req, res);
+            res.json({ role: session.role, expires_at: session.expires_at });
+        } catch (error) {
+            res.status(error.status || 500).json({ message: error.message });
+        }
+    }
+);
 
 module.exports = router;

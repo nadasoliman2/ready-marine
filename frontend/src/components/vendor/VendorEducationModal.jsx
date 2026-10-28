@@ -78,7 +78,7 @@ export default function VendorEducationModal({ open, onClose, language = 'en' })
                     className="h-full w-full object-cover"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/35">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-marine-cyan text-white shadow-xl shadow-red-900/30">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-marine-cyan text-white shadow-xl shadow-marine-cyan/30">
                       <PlayCircle size={30} />
                     </span>
                   </div>

@@ -6,6 +6,7 @@
  * owns the invited email, or with a code sent to the invited number.
  */
 const express = require('express');
+const { startSession } = require('../services/sessionService');
 const router = express.Router();
 const { optionalUser } = require('../middleware/authMiddleware');
 const { rateLimit } = require('../middleware/rateLimit');
@@ -20,13 +21,8 @@ const fail = (res, error) => {
     });
 };
 
-const setAuthCookie = (res, token) => {
-    res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-    });
-};
+// A refresh session (services/sessionService.js), as every sign-in.
+const setAuthCookie = (req, res, token) => startSession(req, res, token, { persistent: false });
 
 /** A company membership belongs to a customer account, never a staff session. */
 const rejectStaffSession = (req, res) => {
@@ -101,7 +97,7 @@ router.post(
                 language: requestLanguage(req),
             });
             const { token, ...safe } = result;
-            setAuthCookie(res, token);
+            await setAuthCookie(req, res, token);
             res.status(201).json(safe);
         } catch (error) {
             fail(res, error);
@@ -141,7 +137,7 @@ router.post(
                 name: req.body?.name,
             });
             const { token, ...safe } = result;
-            setAuthCookie(res, token);
+            await setAuthCookie(req, res, token);
             res.status(201).json(safe);
         } catch (error) {
             fail(res, error);

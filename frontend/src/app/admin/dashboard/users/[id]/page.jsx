@@ -85,7 +85,7 @@ export default function AdminUserProfilePage({ params }) {
           {/* Main Info */}
           <div className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 shadow-sm p-6">
             <div className="flex flex-col items-center text-center pb-6 border-b border-zinc-100 dark:border-white/5">
-              <div className="w-24 h-24 bg-red-50 dark:bg-marine-cyan/10 text-marine-primary rounded-full flex items-center justify-center text-4xl font-black mb-4 shadow-inner">
+              <div className="w-24 h-24 bg-gradient-to-br from-marine-primary to-marine-cyan  dark:bg-marine-cyan/10 text-white rounded-full flex items-center justify-center text-4xl font-black mb-4 shadow-inner">
                 {(user.name || 'U').charAt(0).toUpperCase()}
               </div>
               <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{user.name}</h2>

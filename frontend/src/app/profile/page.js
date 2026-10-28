@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { 
   User, 
   MapPin, 
@@ -27,7 +27,8 @@ import {
   Wallet,
   History,
   LifeBuoy,
-  Building2
+  Building2,
+  RefreshCw
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Link from '../../components/LocaleLink';
@@ -57,6 +58,7 @@ import ParcelJourney from '../../components/orders/ParcelJourney';
 import { orgTerms } from '../../lib/orgTerms';
 import Overlay from '../../components/Overlay';
 import SearchableSelect from '../../components/SearchableSelect';
+import AudiencePicker from '../../components/dashboard/AudiencePicker';
 import { makeOptions, modelOptions, yearOptions } from '../../lib/pickerOptions';
 
 export default function ProfilePage() {
@@ -116,6 +118,8 @@ function ProfilePageContent() {
   const [recommendations, setRecommendations] = useState([]);
   const [recLoading, setRecLoading] = useState(false);
   const [recLoaded, setRecLoaded] = useState(false);
+  // The hubs the customer picked; null until the profile has said.
+  const [interests, setInterests] = useState(null);
 
   // Count of family requests waiting on this organizer — badges the Family tab.
   const [familyPendingCount, setFamilyPendingCount] = useState(0);
@@ -269,16 +273,48 @@ function ProfilePageContent() {
       .catch(() => setFriendRequestCount(0));
   }, [isMounted, user]);
 
-  // Load Ready Marine recommendations the first time the tab is opened.
+  // Load Ready Marine recommendations when the tab is opened.
+  const loadRecommendations = useCallback(async () => {
+    setRecLoading(true);
+    try {
+      const res = await userApi.getRecommendations();
+      setRecommendations(res.products || []);
+    } catch {
+      setRecommendations([]);
+    } finally {
+      setRecLoading(false);
+      setRecLoaded(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (!isMounted || !user || user.role === 'vendor') return;
-    if (searchParams.get('tab') !== 'recommendations' || recLoaded || recLoading) return;
+    if (searchParams.get('tab') === 'recommendations' && !recLoaded && !recLoading) {
+      loadRecommendations();
+    }
+  }, [searchParams, user, isMounted, recLoaded, recLoading, loadRecommendations]);
+
+  useEffect(() => {
+    if (profile && interests === null) setInterests(profile.interests || []);
+  }, [profile, interests]);
+
+  // Saved as they are picked; the recommendations reload immediately to follow.
+  const changeInterests = async (next) => {
+    const before = interests;
+    setInterests(next);
     setRecLoading(true);
-    userApi.getRecommendations()
-      .then(res => setRecommendations(res.products || []))
-      .catch(() => setRecommendations([]))
-      .finally(() => { setRecLoading(false); setRecLoaded(true); });
-  }, [searchParams, user, isMounted, recLoaded, recLoading]);
+    try {
+      const res = await userApi.updateInterests(next);
+      setInterests(res.interests || []);
+      const recRes = await userApi.getRecommendations();
+      setRecommendations(recRes.products || []);
+    } catch {
+      setInterests(before);
+    } finally {
+      setRecLoading(false);
+      setRecLoaded(true);
+    }
+  };
 
   const handleInfoSubmit = async (e) => {
     e.preventDefault();
@@ -450,7 +486,7 @@ function ProfilePageContent() {
   ] : [
     { id: 'info', label: t.personalInfo, icon: User },
     { id: 'addresses', label: t.addresses, icon: MapPin },
-    { id: 'garage', label: isAr ? 'أسطولي' : 'My Fleet', icon: Ship },
+    // { id: 'garage', label: isAr ? 'مراكبي' : 'My Boats', icon: Ship },
     { id: 'recommendations', label: isAr ? 'ترشيحات ريدي مارين' : 'Ready Marine Recommendations', icon: Sparkles },
     { id: 'orders', label: isAr ? 'الطلبات الجارية' : 'Active Orders', icon: Package },
     { id: 'orders-history', label: isAr ? 'سجل الطلبات' : 'Order History', icon: History },
@@ -466,12 +502,77 @@ function ProfilePageContent() {
   const activeTab = tabs.some(tab => tab.id === requestedTab) ? requestedTab : 'info';
 
   return (
-    <div className="min-h-screen bg-marine-canvas py-10 px-4 sm:px-6" dir={isAr ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-marine-canvas py-6 sm:py-10 px-4 sm:px-6" dir={isAr ? 'rtl' : 'ltr'}>
       <div className="max-w-6xl mx-auto">
+
+        {/* Mobile Compact User Strip & Horizontal Tab Bar */}
+        <div className="md:hidden bg-white border border-zinc-200/80 rounded-2xl p-4 shadow-sm mb-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative shrink-0">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-marine-primary to-marine-cyan flex items-center justify-center text-white text-lg font-black shadow-sm overflow-hidden">
+                  {profile?.profile_image ? (
+                    <img src={resolveAssetUrl(profile.profile_image)} alt={profile?.name || 'Profile'} className="w-full h-full object-cover" />
+                  ) : (
+                    profile?.store_name?.[0]?.toUpperCase() || profile?.name?.[0]?.toUpperCase() || 'U'
+                  )}
+                </div>
+                {user?.role !== 'vendor' && (
+                  <label className="absolute -bottom-1 -end-1 w-5 h-5 rounded-full bg-white text-marine-primary border border-zinc-200 shadow flex items-center justify-center cursor-pointer">
+                    {uploadingPhoto ? <Loader2 size={10} className="animate-spin" /> : <Camera size={10} />}
+                    <input type="file" accept="image/jpeg,image/jpg,image/png,image/webp" onChange={handleProfilePhotoChange} className="hidden" disabled={uploadingPhoto} />
+                  </label>
+                )}
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-zinc-900 font-bold text-base truncate">{profile?.store_name || profile?.name}</h2>
+                <p className="text-zinc-500 text-xs truncate">{profile?.email}</p>
+              </div>
+            </div>
+            <button
+              onClick={logout}
+              className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
+              title={t.logout}
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
+
+          {/* Scrollable Horizontal Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-3 mt-3 border-t border-zinc-100 -mx-1 px-1 scroll-smooth">
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <Link
+                  key={tab.id}
+                  href={`/profile?tab=${tab.id}`}
+                  onClick={() => setMessage({ type: '', text: '' })}
+                  className={`shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+                    isActive
+                      ? 'bg-marine-cyan text-white shadow-sm shadow-marine-cyan/25'
+                      : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                  }`}
+                >
+                  <Icon size={14} />
+                  <span>{tab.label}</span>
+                  {tab.badge > 0 && (
+                    <span className={`text-[10px] font-black rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center ${
+                      isActive ? 'bg-white text-marine-primary' : 'bg-marine-cyan text-white'
+                    }`}>
+                      {tab.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="flex flex-col md:flex-row gap-8">
           
-          {/* Sidebar */}
-          <div className="w-full md:w-72 flex-shrink-0">
+          {/* Desktop Sidebar (hidden on mobile) */}
+          <div className="hidden md:block w-72 flex-shrink-0">
             <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 sticky top-24 shadow-sm">
               <div className="flex flex-col items-center text-center mb-8">
                 <div className="relative mb-4">
@@ -794,47 +895,78 @@ function ProfilePageContent() {
               )}
 
               {activeTab === 'recommendations' && (
-                <div className="space-y-8 animate-in fade-in duration-500">
-                  <div>
-                    <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
-                      <Sparkles className="text-marine-primary" /> {isAr ? 'ترشيحات ريدي مارين' : 'Ready Marine Recommendations'}
-                    </h3>
-                    <p className="text-zinc-500 text-sm mt-2">
-                      {isAr
-                        ? 'قطع غيار مخصوصة لقواربك، ومعاها منتجات تنفع مع أي يخت أو قارب، الأكثر مبيعًا الأول. مش هنرشحلك حاجة اشتريتها في آخر شهر.'
-                        : 'Parts tailored for your vessels, with universal marine products, best sellers first. Nothing you bought in the last month.'}
-                    </p>
+                <div className="space-y-6 animate-in fade-in duration-500">
+                  <div className="flex items-start justify-between flex-wrap gap-4 pb-2 border-b border-zinc-100">
+                    <div>
+                      <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-2.5">
+                        <Sparkles className="text-marine-primary w-6 h-6" />
+                        <span>{isAr ? 'ترشيحات ريدي مارين' : 'Ready Marine Recommendations'}</span>
+                      </h3>
+                      <p className="text-zinc-500 text-sm mt-1.5 max-w-2xl leading-relaxed">
+                        {isAr
+                          ? 'منتجات مختارة خصيصاً لك، مبنية على اهتماماتك البحرية وما في سلتك وأحدث المنتجات وصولاً والأكثر طلباً.'
+                          : 'Hand-picked products based on your marine interests, cart items, new arrivals, and top sellers.'}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={loadRecommendations}
+                      disabled={recLoading}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-marine-primary bg-marine-mist hover:bg-marine-mist/80 border border-marine-cyan/20 transition-all disabled:opacity-50 shrink-0 shadow-xs"
+                    >
+                      <RefreshCw size={14} className={recLoading ? 'animate-spin' : ''} />
+                      <span>{isAr ? 'تحديث الترشيحات' : 'Refresh'}</span>
+                    </button>
+                  </div>
+
+                  {/* Personalization Hubs */}
+                  <div className="bg-gradient-to-br from-marine-mist/40 via-white to-zinc-50 rounded-2xl p-5 sm:p-6 border border-marine-cyan/20 shadow-xs">
+                    <div className="flex items-center justify-between gap-3 mb-3.5 flex-wrap">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-marine-cyan animate-pulse" />
+                        <h4 className="text-sm font-black text-zinc-900">
+                          {isAr ? 'إيه اللي بيهمك في البحر؟' : 'What are you into?'}
+                        </h4>
+                      </div>
+                      <span className="text-xs text-zinc-500 font-medium">
+                        {isAr
+                          ? 'اضغط على اهتماماتك لتخصيص المنتجات فورياً'
+                          : 'Pick your interests to tailor recommendations in real time'}
+                      </span>
+                    </div>
+                    <AudiencePicker value={interests || []} onChange={changeInterests} isAr={isAr} />
                   </div>
 
                   {recLoading ? (
-                    <div className="flex items-center justify-center py-16">
-                      <Loader2 size={32} className="animate-spin text-marine-primary" />
-                    </div>
-                  ) : (profile?.cars?.length ?? 0) === 0 ? (
-                    <div className="bg-zinc-50 rounded-3xl p-12 text-center border border-dashed border-zinc-200">
-                      <Ship size={48} className="text-zinc-400 mx-auto mb-4" />
-                      <p className="text-zinc-700 font-bold">
-                        {isAr ? 'أضف مركب إلى أسطولك لعرض الترشيحات المناسبة له.' : 'Add a vessel to your fleet to get recommendations tailored to it.'}
-                      </p>
-                      <Link href="/profile?tab=garage" className="text-marine-primary mt-2 inline-block hover:underline font-bold">
-                        {isAr ? 'الذهاب إلى أسطولي' : 'Go to My Fleet'}
-                      </Link>
+                    <div className="flex flex-col items-center justify-center py-20 gap-3">
+                      <Loader2 size={36} className="animate-spin text-marine-primary" />
+                      <p className="text-zinc-500 text-xs font-bold">{isAr ? 'جاري تجهيز ترشيحاتك...' : 'Loading recommendations...'}</p>
                     </div>
                   ) : recommendations.length === 0 ? (
-                    <div className="bg-zinc-50 rounded-3xl p-12 text-center border border-dashed border-zinc-200">
+                    <div className="bg-zinc-50/80 rounded-3xl p-12 text-center border border-dashed border-zinc-200">
                       <Sparkles size={48} className="text-zinc-400 mx-auto mb-4" />
-                      <p className="text-zinc-700 font-bold">
-                        {isAr ? 'لا توجد ترشيحات متاحة لمراكبك حاليًا.' : 'No recommendations available for your vessels right now.'}
+                      <p className="text-zinc-700 font-bold text-base">
+                        {isAr ? 'لا توجد ترشيحات متاحة حالياً.' : 'No recommendations available right now.'}
                       </p>
-                      <Link href="/products" className="text-marine-primary mt-2 inline-block hover:underline font-bold">
+                      <p className="text-zinc-500 text-xs mt-1 mb-4">
+                        {isAr ? 'جرّب اختيار اهتمامات إضافية من القائمة أعلاه أو تصفح جميع المنتجات' : 'Try selecting more interests above or browse all products'}
+                      </p>
+                      <Link href="/products" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-marine-cyan text-white text-xs font-bold hover:bg-marine-cyan-dark transition-colors shadow-sm">
                         {isAr ? 'تصفّح كل المنتجات' : 'Browse all products'}
                       </Link>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
-                      {recommendations.map(product => (
-                        <ProductCard key={product._id} product={product} />
-                      ))}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                          {isAr ? `عرض ${recommendations.length} منتجات مرشحة لك` : `Showing ${recommendations.length} recommended products`}
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                        {recommendations.map(product => (
+                          <ProductCard key={product._id} product={product} />
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -843,7 +975,7 @@ function ProfilePageContent() {
               {activeTab === 'garage' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
                   <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
-                    <Ship className="text-marine-primary" /> {isAr ? 'أسطولي' : 'My Fleet'}
+                    <Ship className="text-marine-primary" /> {isAr ? 'مراكبي' : 'My Boats'}
                   </h3>
                   
                   <div className="bg-zinc-50/70 border border-zinc-200/80 rounded-3xl p-6">
@@ -900,7 +1032,7 @@ function ProfilePageContent() {
                       </div>
                     ))}
                     {profile?.cars?.length === 0 && (
-                      <p className="text-zinc-500 text-center py-6">{isAr ? 'أسطولك فارغ.' : 'Your fleet is empty.'}</p>
+                      <p className="text-zinc-500 text-center py-6">{isAr ? 'لسه مضفتش أي مركب.' : 'No boats saved yet.'}</p>
                     )}
                   </div>
                 </div>
@@ -921,7 +1053,7 @@ function ProfilePageContent() {
               {activeTab === 'family' && (
                 <FamilyTab
                   isAr={isAr}
-                  currency={siteSettings?.currency || 'QAR'}
+                  currency={siteSettings?.currency || 'EGP'}
                   onUnreadChange={setFamilyPendingCount}
                 />
               )}
@@ -929,7 +1061,7 @@ function ProfilePageContent() {
               {activeTab === 'friends' && (
                 <FriendsTab
                   isAr={isAr}
-                  currency={siteSettings?.currency || 'QAR'}
+                  currency={siteSettings?.currency || 'EGP'}
                   onUnreadChange={setFriendRequestCount}
                 />
               )}
@@ -980,7 +1112,7 @@ function ProfilePageContent() {
                           order={order}
                           isAr={isAr}
                           language={language}
-                          currency={siteSettings?.currency || 'QAR'}
+                          currency={siteSettings?.currency || 'EGP'}
                           cancellingParcelId={cancellingParcelId}
                           onCancelParcel={cancelParcel}
                           onShipParcelNow={shipParcelNow}

@@ -1,15 +1,15 @@
 {
-  "currency": "QAR",
-  "header_phone": "+974 123 456 789",
-  "footer_phones": ["+974 123 456 789", "+974 987 654 321"],
-  "footer_emails": ["info@sayarty.com", "support@sayarty.com"],
+  "currency": "EGP",
+  "header_phone": "010155661614",
+  "footer_phones": ["010155661614"],
+  "footer_emails": ["info@tech-oriented.digital"],
   "contact_email": "info@tech-oriented.digital",
   "contact_telephone": "010155661614",
-  "contact_address": "696 El Houria St. Louran-Alexandria,Egypt",
-  "header_text_en": "Welcome to Sayarty",
-  "header_text_ar": "مرحباً بكم في سيارتي",
-  "footer_text_en": "Your trusted source for genuine and aftermarket auto parts. Quality you can count on, delivered fast.",
-  "footer_text_ar": "مصدرك الموثوق لقطع غيار السيارات الأصلية وما بعد البيع. جودة يمكنك الاعتماد عليها وتوصيل سريع.",
-  "locations_en": ["Doha, Qatar"],
-  "locations_ar": ["الدوحة، قطر"]
+  "contact_address": "696 El Houria St. Louran-Alexandria, Egypt",
+  "header_text_en": "Welcome to Ready Marine — Egypt's first multi-vendor marine platform",
+  "header_text_ar": "أهلاً بيك في Ready Marine — أول منصة متعددة التجار لقطع غيار اليخوت والمراكب في مصر",
+  "footer_text_en": "Genuine yacht, boat and marine engine parts from verified vendors — fitment checked, delivered to your dock, marina or door across Egypt.",
+  "footer_text_ar": "قطع غيار أصلية لليخوت والمراكب ومحركاتها من تجار موثّقين — بنتأكد من التوافق ونوصّل للمرسى أو المارينا أو لحد البيت في كل مصر.",
+  "locations_en": ["Alexandria, Egypt"],
+  "locations_ar": ["الإسكندرية، مصر"]
 }

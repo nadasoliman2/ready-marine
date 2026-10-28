@@ -83,6 +83,26 @@ router.put('/profile', protect('user'), async (req, res) => {
 });
 
 /**
+ * @desc    The audience hubs the customer is into — what their recommendations lean to.
+ *          Unknown keys are dropped (User.interests).
+ * @route   PUT /api/users/interests
+ * @body    { interests: string[] }
+ */
+router.put('/interests', protect('user'), denyUnclaimedGuest, async (req, res) => {
+    try {
+        if (!Array.isArray(req.body?.interests)) return res.status(400).json({ message: 'interests must be a list' });
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { interests: req.body.interests },
+            { returnDocument: 'after', runValidators: true }
+        ).select('interests');
+        res.json({ interests: user?.interests || [] });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+/**
  * @desc    Upload user profile photo
  * @route   PUT /api/users/profile-photo
  */

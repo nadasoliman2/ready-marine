@@ -68,10 +68,10 @@ export default function PolicyPageLayout({ slug }) {
       {/* Hero Section */}
       <div className="relative bg-zinc-900 overflow-hidden pt-8 pb-8 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-900/50 z-10" />
+          <div className="absolute inset-0 bg-marine-navy  z-10" />
           {/* Subtle grid pattern background */}
           <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-zinc-900 to-transparent z-10" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-marine-navy to-transparent z-10" />
         </div>
         
         <div className="relative z-20 max-w-4xl mx-auto px-4 text-center">

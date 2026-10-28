@@ -25,7 +25,7 @@ export default function RelatedProducts({ categoryId, excludeId, isAr }) {
 
   return (
     <section className="mt-12 sm:mt-16">
-      <p className={SECTION_EYEBROW}>{isAr ? 'مستلزمات الأسطول المقترحة' : 'Recommended Fleet Supplies'}</p>
+      <p className={SECTION_EYEBROW}>{isAr ? 'منتجات مقترحة لك' : 'Recommended for You'}</p>
       <h2 className={`${SECTION_TITLE} mb-6`}>{isAr ? 'قطع ومستلزمات صيانة متوافقة' : 'Compatible Parts & Maintenance Gear'}</h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         {products.map((p) => <ProductCard key={p._id} product={p} />)}

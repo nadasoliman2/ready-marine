@@ -41,8 +41,8 @@ const metadata = {
     },
   },
   other: {
-    'geo.region': 'QA',
-    'geo.placename': 'Qatar',
+    'geo.region': 'EG',
+    'geo.placename': 'Egypt',
   },
 };
 

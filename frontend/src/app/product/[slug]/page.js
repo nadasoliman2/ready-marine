@@ -865,7 +865,7 @@ export default function ProductDetailsPage({ params }) {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 bg-marine-mist border border-marine-teal/15 text-marine-teal font-display text-[11px] font-bold uppercase tracking-[0.06em] py-3 rounded hover:border-marine-cyan transition-colors"
               >
-                <MessageCircle size={15} />{isAr ? 'استفسار فني عن التوافق عبر واتساب' : 'Technical Fleet Inquiry via WhatsApp'}
+                <MessageCircle size={15} />{isAr ? 'استفسار فني عن التوافق عبر واتساب' : 'Technical Fit Inquiry via WhatsApp'}
               </a>
             )}
             <div className="grid sm:grid-cols-2 gap-3">

@@ -7,6 +7,7 @@
  * explicit POST from an account whose email matches the invited address.
  */
 const express = require('express');
+const { startSession } = require('../services/sessionService');
 const router = express.Router();
 const { optionalUser } = require('../middleware/authMiddleware');
 const { rateLimit } = require('../middleware/rateLimit');
@@ -21,13 +22,8 @@ const fail = (res, error) => {
     });
 };
 
-const setAuthCookie = (res, token) => {
-    res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-    });
-};
+// A refresh session (services/sessionService.js), as every sign-in.
+const setAuthCookie = (req, res, token) => startSession(req, res, token, { persistent: false });
 
 /** A vendor/admin session cannot participate in families. */
 const rejectStaffSession = (req, res) => {
@@ -105,7 +101,7 @@ router.post(
                 language: req.body?.language === 'ar' ? 'ar' : 'en',
             });
 
-            setAuthCookie(res, result.token);
+            await setAuthCookie(req, res, result.token);
             res.status(201).json({ joined: true, user: result.user });
         } catch (error) {
             fail(res, error);
@@ -159,7 +155,7 @@ router.post(
             });
 
             const { token, ...safe } = result;
-            setAuthCookie(res, token);
+            await setAuthCookie(req, res, token);
             res.status(201).json(safe);
         } catch (error) {
             fail(res, error);

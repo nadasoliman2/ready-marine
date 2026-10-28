@@ -6,6 +6,8 @@
     "test:courier-transfer": "node --test tests/courierTransfer.test.js",
     "test:company-wallet": "node --test tests/companyWallet.test.js",
     "test:search": "node --test tests/searchSuggest.test.js",
+    "test:recommendations": "node --test tests/recommendations.test.js",
+    "test:sessions": "node --test tests/sessions.test.js",
     "test:everysecond": "node --test tests/everysecond.test.js",
     "test:meta-feed": "node --test tests/metaCatalogFeed.test.js",
     "test:matching": "node --test tests/catalogMatching.test.js",

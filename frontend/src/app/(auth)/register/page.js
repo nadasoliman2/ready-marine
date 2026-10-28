@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Eye, EyeOff, Lock, User as UserIcon, Mail, Phone, MapPin, Store, Hash, Loader2, MessageCircle, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, Lock, User as UserIcon, Mail, Phone, MapPin, Store, Hash, Loader2, MessageCircle, ArrowLeft, ShieldCheck, PlayCircle } from 'lucide-react';
 import { useRouter } from '../../../lib/navigation';
 import { useApp } from '../../../context/AppContext';
 import Link from '../../../components/LocaleLink';
@@ -385,15 +385,21 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {role === 'vendor' && (
-          <button
-            type="button"
-            onClick={() => setEducationOpen(true)}
-            className="mb-6 flex w-full items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 text-sm font-black text-zinc-900 shadow-sm hover:text-white transition-all hover:-translate-y-0.5 hover:border-marine-cyan hover:bg-marine-cyan"
-          >
-            {vendorEducationLabel(isAr)}
-          </button>
-        )}
+        {/* {role === 'vendor' && (
+          <div className="flex items-center justify-between -mt-3 mb-5 px-1">
+            <span className="text-xs font-semibold text-zinc-500">
+              {isAr ? 'بيانات حساب التاجر' : 'Vendor details'}
+            </span>
+            <button
+              type="button"
+              onClick={() => setEducationOpen(true)}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-marine-primary hover:text-marine-cyan transition-colors"
+            >
+              <PlayCircle size={15} />
+              <span>{vendorEducationLabel(isAr)}</span>
+            </button>
+          </div>
+        )} */}
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           {role === 'customer' ? (
@@ -579,10 +585,23 @@ export default function RegisterPage() {
             {/* A phone: the way back to signing in as a second, outlined button. */}
             <Link
               href={`/login?role=${role}${loginRedirect ? `&redirect=${encodeURIComponent(loginRedirect)}` : ''}`}
-              className="mt-4 flex w-full items-center justify-center rounded-xl border-2 border-zinc-900 py-3.5 text-sm font-bold text-zinc-900 active:bg-zinc-50"
+              className="mt-4 flex w-full items-center justify-center rounded-xl border-2 border-zinc-900 py-3.5 text-sm font-bold text-zinc-900 active:bg-zinc-50 hover:bg-zinc-50 transition-colors"
             >
               {isAr ? 'عندك حساب؟ سجّل دخول' : 'Have an account? Sign in'}
             </Link>
+{/* 
+            {role === 'vendor' && (
+              <div className="mt-5 pt-4 border-t border-zinc-200/60 text-center">
+                <button
+                  type="button"
+                  onClick={() => setEducationOpen(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-marine-mist/70 hover:bg-marine-mist border border-marine-cyan/25 text-xs font-bold text-marine-primary hover:text-marine-cyan transition-all shadow-sm"
+                >
+                  <PlayCircle size={16} />
+                  <span>{vendorEducationLabel(isAr)}</span>
+                </button>
+              </div>
+            )} */}
           </>
         )}
         </>

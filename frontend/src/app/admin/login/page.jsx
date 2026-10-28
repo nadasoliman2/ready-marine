@@ -5,6 +5,7 @@ import { useRouter } from '../../../lib/navigation';
 import { Anchor, Eye, EyeOff, Lock, User } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import BrandMark from '../../../components/marine/BrandMark';
+import { safeRedirect } from '../../../lib/safeRedirect';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -38,7 +39,9 @@ export default function AdminLogin() {
 
       // Simulate a login call so AppContext has user
       login({ username: formData.username, role: 'admin' });
-      router.push('/admin/dashboard');
+      // Back to the page the admin was on when the session ran out (only an admin page).
+      const redirect = safeRedirect('/admin/dashboard');
+      router.push(/^\/admin\/(?!login)/.test(redirect) ? redirect : '/admin/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
