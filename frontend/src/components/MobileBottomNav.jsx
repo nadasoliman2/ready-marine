@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   Home, LayoutGrid, Wrench, Menu, User, ChevronLeft, ChevronDown, Briefcase, Store,
   Newspaper, Truck, Phone, Mail, ShieldCheck, FileText, PackageSearch, LayoutDashboard,
+  Anchor,
 } from 'lucide-react';
 import Link from './LocaleLink';
 import Overlay from './Overlay';
@@ -91,7 +92,7 @@ function MorePage({ onClose, openCategory }) {
             </span>
             <span className="block text-xs text-white/60 mt-0.5">
               {!signedIn
-                ? (isAr ? 'تابع طلباتك واحفظ عربياتك' : 'Track your orders and save your cars')
+                ? (isAr ? 'تابع طلباتك واحفظ قواربك' : 'Track your orders and save your boats')
                 : (isAr ? 'حسابي وطلباتي' : 'My account and orders')}
             </span>
           </span>
