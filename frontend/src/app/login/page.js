@@ -136,7 +136,7 @@ export default function LoginPage() {
   // From `sm` up, and while Google's second step owns the card (it is drawn for the dark
   // card), the dark page as before.
   const light = !googleStep;
-  const logo = siteSettings?.logo_light_url || siteSettings?.logo_url;
+  const logo = siteSettings?.logo_light_url || siteSettings?.logo_url || '/images/ready-marine-logo.png';
 
   return (
     <div className={`min-h-screen flex justify-center relative overflow-hidden ${light ? 'bg-white sm:bg-zinc-50 sm:items-center sm:py-12 sm:px-4' : 'bg-[#111315] items-center py-12 px-4'}`} dir={isAr ? 'rtl' : 'ltr'}>
@@ -158,9 +158,22 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mb-6 sm:mb-8">
-          {logo && <img src={logo} alt="Ready Marine" className="mx-auto h-11 w-auto max-w-[200px] object-contain mb-5" />}
-          <h1 className="text-xl sm:text-2xl font-bold text-zinc-900">{isAr ? 'أهلاً بيك في Ready Marine' : 'Welcome to Ready Marine'}</h1>
-          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm">{isAr ? 'سجل دخولك لمتابعة الطلبات والعناوين وعربياتك.' : 'Sign in to follow your orders, addresses and cars.'}</p>
+          {/* <div className="inline-flex items-center justify-center px-4 py-2 bg-white rounded-2xl border border-zinc-200/80 shadow-[0_2px_10px_rgba(0,103,129,0.06)] mb-3.5 group hover:border-marine-cyan/40 transition-all">
+            <img
+              src={logo}
+              alt="Ready Marine"
+              className="h-7 sm:h-8 w-auto max-w-[210px] object-contain"
+            />
+          </div> */}
+          <h1 className="text-xl sm:text-2xl font-extrabold text-zinc-900 tracking-tight flex items-center justify-center gap-1.5 flex-wrap">
+            <span>{isAr ? 'أهلاً بك في' : 'Welcome to'}</span>
+            <span className="bg-gradient-to-r from-marine-primary via-marine-cyan to-teal-500 bg-clip-text text-transparent font-black font-display" dir="ltr">
+              Ready Marine
+            </span>
+          </h1>
+          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm max-w-xs mx-auto leading-relaxed">
+            {isAr ? 'سجل دخولك لمتابعة طلباتك وقواربك ومشترياتك البحرية.' : 'Sign in to follow your orders, boats and marine purchases.'}
+          </p>
         </div>
 
         {/* Tab Toggle */}

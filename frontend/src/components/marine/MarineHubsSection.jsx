@@ -345,7 +345,7 @@ function MobileHubsCarousel({ isAr }) {
       <div
         ref={trackRef}
         onScroll={onScroll}
-        className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-[11vw]"
+        className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-[5vw]"
       >
         {ALL_SLIDES.map((slide, i) => (
           <Link

@@ -254,7 +254,7 @@ export default function RegisterPage() {
   // A phone: a plain white page, as the sign-in. From `sm` up — and for the code step and
   // Google's second step, whose parts are drawn for the dark card — the dark page as before.
   const light = !googleStep && !otpStage;
-  const logo = siteSettings?.logo_light_url || siteSettings?.logo_url;
+  const logo = siteSettings?.logo_light_url || siteSettings?.logo_url || '/images/ready-marine-logo.png';
 
   return (
     <div className={`min-h-screen flex justify-center relative overflow-hidden ${light ? 'bg-white sm:bg-zinc-50 sm:items-center sm:py-12 sm:px-4' : 'bg-[#111315] items-center py-12 px-4'}`} dir={isAr ? 'rtl' : 'ltr'}>
@@ -343,9 +343,24 @@ export default function RegisterPage() {
         </div>
 
         <div className="text-center mb-6 sm:mb-8">
-          {logo && <img src={logo} alt="Ready Marine" className="mx-auto h-11 w-auto max-w-[200px] object-contain mb-5" />}
-          <h1 className="text-xl sm:text-2xl font-bold text-zinc-900">{isAr ? 'انضم لـ Ready Marine' : 'Join Ready Marine'}</h1>
-          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm">{isAr ? 'اعمل حسابك عشان تطلب وتتابع طلباتك وتحفظ عربياتك.' : 'Create your account to order, follow your orders and save your cars.'}</p>
+          {/* <div className="inline-flex items-center justify-center px-4 py-2 bg-white rounded-2xl border border-zinc-200/80 shadow-[0_2px_10px_rgba(0,103,129,0.06)] mb-3.5 group hover:border-marine-cyan/40 transition-all">
+            <img
+              src={logo}
+              alt="Ready Marine"
+              className="h-7 sm:h-8 w-auto max-w-[210px] object-contain"
+            />
+          </div> */}
+          <h1 className="text-xl sm:text-2xl font-extrabold text-zinc-900 tracking-tight flex items-center justify-center gap-1.5 flex-wrap">
+            <span>{isAr ? 'انضم إلى' : 'Join'}</span>
+            <span className="bg-gradient-to-r from-marine-primary via-marine-cyan to-teal-500 bg-clip-text text-transparent font-black font-display" dir="ltr">
+              Ready Marine
+            </span>
+          </h1>
+          <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm max-w-xs mx-auto leading-relaxed">
+            {isAr
+              ? 'أنشئ حسابك لمتابعة طلباتك ومستلزمات قواربك بكل سهولة.'
+              : 'Create your account to manage your orders and marine gear with ease.'}
+          </p>
         </div>
 
         {/* Tab Toggle */}
