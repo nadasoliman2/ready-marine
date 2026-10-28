@@ -33,7 +33,7 @@ const carName = (car) => [car.year, car.car_brand_name, car.car_model_name].filt
 
 /** One slim row: what saving the car gives, and the action — a link, or a button. */
 function PromptRow({ title, sub, cta, href, onClick, busy = false, onNavigate }) {
-  const className = 'w-full text-start flex items-center gap-3 rounded-lg border border-marine-cyan/25 bg-red-50/70 hover:bg-red-50 px-4 py-3 transition-colors disabled:opacity-60';
+  const className = 'w-full text-start flex items-center gap-3 rounded-lg border border-marine-cyan/25 bg-marine-mist/60 hover:bg-marine-mist px-4 py-3 transition-colors disabled:opacity-60';
   const body = (
     <>
       <span className="shrink-0 w-8 h-8 rounded-xl bg-white text-marine-primary flex items-center justify-center shadow-sm">

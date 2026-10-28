@@ -486,7 +486,7 @@ export default function AdminVendorsPage() {
                         <tr className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black ${suspended ? 'bg-red-50 text-red-500 dark:bg-red-500/10' : 'bg-red-50 text-marine-primary dark:bg-marine-cyan/10'}`}>
+                              <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black ${suspended ? 'bg-red-50 text-red-500 dark:bg-red-500/10' : 'bg-marine-mist text-marine-primary dark:bg-marine-cyan/10'}`}>
                                 {(vendor.store_name || 'V').charAt(0).toUpperCase()}
                               </div>
                               <div>
@@ -1194,7 +1194,7 @@ function StatCard({ icon: Icon, label, value, tone = 'orange' }) {
     ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400'
     : tone === 'red'
       ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400'
-      : 'bg-red-50 text-marine-primary dark:bg-marine-cyan/10';
+      : 'bg-marine-mist text-marine-primary dark:bg-marine-cyan/10';
 
   return (
     <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 p-5 shadow-sm">

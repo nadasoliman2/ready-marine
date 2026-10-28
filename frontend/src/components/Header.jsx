@@ -107,13 +107,13 @@ export function TopBar() {
 }
 
 /** The site's logo from its settings, or Ready Marine's own when none is uploaded. */
-function SiteLogo({ siteSettings, compact = false }) {
+export function SiteLogo({ siteSettings, compact = false }) {
   if (siteSettings?.logo_light_url || siteSettings?.logo_url) {
     return (
       <img
         src={siteSettings.logo_light_url || siteSettings.logo_url}
         alt="Logo"
-        className={compact ? 'h-9 w-auto object-contain max-w-[200px]' : 'h-10 sm:h-12 w-auto object-contain max-w-[180px] sm:max-w-[300px]'}
+        className={compact ? 'h-9 w-auto object-contain max-w-[200px]' : 'h-10 sm:h-12 w-auto object-contain max-w-[250px] sm:max-w-[300px]'}
       />
     );
   }

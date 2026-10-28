@@ -63,9 +63,9 @@ function ChoiceCard({ icon: Icon, title, body, onClick }) {
         <button
             type="button"
             onClick={onClick}
-            className="text-start rounded-2xl border border-zinc-200 dark:border-white/10 p-5 hover:border-marine-cyan hover:bg-red-50/40 dark:hover:bg-marine-cyan/5 transition-all"
+            className="text-start rounded-2xl border border-zinc-200 dark:border-white/10 p-5 hover:border-marine-cyan hover:bg-marine-mist/50 dark:hover:bg-marine-cyan/5 transition-all"
         >
-            <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-marine-cyan/10 text-marine-primary flex items-center justify-center mb-3">
+            <div className="w-10 h-10 rounded-xl bg-marine-mist dark:bg-marine-cyan/10 text-marine-primary flex items-center justify-center mb-3">
                 <Icon size={20} />
             </div>
             <p className="font-black text-zinc-900 dark:text-white">{title}</p>

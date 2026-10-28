@@ -118,7 +118,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between flex-wrap gap-4">
-                <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                     <Users className="text-marine-primary" /> {copy.family}
                 </h3>
                 {isOrganizer && (
@@ -134,8 +134,8 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
             {message.text && (
                 <div className={`p-4 rounded-xl text-sm font-bold flex items-start gap-3 ${
                     message.type === 'success'
-                        ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
-                        : 'bg-red-500/10 border border-red-500/20 text-red-400'
+                        ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600'
+                        : 'bg-red-500/10 border border-red-500/20 text-red-600'
                 }`}>
                     <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
                     <span>{message.text}</span>
@@ -144,9 +144,9 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
 
             {/* ---------------- No family yet ---------------- */}
             {!overview?.role && (
-                <div className="bg-white/5 rounded-3xl p-12 text-center border border-dashed border-white/10">
-                    <Users size={48} className="text-zinc-600 mx-auto mb-4" />
-                    <p className="text-zinc-300 font-bold max-w-md mx-auto leading-relaxed">{copy.emptyStateBody}</p>
+                <div className="bg-zinc-50/70 rounded-3xl p-12 text-center border border-dashed border-zinc-200">
+                    <Users size={48} className="text-zinc-400 mx-auto mb-4" />
+                    <p className="text-zinc-700 font-bold max-w-md mx-auto leading-relaxed">{copy.emptyStateBody}</p>
                     <button
                         onClick={() => setShowInvite(true)}
                         className="mt-6 inline-flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-5 py-3 rounded-xl text-sm font-bold transition-all shadow-lg"
@@ -161,7 +161,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                 <>
                     {/* 1. Approval queue — time-sensitive, so it comes first. */}
                     <section className="space-y-4">
-                        <h4 className="text-lg font-black text-white flex items-center gap-2">
+                        <h4 className="text-lg font-black text-zinc-900 flex items-center gap-2">
                             <Inbox size={18} className="text-marine-primary" />
                             {copy.requestsNeedingAttention}
                             {pendingIncoming.length > 0 && (
@@ -172,7 +172,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                         </h4>
 
                         {pendingIncoming.length === 0 ? (
-                            <p className="text-zinc-500 text-sm bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <p className="text-zinc-500 text-sm bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-6">
                                 {copy.noPendingRequests}
                             </p>
                         ) : (
@@ -185,7 +185,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
 
                         {otherIncoming.length > 0 && (
                             <details className="group">
-                                <summary className="cursor-pointer text-zinc-400 hover:text-white text-sm font-bold py-2">
+                                <summary className="cursor-pointer text-zinc-500 hover:text-zinc-900 text-sm font-bold py-2">
                                     {isAr ? `الطلبات السابقة (${otherIncoming.length})` : `Past requests (${otherIncoming.length})`}
                                 </summary>
                                 <div className="space-y-3 mt-3">
@@ -199,30 +199,30 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
 
                     {/* 2. Members */}
                     <section className="space-y-4">
-                        <h4 className="text-lg font-black text-white flex items-center gap-2">
+                        <h4 className="text-lg font-black text-zinc-900 flex items-center gap-2">
                             <Users size={18} className="text-marine-primary" /> {copy.familyMembers}
                         </h4>
 
                         {overview.members.length === 0 ? (
-                            <p className="text-zinc-500 text-sm bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <p className="text-zinc-500 text-sm bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-6">
                                 {copy.emptyStateBody}
                             </p>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {overview.members.map((member) => (
-                                    <div key={member._id} className="bg-white/5 border border-white/10 rounded-2xl p-5">
+                                    <div key={member._id} className="bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-5 hover:bg-zinc-50 transition-colors">
                                         <div className="flex items-center gap-3 mb-3">
                                             <Avatar user={member.user} />
                                             <div className="min-w-0">
-                                                <p className="text-white font-bold truncate">{member.user?.name}</p>
+                                                <p className="text-zinc-900 font-bold truncate">{member.user?.name}</p>
                                                 <p className="text-zinc-500 text-xs truncate">{member.user?.email}</p>
                                             </div>
-                                            <span className="ms-auto bg-white/10 text-zinc-300 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md flex-shrink-0">
+                                            <span className="ms-auto bg-zinc-100 text-zinc-700 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md flex-shrink-0">
                                                 {getRelationshipLabel(member.relationship, isAr)}
                                             </span>
                                         </div>
 
-                                        <p className="text-zinc-400 text-xs flex items-center gap-1.5 mb-4">
+                                        <p className="text-zinc-500 text-xs flex items-center gap-1.5 mb-4">
                                             <MapPin size={12} />
                                             {isAr
                                                 ? `${member.shared_address_ids.length} عنوان مشترك`
@@ -232,7 +232,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                         <div className="flex items-center gap-4">
                                             <button
                                                 onClick={() => { setEditingMember(member); setEditingAddressIds(member.shared_address_ids); }}
-                                                className="flex items-center gap-1.5 text-blue-400 hover:text-blue-300 text-xs font-bold transition-colors"
+                                                className="flex items-center gap-1.5 text-marine-primary hover:text-marine-cyan text-xs font-bold transition-colors"
                                             >
                                                 <MapPin size={13} /> {copy.manageSharedAddresses}
                                             </button>
@@ -258,14 +258,14 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                     {/* 3. Pending invitations */}
                     {overview.invitations.length > 0 && (
                         <section className="space-y-4">
-                            <h4 className="text-lg font-black text-white flex items-center gap-2">
+                            <h4 className="text-lg font-black text-zinc-900 flex items-center gap-2">
                                 <Mail size={18} className="text-marine-primary" /> {copy.pendingInvitations}
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {overview.invitations.map((invitation) => (
-                                    <div key={invitation._id} className="bg-white/5 border border-white/10 rounded-2xl p-5">
-                                        <p className="text-white font-bold text-sm break-all">{invitation.email}</p>
-                                        <p className="text-zinc-400 text-xs mt-1">
+                                    <div key={invitation._id} className="bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-5">
+                                        <p className="text-zinc-900 font-bold text-sm break-all">{invitation.email}</p>
+                                        <p className="text-zinc-500 text-xs mt-1">
                                             {getRelationshipLabel(invitation.relationship, isAr)}
                                         </p>
                                         <div className="text-zinc-500 text-[11px] mt-3 space-y-0.5">
@@ -279,7 +279,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                                     () => familyApi.resendInvitation(invitation._id, isAr ? 'ar' : 'en'),
                                                     copy.invitationSent
                                                 )}
-                                                className="flex items-center gap-1.5 text-blue-400 hover:text-blue-300 text-xs font-bold disabled:opacity-50"
+                                                className="flex items-center gap-1.5 text-marine-primary hover:text-marine-cyan text-xs font-bold disabled:opacity-50"
                                             >
                                                 <Send size={13} /> {copy.resend}
                                             </button>
@@ -299,10 +299,10 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
 
                     {/* 4. Shared-address permissions summary */}
                     <section className="space-y-4">
-                        <h4 className="text-lg font-black text-white flex items-center gap-2">
+                        <h4 className="text-lg font-black text-zinc-900 flex items-center gap-2">
                             <ShieldCheck size={18} className="text-marine-primary" /> {copy.sharedAddresses}
                         </h4>
-                        <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                        <div className="bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-5 space-y-3">
                             {overview.addresses.length === 0 ? (
                                 <p className="text-zinc-500 text-sm">
                                     {isAr
@@ -318,13 +318,13 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                     (m) => m.shared_address_ids.includes(String(address._id))
                                 );
                                 return (
-                                    <div key={address._id} className="flex items-start gap-3 py-2 border-b border-white/5 last:border-0">
-                                        <Home size={15} className="text-zinc-500 mt-1 flex-shrink-0" />
+                                    <div key={address._id} className="flex items-start gap-3 py-2 border-b border-zinc-200/60 last:border-0">
+                                        <Home size={15} className="text-zinc-400 mt-1 flex-shrink-0" />
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-white text-sm font-bold truncate">{addressSummary(address)}</p>
+                                            <p className="text-zinc-900 text-sm font-bold truncate">{addressSummary(address)}</p>
                                             <p className="text-zinc-500 text-xs truncate">{address.full_address}</p>
                                         </div>
-                                        <p className="text-[11px] text-zinc-400 flex-shrink-0">
+                                        <p className="text-[11px] text-zinc-500 flex-shrink-0">
                                             {sharedWith.length === 0
                                                 ? (isAr ? 'غير مشترك' : 'Not shared')
                                                 : sharedWith.map((m) => m.user?.name).join(', ')}
@@ -340,13 +340,13 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
             {/* ================= MEMBER VIEW ================= */}
             {isMember && (
                 <>
-                    <section className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <section className="bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-6">
                         <div className="flex items-center gap-4">
                             <Avatar user={overview.organizer} size="lg" />
                             <div className="min-w-0">
                                 <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">{copy.organizer}</p>
-                                <p className="text-white font-bold text-lg truncate">{overview.organizer?.name}</p>
-                                <p className="text-zinc-400 text-xs mt-0.5">
+                                <p className="text-zinc-900 font-bold text-lg truncate">{overview.organizer?.name}</p>
+                                <p className="text-zinc-500 text-xs mt-0.5">
                                     {getRelationshipLabel(overview.membership?.relationship, isAr)}
                                     {' · '}
                                     {isAr
@@ -358,12 +358,12 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                     </section>
 
                     <section className="space-y-4">
-                        <h4 className="text-lg font-black text-white flex items-center gap-2">
+                        <h4 className="text-lg font-black text-zinc-900 flex items-center gap-2">
                             <Inbox size={18} className="text-marine-primary" /> {copy.myFamilyRequests}
                         </h4>
                         {(requests.outgoing || []).length === 0 ? (
-                            <div className="bg-white/5 rounded-2xl p-8 text-center border border-dashed border-white/10">
-                                <p className="text-zinc-400 text-sm font-bold">
+                            <div className="bg-zinc-50/70 rounded-2xl p-8 text-center border border-dashed border-zinc-200">
+                                <p className="text-zinc-600 text-sm font-bold">
                                     {isAr
                                         ? 'لم ترسل أي طلبات بعد. اختر منتجاتك ثم اختر مسؤول العائلة عند الدفع.'
                                         : 'You have not sent any requests yet. Pick your products, then choose your organizer at checkout.'}
@@ -382,13 +382,13 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                     </section>
 
                     <section className="space-y-4">
-                        <h4 className="text-lg font-black text-white flex items-center gap-2">
+                        <h4 className="text-lg font-black text-zinc-900 flex items-center gap-2">
                             <MapPin size={18} className="text-marine-primary" /> {copy.sharedAddresses}
                         </h4>
                         {overview.shared_addresses.length === 0 ? (
                             <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-5">
-                                <p className="text-amber-300 text-sm font-bold">{copy.noSharedAddressesMember}</p>
-                                <p className="text-amber-200/70 text-xs mt-2">
+                                <p className="text-amber-700 text-sm font-bold">{copy.noSharedAddressesMember}</p>
+                                <p className="text-amber-800/80 text-xs mt-2">
                                     {isAr
                                         ? `اطلب من ${overview.organizer?.name} مشاركة عنوان توصيل معك من تبويب العائلة في حسابه.`
                                         : `Ask ${overview.organizer?.name} to share a delivery address with you from their Family tab.`}
@@ -397,22 +397,22 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {overview.shared_addresses.map((address) => (
-                                    <div key={address._id} className="bg-white/5 border border-white/10 rounded-2xl p-5">
+                                    <div key={address._id} className="bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-5">
                                         {address.label && (
-                                            <span className="inline-block bg-white/10 text-zinc-300 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md mb-2">
+                                            <span className="inline-block bg-zinc-100 text-zinc-700 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md mb-2">
                                                 {address.label}
                                             </span>
                                         )}
-                                        <p className="text-white font-bold text-sm">{address.recipient_name}</p>
-                                        <p className="text-zinc-400 text-xs mt-1">{address.phone}</p>
-                                        <p className="text-zinc-500 text-xs mt-1">{address.full_address}</p>
+                                        <p className="text-zinc-900 font-bold text-sm">{address.recipient_name}</p>
+                                        <p className="text-zinc-500 text-xs mt-1">{address.phone}</p>
+                                        <p className="text-zinc-600 text-xs mt-1">{address.full_address}</p>
                                         {(address.shipping_city || address.shipping_country) && (
                                             <p className="text-zinc-500 text-[11px] mt-2">
                                                 {[address.shipping_city, address.shipping_country].filter(Boolean).join(', ')}
                                             </p>
                                         )}
                                         {/* Read-only by design — no edit or delete affordance. */}
-                                        <p className="text-zinc-600 text-[10px] mt-3 italic">
+                                        <p className="text-zinc-400 text-[10px] mt-3 italic">
                                             {isAr ? 'للعرض فقط — يديره مسؤول العائلة' : 'View only — managed by your organizer'}
                                         </p>
                                     </div>
@@ -421,7 +421,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                         )}
                     </section>
 
-                    <section className="pt-4 border-t border-white/5">
+                    <section className="pt-4 border-t border-zinc-200/80">
                         <button
                             disabled={busy}
                             onClick={() => {
@@ -430,7 +430,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                     : 'You will lose access to the shared addresses and any unpaid requests will be cancelled. Continue?')) return;
                                 run(() => familyApi.leaveFamily());
                             }}
-                            className="flex items-center gap-2 text-red-400 hover:text-red-300 text-sm font-bold disabled:opacity-50"
+                            className="flex items-center gap-2 text-red-600 hover:text-red-500 text-sm font-bold disabled:opacity-50"
                         >
                             <LogOut size={16} /> {copy.leaveFamily}
                         </button>
@@ -441,19 +441,19 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
             {/* ---------------- Invite modal ---------------- */}
             {showInvite && (
                 <Overlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowInvite(false)} />
-                    <div className="relative bg-[#09090b] border border-white/10 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
-                        <h4 className="text-xl font-black text-white mb-6 flex items-center gap-2">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowInvite(false)} />
+                    <div className="relative bg-white border border-zinc-200 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+                        <h4 className="text-xl font-black text-zinc-900 mb-6 flex items-center gap-2">
                             <UserPlus size={20} className="text-marine-primary" /> {copy.inviteMember}
                         </h4>
 
                         <form onSubmit={submitInvite} className="space-y-5">
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{copy.emailOrPhone}</label>
+                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.emailOrPhone}</label>
                                 <input
                                     type="text" required value={inviteForm.identifier}
                                     onChange={(e) => setInviteForm({ ...inviteForm, identifier: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                                    className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white"
                                     placeholder="01xxxxxxxxx"
                                 />
                                 {/* Says plainly that the person does not need an
@@ -465,11 +465,11 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{copy.relationshipQuestion}</label>
+                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.relationshipQuestion}</label>
                                 <select
                                     value={inviteForm.relationship}
                                     onChange={(e) => setInviteForm({ ...inviteForm, relationship: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                                    className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white"
                                 >
                                     {RELATIONSHIPS.map((value) => (
                                         <option key={value} value={value} className="text-zinc-900">
@@ -477,7 +477,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                         </option>
                                     ))}
                                 </select>
-                                <p className="text-zinc-600 text-[11px]">
+                                <p className="text-zinc-500 text-[11px]">
                                     {isAr
                                         ? 'الصلة وصفية فقط ولا تمنح أي صلاحيات إضافية.'
                                         : 'Relationship is descriptive only — it does not change any permissions.'}
@@ -485,7 +485,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{copy.addressesToShare}</label>
+                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.addressesToShare}</label>
                                 <AddressPicker
                                     addresses={overview?.addresses || []}
                                     selectedIds={inviteForm.shared_address_ids}
@@ -494,9 +494,9 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                 />
                             </div>
 
-                            <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-                                <p className="text-white text-xs font-black uppercase tracking-widest">{copy.privacyTitle}</p>
-                                <ul className="text-zinc-400 text-xs space-y-1.5 list-disc list-inside">
+                            <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 space-y-2">
+                                <p className="text-zinc-900 text-xs font-black uppercase tracking-widest">{copy.privacyTitle}</p>
+                                <ul className="text-zinc-600 text-xs space-y-1.5 list-disc list-inside">
                                     <li>{copy.privacyCanView}</li>
                                     <li>{copy.privacyCannotEdit}</li>
                                     <li>{copy.privacyNoPayment}</li>
@@ -513,7 +513,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                 </button>
                                 <button
                                     type="button" onClick={() => setShowInvite(false)}
-                                    className="flex-1 bg-white/5 text-zinc-400 py-3 rounded-xl font-bold hover:bg-white/10 transition-all"
+                                    className="flex-1 bg-zinc-100 text-zinc-700 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-all"
                                 >
                                     {copy.cancel}
                                 </button>
@@ -526,10 +526,10 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
             {/* ---------------- Shared-address editor ---------------- */}
             {editingMember && (
                 <Overlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setEditingMember(null)} />
-                    <div className="relative bg-[#09090b] border border-white/10 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
-                        <h4 className="text-xl font-black text-white mb-2">{copy.manageSharedAddresses}</h4>
-                        <p className="text-zinc-400 text-sm mb-6">{editingMember.user?.name}</p>
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setEditingMember(null)} />
+                    <div className="relative bg-white border border-zinc-200 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+                        <h4 className="text-xl font-black text-zinc-900 mb-2">{copy.manageSharedAddresses}</h4>
+                        <p className="text-zinc-500 text-sm mb-6">{editingMember.user?.name}</p>
 
                         <AddressPicker
                             addresses={overview?.addresses || []}
@@ -553,7 +553,7 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                             </button>
                             <button
                                 onClick={() => setEditingMember(null)}
-                                className="flex-1 bg-white/5 text-zinc-400 py-3 rounded-xl font-bold hover:bg-white/10 transition-all"
+                                className="flex-1 bg-zinc-100 text-zinc-700 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-all"
                             >
                                 {copy.cancel}
                             </button>
@@ -580,7 +580,7 @@ function Avatar({ user, size = 'md' }) {
 function AddressPicker({ addresses, selectedIds, onChange, isAr }) {
     if (addresses.length === 0) {
         return (
-            <p className="text-zinc-500 text-sm bg-white/5 border border-white/10 rounded-xl p-4">
+            <p className="text-zinc-500 text-sm bg-zinc-50 border border-zinc-200 rounded-xl p-4">
                 {isAr
                     ? 'لا توجد عناوين محفوظة بعد. أضف عنواناً من تبويب العناوين أولاً.'
                     : 'No saved addresses yet. Add one from the Addresses tab first.'}
@@ -603,15 +603,15 @@ function AddressPicker({ addresses, selectedIds, onChange, isAr }) {
                     <label
                         key={address._id}
                         className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                            checked ? 'border-marine-cyan bg-marine-cyan/10' : 'border-white/10 bg-white/5 hover:border-white/20'
+                            checked ? 'border-marine-cyan bg-marine-cyan/10' : 'border-zinc-200 bg-zinc-50 hover:border-zinc-300'
                         }`}
                     >
                         <input
                             type="checkbox" checked={checked} onChange={() => toggle(address._id)}
-                            className="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 accent-marine-cyan"
+                            className="mt-1 w-4 h-4 rounded border-zinc-300 bg-white accent-marine-cyan"
                         />
                         <div className="min-w-0">
-                            <p className="text-white text-sm font-bold truncate">{addressSummary(address)}</p>
+                            <p className="text-zinc-900 text-sm font-bold truncate">{addressSummary(address)}</p>
                             <p className="text-zinc-500 text-xs truncate">{address.full_address}</p>
                         </div>
                     </label>
@@ -628,11 +628,11 @@ function RequestRow({ request, isAr, currency, copy }) {
     return (
         <Link
             href={`/family/requests/${request._id}`}
-            className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 hover:bg-white/[0.08] hover:border-marine-cyan/30 transition-all"
+            className="flex items-center gap-4 bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-4 hover:bg-zinc-50 hover:border-marine-cyan/40 transition-all"
         >
             <Avatar user={counterparty} />
             <div className="min-w-0 flex-1">
-                <p className="text-white font-bold text-sm truncate">
+                <p className="text-zinc-900 font-bold text-sm truncate">
                     {request.viewer_role === 'organizer'
                         ? `${copy.requestedBy} ${counterparty?.name || ''}`
                         : `${copy.orderRequest} · ${counterparty?.name || ''}`}
@@ -649,7 +649,7 @@ function RequestRow({ request, isAr, currency, copy }) {
                 </p>
                 <RequestStatusBadge status={request.status} isAr={isAr} />
             </div>
-            <ChevronRight size={16} className="text-zinc-600 flex-shrink-0 rtl:rotate-180" />
+            <ChevronRight size={16} className="text-zinc-400 flex-shrink-0 rtl:rotate-180" />
         </Link>
     );
 }

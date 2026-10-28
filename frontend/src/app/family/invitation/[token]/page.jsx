@@ -267,13 +267,13 @@ export default function FamilyInvitationPage() {
                     <div className="w-16 h-16 bg-red-500/15 text-red-400 rounded-full flex items-center justify-center mx-auto mb-5">
                         <AlertCircle size={32} />
                     </div>
-                    <h1 className="text-xl font-black text-white mb-2">
+                    <h1 className="text-xl font-black text-zinc-900 mb-2">
                         {isAr ? 'لا يمكن استخدام هذا الرابط' : 'This link cannot be used'}
                     </h1>
-                    <p className="text-zinc-400 text-sm max-w-sm mx-auto">
+                    <p className="text-zinc-500 text-sm max-w-sm mx-auto">
                         {messages[loadError.code] || loadError.message}
                     </p>
-                    <Link href="/" className="inline-block mt-6 bg-white/5 hover:bg-white/10 text-zinc-300 font-bold px-6 py-3 rounded-xl transition-all">
+                    <Link href="/" className="inline-block mt-6 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold px-6 py-3 rounded-xl transition-all">
                         {isAr ? 'العودة للرئيسية' : 'Back to home'}
                     </Link>
                 </div>
@@ -295,7 +295,7 @@ export default function FamilyInvitationPage() {
                 <div className="w-16 h-16 bg-marine-cyan/15 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-5">
                     <Users size={32} />
                 </div>
-                <h1 className="text-2xl font-black text-white leading-snug">
+                <h1 className="text-2xl font-black text-zinc-900 leading-snug">
                     {isAr
                         ? `${organizer.name} يدعوك للانضمام إلى عائلته على Ready Marine بصفتك ${relationship}.`
                         : `${organizer.name} invited you to join their Ready Marine family as their ${relationship}.`}
@@ -306,11 +306,11 @@ export default function FamilyInvitationPage() {
             </div>
 
             {/* What acceptance means — stated before any action. */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-6">
-                <p className="text-white text-xs font-black uppercase tracking-widest flex items-center gap-2 mb-3">
-                    <ShieldCheck size={14} className="text-emerald-400" /> {copy.privacyTitle}
+            <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-5 mb-6">
+                <p className="text-zinc-900 text-xs font-black uppercase tracking-widest flex items-center gap-2 mb-3">
+                    <ShieldCheck size={14} className="text-emerald-600" /> {copy.privacyTitle}
                 </p>
-                <ul className="text-zinc-400 text-sm space-y-2 list-disc list-inside">
+                <ul className="text-zinc-600 text-sm space-y-2 list-disc list-inside">
                     <li>
                         {isAr
                             ? `يمكنك استخدام ${invitation.shared_address_count} عنوان توصيل شاركه معك فقط.`
@@ -327,7 +327,7 @@ export default function FamilyInvitationPage() {
             </div>
 
             {actionError && (
-                <div className="p-4 mb-6 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-bold flex items-start gap-3">
+                <div className="p-4 mb-6 bg-red-500/10 border border-red-500/20 text-red-600 rounded-xl text-sm font-bold flex items-start gap-3">
                     <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
                     <span>{actionError}</span>
                 </div>
@@ -349,14 +349,14 @@ export default function FamilyInvitationPage() {
                                     onChange={(e) => setClaimName(e.target.value)}
                                     placeholder={ic.yourNamePlaceholder}
                                     autoComplete="name"
-                                    className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                                    className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white"
                                 />
                             </Field>
                         )}
                         <button
                             onClick={startCodeStep}
                             disabled={sendingCode}
-                            className="w-full bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                            className="w-full bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-60 flex items-center justify-center gap-2 shadow-sm"
                         >
                             {sendingCode ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
                             {ic.acceptFamily(organizer.name)}
@@ -366,11 +366,11 @@ export default function FamilyInvitationPage() {
                 ) : (
                     <div className="space-y-4">
                         <div className="text-center">
-                            <p className="text-white font-bold flex items-center justify-center gap-2">
-                                <ShieldCheck size={16} className="text-emerald-400" />
+                            <p className="text-zinc-900 font-bold flex items-center justify-center gap-2">
+                                <ShieldCheck size={16} className="text-emerald-600" />
                                 {ic.confirmNumberTitle}
                             </p>
-                            <p className="text-zinc-400 text-sm mt-1">{ic.confirmNumberBody(codeMasked)}</p>
+                            <p className="text-zinc-500 text-sm mt-1">{ic.confirmNumberBody(codeMasked)}</p>
                         </div>
 
                         <OtpCodeInput
@@ -520,8 +520,8 @@ export default function FamilyInvitationPage() {
 
 function Shell({ children, isAr }) {
     return (
-        <div className="min-h-screen bg-[#111315] flex items-center justify-center px-4 py-12" dir={isAr ? 'rtl' : 'ltr'}>
-            <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div className="min-h-screen bg-marine-canvas flex items-center justify-center px-4 py-12" dir={isAr ? 'rtl' : 'ltr'}>
+            <div className="w-full max-w-lg bg-white border border-zinc-200/80 rounded-3xl p-6 sm:p-8 shadow-xl">
                 {children}
             </div>
         </div>
@@ -531,7 +531,7 @@ function Shell({ children, isAr }) {
 function Field({ label, children }) {
     return (
         <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{label}</label>
+            <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{label}</label>
             {children}
         </div>
     );
@@ -541,7 +541,7 @@ function DeclineButton({ onClick, busy, isAr }) {
     return (
         <button
             type="button" onClick={onClick} disabled={busy}
-            className="w-full bg-transparent text-zinc-500 hover:text-zinc-300 font-bold py-3 rounded-xl transition-all disabled:opacity-60 text-sm"
+            className="w-full bg-transparent text-zinc-500 hover:text-zinc-800 font-bold py-3 rounded-xl transition-all disabled:opacity-60 text-sm"
         >
             {isAr ? 'رفض الدعوة' : 'Decline'}
         </button>

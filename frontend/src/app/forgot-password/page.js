@@ -107,40 +107,34 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  const inputCls = 'w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3.5 peer focus:outline-none focus:border-marine-cyan focus:bg-white/10 transition-all text-sm ltr:pl-11 rtl:pr-11';
-  const iconCls = 'absolute ltr:left-4 rtl:right-4 top-1/2 -translate-y-1/2 text-zinc-500 peer-focus:text-marine-primary transition-colors';
-  const submitCls = 'w-full bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.39)] hover:shadow-[0_6px_20px_rgba(0,166,206,0.23)] hover:-translate-y-0.5 flex items-center justify-center gap-2';
-  const tabCls = (active) => `flex-1 py-2 text-sm font-bold rounded-lg transition-all duration-300 inline-flex items-center justify-center gap-1.5 ${active ? 'bg-marine-cyan text-white shadow-lg' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`;
+  const inputCls = 'w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3.5 peer focus:outline-none focus:border-marine-cyan focus:bg-white transition-all text-sm ltr:pl-11 rtl:pr-11';
+  const iconCls = 'absolute ltr:left-4 rtl:right-4 top-1/2 -translate-y-1/2 text-zinc-400 peer-focus:text-marine-primary transition-colors';
+  const submitCls = 'w-full bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.35)] hover:shadow-[0_6px_20px_rgba(0,166,206,0.25)] hover:-translate-y-0.5 flex items-center justify-center gap-2';
+  const tabCls = (active) => `flex-1 py-2 text-sm font-bold rounded-lg transition-all duration-300 inline-flex items-center justify-center gap-1.5 ${active ? 'bg-marine-cyan text-white shadow-md shadow-marine-cyan/20' : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-200/50'}`;
 
   return (
-    <div className="min-h-screen bg-[#111315] flex items-center justify-center py-12 px-4 relative overflow-hidden" dir={isAr ? 'rtl' : 'ltr'}>
-      <div className="absolute inset-0 z-0">
-        <img src="https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Background" className="w-full h-full object-cover opacity-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#111315] via-[#111315]/90 to-[#111315]/60" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-marine-cyan rounded-full blur-[128px] opacity-20 translate-x-1/2 -translate-y-1/4" />
-      </div>
-
-      <div className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.6)] p-8 my-10">
-        <Link href="/login" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-colors mb-6">
+    <div className="min-h-screen bg-marine-canvas flex items-center justify-center py-12 px-4 relative overflow-hidden" dir={isAr ? 'rtl' : 'ltr'}>
+      <div className="relative z-10 w-full max-w-md bg-white border border-zinc-200/80 rounded-3xl shadow-xl p-8 my-10">
+        <Link href="/login" className="inline-flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors mb-6">
           <ArrowLeft size={16} className={isAr ? 'rotate-180' : ''} />
           {t.signIn}
         </Link>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black text-white tracking-tight">{t.resetPasswordTitle}</h1>
-          <p className="text-zinc-400 mt-2 text-sm">
+          <h1 className="text-3xl font-black text-zinc-900 tracking-tight">{t.resetPasswordTitle}</h1>
+          <p className="text-zinc-500 mt-2 text-sm">
             {isAr ? 'اختار هتسترجع حسابك إزاي: رابط على الإيميل أو كود على واتساب.' : 'Choose how to reset it: a link by email or a code on WhatsApp.'}
           </p>
         </div>
 
         {/* Whose account */}
-        <div className="flex p-1 bg-white/5 rounded-xl mb-3 border border-white/5">
+        <div className="flex p-1 bg-zinc-100 rounded-xl mb-3 border border-zinc-200/60">
           <button type="button" onClick={() => switchRole('user')} className={tabCls(role === 'user')}>{t.customer}</button>
           <button type="button" onClick={() => switchRole('vendor')} className={tabCls(role === 'vendor')}>{t.vendor}</button>
         </div>
 
         {/* How */}
-        <div className="flex p-1 bg-white/5 rounded-xl mb-6 border border-white/5">
+        <div className="flex p-1 bg-zinc-100 rounded-xl mb-6 border border-zinc-200/60">
           <button type="button" onClick={() => switchMethod('email')} className={tabCls(method === 'email')}>
             <Mail size={15} /> {isAr ? 'بالإيميل' : 'By email'}
           </button>
@@ -150,18 +144,18 @@ export default function ForgotPasswordPage() {
         </div>
 
         {message && (
-          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-xl text-center">
+          <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl text-center font-medium">
             {method === 'email' && isAr ? t.resetLinkSent : message}
           </div>
         )}
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl text-center">{error}</div>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl text-center font-medium">{error}</div>
         )}
 
         {method === 'email' ? (
           <form className="space-y-5" onSubmit={submitEmail}>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1.5">{t.emailAddress}</label>
+              <label className="block text-sm font-medium text-zinc-700 mb-1.5">{t.emailAddress}</label>
               <div className="relative">
                 <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} placeholder="name@example.com" />
                 <Mail size={18} className={iconCls} />
@@ -174,15 +168,15 @@ export default function ForgotPasswordPage() {
           </form>
         ) : step === 'done' ? (
           <div className="text-center space-y-5">
-            <CheckCircle2 size={48} className="mx-auto text-emerald-400" />
-            <p className="text-white font-bold">{isAr ? 'تم تغيير كلمة السر.' : 'Your password has been changed.'}</p>
-            <p className="text-zinc-400 text-sm">{isAr ? 'سجّل دخولك بكلمة السر الجديدة.' : 'Sign in with your new password.'}</p>
+            <CheckCircle2 size={48} className="mx-auto text-emerald-500" />
+            <p className="text-zinc-900 font-bold">{isAr ? 'تم تغيير كلمة السر.' : 'Your password has been changed.'}</p>
+            <p className="text-zinc-500 text-sm">{isAr ? 'سجّل دخولك بكلمة السر الجديدة.' : 'Sign in with your new password.'}</p>
             <Link href={role === 'vendor' ? '/login?role=vendor' : '/login'} className={submitCls}>{t.signIn}</Link>
           </div>
         ) : step === 'request' ? (
           <form className="space-y-5" onSubmit={sendCode}>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1.5">
+              <label className="block text-sm font-medium text-zinc-700 mb-1.5">
                 {isAr ? 'رقم الموبايل المسجّل في الحساب' : 'The mobile number on the account'}
               </label>
               <div className="relative">
@@ -197,12 +191,12 @@ export default function ForgotPasswordPage() {
           </form>
         ) : (
           <form className="space-y-5" onSubmit={resetWithCode}>
-            <p className="text-sm text-zinc-400 text-center">
+            <p className="text-sm text-zinc-600 text-center">
               {isAr ? 'اكتب الكود اللي وصلك على واتساب' : 'Enter the code sent on WhatsApp to'}
-              {masked && <span className="font-bold text-white" dir="ltr"> {masked}</span>}
+              {masked && <span className="font-bold text-zinc-900" dir="ltr"> {masked}</span>}
             </p>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1.5">{isAr ? 'الكود' : 'Code'}</label>
+              <label className="block text-sm font-medium text-zinc-700 mb-1.5">{isAr ? 'الكود' : 'Code'}</label>
               <div className="relative">
                 <input
                   type="text"
@@ -220,14 +214,14 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1.5">{isAr ? 'كلمة السر الجديدة' : 'New password'}</label>
+              <label className="block text-sm font-medium text-zinc-700 mb-1.5">{isAr ? 'كلمة السر الجديدة' : 'New password'}</label>
               <div className="relative">
                 <input type="password" required minLength={8} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} placeholder={isAr ? '8 حروف على الأقل' : 'At least 8 characters'} />
                 <Lock size={18} className={iconCls} />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1.5">{isAr ? 'أكّد كلمة السر' : 'Confirm password'}</label>
+              <label className="block text-sm font-medium text-zinc-700 mb-1.5">{isAr ? 'أكّد كلمة السر' : 'Confirm password'}</label>
               <div className="relative">
                 <input type="password" required minLength={8} autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className={inputCls} />
                 <Lock size={18} className={iconCls} />
@@ -238,14 +232,14 @@ export default function ForgotPasswordPage() {
               {isAr ? 'غيّر كلمة السر' : 'Change password'}
             </button>
             <div className="flex items-center justify-between text-xs">
-              <button type="button" onClick={() => { setStep('request'); setCode(''); resetMessages(); }} className="text-zinc-400 hover:text-white font-bold">
+              <button type="button" onClick={() => { setStep('request'); setCode(''); resetMessages(); }} className="text-zinc-500 hover:text-zinc-900 font-bold">
                 {isAr ? 'غيّر الرقم' : 'Change number'}
               </button>
               <button
                 type="button"
                 onClick={sendCode}
                 disabled={loading || resendIn > 0}
-                className="text-marine-primary hover:text-red-400 font-bold disabled:text-zinc-500 disabled:cursor-not-allowed"
+                className="text-marine-primary hover:text-marine-cyan font-bold disabled:text-zinc-400 disabled:cursor-not-allowed"
               >
                 {resendIn > 0
                   ? (isAr ? `ابعت تاني بعد ${resendIn} ث` : `Resend in ${resendIn}s`)

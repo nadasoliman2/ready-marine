@@ -34,13 +34,13 @@ function LanguagePicker() {
         <div className="absolute top-full end-0 mt-1 w-24 bg-white dark:bg-[#09090b] rounded-lg shadow-xl py-1 z-50 border border-zinc-100 dark:border-white/10 overflow-hidden">
           <button 
             onClick={() => { setLanguage('en'); setIsOpen(false); }} 
-            className={`w-full text-start px-3 py-2 text-xs font-bold hover:bg-zinc-50 dark:hover:bg-white/10 transition-colors ${language === 'en' ? 'text-marine-primary bg-red-50 dark:bg-white/5' : 'text-zinc-600 dark:text-zinc-300'}`}
+            className={`w-full text-start px-3 py-2 text-xs font-bold hover:bg-zinc-50 dark:hover:bg-white/10 transition-colors ${language === 'en' ? 'text-marine-primary bg-marine-mist dark:bg-white/5' : 'text-zinc-600 dark:text-zinc-300'}`}
           >
             English
           </button>
           <button 
             onClick={() => { setLanguage('ar'); setIsOpen(false); }} 
-            className={`w-full text-start px-3 py-2 text-xs font-bold hover:bg-zinc-50 dark:hover:bg-white/10 transition-colors ${language === 'ar' ? 'text-marine-primary bg-red-50 dark:bg-white/5' : 'text-zinc-600 dark:text-zinc-300'}`}
+            className={`w-full text-start px-3 py-2 text-xs font-bold hover:bg-zinc-50 dark:hover:bg-white/10 transition-colors ${language === 'ar' ? 'text-marine-primary bg-marine-mist dark:bg-white/5' : 'text-zinc-600 dark:text-zinc-300'}`}
           >
             العربية
           </button>
@@ -87,7 +87,7 @@ export default function TopBar({ onMenuClick, onEducationClick }) {
           <button
             type="button"
             onClick={onEducationClick}
-            className="inline-flex items-center gap-2 rounded-xl bg-marine-cyan px-2.5 py-2 text-xs font-black text-white shadow-sm shadow-red-500/20 transition-all hover:bg-marine-cyan-dark sm:px-3"
+            className="inline-flex items-center gap-2 rounded-xl bg-marine-cyan px-2.5 py-2 text-xs font-black text-white shadow-sm shadow-marine-cyan/20 transition-all hover:bg-marine-cyan-dark sm:px-3"
             aria-label={vendorEducationLabel(isAr)}
           >
             <BookOpen size={16} />

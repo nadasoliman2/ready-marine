@@ -575,7 +575,7 @@ export default function ProductTable({
                     <td className={`px-6 py-3 ${isAr ? 'text-left' : 'text-right'}`}>
                       <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
                         <ProductViewMenu product={product} reviewHref={`${reviewBasePath}/${product._id}`} language={language} />
-                        <button onClick={() => onEdit(product)} className="p-2 text-zinc-400 hover:text-marine-primary hover:bg-red-50 dark:hover:bg-marine-cyan/10 rounded-xl transition-colors" title={t.edit || 'Edit'}>
+                        <button onClick={() => onEdit(product)} className="p-2 text-zinc-400 hover:text-marine-primary hover:bg-marine-mist dark:hover:bg-marine-cyan/10 rounded-xl transition-colors" title={t.edit || 'Edit'}>
                           <Edit2 size={16} />
                         </button>
                         {onDelete && (

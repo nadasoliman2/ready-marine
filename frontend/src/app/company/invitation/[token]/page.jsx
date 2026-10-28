@@ -241,7 +241,7 @@ export default function CompanyInvitationPage() {
         <Shell isAr={isAr}>
             <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-marine-cyan/15 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-5"><Building2 size={32} /></div>
-                <h1 className="text-2xl font-black text-white leading-snug">
+                <h1 className="text-2xl font-black text-zinc-900 leading-snug">
                     {manager
                         ? (isAr ? `دعوة لإدارة حساب ${company.name} على Ready Marine` : `You're invited to manage ${company.name} on Ready Marine`)
                         : (isAr ? `${company.name} ${ot.v('ضافتك', 'ضافك')} لحساب ${ot.the} على Ready Marine` : `${company.name} added you to its Ready Marine ${ot.one} account`)}
@@ -251,9 +251,9 @@ export default function CompanyInvitationPage() {
                 </p>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-6 space-y-3">
+            <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-5 mb-6 space-y-3">
                 {manager ? (
-                    <p className="text-zinc-300 text-sm">
+                    <p className="text-zinc-600 text-sm">
                         {isAr
                             ? `هتقدر تضيف ${ot.members} وتحدد ليميت كل واحد، وتتابع المشتريات والفواتير، وتطلب قطع غيار لعربيات ${ot.the}.`
                             : `You will add ${ot.members} and set their limits, follow purchases and invoices, and order parts for ${ot.one} cars.`}
@@ -262,20 +262,20 @@ export default function CompanyInvitationPage() {
                     <>
                         {terms && (
                             <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-xl bg-white/5 p-3">
-                                    <p className="text-[11px] font-bold text-zinc-400 uppercase flex items-center gap-1.5"><Wallet size={12} />{isAr ? 'ليميتك الشهري' : 'Your monthly limit'}</p>
-                                    <p className="text-white font-black mt-1 tabular-nums" dir="ltr">{formatLimit(terms.limit, isAr)}</p>
+                                <div className="rounded-xl bg-white border border-zinc-200/80 p-3">
+                                    <p className="text-[11px] font-bold text-zinc-500 uppercase flex items-center gap-1.5"><Wallet size={12} />{isAr ? 'ليميتك الشهري' : 'Your monthly limit'}</p>
+                                    <p className="text-zinc-900 font-black mt-1 tabular-nums" dir="ltr">{formatLimit(terms.limit, isAr)}</p>
                                 </div>
-                                <div className="rounded-xl bg-white/5 p-3">
-                                    <p className="text-[11px] font-bold text-zinc-400 uppercase flex items-center gap-1.5"><MapPin size={12} />{isAr ? `${ot.theBranch}` : `${ot.Branch}`}</p>
-                                    <p className="text-white font-black mt-1 truncate">{terms.office_name || '—'}</p>
+                                <div className="rounded-xl bg-white border border-zinc-200/80 p-3">
+                                    <p className="text-[11px] font-bold text-zinc-500 uppercase flex items-center gap-1.5"><MapPin size={12} />{isAr ? `${ot.theBranch}` : `${ot.Branch}`}</p>
+                                    <p className="text-zinc-900 font-black mt-1 truncate">{terms.office_name || '—'}</p>
                                 </div>
                             </div>
                         )}
-                        <p className="text-white text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                            <ShieldCheck size={14} className="text-emerald-400" /> {isAr ? 'الخصوصية' : 'Privacy'}
+                        <p className="text-zinc-900 text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                            <ShieldCheck size={14} className="text-emerald-600" /> {isAr ? 'الخصوصية' : 'Privacy'}
                         </p>
-                        <ul className="text-zinc-400 text-sm space-y-2 list-disc list-inside">
+                        <ul className="text-zinc-600 text-sm space-y-2 list-disc list-inside">
                             <li>{isAr ? `${ot.the} ${ot.v('هتشوف', 'هيشوف')} الأوردرات اللي بتطلبها على ${ot.v('حسابها', 'حسابه')} بس: إيه وبكام وامتى.` : `The ${ot.one} sees only the orders you place on its account: what, how much and when.`}</li>
                             <li>{isAr ? 'مشترياتك الشخصية اللي بتدفعها بنفسك مش هتظهرلها خالص.' : 'Purchases you pay for yourself are never shown to it.'}</li>
                             <li>{isAr ? 'الليميت بيتجدد أول كل شهر وشامل الشحن.' : 'The limit renews on the 1st of every month and includes shipping.'}</li>
@@ -410,8 +410,8 @@ export default function CompanyInvitationPage() {
 
 function Shell({ children, isAr }) {
     return (
-        <div className="min-h-screen bg-[#111315] flex items-center justify-center px-4 py-12" dir={isAr ? 'rtl' : 'ltr'}>
-            <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">{children}</div>
+        <div className="min-h-screen bg-marine-canvas flex items-center justify-center px-4 py-12" dir={isAr ? 'rtl' : 'ltr'}>
+            <div className="w-full max-w-lg bg-white border border-zinc-200/80 rounded-3xl p-6 sm:p-8 shadow-xl">{children}</div>
         </div>
     );
 }
@@ -419,7 +419,7 @@ function Shell({ children, isAr }) {
 function Field({ label, children }) {
     return (
         <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{label}</label>
+            <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{label}</label>
             {children}
         </div>
     );

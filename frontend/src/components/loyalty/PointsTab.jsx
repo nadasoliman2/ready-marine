@@ -78,9 +78,9 @@ export default function PointsTab({ isAr }) {
 
     if (error) {
         return (
-            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-3">
-                <AlertCircle size={18} className="text-red-400 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-red-300">{error}</p>
+            <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
+                <AlertCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-600">{error}</p>
             </div>
         );
     }
@@ -97,11 +97,11 @@ export default function PointsTab({ isAr }) {
     if (!wallet?.enabled && !hasAnyPoints) {
         return (
             <div className="space-y-6 animate-in fade-in duration-500">
-                <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                     <Sparkles className="text-marine-primary" /> {copy.myPoints}
                 </h3>
-                <div className="p-6 bg-white/5 border border-white/10 rounded-2xl text-center">
-                    <p className="text-zinc-400 text-sm">{copy.noPointsYet}</p>
+                <div className="p-6 bg-zinc-50 border border-zinc-200 rounded-2xl text-center">
+                    <p className="text-zinc-500 text-sm">{copy.noPointsYet}</p>
                 </div>
             </div>
         );
@@ -109,7 +109,7 @@ export default function PointsTab({ isAr }) {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <h3 className="text-2xl font-black text-white flex items-center gap-3">
+            <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                 <Sparkles className="text-marine-primary" /> {copy.myPoints}
             </h3>
 
@@ -148,11 +148,11 @@ export default function PointsTab({ isAr }) {
             </div>
 
             {/* ---- Rules ---- */}
-            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
-                <p className="text-white font-bold mb-3 flex items-center gap-2">
+            <div className="p-5 bg-zinc-50/70 border border-zinc-200/80 rounded-2xl">
+                <p className="text-zinc-900 font-bold mb-3 flex items-center gap-2">
                     <Info size={16} className="text-marine-primary" />{copy.howItWorks}
                 </p>
-                <ul className="space-y-1.5 text-sm text-zinc-400">
+                <ul className="space-y-1.5 text-sm text-zinc-600">
                     <li>· {copy.earnRule(rules.spend_per_point, currency)}</li>
                     <li>· {copy.valueRule(Number(rules.point_value || 0).toFixed(2), currency)}</li>
                     <li>· {copy.capRule(rules.max_redemption_percent)}</li>
@@ -169,9 +169,9 @@ export default function PointsTab({ isAr }) {
 
             {/* ---- Ledger ---- */}
             <div>
-                <p className="text-white font-bold mb-4">{copy.history}</p>
+                <p className="text-zinc-900 font-bold mb-4">{copy.history}</p>
                 {history.length === 0 ? (
-                    <div className="p-6 bg-white/5 border border-white/10 rounded-2xl text-center">
+                    <div className="p-6 bg-zinc-50 border border-zinc-200 rounded-2xl text-center">
                         <p className="text-zinc-500 text-sm">{copy.noHistory}</p>
                     </div>
                 ) : (
@@ -181,10 +181,10 @@ export default function PointsTab({ isAr }) {
                             return (
                                 <div
                                     key={entry._id}
-                                    className="flex items-start justify-between gap-4 p-4 bg-white/5 border border-white/10 rounded-xl"
+                                    className="flex items-start justify-between gap-4 p-4 bg-white border border-zinc-200/80 rounded-xl shadow-xs"
                                 >
                                     <div className="min-w-0">
-                                        <p className="text-white text-sm font-bold">{loyaltyTypeLabel(entry.type, isAr)}</p>
+                                        <p className="text-zinc-900 text-sm font-bold">{loyaltyTypeLabel(entry.type, isAr)}</p>
                                         <p className="text-zinc-500 text-xs mt-0.5">{formatDate(entry.created_at, isAr)}</p>
                                         {entry.order && (
                                             <p className="text-zinc-500 text-xs mt-1">
@@ -194,16 +194,16 @@ export default function PointsTab({ isAr }) {
                                         {/* The reason matters most on a manual adjustment — it is
                                             the only explanation the customer will ever get. */}
                                         {entry.reason && (
-                                            <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{entry.reason}</p>
+                                            <p className="text-zinc-600 text-xs mt-1 leading-relaxed">{entry.reason}</p>
                                         )}
                                         {entry.type === 'earn_pending' && entry.available_at && (
-                                            <p className="text-amber-400/80 text-[11px] mt-1">
+                                            <p className="text-amber-600 text-[11px] mt-1">
                                                 {isAr ? 'متاحة في' : 'Available on'} {formatDate(entry.available_at, isAr)}
                                             </p>
                                         )}
                                     </div>
                                     <div className="text-end flex-shrink-0">
-                                        <p className={`font-black text-sm ${sign === '+' ? 'text-emerald-400' : 'text-red-400'}`}>
+                                        <p className={`font-black text-sm ${sign === '+' ? 'text-emerald-600' : 'text-red-500'}`}>
                                             {sign}{entry.points} {copy.points}
                                         </p>
                                         {entry.monetary_value > 0 && (
@@ -221,7 +221,7 @@ export default function PointsTab({ isAr }) {
                                 type="button"
                                 onClick={loadMore}
                                 disabled={loadingMore}
-                                className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-zinc-300 font-bold text-sm hover:bg-white/10 transition-colors disabled:opacity-50"
+                                className="w-full py-3 rounded-xl bg-zinc-100 border border-zinc-200 text-zinc-700 font-bold text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50"
                             >
                                 {loadingMore ? <Loader2 size={16} className="animate-spin mx-auto" /> : copy.loadMore}
                             </button>
@@ -236,12 +236,12 @@ export default function PointsTab({ isAr }) {
 function BalanceCard({ tone, icon: Icon, label, points, valueLabel, hint, unit }) {
     const isPrimary = tone === 'primary';
     return (
-        <div className={`p-5 rounded-2xl border ${isPrimary ? 'bg-marine-cyan/10 border-marine-cyan/30' : 'bg-white/5 border-white/10'}`}>
-            <p className="text-zinc-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+        <div className={`p-5 rounded-2xl border ${isPrimary ? 'bg-gradient-to-br from-marine-mist/70 to-marine-canvas border-marine-cyan/30' : 'bg-white border-zinc-200/80 shadow-xs'}`}>
+            <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                 {Icon ? <Icon size={12} /> : <Sparkles size={12} className="text-marine-primary" />}
                 {label}
             </p>
-            <p className={`text-3xl font-black mt-2 ${isPrimary ? 'text-white' : 'text-zinc-300'}`}>
+            <p className={`text-3xl font-black mt-2 ${isPrimary ? 'text-zinc-900' : 'text-zinc-800'}`}>
                 {points} <span className="text-sm font-bold text-zinc-500">{unit}</span>
             </p>
             <p className="text-zinc-500 text-sm mt-1">≈ {valueLabel}</p>

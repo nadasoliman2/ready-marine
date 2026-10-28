@@ -91,16 +91,16 @@ export default function Sidebar({ isOpen, setIsOpen }) {
               onClick={() => setIsOpen(false)}
               className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${
                 isActive 
-                  ? 'bg-red-50 dark:bg-marine-cyan/10 text-marine-primary shadow-sm' 
-                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-white/5'
+                  ? 'bg-marine-mist dark:bg-marine-cyan/10 text-marine-primary shadow-sm' 
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-marine-primary dark:hover:text-white hover:bg-marine-mist/50 dark:hover:bg-white/5'
               }`}
             >
               <item.icon size={20} className={isActive ? 'text-marine-primary' : 'text-zinc-400 dark:text-zinc-500'} />
               <span className="flex-1 truncate">{item.name}</span>
               {item.badge > 0 && (
                 <span
-                  className={`min-w-[1.35rem] h-[1.35rem] px-1.5 rounded-full bg-marine-cyan text-white text-[10px] font-black leading-none flex items-center justify-center shadow-sm shadow-red-500/20 ring-2 ${
-                    isActive ? 'ring-red-50 dark:ring-[#2B1719]' : 'ring-white dark:ring-[#14171A]'
+                  className={`min-w-[1.35rem] h-[1.35rem] px-1.5 rounded-full bg-marine-cyan text-white text-[10px] font-black leading-none flex items-center justify-center shadow-sm shadow-marine-cyan/20 ring-2 ${
+                    isActive ? 'ring-marine-mist dark:ring-marine-cyan/20' : 'ring-white dark:ring-[#14171A]'
                   }`}
                   aria-label={isAr ? `${item.badge} طلبات جديدة` : `${item.badge} new orders`}
                   title={isAr ? `${item.badge} طلبات جديدة` : `${item.badge} new orders`}

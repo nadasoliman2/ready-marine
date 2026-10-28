@@ -69,7 +69,7 @@ export default function ProfilePage() {
 
 function ProfilePageFallback() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#111315]">
+    <div className="min-h-screen flex items-center justify-center bg-marine-canvas">
       <Loader2 size={40} className="text-marine-primary animate-spin" />
     </div>
   );
@@ -406,10 +406,10 @@ function ProfilePageContent() {
 
   if (!isMounted || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#111315]">
+      <div className="min-h-screen flex items-center justify-center bg-marine-canvas">
         <div className="text-center">
           <Loader2 size={40} className="text-marine-primary animate-spin mx-auto mb-4" />
-          <p className="text-zinc-400 animate-pulse">{isAr ? 'جاري التحميل...' : 'Loading...'}</p>
+          <p className="text-zinc-500 font-bold animate-pulse">{isAr ? 'جاري التحميل...' : 'Loading...'}</p>
         </div>
       </div>
     );
@@ -417,23 +417,23 @@ function ProfilePageContent() {
 
   if (error || !profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#111315] px-4">
-        <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-3xl p-8 text-center backdrop-blur-xl">
-          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Settings className="text-red-400" size={32} />
+      <div className="min-h-screen flex items-center justify-center bg-marine-canvas px-4">
+        <div className="max-w-md w-full bg-white border border-zinc-200/80 rounded-3xl p-8 text-center shadow-lg">
+          <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Settings className="text-red-500" size={32} />
           </div>
-          <h3 className="text-white font-bold text-xl mb-2">{isAr ? 'عذراً، حدث خطأ' : 'Something went wrong'}</h3>
-          <p className="text-zinc-400 mb-8">{error || (isAr ? 'تعذر تحميل بيانات الملف الشخصي. يرجى التأكد من تشغيل الخادم.' : 'Could not load profile data. Please ensure the backend server is running.')}</p>
+          <h3 className="text-zinc-900 font-bold text-xl mb-2">{isAr ? 'عذراً، حدث خطأ' : 'Something went wrong'}</h3>
+          <p className="text-zinc-500 mb-8">{error || (isAr ? 'تعذر تحميل بيانات الملف الشخصي. يرجى التأكد من تشغيل الخادم.' : 'Could not load profile data. Please ensure the backend server is running.')}</p>
           <button 
             onClick={() => window.location.reload()}
-            className="w-full bg-marine-cyan text-white font-bold py-3 rounded-xl hover:bg-marine-cyan-dark transition-all"
+            className="w-full bg-marine-cyan text-white font-bold py-3 rounded-xl hover:bg-marine-cyan-dark transition-all shadow-md"
           >
             {isAr ? 'إعادة المحاولة' : 'Try Again'}
           </button>
           {/* The way out when the account cannot load: this page holds the only sign-out. */}
           <button
             onClick={logout}
-            className="w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-red-400 hover:bg-red-500/10 transition-all"
+            className="w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-red-500 hover:bg-red-50 transition-all"
           >
             <LogOut size={18} />
             {t.logout}
@@ -466,16 +466,16 @@ function ProfilePageContent() {
   const activeTab = tabs.some(tab => tab.id === requestedTab) ? requestedTab : 'info';
 
   return (
-    <div className="min-h-screen bg-[#111315] py-12 px-4" dir={isAr ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-marine-canvas py-10 px-4 sm:px-6" dir={isAr ? 'rtl' : 'ltr'}>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8">
           
           {/* Sidebar */}
           <div className="w-full md:w-72 flex-shrink-0">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sticky top-24">
+            <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 sticky top-24 shadow-sm">
               <div className="flex flex-col items-center text-center mb-8">
                 <div className="relative mb-4">
-                  <div className="w-20 h-20 rounded-full bg-marine-cyan flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-red-950/20 overflow-hidden">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-marine-primary to-marine-cyan flex items-center justify-center text-white text-3xl font-black shadow-md shadow-marine-cyan/25 overflow-hidden">
                     {profile?.profile_image ? (
                       <img src={resolveAssetUrl(profile.profile_image)} alt={profile?.name || 'Profile'} className="w-full h-full object-cover" />
                     ) : (
@@ -483,14 +483,14 @@ function ProfilePageContent() {
                     )}
                   </div>
                   {user?.role !== 'vendor' && (
-                    <label className="absolute -bottom-1 -end-1 w-8 h-8 rounded-full bg-white text-marine-primary border border-white/20 shadow-lg flex items-center justify-center cursor-pointer hover:bg-zinc-100 transition-colors">
+                    <label className="absolute -bottom-1 -end-1 w-8 h-8 rounded-full bg-white text-marine-primary border border-zinc-200 shadow-md flex items-center justify-center cursor-pointer hover:bg-marine-mist transition-colors">
                       {uploadingPhoto ? <Loader2 size={15} className="animate-spin" /> : <Camera size={15} />}
                       <input type="file" accept="image/jpeg,image/jpg,image/png,image/webp" onChange={handleProfilePhotoChange} className="hidden" disabled={uploadingPhoto} />
                     </label>
                   )}
                 </div>
-                <h2 className="text-white font-bold text-xl">{profile?.store_name || profile?.name}</h2>
-                {user?.role === 'vendor' && <span className="bg-red-500/20 text-red-400 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md mt-1 mb-1">Vendor</span>}
+                <h2 className="text-zinc-900 font-bold text-xl">{profile?.store_name || profile?.name}</h2>
+                {user?.role === 'vendor' && <span className="bg-marine-mist text-marine-primary border border-marine-cyan/20 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md mt-1 mb-1">Vendor</span>}
                 <p className="text-zinc-500 text-sm mt-1">{profile?.email}</p>
               </div>
 
@@ -502,8 +502,8 @@ function ProfilePageContent() {
                     onClick={() => setMessage({ type: '', text: '' })}
                     className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all ${
                       activeTab === tab.id 
-                        ? 'bg-marine-cyan text-white shadow-lg' 
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-marine-cyan text-white shadow-md shadow-marine-cyan/25' 
+                        : 'text-zinc-600 hover:text-marine-primary hover:bg-marine-mist/60'
                     }`}
                   >
                     <tab.icon size={18} />
@@ -519,7 +519,7 @@ function ProfilePageContent() {
                 ))}
                 <button
                   onClick={logout}
-                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-red-400 hover:bg-red-500/10 transition-all mt-4"
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-red-500 hover:text-red-600 hover:bg-red-50 transition-all mt-4"
                 >
                   <LogOut size={18} />
                   <span>{t.logout}</span>
@@ -530,11 +530,11 @@ function ProfilePageContent() {
 
           {/* Main Content */}
           <div className="flex-1">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 min-h-[500px] shadow-2xl">
+            <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 sm:p-8 min-h-[500px] shadow-sm">
               
               {message.text && (
                 <div className={`mb-8 p-4 rounded-xl text-sm font-bold flex items-center gap-3 animate-in fade-in slide-in-from-top-4 ${
-                  message.type === 'success' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'
+                  message.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-600'
                 }`}>
                    <CheckCircle2 size={18} />
                    <span>{message.text}</span>
@@ -543,55 +543,55 @@ function ProfilePageContent() {
 
               {activeTab === 'info' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
-                  <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                  <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                     {user?.role === 'vendor' ? <Settings className="text-marine-primary" /> : <User className="text-marine-primary" />}
                     {user?.role === 'vendor' ? (t.storeInfo || 'Store Info') : t.personalInfo}
                   </h3>
                   <form onSubmit={handleInfoSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                       <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{user?.role === 'vendor' ? 'Store Name' : t.fullName}</label>
+                       <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{user?.role === 'vendor' ? 'Store Name' : t.fullName}</label>
                       <input 
                         type="text" 
                         required
                         value={infoForm.name}
                         onChange={e => setInfoForm({ ...infoForm, name: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan transition-all"
+                        className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white focus:ring-2 focus:ring-marine-cyan/15 transition-all text-sm"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t.emailAddress}</label>
+                      <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{t.emailAddress}</label>
                       <input 
                         type="email" 
                         required
                         value={infoForm.email}
                         onChange={e => setInfoForm({ ...infoForm, email: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan transition-all"
+                        className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white focus:ring-2 focus:ring-marine-cyan/15 transition-all text-sm"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t.phoneNumber}</label>
+                      <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{t.phoneNumber}</label>
                       <input 
                         type="tel" 
                         required
                         value={infoForm.phone}
                         onChange={e => setInfoForm({ ...infoForm, phone: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan transition-all"
+                        className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white focus:ring-2 focus:ring-marine-cyan/15 transition-all text-sm"
                       />
                     </div>
                     {user?.role !== 'vendor' && (
                       <div className="space-y-2">
-                        <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">
+                        <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">
                           {isAr ? 'لغة الإشعارات' : 'Notification language'}
                         </label>
                         <select
                           value={infoForm.preferred_language || 'en'}
                           onChange={e => setInfoForm({ ...infoForm, preferred_language: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan transition-all"
+                          className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white focus:ring-2 focus:ring-marine-cyan/15 transition-all text-sm"
                         >
-                          <option value="en" className="text-zinc-900">English</option>
-                          <option value="ar" className="text-zinc-900">العربية</option>
+                          <option value="en">English</option>
+                          <option value="ar">العربية</option>
                         </select>
-                        <p className="text-zinc-600 text-[11px]">
+                        <p className="text-zinc-500 text-[11px]">
                           {isAr
                             ? 'تُرسل رسائل البريد والإشعارات بهذه اللغة، بغض النظر عن لغة تصفح المُرسِل.'
                             : 'Emails and notifications use this language, regardless of the sender’s browsing language.'}
@@ -601,7 +601,7 @@ function ProfilePageContent() {
                     <div className="md:col-span-2 pt-4">
                       <button
                         disabled={submitting}
-                        className="bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg hover:-translate-y-0.5 flex items-center gap-2"
+                        className="bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.35)] hover:shadow-[0_6px_20px_rgba(0,166,206,0.25)] hover:-translate-y-0.5 flex items-center gap-2"
                       >
                         {submitting && <Loader2 size={16} className="animate-spin" />}
                         {isAr ? 'حفظ التغييرات' : 'Save Changes'}
@@ -624,12 +624,12 @@ function ProfilePageContent() {
 
               {activeTab === 'security' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
-                  <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                  <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                     <Lock className="text-marine-primary" /> {isAr ? 'تغيير كلمة المرور' : 'Change Password'}
                   </h3>
                   <form onSubmit={handlePasswordSubmit} className="max-w-md space-y-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{isAr ? 'كلمة المرور القديمة' : 'Old Password'}</label>
+                      <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{isAr ? 'كلمة المرور القديمة' : 'Old Password'}</label>
                       <PasswordField
                         value={passForm.oldPassword}
                         visible={showPass.old}
@@ -639,7 +639,7 @@ function ProfilePageContent() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{isAr ? 'كلمة المرور الجديدة' : 'New Password'}</label>
+                      <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{isAr ? 'كلمة المرور الجديدة' : 'New Password'}</label>
                       <PasswordField
                         value={passForm.newPassword}
                         visible={showPass.next}
@@ -649,7 +649,7 @@ function ProfilePageContent() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{isAr ? 'تأكيد كلمة المرور' : 'Confirm Password'}</label>
+                      <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{isAr ? 'تأكيد كلمة المرور' : 'Confirm Password'}</label>
                       <PasswordField
                         value={passForm.confirmPassword}
                         visible={showPass.confirm}
@@ -660,7 +660,7 @@ function ProfilePageContent() {
                     </div>
                     <button 
                       disabled={submitting}
-                      className="bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg hover:-translate-y-0.5"
+                      className="bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.35)] hover:shadow-[0_6px_20px_rgba(0,166,206,0.25)] hover:-translate-y-0.5"
                     >
                       {submitting ? <Loader2 size={16} className="animate-spin inline mr-2" /> : null}
                       {isAr ? 'تحديث كلمة المرور' : 'Update Password'}
@@ -672,12 +672,12 @@ function ProfilePageContent() {
               {activeTab === 'addresses' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                    <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                       <MapPin className="text-marine-primary" /> {t.addresses}
                     </h3>
                     <button 
                       onClick={() => { setShowAddressModal(true); setEditingAddressId(null); setAddressForm({ label: '', recipient_name: '', phone: '', full_address: '', shipping_country: '', shipping_city: '', is_default: false }); }}
-                      className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg"
+                      className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.35)] hover:shadow-[0_6px_20px_rgba(0,166,206,0.25)]"
                     >
                       <Plus size={18} /> {isAr ? 'إضافة عنوان' : 'Add Address'}
                     </button>
@@ -685,29 +685,29 @@ function ProfilePageContent() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {profile?.addresses?.map(addr => (
-                      <div key={addr._id} className="bg-white/5 border border-white/10 rounded-2xl p-6 relative group/addr transition-all hover:bg-white/10 hover:border-marine-cyan/30 shadow-xl">
+                      <div key={addr._id} className="bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-6 relative group/addr transition-all hover:bg-white hover:border-marine-cyan/40 hover:shadow-md">
                         {addr.is_default && (
-                          <span className="absolute top-4 end-4 bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md">Default</span>
+                          <span className="absolute top-4 end-4 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md">Default</span>
                         )}
                         {addr.label && (
-                          <span className="inline-block bg-white/10 text-zinc-300 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md mb-2">
+                          <span className="inline-block bg-marine-mist text-marine-primary border border-marine-cyan/20 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md mb-2">
                             {addr.label}
                           </span>
                         )}
-                        <h4 className="text-white font-bold text-lg mb-2">{addr.recipient_name}</h4>
-                        <p className="text-zinc-400 text-sm mb-1">{addr.phone}</p>
+                        <h4 className="text-zinc-900 font-bold text-lg mb-2">{addr.recipient_name}</h4>
+                        <p className="text-zinc-600 text-sm mb-1">{addr.phone}</p>
                         <p className="text-zinc-500 text-sm italic">{addr.full_address}</p>
                         
                         <div className="flex items-center gap-4 mt-6">
                           <button 
                             onClick={() => { setEditingAddressId(addr._id); setAddressForm(addr); setShowAddressModal(true); }}
-                            className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-xs font-bold transition-colors"
+                            className="flex items-center gap-2 text-marine-primary hover:text-marine-cyan text-xs font-bold transition-colors"
                           >
                             <Edit size={14} /> {isAr ? 'تعديل' : 'Edit'}
                           </button>
                           <button 
                             onClick={() => deleteAddressById(addr._id)}
-                            className="flex items-center gap-2 text-red-500 hover:text-red-400 text-xs font-bold transition-colors"
+                            className="flex items-center gap-2 text-red-500 hover:text-red-700 text-xs font-bold transition-colors"
                           >
                             <Trash2 size={14} /> {isAr ? 'حذف' : 'Delete'}
                           </button>
@@ -718,71 +718,71 @@ function ProfilePageContent() {
 
                   {showAddressModal && (
                     <Overlay className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowAddressModal(false)} />
-                      <div className="relative bg-[#09090b] border border-white/10 w-full max-w-lg rounded-3xl p-8 shadow-2xl overflow-hidden">
-                        <h4 className="text-xl font-black text-white mb-6 flex items-center gap-2">
+                      <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm" onClick={() => setShowAddressModal(false)} />
+                      <div className="relative bg-white border border-zinc-200 w-full max-w-lg rounded-3xl p-8 shadow-2xl overflow-hidden">
+                        <h4 className="text-xl font-black text-zinc-900 mb-6 flex items-center gap-2">
                           {editingAddressId ? (isAr ? 'تعديل العنوان' : 'Edit Address') : (isAr ? 'عنوان جديد' : 'New Address')}
                         </h4>
                         <form onSubmit={handleAddressSubmit} className="space-y-4">
                           <div className="space-y-2">
-                            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                            <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                               {isAr ? 'اسم مختصر (اختياري)' : 'Label (optional)'}
                             </label>
                             <input
                               type="text" maxLength={40} value={addressForm.label || ''}
                               onChange={e => setAddressForm({...addressForm, label: e.target.value})}
                               placeholder={isAr ? 'المنزل، العمل، منزل الوالدين' : 'Home, Work, Parents’ Home'}
-                              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white text-sm"
                             />
-                            <p className="text-zinc-600 text-[11px]">
+                            <p className="text-zinc-500 text-[11px]">
                               {isAr
                                 ? 'يساعد أفراد عائلتك على التعرّف على العنوان بسرعة عند الطلب.'
                                 : 'Helps your family members recognise this address when they order.'}
                             </p>
                           </div>
                           <div className="space-y-2">
-                            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{t.fullName}</label>
+                            <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">{t.fullName}</label>
                             <input 
                               type="text" required value={addressForm.recipient_name}
                               onChange={e => setAddressForm({...addressForm, recipient_name: e.target.value})}
-                              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white text-sm"
                             />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{t.phoneNumber}</label>
+                            <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">{t.phoneNumber}</label>
                             <input 
                               type="tel" required value={addressForm.phone}
                               onChange={e => setAddressForm({...addressForm, phone: e.target.value})}
-                              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white text-sm"
                             />
                           </div>
                           <ShippingZoneSelect
-                            dark
+                            dark={false}
                             country={addressForm.shipping_country || ''}
                             city={addressForm.shipping_city || ''}
                             onChange={({ country, city }) => setAddressForm(f => ({ ...f, shipping_country: country, shipping_city: city }))}
                           />
                           <div className="space-y-2">
-                            <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{isAr ? 'العنوان الكامل' : 'Full Address'}</label>
+                            <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">{isAr ? 'العنوان الكامل' : 'Full Address'}</label>
                             <textarea
                               required rows="3" value={addressForm.full_address}
                               onChange={e => setAddressForm({...addressForm, full_address: e.target.value})}
-                              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white text-sm"
                             />
                           </div>
-                          <label className="flex items-center gap-3 text-white text-sm cursor-pointer py-2 group">
+                          <label className="flex items-center gap-3 text-zinc-800 text-sm cursor-pointer py-2 group">
                             <input 
                               type="checkbox" checked={addressForm.is_default}
                               onChange={e => setAddressForm({...addressForm, is_default: e.target.checked})}
-                              className="w-4 h-4 rounded border-white/20 bg-white/5 text-marine-primary"
+                              className="w-4 h-4 rounded border-zinc-300 bg-white text-marine-primary accent-marine-cyan"
                             />
                             <span>{isAr ? 'ضبط كعنوان افتراضي' : 'Set as default address'}</span>
                           </label>
                           <div className="pt-4 flex gap-4">
-                            <button type="submit" disabled={submitting} className="flex-1 bg-marine-cyan text-white py-3 rounded-xl font-bold hover:bg-marine-cyan-dark transition-all">
+                            <button type="submit" disabled={submitting} className="flex-1 bg-marine-cyan text-white py-3 rounded-xl font-bold hover:bg-marine-cyan-dark transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.35)]">
                               {isAr ? 'حفظ' : 'Save'}
                             </button>
-                            <button type="button" onClick={() => setShowAddressModal(false)} className="flex-1 bg-white/5 text-zinc-400 py-3 rounded-xl font-bold hover:bg-white/10 transition-all">
+                            <button type="button" onClick={() => setShowAddressModal(false)} className="flex-1 bg-zinc-100 text-zinc-700 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-all">
                               {isAr ? 'إلغاء' : 'Cancel'}
                             </button>
                           </div>
@@ -796,13 +796,13 @@ function ProfilePageContent() {
               {activeTab === 'recommendations' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
                   <div>
-                    <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                    <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                       <Sparkles className="text-marine-primary" /> {isAr ? 'ترشيحات ريدي مارين' : 'Ready Marine Recommendations'}
                     </h3>
-                    <p className="text-zinc-400 text-sm mt-2">
+                    <p className="text-zinc-500 text-sm mt-2">
                       {isAr
-                        ? 'قطع غيار مخصوصة لعربياتك، ومعاها منتجات تنفع مع أي عربية، الأكثر مبيعًا الأول. مش هنرشحلك حاجة اشتريتها في آخر شهر.'
-                        : 'Parts made for your cars, with products that fit any car, best sellers first. Nothing you bought in the last month.'}
+                        ? 'قطع غيار مخصوصة لقواربك، ومعاها منتجات تنفع مع أي يخت أو قارب، الأكثر مبيعًا الأول. مش هنرشحلك حاجة اشتريتها في آخر شهر.'
+                        : 'Parts tailored for your vessels, with universal marine products, best sellers first. Nothing you bought in the last month.'}
                     </p>
                   </div>
 
@@ -811,9 +811,9 @@ function ProfilePageContent() {
                       <Loader2 size={32} className="animate-spin text-marine-primary" />
                     </div>
                   ) : (profile?.cars?.length ?? 0) === 0 ? (
-                    <div className="bg-white/5 rounded-3xl p-12 text-center border border-dashed border-white/10">
-                      <Ship size={48} className="text-zinc-600 mx-auto mb-4" />
-                      <p className="text-zinc-400 font-bold">
+                    <div className="bg-zinc-50 rounded-3xl p-12 text-center border border-dashed border-zinc-200">
+                      <Ship size={48} className="text-zinc-400 mx-auto mb-4" />
+                      <p className="text-zinc-700 font-bold">
                         {isAr ? 'أضف مركب إلى أسطولك لعرض الترشيحات المناسبة له.' : 'Add a vessel to your fleet to get recommendations tailored to it.'}
                       </p>
                       <Link href="/profile?tab=garage" className="text-marine-primary mt-2 inline-block hover:underline font-bold">
@@ -821,9 +821,9 @@ function ProfilePageContent() {
                       </Link>
                     </div>
                   ) : recommendations.length === 0 ? (
-                    <div className="bg-white/5 rounded-3xl p-12 text-center border border-dashed border-white/10">
-                      <Sparkles size={48} className="text-zinc-600 mx-auto mb-4" />
-                      <p className="text-zinc-400 font-bold">
+                    <div className="bg-zinc-50 rounded-3xl p-12 text-center border border-dashed border-zinc-200">
+                      <Sparkles size={48} className="text-zinc-400 mx-auto mb-4" />
+                      <p className="text-zinc-700 font-bold">
                         {isAr ? 'لا توجد ترشيحات متاحة لمراكبك حاليًا.' : 'No recommendations available for your vessels right now.'}
                       </p>
                       <Link href="/products" className="text-marine-primary mt-2 inline-block hover:underline font-bold">
@@ -842,12 +842,12 @@ function ProfilePageContent() {
 
               {activeTab === 'garage' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
-                  <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                  <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                     <Ship className="text-marine-primary" /> {isAr ? 'أسطولي' : 'My Fleet'}
                   </h3>
                   
-                  <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
-                    <h4 className="text-lg font-bold text-white mb-4">{isAr ? 'إضافة مركب جديد' : 'Add a New Vessel'}</h4>
+                  <div className="bg-zinc-50/70 border border-zinc-200/80 rounded-3xl p-6">
+                    <h4 className="text-lg font-bold text-zinc-900 mb-4">{isAr ? 'إضافة مركب جديد' : 'Add a New Vessel'}</h4>
                     <form onSubmit={handleAddCar} className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-2">
                        {/* Searchable, the makes with their logos, as everywhere a car is picked. */}
                        <SearchableSelect
@@ -856,7 +856,7 @@ function ProfilePageContent() {
                          options={makeOptions(carMetadata?.carBrands)}
                          placeholder={isAr ? 'اختر الماركة' : 'Select Brand'}
                          isAr={isAr}
-                         buttonClassName="w-full bg-white/5 border border-white/10 text-white rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan"
+                         buttonClassName="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan text-sm"
                        />
                        <SearchableSelect
                          value={carForm.car_model_id}
@@ -865,7 +865,7 @@ function ProfilePageContent() {
                          placeholder={isAr ? 'اختر الموديل' : 'Select Model'}
                          disabled={!carForm.car_brand_id}
                          isAr={isAr}
-                         buttonClassName="w-full bg-white/5 border border-white/10 text-white rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan"
+                         buttonClassName="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan text-sm"
                        />
                        <SearchableSelect
                          value={carForm.year}
@@ -874,10 +874,10 @@ function ProfilePageContent() {
                          placeholder={isAr ? 'سنة الصنع' : 'Select Year'}
                          disabled={!carForm.car_model_id}
                          isAr={isAr}
-                         buttonClassName="w-full bg-white/5 border border-white/10 text-white rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan"
+                         buttonClassName="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan text-sm"
                        />
                        <div className="sm:col-span-3 pt-2">
-                         <button disabled={submitting || !carForm.year} type="submit" className="bg-marine-cyan text-white font-bold py-3 px-6 rounded-xl hover:bg-marine-cyan-dark transition-all disabled:opacity-50">
+                         <button disabled={submitting || !carForm.year} type="submit" className="bg-marine-cyan text-white font-bold py-3 px-6 rounded-xl hover:bg-marine-cyan-dark transition-all disabled:opacity-50 shadow-[0_4px_14px_0_rgba(0,166,206,0.35)]">
                             {isAr ? 'حفظ المركب' : 'Save Vessel'}
                          </button>
                        </div>
@@ -886,15 +886,15 @@ function ProfilePageContent() {
 
                   <div className="space-y-4">
                     {profile?.cars?.map(car => (
-                      <div key={car._id} className="flex flex-wrap items-center justify-between gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl hover:border-marine-cyan/30 transition-all shadow-xl">
+                      <div key={car._id} className="flex flex-wrap items-center justify-between gap-4 bg-white border border-zinc-200/80 p-5 rounded-2xl hover:border-marine-cyan/30 transition-all shadow-sm">
                          <div>
                             <div className="flex items-center gap-2 mb-1">
                                <Ship size={16} className="text-marine-primary" />
-                               <h4 className="text-white font-bold text-lg">{car.car_brand_name} {car.car_model_name}</h4>
+                               <h4 className="text-zinc-900 font-bold text-lg">{car.car_brand_name} {car.car_model_name}</h4>
                             </div>
-                            <p className="text-zinc-400 text-sm font-medium">{car.year}</p>
+                            <p className="text-zinc-500 text-sm font-medium">{car.year}</p>
                          </div>
-                         <button onClick={() => deleteCarById(car._id)} className="flex items-center gap-2 text-red-500 hover:text-red-400 text-xs font-bold transition-colors bg-red-500/10 px-3 py-2 rounded-lg">
+                         <button onClick={() => deleteCarById(car._id)} className="flex items-center gap-2 text-red-500 hover:text-red-700 text-xs font-bold transition-colors bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg">
                             <Trash2 size={14} /> {isAr ? 'حذف' : 'Remove'}
                          </button>
                       </div>
@@ -943,21 +943,21 @@ function ProfilePageContent() {
                 return (
                 <div className="space-y-8 animate-in fade-in duration-500">
                   <div className="flex items-center justify-between flex-wrap gap-4">
-                    <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                    <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                       {isHistory ? <History className="text-marine-primary" /> : <Package className="text-marine-primary" />}
                       {isHistory ? (isAr ? 'سجل الطلبات' : 'Order History') : (isAr ? 'الطلبات الجارية' : 'Active Orders')}
                     </h3>
                     <Link href="/profile/returns"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-white/5 border border-white/10 text-zinc-300 hover:bg-marine-cyan/10 hover:border-marine-cyan/30 hover:text-marine-primary transition-all">
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-zinc-50 border border-zinc-200 text-zinc-700 hover:bg-marine-mist hover:border-marine-cyan/30 hover:text-marine-primary transition-all">
                       <RotateCcw size={14} />
                       {isAr ? 'طلبات الإرجاع' : 'My Returns'}
                     </Link>
                   </div>
 
                   {shown.length === 0 ? (
-                    <div className="bg-white/5 rounded-3xl p-12 text-center border border-dashed border-white/10">
-                      {isHistory ? <History size={48} className="text-zinc-600 mx-auto mb-4" /> : <Package size={48} className="text-zinc-600 mx-auto mb-4" />}
-                      <p className="text-zinc-400 font-bold">
+                    <div className="bg-zinc-50 rounded-3xl p-12 text-center border border-dashed border-zinc-200">
+                      {isHistory ? <History size={48} className="text-zinc-400 mx-auto mb-4" /> : <Package size={48} className="text-zinc-400 mx-auto mb-4" />}
+                      <p className="text-zinc-700 font-bold">
                         {isHistory
                           ? (isAr ? 'لا توجد طلبات منتهية بعد' : 'No past orders yet')
                           : (isAr ? 'لا توجد طلبات جارية حالياً' : 'No orders in progress right now')}
@@ -1011,15 +1011,15 @@ function ProfilePageContent() {
  */
 function OrderCard({ order, isAr, language, currency, cancellingParcelId, onCancelParcel, onShipParcelNow, onRequestReturn, onContactSupport, onReviewParcel, reviewingParcelId }) {
   return (
-      <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl hover:bg-white/[0.07] transition-all">
-        <div className="p-6 flex flex-wrap items-center justify-between gap-4 border-b border-white/5 bg-white/5">
+      <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+        <div className="p-6 flex flex-wrap items-center justify-between gap-4 border-b border-zinc-100 bg-zinc-50/70">
           <div className="space-y-1">
             <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{isAr ? 'رقم الطلب' : 'Order ID'}</p>
-            <p className="text-white font-bold text-sm">#{order._id.slice(-8).toUpperCase()}</p>
+            <p className="text-zinc-900 font-bold text-sm">#{order._id.slice(-8).toUpperCase()}</p>
           </div>
           <div className="space-y-1">
             <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{isAr ? 'التاريخ' : 'Date'}</p>
-            <p className="text-white font-bold text-sm">{new Date(order.created_at).toLocaleDateString(language === 'ar' ? 'ar-u-ca-gregory' : 'en-US')}</p>
+            <p className="text-zinc-900 font-bold text-sm">{new Date(order.created_at).toLocaleDateString(language === 'ar' ? 'ar-u-ca-gregory' : 'en-US')}</p>
           </div>
           <div className="space-y-1 min-w-[120px]">
             <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{isAr ? 'الإجمالي' : 'Total'}</p>
@@ -1035,7 +1035,7 @@ function OrderCard({ order, isAr, language, currency, cancellingParcelId, onCanc
              {/* One word cannot describe three parcels in three different
                  places, so the badge never travels without its counter. */}
              {getParcelCounterLabel(order.parcel_summary, isAr) && (
-               <p className="text-[10px] text-zinc-400 text-center font-bold">
+               <p className="text-[10px] text-zinc-500 text-center font-bold">
                  {getParcelCounterLabel(order.parcel_summary, isAr)}
                </p>
              )}
@@ -1043,7 +1043,7 @@ function OrderCard({ order, isAr, language, currency, cancellingParcelId, onCanc
           <Link
             href={`/support/tickets/new?order=${order._id}`}
             title={isAr ? 'إبلاغ الدعم الفني عن مشكلة في الطلب ده' : 'Report a problem with this order to support'}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 hover:bg-marine-cyan text-zinc-200 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-zinc-100 hover:bg-marine-cyan text-zinc-700 hover:text-white transition-colors"
           >
             <LifeBuoy size={13} /> {isAr ? 'بلّغ عن مشكلة' : 'Report a problem'}
           </Link>
@@ -1054,9 +1054,9 @@ function OrderCard({ order, isAr, language, currency, cancellingParcelId, onCanc
                Owner labels are off here: on a basket from three stores "the store" would
                name three different shops, and the parcel cards below say which is which. */}
            {order.journey?.steps?.length > 0 && (
-             <div className="mb-5 pb-5 border-b border-white/5">
+             <div className="mb-5 pb-5 border-b border-zinc-100">
                <div className="flex items-baseline justify-between gap-3 mb-4">
-                 <h3 className="text-xs font-black text-white uppercase tracking-widest">
+                 <h3 className="text-xs font-black text-zinc-900 uppercase tracking-widest">
                    {isAr ? 'رحلة طلبك' : 'Your order journey'}
                  </h3>
                  {order.parcel_summary?.total > 1 && (
@@ -1108,22 +1108,22 @@ function OrderCard({ order, isAr, language, currency, cancellingParcelId, onCanc
              <div className="flex flex-col gap-4">
                {order.items.map((item, i) => (
                  <div key={i} className="flex items-center gap-4">
-                   <div className="w-16 h-16 bg-white/10 rounded-xl overflow-hidden flex-shrink-0 border border-white/10">
+                   <div className="w-16 h-16 bg-zinc-50 rounded-xl overflow-hidden flex-shrink-0 border border-zinc-200">
                       <img src={item.product_image} alt={item.product_title} className="w-full h-full object-cover" />
                    </div>
                    <div className="flex-1 min-w-0">
-                      <h5 className="text-white font-bold text-base truncate">{item.product_title}</h5>
-                      <p className="text-zinc-400 text-sm mt-0.5">{item.variant_label} x {item.quantity}</p>
+                      <h5 className="text-zinc-900 font-bold text-base truncate">{item.product_title}</h5>
+                      <p className="text-zinc-500 text-sm mt-0.5">{item.variant_label} x {item.quantity}</p>
                       {item.product_slug && (
                         <Link
                           href={`/product/${item.product_slug}`}
-                          className="mt-1.5 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/10 hover:bg-marine-cyan text-zinc-200 hover:text-white transition-colors"
+                          className="mt-1.5 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-zinc-100 hover:bg-marine-cyan text-zinc-700 hover:text-white transition-colors"
                         >
                           {isAr ? 'عرض المنتج' : 'View product'}
                         </Link>
                       )}
                    </div>
-                   <div className="text-end text-white font-bold text-base">
+                   <div className="text-end text-zinc-900 font-bold text-base">
                      {currency} {item.unit_price.toFixed(2)}
                    </div>
                  </div>
@@ -1132,16 +1132,16 @@ function OrderCard({ order, isAr, language, currency, cancellingParcelId, onCanc
            )}
            {order.shipping && (
              <div className="mt-4">
-               <OrderShippingPanel order={order} isAr={isAr} currency={currency} dark />
+               <OrderShippingPanel order={order} isAr={isAr} currency={currency} dark={false} />
              </div>
            )}
            {/* Order-level return stays only for legacy orders — with parcels
                the button lives on the delivered card it applies to. */}
            {order.status === 'completed' && (order.parcels || []).length === 0 && (
-             <div className="mt-4 pt-4 border-t border-white/5">
+             <div className="mt-4 pt-4 border-t border-zinc-100">
                <Link
                  href={`/profile/returns/request/${order._id}`}
-                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-white/5 border border-white/10 text-zinc-300 hover:bg-marine-cyan/10 hover:border-marine-cyan/30 hover:text-marine-primary transition-all"
+                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-zinc-50 border border-zinc-200 text-zinc-700 hover:bg-marine-mist hover:border-marine-cyan/30 hover:text-marine-primary transition-all"
                >
                  <RotateCcw size={14} />
                  {isAr ? 'طلب إرجاع' : 'Request Return'}
@@ -1161,12 +1161,12 @@ function PasswordField({ value, onChange, visible, onToggle, isAr }) {
         required
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 pe-11 focus:outline-none focus:border-marine-cyan transition-all"
+        className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 pe-11 focus:outline-none focus:border-marine-cyan focus:bg-white focus:ring-2 focus:ring-marine-cyan/15 transition-all text-sm"
       />
       <button
         type="button"
         onClick={onToggle}
-        className="absolute end-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white focus:outline-none focus:text-marine-primary transition-colors"
+        className="absolute end-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 focus:outline-none focus:text-marine-primary transition-colors"
         aria-label={visible ? (isAr ? 'إخفاء كلمة المرور' : 'Hide password') : (isAr ? 'إظهار كلمة المرور' : 'Show password')}
       >
         {visible ? <EyeOff size={18} /> : <Eye size={18} />}

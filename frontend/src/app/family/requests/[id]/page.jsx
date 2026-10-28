@@ -155,7 +155,7 @@ export default function FamilyRequestPage() {
 
     if (!isMounted || loading) {
         return (
-            <div className="min-h-screen bg-[#111315] flex items-center justify-center">
+            <div className="min-h-screen bg-marine-canvas flex items-center justify-center">
                 <Loader2 size={36} className="animate-spin text-marine-primary" />
             </div>
         );
@@ -163,11 +163,11 @@ export default function FamilyRequestPage() {
 
     if (!data) {
         return (
-            <div className="min-h-screen bg-[#111315] flex items-center justify-center px-4" dir={isAr ? 'rtl' : 'ltr'}>
-                <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
-                    <AlertTriangle size={40} className="text-red-400 mx-auto mb-4" />
-                    <p className="text-white font-bold mb-6">{error || (isAr ? 'تعذر تحميل الطلب.' : 'Could not load this request.')}</p>
-                    <Link href="/profile?tab=family" className="inline-block bg-marine-cyan text-white font-bold px-6 py-3 rounded-xl">
+            <div className="min-h-screen bg-marine-canvas flex items-center justify-center px-4" dir={isAr ? 'rtl' : 'ltr'}>
+                <div className="max-w-md w-full bg-white border border-zinc-200/80 rounded-3xl p-8 text-center shadow-sm">
+                    <AlertTriangle size={40} className="text-red-500 mx-auto mb-4" />
+                    <p className="text-zinc-900 font-bold mb-6">{error || (isAr ? 'تعذر تحميل الطلب.' : 'Could not load this request.')}</p>
+                    <Link href="/profile?tab=family" className="inline-block bg-marine-cyan text-white font-bold px-6 py-3 rounded-xl shadow-md">
                         {copy.family}
                     </Link>
                 </div>
@@ -228,14 +228,14 @@ export default function FamilyRequestPage() {
     const current = revalidation?.current;
 
     return (
-        <div className="min-h-screen bg-[#111315] py-10 px-4" dir={isAr ? 'rtl' : 'ltr'}>
+        <div className="min-h-screen bg-marine-canvas py-10 px-4" dir={isAr ? 'rtl' : 'ltr'}>
             <div className="max-w-4xl mx-auto">
-                <Link href="/profile?tab=family" className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-white text-sm font-medium mb-6 transition-colors">
+                <Link href="/profile?tab=family" className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-900 text-sm font-medium mb-6 transition-colors">
                     {isAr ? <ChevronRight size={16} /> : <ArrowLeft size={16} />} {copy.family}
                 </Link>
 
                 {/* ---------- Header ---------- */}
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6">
+                <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 mb-6 shadow-sm">
                     <div className="flex items-start justify-between gap-4 flex-wrap">
                         <div className="flex items-center gap-4 min-w-0">
                             <Avatar user={isOrganizer ? request.requester : request.organizer} />
@@ -243,11 +243,11 @@ export default function FamilyRequestPage() {
                                 <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">
                                     {isOrganizer ? copy.requestedBy : copy.organizer}
                                 </p>
-                                <h1 className="text-white font-black text-xl truncate">
+                                <h1 className="text-zinc-900 font-black text-xl truncate">
                                     {isOrganizer ? requesterName : organizerName}
                                 </h1>
                                 {isOrganizer && (
-                                    <p className="text-zinc-400 text-xs mt-0.5">
+                                    <p className="text-zinc-500 text-xs mt-0.5">
                                         {isAr
                                             ? `${getRelationshipLabel(relationship, isAr)} لديك`
                                             : `Your ${getRelationshipLabel(relationship, isAr).toLowerCase()}`}
@@ -259,7 +259,7 @@ export default function FamilyRequestPage() {
                     </div>
 
                     {/* Actor-named status — never a bare "waiting for approval". */}
-                    <p className="text-zinc-300 text-sm font-bold mt-5">
+                    <p className="text-zinc-800 text-sm font-bold mt-5">
                         {getActorStatusLine(request.status, organizerName, isAr)}
                     </p>
                     <p className="text-zinc-500 text-xs mt-1">
@@ -267,45 +267,45 @@ export default function FamilyRequestPage() {
                     </p>
 
                     {request.member_note && (
-                        <div className="mt-4 p-3 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="mt-4 p-3 bg-zinc-50 border border-zinc-200 rounded-xl">
                             <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-1">
                                 {isAr ? 'ملاحظة' : 'Note'}
                             </p>
-                            <p className="text-zinc-300 text-sm italic">“{request.member_note}”</p>
+                            <p className="text-zinc-700 text-sm italic">“{request.member_note}”</p>
                         </div>
                     )}
 
                     {request.status === 'declined' && (
                         <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                            <p className="text-red-300 text-sm font-bold">
+                            <p className="text-red-700 text-sm font-bold">
                                 {isAr ? 'سبب الرفض: ' : 'Decline reason: '}
                                 {DECLINE_REASONS.find((r) => r.value === request.decline_reason)?.[isAr ? 'ar' : 'en'] || request.decline_reason}
                             </p>
-                            {request.decline_note && <p className="text-red-200/70 text-xs mt-1 italic">“{request.decline_note}”</p>}
+                            {request.decline_note && <p className="text-red-600/80 text-xs mt-1 italic">“{request.decline_note}”</p>}
                         </div>
                     )}
                 </div>
 
                 {notice && (
-                    <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-sm font-bold flex items-start gap-3">
+                    <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 rounded-xl text-sm font-bold flex items-start gap-3">
                         <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5" /> <span>{notice}</span>
                     </div>
                 )}
                 {error && (
-                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-bold flex items-start gap-3">
+                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-600 rounded-xl text-sm font-bold flex items-start gap-3">
                         <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" /> <span>{error}</span>
                     </div>
                 )}
 
                 {/* ---------- Resulting order (both sides, read-only for the member) ---------- */}
                 {data.order && (
-                    <section className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6">
-                        <h2 className="text-white font-black text-lg flex items-center gap-2 mb-4">
+                    <section className="bg-white border border-zinc-200/80 rounded-3xl p-6 mb-6 shadow-sm">
+                        <h2 className="text-zinc-900 font-black text-lg flex items-center gap-2 mb-4">
                             <Package size={18} className="text-marine-primary" />
                             {isAr ? 'الطلب الناتج' : 'Resulting order'}
                         </h2>
 
-                        <p className="text-zinc-400 text-xs mb-4">
+                        <p className="text-zinc-500 text-xs mb-4">
                             {isOrganizer
                                 ? (isAr ? `تم الطلب لصالحك · ${copy.requestedBy} ${requesterName}` : `${copy.orderedFor} you · ${copy.requestedBy} ${requesterName}`)
                                 : (isAr ? `تم الطلب لصالح ${organizerName} · ${copy.requestedByYou}` : `${copy.orderedFor} ${organizerName} · ${copy.requestedByYou}`)}
@@ -320,25 +320,25 @@ export default function FamilyRequestPage() {
                         </div>
 
                         {data.order.shipments?.length > 0 && (
-                            <div className="space-y-2 pt-4 border-t border-white/5">
-                                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                            <div className="space-y-2 pt-4 border-t border-zinc-200/80">
+                                <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
                                     <Truck size={12} className="text-marine-primary" /> {isAr ? 'تتبع الشحنة' : 'Shipment tracking'}
                                 </p>
                                 {data.order.shipments.map((shipment, index) => (
-                                    <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-3 flex items-center justify-between gap-3">
-                                        <p className="text-xs font-mono text-white">{shipment.tracking_number || shipment.bosta_tracking_number || '—'}</p>
-                                        <p className="text-[11px] text-zinc-400">{getShipmentStatusLabel(shipment.bosta_status, isAr)}</p>
+                                    <div key={index} className="bg-zinc-50 border border-zinc-200 rounded-xl p-3 flex items-center justify-between gap-3">
+                                        <p className="text-xs font-mono text-zinc-900">{shipment.tracking_number || shipment.bosta_tracking_number || '—'}</p>
+                                        <p className="text-[11px] text-zinc-500">{getShipmentStatusLabel(shipment.bosta_status, isAr)}</p>
                                     </div>
                                 ))}
                             </div>
                         )}
 
                         {isOrganizer ? (
-                            <Link href="/profile?tab=orders" className="inline-block mt-5 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all">
+                            <Link href="/profile?tab=orders" className="inline-block mt-5 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all shadow-sm">
                                 {isAr ? 'إدارة الطلب' : 'Manage order'}
                             </Link>
                         ) : (
-                            <p className="text-zinc-600 text-[11px] mt-5 italic">
+                            <p className="text-zinc-500 text-[11px] mt-5 italic">
                                 {isAr
                                     ? 'للعرض والتتبع فقط — يتولى مسؤول العائلة الدفع والإلغاء والإرجاع والاسترداد.'
                                     : 'View and tracking only — your organizer handles payment, cancellation, returns, and refunds.'}
@@ -348,8 +348,8 @@ export default function FamilyRequestPage() {
                 )}
 
                 {/* ---------- Items ---------- */}
-                <section className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6">
-                    <h2 className="text-white font-black text-lg flex items-center gap-2 mb-5">
+                <section className="bg-white border border-zinc-200/80 rounded-3xl p-6 mb-6 shadow-sm">
+                    <h2 className="text-zinc-900 font-black text-lg flex items-center gap-2 mb-5">
                         <Package size={18} className="text-marine-primary" /> {isAr ? 'المنتجات المطلوبة' : 'Requested items'}
                     </h2>
 
@@ -359,26 +359,26 @@ export default function FamilyRequestPage() {
                             const dropped = item.removed_at_approval || removedItemIds.includes(String(item._id));
                             return (
                                 <div key={item._id} className={`flex items-center gap-4 ${dropped ? 'opacity-40' : ''}`}>
-                                    <div className="w-16 h-16 bg-white/10 rounded-xl overflow-hidden flex-shrink-0 border border-white/10">
+                                    <div className="w-16 h-16 bg-zinc-100 rounded-xl overflow-hidden flex-shrink-0 border border-zinc-200">
                                         {item.image && <img src={item.image} alt={item.title} className="w-full h-full object-cover" />}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-white font-bold text-sm truncate">{item.title}</p>
+                                        <p className="text-zinc-900 font-bold text-sm truncate">{item.title}</p>
                                         <p className="text-zinc-500 text-xs mt-0.5">
                                             {item.variant_label ? `${item.variant_label} · ` : ''}× {item.quantity}
                                         </p>
                                         {live && !live.available && (
-                                            <p className="text-red-400 text-[11px] font-bold mt-1">
+                                            <p className="text-red-500 text-[11px] font-bold mt-1">
                                                 {isAr ? 'غير متاح حالياً' : 'No longer available'}
                                             </p>
                                         )}
                                     </div>
                                     <div className="text-end flex-shrink-0">
-                                        <p className={`font-bold text-sm ${live && live.available && live.current_unit_price !== live.requested_unit_price ? 'text-zinc-500 line-through' : 'text-white'}`}>
+                                        <p className={`font-bold text-sm ${live && live.available && live.current_unit_price !== live.requested_unit_price ? 'text-zinc-400 line-through' : 'text-zinc-900'}`}>
                                             {currency} {Number(item.estimated_unit_price).toFixed(2)}
                                         </p>
                                         {live?.available && live.current_unit_price !== live.requested_unit_price && (
-                                            <p className="text-amber-400 font-bold text-sm">
+                                            <p className="text-amber-600 font-bold text-sm">
                                                 {currency} {Number(live.current_unit_price).toFixed(2)}
                                             </p>
                                         )}
@@ -386,7 +386,7 @@ export default function FamilyRequestPage() {
                                     {canApprove && live && !live.available && !dropped && (
                                         <button
                                             onClick={() => setRemovedItemIds((ids) => [...ids, String(item._id)])}
-                                            className="text-red-400 hover:text-red-300 flex-shrink-0"
+                                            className="text-red-500 hover:text-red-600 flex-shrink-0"
                                             aria-label={isAr ? 'إزالة المنتج غير المتاح' : 'Remove unavailable item'}
                                         >
                                             <Trash2 size={16} />
@@ -400,7 +400,7 @@ export default function FamilyRequestPage() {
                     {removedItemIds.length > 0 && (
                         <button
                             onClick={() => setRemovedItemIds([])}
-                            className="text-zinc-400 hover:text-white text-xs font-bold mt-4"
+                            className="text-zinc-500 hover:text-zinc-900 text-xs font-bold mt-4"
                         >
                             {isAr ? 'التراجع عن الإزالة' : 'Undo removals'}
                         </button>
@@ -408,8 +408,8 @@ export default function FamilyRequestPage() {
                 </section>
 
                 {/* ---------- Delivery ---------- */}
-                <section className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6 space-y-5">
-                    <h2 className="text-white font-black text-lg flex items-center gap-2">
+                <section className="bg-white border border-zinc-200/80 rounded-3xl p-6 mb-6 space-y-5 shadow-sm">
+                    <h2 className="text-zinc-900 font-black text-lg flex items-center gap-2">
                         <MapPin size={18} className="text-marine-primary" /> {isAr ? 'التوصيل' : 'Delivery'}
                     </h2>
 
@@ -418,13 +418,13 @@ export default function FamilyRequestPage() {
                     {canPay && revalidation ? (
                         <>
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">
                                     {isAr ? 'عنوان التوصيل' : 'Delivery address'}
                                 </label>
                                 <select
                                     value={checkoutAddressId}
                                     onChange={(e) => { setCheckoutAddressId(e.target.value); refreshPreview(e.target.value, ''); }}
-                                    className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan"
+                                    className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white"
                                 >
                                     {(revalidation.available_addresses || []).map((address) => (
                                         <option key={address._id} value={String(address._id)} className="text-zinc-900">
@@ -436,18 +436,18 @@ export default function FamilyRequestPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">
                                     {isAr ? 'طريقة الشحن' : 'Shipping method'}
                                 </label>
                                 {(revalidation.available_methods || []).length === 0 ? (
-                                    <p className="text-red-400 text-sm font-bold">
+                                    <p className="text-red-500 text-sm font-bold">
                                         {isAr ? 'لا توجد طرق شحن متاحة لهذه الوجهة.' : 'No shipping methods available for this destination.'}
                                     </p>
                                 ) : (revalidation.available_methods || []).map((method) => (
                                     <label
                                         key={method.id}
                                         className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                                            String(checkoutMethodId) === String(method.id) ? 'border-marine-cyan bg-marine-cyan/10' : 'border-white/10 bg-white/5 hover:border-white/20'
+                                            String(checkoutMethodId) === String(method.id) ? 'border-marine-cyan bg-marine-cyan/10' : 'border-zinc-200 bg-zinc-50 hover:border-zinc-300'
                                         }`}
                                     >
                                         <input
@@ -456,7 +456,7 @@ export default function FamilyRequestPage() {
                                             onChange={() => { setCheckoutMethodId(String(method.id)); refreshPreview('', String(method.id)); }}
                                             className="accent-marine-cyan"
                                         />
-                                        <span className="flex-1 text-white text-sm font-bold">{isAr ? (method.name_ar || method.name) : method.name}</span>
+                                        <span className="flex-1 text-zinc-900 text-sm font-bold">{isAr ? (method.name_ar || method.name) : method.name}</span>
                                         <span className="text-marine-primary font-bold text-sm">
                                             {Number(method.total_cost) === 0 ? (isAr ? 'مجاني' : 'Free') : `${currency} ${Number(method.total_cost).toFixed(2)}`}
                                         </span>
@@ -468,16 +468,16 @@ export default function FamilyRequestPage() {
                         <>
                             <div>
                                 {request.shipping_address?.label && (
-                                    <span className="inline-block bg-white/10 text-zinc-300 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md mb-2">
+                                    <span className="inline-block bg-zinc-100 text-zinc-700 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md mb-2">
                                         {request.shipping_address.label}
                                     </span>
                                 )}
-                                <p className="text-white font-bold text-sm">{request.shipping_address?.recipient_name}</p>
-                                <p className="text-zinc-400 text-xs mt-0.5">{request.shipping_address?.phone}</p>
-                                <p className="text-zinc-500 text-xs mt-1">{request.shipping_address?.full_address}</p>
+                                <p className="text-zinc-900 font-bold text-sm">{request.shipping_address?.recipient_name}</p>
+                                <p className="text-zinc-500 text-xs mt-0.5">{request.shipping_address?.phone}</p>
+                                <p className="text-zinc-600 text-xs mt-1">{request.shipping_address?.full_address}</p>
                             </div>
                             {request.shipping_method && (
-                                <p className="text-zinc-400 text-sm flex items-center gap-2">
+                                <p className="text-zinc-600 text-sm flex items-center gap-2">
                                     <Truck size={14} className="text-marine-primary" />
                                     {isAr ? (request.shipping_method.name_ar || request.shipping_method.name) : request.shipping_method.name}
                                 </p>
@@ -489,20 +489,20 @@ export default function FamilyRequestPage() {
                 {/* ---------- Changes since submission ---------- */}
                 {isOrganizer && changes.length > 0 && (
                     <section className="bg-amber-500/10 border border-amber-500/25 rounded-3xl p-6 mb-6">
-                        <h2 className="text-amber-300 font-black text-lg flex items-center gap-2 mb-4">
+                        <h2 className="text-amber-800 font-black text-lg flex items-center gap-2 mb-4">
                             <AlertTriangle size={18} /> {copy.changesTitle}
                         </h2>
 
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm min-w-[380px]">
                                 <thead>
-                                    <tr className="text-amber-200/70 text-[10px] font-black uppercase tracking-widest">
+                                    <tr className="text-amber-800/80 text-[10px] font-black uppercase tracking-widest">
                                         <th className="text-start pb-2">{isAr ? 'البند' : 'Item'}</th>
                                         <th className="text-end pb-2">{copy.requested}</th>
                                         <th className="text-end pb-2">{copy.current}</th>
                                     </tr>
                                 </thead>
-                                <tbody className="text-amber-100">
+                                <tbody className="text-amber-900">
                                     {changes.map((change, index) => (
                                         <tr key={index} className="border-t border-amber-500/15">
                                             <td className="py-2 pe-3">{getChangeLabel(change, isAr)}</td>
@@ -529,15 +529,15 @@ export default function FamilyRequestPage() {
                                     onChange={(e) => setAcknowledged(e.target.checked)}
                                     className="w-4 h-4 rounded accent-marine-cyan"
                                 />
-                                <span className="text-amber-100 text-sm font-bold">{copy.acknowledgeChanges}</span>
+                                <span className="text-amber-900 text-sm font-bold">{copy.acknowledgeChanges}</span>
                             </label>
                         )}
                     </section>
                 )}
 
                 {/* ---------- Totals ---------- */}
-                <section className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6">
-                    <h2 className="text-white font-black text-lg mb-5">{isAr ? 'الملخص' : 'Summary'}</h2>
+                <section className="bg-white border border-zinc-200/80 rounded-3xl p-6 mb-6 shadow-sm">
+                    <h2 className="text-zinc-900 font-black text-lg mb-5">{isAr ? 'الملخص' : 'Summary'}</h2>
                     <div className="space-y-2.5 text-sm">
                         <Row label={isAr ? 'إجمالي المنتجات' : 'Product subtotal'}
                              requested={request.estimated_subtotal} current={current?.subtotal} currency={currency} showCurrent={isOrganizer && !!current} />
@@ -545,7 +545,7 @@ export default function FamilyRequestPage() {
                              requested={-request.estimated_discount} current={current ? -current.discount : undefined} currency={currency} showCurrent={isOrganizer && !!current} />
                         <Row label={isAr ? 'الشحن' : 'Shipping'}
                              requested={request.estimated_shipping} current={current?.shipping} currency={currency} showCurrent={isOrganizer && !!current} />
-                        <div className="pt-3 border-t border-white/10">
+                        <div className="pt-3 border-t border-zinc-200/80">
                             <Row bold
                                  label={canPay ? (isAr ? 'الإجمالي' : 'Total') : copy.estimatedTotal}
                                  requested={request.estimated_total} current={current?.total} currency={currency} showCurrent={isOrganizer && !!current} />
@@ -553,10 +553,10 @@ export default function FamilyRequestPage() {
                     </div>
 
                     {request.coupon_code && (
-                        <p className="text-zinc-400 text-xs mt-4">
-                            {isAr ? 'الكوبون: ' : 'Coupon: '}<span className="font-bold text-white">{request.coupon_code}</span>
+                        <p className="text-zinc-500 text-xs mt-4">
+                            {isAr ? 'الكوبون: ' : 'Coupon: '}<span className="font-bold text-zinc-900">{request.coupon_code}</span>
                             {isOrganizer && revalidation && !revalidation.coupon_applied && (
-                                <span className="text-amber-400 font-bold">
+                                <span className="text-amber-600 font-bold">
                                     {' '}· {isAr ? 'غير صالح لحسابك' : 'not valid for your account'}
                                 </span>
                             )}
@@ -590,7 +590,7 @@ export default function FamilyRequestPage() {
                     {canPay && (
                         <>
                             {/* Requester context stays visible through payment. */}
-                            <p className="text-zinc-400 text-sm text-center flex items-center justify-center gap-2 pb-1">
+                            <p className="text-zinc-600 text-sm text-center flex items-center justify-center gap-2 pb-1">
                                 <Users size={14} className="text-marine-primary" />
                                 {isAr
                                     ? `بطلب من ${requesterName}، ${getRelationshipLabel(relationship, isAr)} لديك`
@@ -627,9 +627,7 @@ export default function FamilyRequestPage() {
                                     disabled={busy || revalidation?.purchasable === false
                                         || (method === 'wallet' && (walletFrozen || !walletSufficient))}
                                     onClick={() => payRequest(method)}
-                                    className={method === 'wallet'
-                                        ? 'w-full bg-white/10 hover:bg-white/15 border border-white/10 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2'
-                                        : 'w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2'}
+                                    className="w-full bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-800 font-bold py-4 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
                                     {method === 'wallet' ? <Wallet size={18} /> : <CreditCard size={18} />}
                                     {request.status === 'payment_in_progress' && method !== 'wallet'
@@ -642,15 +640,15 @@ export default function FamilyRequestPage() {
                                 Shown only when it is the thing standing in the
                                 way, so it never nags a funded wallet. */}
                             {walletEnabled && !walletSufficient && !walletFrozen && (
-                                <p className="text-amber-300/80 text-xs text-center leading-relaxed">
+                                <p className="text-amber-700 text-xs text-center leading-relaxed">
                                     {wal.shortfall(Number(walletState.shortfall || 0).toFixed(2), currency)}{' '}
-                                    <Link href="/profile?tab=wallet" className="underline underline-offset-4 font-bold">
+                                    <Link href="/profile?tab=wallet" className="underline underline-offset-4 font-bold text-marine-primary">
                                         {wal.topUp}
                                     </Link>
                                 </p>
                             )}
                             {walletEnabled && walletFrozen && (
-                                <p className="text-amber-300/80 text-xs text-center leading-relaxed">{wal.frozenHint}</p>
+                                <p className="text-amber-700 text-xs text-center leading-relaxed">{wal.frozenHint}</p>
                             )}
                         </>
                     )}
@@ -659,7 +657,7 @@ export default function FamilyRequestPage() {
                         <button
                             disabled={busy}
                             onClick={() => setShowDecline(true)}
-                            className="w-full bg-transparent border border-red-500/30 text-red-400 hover:bg-red-500/10 font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="w-full bg-transparent border border-red-500/30 text-red-500 hover:bg-red-50 font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             <XCircle size={18} /> {copy.declineRequest}
                         </button>
@@ -672,7 +670,7 @@ export default function FamilyRequestPage() {
                                 if (!confirm(isAr ? 'هل تريد سحب هذا الطلب؟' : 'Withdraw this request?')) return;
                                 run(() => familyApi.withdrawRequest(requestId));
                             }}
-                            className="w-full bg-transparent border border-white/10 text-zinc-400 hover:text-white hover:bg-white/5 font-bold py-3.5 rounded-xl transition-all disabled:opacity-50"
+                            className="w-full bg-transparent border border-zinc-300 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-bold py-3.5 rounded-xl transition-all disabled:opacity-50"
                         >
                             {copy.withdraw}
                         </button>
@@ -681,7 +679,7 @@ export default function FamilyRequestPage() {
                     {!isOrganizer && ['declined', 'expired', 'withdrawn'].includes(request.status) && (
                         <Link
                             href="/products"
-                            className="block w-full text-center bg-white/5 hover:bg-white/10 text-zinc-300 font-bold py-3.5 rounded-xl transition-all"
+                            className="block w-full text-center bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold py-3.5 rounded-xl transition-all"
                         >
                             <Send size={16} className="inline me-2" />
                             {isAr ? 'تجهيز طلب جديد' : 'Prepare a new request'}
@@ -693,16 +691,16 @@ export default function FamilyRequestPage() {
             {/* ---------- Decline dialog: one step, low friction ---------- */}
             {showDecline && (
                 <Overlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowDecline(false)} />
-                    <div className="relative bg-[#09090b] border border-white/10 w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl">
-                        <h3 className="text-xl font-black text-white mb-5">{copy.declineRequest}</h3>
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowDecline(false)} />
+                    <div className="relative bg-white border border-zinc-200 w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl">
+                        <h3 className="text-xl font-black text-zinc-900 mb-5">{copy.declineRequest}</h3>
 
                         <div className="space-y-2 mb-5">
                             {DECLINE_REASONS.map((reason) => (
                                 <label
                                     key={reason.value}
                                     className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                                        declineForm.reason === reason.value ? 'border-marine-cyan bg-marine-cyan/10' : 'border-white/10 bg-white/5 hover:border-white/20'
+                                        declineForm.reason === reason.value ? 'border-marine-cyan bg-marine-cyan/10' : 'border-zinc-200 bg-zinc-50 hover:border-zinc-300'
                                     }`}
                                 >
                                     <input
@@ -710,7 +708,7 @@ export default function FamilyRequestPage() {
                                         onChange={() => setDeclineForm({ ...declineForm, reason: reason.value })}
                                         className="accent-marine-cyan"
                                     />
-                                    <span className="text-white text-sm font-bold">{isAr ? reason.ar : reason.en}</span>
+                                    <span className="text-zinc-900 text-sm font-bold">{isAr ? reason.ar : reason.en}</span>
                                 </label>
                             ))}
                         </div>
@@ -719,7 +717,7 @@ export default function FamilyRequestPage() {
                             rows={3} maxLength={300} value={declineForm.note}
                             onChange={(e) => setDeclineForm({ ...declineForm, note: e.target.value })}
                             placeholder={isAr ? `ملاحظة اختيارية لـ ${requesterName}...` : `Optional note for ${requesterName}...`}
-                            className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan resize-none mb-5"
+                            className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white resize-none mb-5"
                         />
 
                         <div className="flex gap-3">
@@ -735,7 +733,7 @@ export default function FamilyRequestPage() {
                             </button>
                             <button
                                 onClick={() => setShowDecline(false)}
-                                className="flex-1 bg-white/5 text-zinc-400 py-3 rounded-xl font-bold hover:bg-white/10 transition-all"
+                                className="flex-1 bg-zinc-100 text-zinc-700 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-all"
                             >
                                 {copy.cancel}
                             </button>
@@ -761,7 +759,7 @@ function Stat({ label, value }) {
     return (
         <div>
             <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">{label}</p>
-            <p className="text-white font-bold text-sm mt-0.5">{value}</p>
+            <p className="text-zinc-900 font-bold text-sm mt-0.5">{value}</p>
         </div>
     );
 }
@@ -770,14 +768,14 @@ function Stat({ label, value }) {
 function Row({ label, requested, current, currency, showCurrent, bold }) {
     const changed = showCurrent && current != null && Math.abs(Number(requested) - Number(current)) > 0.009;
     return (
-        <div className={`flex justify-between items-baseline gap-4 ${bold ? 'text-white font-black text-base' : 'text-zinc-400'}`}>
+        <div className={`flex justify-between items-baseline gap-4 ${bold ? 'text-zinc-900 font-black text-base' : 'text-zinc-500'}`}>
             <span>{label}</span>
             <span className="flex items-baseline gap-2 whitespace-nowrap">
-                <span className={changed ? 'text-zinc-600 line-through text-xs' : ''}>
+                <span className={changed ? 'text-zinc-400 line-through text-xs' : ''}>
                     {currency} {Number(requested || 0).toFixed(2)}
                 </span>
                 {changed && (
-                    <span className={bold ? 'text-marine-primary' : 'text-amber-400 font-bold'}>
+                    <span className={bold ? 'text-marine-primary' : 'text-amber-600 font-bold'}>
                         {currency} {Number(current).toFixed(2)}
                     </span>
                 )}

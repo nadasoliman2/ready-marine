@@ -239,7 +239,7 @@ export default function ProductFormSections({
                         <CompatibilityBuilder compatibleCars={form.compatible_cars} setCompatibleCars={(cars) => setForm({ ...form, compatible_cars: cars })} carBrands={metadata?.carBrands || []} />
                     ) : (
                         <div className="text-center py-8">
-                            <div className="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-3"><Info size={24} /></div>
+                            <div className="w-12 h-12 bg-marine-mist dark:bg-marine-cyan/10 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-3"><Info size={24} /></div>
                             <h4 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'هذه قطعة عامة' : 'This is a Universal Part'}</h4>
                             <p className="text-sm text-zinc-500 mt-1">{isAr ? 'تناسب جميع المركبات.' : 'It fits all vehicles. Toggle off "Set as Universal" to define specific models.'}</p>
                         </div>

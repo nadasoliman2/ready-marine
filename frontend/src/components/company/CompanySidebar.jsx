@@ -73,7 +73,7 @@ export default function CompanySidebar({ isOpen, setIsOpen, companyName, orgType
                             href={item.href}
                             onClick={() => setIsOpen(false)}
                             className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${isActive
-                                ? 'bg-red-50 dark:bg-marine-cyan/10 text-marine-primary shadow-sm'
+                                ? 'bg-marine-mist dark:bg-marine-cyan/10 text-marine-primary shadow-sm'
                                 : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-white/5'}`}
                         >
                             <item.icon size={20} className={isActive ? 'text-marine-primary' : 'text-zinc-400 dark:text-zinc-500'} />

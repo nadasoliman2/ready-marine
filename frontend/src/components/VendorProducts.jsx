@@ -15,7 +15,7 @@ function PriceBadge({ product, currency }) {
   return (
     <>
       <span>{currency} {price.toFixed(2)}</span>
-      {hasDiscount && <span className="text-white/50 line-through">{currency} {original.toFixed(2)}</span>}
+      {hasDiscount && <span className="text-zinc-400 line-through text-xs font-normal">{currency} {original.toFixed(2)}</span>}
     </>
   );
 }
@@ -118,17 +118,17 @@ export default function VendorProducts({ vendorProducts, setVendorProducts, carM
 
   if (isEditing) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl animate-in fade-in duration-300">
+      <div className="bg-zinc-50/70 border border-zinc-200/80 rounded-3xl p-6 shadow-sm animate-in fade-in duration-300">
         <div className="flex items-center justify-between mb-8">
-           <h3 className="text-2xl font-black text-white">{editingId ? t.editProduct : t.addProduct}</h3>
-           <button onClick={handleCloseForm} className="text-zinc-400 hover:text-white px-4 py-2 font-bold transition-colors">
-              X
+           <h3 className="text-2xl font-black text-zinc-900">{editingId ? t.editProduct : t.addProduct}</h3>
+           <button onClick={handleCloseForm} className="text-zinc-400 hover:text-zinc-700 px-4 py-2 font-bold transition-colors">
+              ✕
            </button>
         </div>
 
         {message.text && (
             <div className={`mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-3 ${
-               message.type === 'success' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'
+               message.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-600'
             }`}>
                <CheckCircle2 size={18} />
                <span>{message.text}</span>
@@ -138,31 +138,31 @@ export default function VendorProducts({ vendorProducts, setVendorProducts, carM
         <form onSubmit={handleSubmit} className="space-y-6">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                 <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t.productTitle} (EN)</label>
-                 <input type="text" required value={form.title_en} onChange={e => setForm({...form, title_en: e.target.value})} className="w-full bg-[#09090b] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan" />
+                 <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{t.productTitle} (EN)</label>
+                 <input type="text" required value={form.title_en} onChange={e => setForm({...form, title_en: e.target.value})} className="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan text-sm" />
               </div>
               <div className="space-y-2">
-                 <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t.productTitle} (AR)</label>
-                 <input type="text" value={form.title_ar} onChange={e => setForm({...form, title_ar: e.target.value})} className="w-full bg-[#09090b] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan" />
+                 <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{t.productTitle} (AR)</label>
+                 <input type="text" value={form.title_ar} onChange={e => setForm({...form, title_ar: e.target.value})} className="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan text-sm" />
               </div>
               <div className="space-y-2">
-                 <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t.sku}</label>
-                 <input type="text" value={form.sku} onChange={e => setForm({...form, sku: e.target.value})} placeholder="Auto-generated if blank" className="w-full bg-[#09090b] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan" />
+                 <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{t.sku}</label>
+                 <input type="text" value={form.sku} onChange={e => setForm({...form, sku: e.target.value})} placeholder="Auto-generated if blank" className="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan text-sm" />
               </div>
               <div className="space-y-2 flex gap-4">
                  <div className="flex-1 space-y-2">
-                    <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t.price}</label>
-                    <input type="number" required min="0" step="0.01" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="w-full bg-[#09090b] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan" />
+                    <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{t.price}</label>
+                    <input type="number" required min="0" step="0.01" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan text-sm" />
                  </div>
                  <div className="flex-1 space-y-2">
-                    <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t.stock}</label>
-                    <input type="number" min="0" value={form.quantity} onChange={e => setForm({...form, quantity: e.target.value})} className="w-full bg-[#09090b] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan" />
+                    <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">{t.stock}</label>
+                    <input type="number" min="0" value={form.quantity} onChange={e => setForm({...form, quantity: e.target.value})} className="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan text-sm" />
                  </div>
               </div>
 
               <div className="space-y-2">
-                 <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Category</label>
-                 <select required value={form.category_id} onChange={e => setForm({...form, category_id: e.target.value})} className="w-full bg-[#09090b] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan">
+                 <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">Category</label>
+                 <select required value={form.category_id} onChange={e => setForm({...form, category_id: e.target.value})} className="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan text-sm">
                     <option value="">Select Category</option>
                     {linked.categories?.map(c => (
                        <option key={c._id} value={c._id}>{isAr && c.name_ar ? c.name_ar : c.name_en || c.name}</option>
@@ -171,23 +171,23 @@ export default function VendorProducts({ vendorProducts, setVendorProducts, carM
               </div>
 
               <div className="space-y-2">
-                 <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Brand</label>
+                 <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">Brand</label>
                  <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm({ ...form, product_brand_id: v })}
                     options={brandOptions(linked.brands)} placeholder={isAr ? 'اختار الماركة' : 'Select Brand'} isAr={isAr}
-                    buttonClassName="w-full bg-[#09090b] border border-white/10 text-white rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan" />
+                    buttonClassName="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl ps-4 pe-9 py-3 focus:outline-none focus:border-marine-cyan text-sm" />
               </div>
 
               <div className="col-span-1 md:col-span-2 space-y-2">
-                 <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Image URL</label>
+                 <label className="text-xs sm:text-sm font-bold text-zinc-700 uppercase tracking-wider">Image URL</label>
                  <div className="flex items-center gap-4">
-                    <input type="url" value={form.images[0]?.url || ''} onChange={e => setForm({...form, images: [{ url: e.target.value, is_primary: true }]})} placeholder="https://..." className="flex-1 bg-[#09090b] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan" />
-                    {form.images[0]?.url && <img src={form.images[0].url} alt="Preview" className="w-12 h-12 object-cover rounded-lg border border-white/20" />}
+                    <input type="url" value={form.images[0]?.url || ''} onChange={e => setForm({...form, images: [{ url: e.target.value, is_primary: true }]})} placeholder="https://..." className="flex-1 bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan text-sm" />
+                    {form.images[0]?.url && <img src={form.images[0].url} alt="Preview" className="w-12 h-12 object-cover rounded-lg border border-zinc-200" />}
                  </div>
               </div>
            </div>
 
-           <div className="pt-6 border-t border-white/10 flex justify-end gap-4">
-              <button disabled={loading} type="submit" className="bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg flex items-center gap-2 disabled:opacity-50">
+           <div className="pt-6 border-t border-zinc-200 flex justify-end gap-4">
+              <button disabled={loading} type="submit" className="bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.35)] flex items-center gap-2 disabled:opacity-50">
                  {loading && <Loader2 size={16} className="animate-spin" />}
                  {t.saveProduct}
               </button>
@@ -200,8 +200,8 @@ export default function VendorProducts({ vendorProducts, setVendorProducts, carM
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-         <h3 className="text-2xl font-black text-white">{t.myProducts} ({vendorProducts.length})</h3>
-         <button onClick={() => handleOpenForm(null)} className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg">
+         <h3 className="text-2xl font-black text-zinc-900">{t.myProducts} ({vendorProducts.length})</h3>
+         <button onClick={() => handleOpenForm(null)} className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-[0_4px_14px_0_rgba(0,166,206,0.35)]">
             <Plus size={18} /> {t.addProduct}
          </button>
       </div>
@@ -213,42 +213,42 @@ export default function VendorProducts({ vendorProducts, setVendorProducts, carM
                placeholder={t.searchProducts}
                value={search}
                onChange={e => setSearch(e.target.value)}
-               className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 pl-11 focus:outline-none focus:border-marine-cyan" 
+               className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 pl-11 focus:outline-none focus:border-marine-cyan focus:bg-white text-sm" 
             />
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
          </div>
       </div>
 
       {filteredProducts.length === 0 ? (
-         <div className="bg-white/5 rounded-3xl p-12 text-center border border-dashed border-white/10 mt-6">
-            <ImageIcon size={48} className="text-zinc-600 mx-auto mb-4 opacity-50" />
-            <p className="text-zinc-400 font-bold">{t.noProductsFound}</p>
+         <div className="bg-zinc-50 rounded-3xl p-12 text-center border border-dashed border-zinc-200 mt-6">
+            <ImageIcon size={48} className="text-zinc-400 mx-auto mb-4 opacity-50" />
+            <p className="text-zinc-600 font-bold">{t.noProductsFound}</p>
          </div>
       ) : (
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             {filteredProducts.map(product => (
-               <div key={product._id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all shadow-xl flex flex-col group">
-                  <div className="aspect-square bg-[#111315] relative">
+               <div key={product._id} className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden hover:border-marine-cyan/30 transition-all shadow-sm hover:shadow-md flex flex-col group">
+                  <div className="aspect-square bg-zinc-100 relative">
                      {product.images && product.images[0] ? (
-                        <img src={product.images[0].url} alt={product.title_en} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                        <img src={product.images[0].url} alt={product.title_en} className="w-full h-full object-cover" />
                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-white/20"><ImageIcon size={40}/></div>
+                        <div className="w-full h-full flex items-center justify-center text-zinc-400"><ImageIcon size={40}/></div>
                      )}
                      <div className="absolute top-3 end-3 bg-black/60 backdrop-blur-sm text-xs font-bold text-white px-3 py-1 rounded-full flex items-center gap-1">
                         <PriceBadge product={product} currency={siteSettings?.currency || 'QAR'} />
                      </div>
                   </div>
                   <div className="p-5 flex-1 flex flex-col">
-                     <h4 className="text-white font-bold text-sm mb-1 line-clamp-2 leading-snug">{isAr ? (product.title_ar || product.title_en) : product.title_en}</h4>
+                     <h4 className="text-zinc-900 font-bold text-sm mb-1 line-clamp-2 leading-snug">{isAr ? (product.title_ar || product.title_en) : product.title_en}</h4>
                      <p className="text-zinc-500 text-xs mb-4">SKU: {product.sku}</p>
                      
-                     <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/10">
-                        <span className="text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-1 rounded-md">{t.stock}: {product.quantity || 0}</span>
+                     <div className="mt-auto flex items-center justify-between pt-4 border-t border-zinc-100">
+                        <span className="text-emerald-700 text-xs font-bold bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-md">{t.stock}: {product.quantity || 0}</span>
                         <div className="flex items-center gap-3">
-                           <button onClick={() => handleOpenForm(product)} className="text-blue-400 hover:text-blue-300 transition-colors">
+                           <button onClick={() => handleOpenForm(product)} className="text-marine-primary hover:text-marine-cyan transition-colors" title={t.edit || 'Edit'}>
                               <Edit size={16} />
                            </button>
-                           <button onClick={() => handleDelete(product._id)} className="text-red-500 hover:text-red-400 transition-colors">
+                           <button onClick={() => handleDelete(product._id)} className="text-red-500 hover:text-red-700 transition-colors" title={t.delete || 'Delete'}>
                               <Trash2 size={16} />
                            </button>
                         </div>

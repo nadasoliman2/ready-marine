@@ -48,7 +48,7 @@ export default function ContactPage() {
 
   return (
     <div className="bg-zinc-50" dir={isAr ? 'rtl' : 'ltr'}>
-      <section className="bg-[#111315] text-white">
+      <section className="bg-gradient-to-r from-marine-navy via-marine-teal to-marine-primary text-white">
         <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
           <div className="max-w-2xl">
             <h1 className="text-3xl md:text-5xl font-black tracking-tight">

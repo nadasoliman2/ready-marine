@@ -169,9 +169,9 @@ export default function WalletTab({ isAr }) {
 
     if (error) {
         return (
-            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-3">
-                <AlertCircle size={18} className="text-red-400 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-red-300">{error}</p>
+            <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
+                <AlertCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-600">{error}</p>
             </div>
         );
     }
@@ -184,34 +184,31 @@ export default function WalletTab({ isAr }) {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <h3 className="text-2xl font-black text-white flex items-center gap-3">
+            <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
                 <Wallet className="text-marine-primary" /> {copy.myWallet}
             </h3>
 
             {notice && (
                 <div className={`p-4 rounded-2xl border flex items-start gap-3 ${
-                    notice.tone === 'success' ? 'bg-emerald-500/10 border-emerald-500/20'
-                        : notice.tone === 'pending' ? 'bg-amber-500/10 border-amber-500/20'
-                            : 'bg-red-500/10 border-red-500/20'
+                    notice.tone === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                        : notice.tone === 'pending' ? 'bg-amber-50 border-amber-200 text-amber-700'
+                            : 'bg-red-50 border-red-200 text-red-600'
                 }`}>
                     {notice.tone === 'success'
-                        ? <CheckCircle2 size={18} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                        ? <CheckCircle2 size={18} className="text-emerald-500 flex-shrink-0 mt-0.5" />
                         : notice.tone === 'pending'
-                            ? <Clock size={18} className="text-amber-400 flex-shrink-0 mt-0.5" />
-                            : <AlertCircle size={18} className="text-red-400 flex-shrink-0 mt-0.5" />}
-                    <p className={`text-sm ${
-                        notice.tone === 'success' ? 'text-emerald-300'
-                            : notice.tone === 'pending' ? 'text-amber-300' : 'text-red-300'
-                    }`}>{notice.text}</p>
+                            ? <Clock size={18} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                            : <AlertCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />}
+                    <p className="text-sm font-medium">{notice.text}</p>
                 </div>
             )}
 
             {isFrozen && (
-                <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-start gap-3">
-                    <Lock size={18} className="text-amber-400 flex-shrink-0 mt-0.5" />
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
+                    <Lock size={18} className="text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
-                        <p className="text-amber-300 font-bold text-sm">{copy.frozen}</p>
-                        <p className="text-amber-200/70 text-xs mt-1 leading-relaxed">
+                        <p className="text-amber-800 font-bold text-sm">{copy.frozen}</p>
+                        <p className="text-amber-700 text-xs mt-1 leading-relaxed">
                             {balances.frozen_reason || copy.frozenHint}
                         </p>
                     </div>
@@ -219,11 +216,11 @@ export default function WalletTab({ isAr }) {
             )}
 
             {/* ---- Balance ---- */}
-            <div className="p-6 rounded-2xl border bg-marine-cyan/10 border-marine-cyan/30">
-                <p className="text-zinc-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <div className="p-6 rounded-2xl border bg-gradient-to-br from-marine-mist/60 to-marine-canvas border-marine-cyan/25">
+                <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                     <Wallet size={12} className="text-marine-primary" />{copy.balance}
                 </p>
-                <p className="text-3xl sm:text-4xl font-black text-white mt-2">
+                <p className="text-3xl sm:text-4xl font-black text-zinc-900 mt-2">
                     <span className="text-lg font-bold text-zinc-500 me-2">{currency}</span>
                     {money(balances.available)}
                 </p>
@@ -232,11 +229,11 @@ export default function WalletTab({ isAr }) {
                 {/* Shown only when non-zero — a permanent "0 on hold" row is
                     noise the customer cannot act on. */}
                 {Number(balances.reserved || 0) > 0 && (
-                    <div className="mt-4 pt-4 border-t border-white/10">
-                        <p className="text-zinc-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <div className="mt-4 pt-4 border-t border-zinc-200">
+                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                             <Lock size={12} />{copy.reserved}
                         </p>
-                        <p className="text-xl font-black text-zinc-300 mt-1">{currency} {money(balances.reserved)}</p>
+                        <p className="text-xl font-black text-zinc-800 mt-1">{currency} {money(balances.reserved)}</p>
                         <p className="text-zinc-500 text-[11px] mt-1 leading-relaxed">{copy.reservedHint}</p>
                     </div>
                 )}
@@ -244,8 +241,8 @@ export default function WalletTab({ isAr }) {
 
             {/* ---- Top up ---- */}
             {canTopUp && (
-                <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
-                    <p className="text-white font-bold mb-1 flex items-center gap-2">
+                <div className="p-5 bg-zinc-50/70 border border-zinc-200/80 rounded-2xl">
+                    <p className="text-zinc-900 font-bold mb-1 flex items-center gap-2">
                         <Plus size={16} className="text-marine-primary" />{copy.topUpTitle}
                     </p>
                     <p className="text-zinc-500 text-xs mb-4 leading-relaxed">{copy.topUpNote}</p>
@@ -260,8 +257,8 @@ export default function WalletTab({ isAr }) {
                                     onClick={() => setAmount(String(value))}
                                     className={`px-4 py-2 rounded-xl border text-sm font-bold transition-colors disabled:opacity-50 ${
                                         String(value) === amount
-                                            ? 'border-marine-cyan bg-marine-cyan/20 text-white'
-                                            : 'border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10'
+                                            ? 'border-marine-cyan bg-marine-cyan text-white shadow-sm'
+                                            : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'
                                     }`}
                                 >
                                     {currency} {value}
@@ -270,7 +267,7 @@ export default function WalletTab({ isAr }) {
                         </div>
                     )}
 
-                    <label className="text-xs font-semibold text-zinc-500 uppercase">{copy.topUpCustom}</label>
+                    <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">{copy.topUpCustom}</label>
                     <div className="flex flex-col sm:flex-row gap-3 mt-2">
                         <input
                             type="number"
@@ -280,13 +277,13 @@ export default function WalletTab({ isAr }) {
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder={copy.topUpAmount}
-                            className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-marine-cyan transition-colors"
+                            className="flex-1 px-4 py-3 rounded-xl bg-white border border-zinc-200 text-zinc-900 outline-none focus:border-marine-cyan transition-colors text-sm"
                         />
                         <button
                             type="button"
                             disabled={submitting || !amount}
                             onClick={() => startTopup(amount)}
-                            className="px-6 py-3 rounded-xl bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="px-6 py-3 rounded-xl bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_4px_14px_0_rgba(0,166,206,0.35)]"
                         >
                             {submitting ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
                             {copy.topUpAction}
@@ -296,11 +293,11 @@ export default function WalletTab({ isAr }) {
             )}
 
             {/* ---- Rules ---- */}
-            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
-                <p className="text-white font-bold mb-3 flex items-center gap-2">
+            <div className="p-5 bg-zinc-50/70 border border-zinc-200/80 rounded-2xl">
+                <p className="text-zinc-900 font-bold mb-3 flex items-center gap-2">
                     <Info size={16} className="text-marine-primary" />{copy.howItWorks}
                 </p>
-                <ul className="space-y-1.5 text-sm text-zinc-400">
+                <ul className="space-y-1.5 text-sm text-zinc-600">
                     <li>· {copy.ruleTopUp}</li>
                     <li>· {copy.ruleRefunds}</li>
                     <li>· {copy.ruleNoExpiry}</li>
@@ -311,18 +308,18 @@ export default function WalletTab({ isAr }) {
             {/* ---- Recent top-ups ---- */}
             {topups.length > 0 && (
                 <div>
-                    <p className="text-white font-bold mb-4">{copy.topupHistory}</p>
+                    <p className="text-zinc-900 font-bold mb-4">{copy.topupHistory}</p>
                     <div className="space-y-2">
                         {topups.map((t) => (
-                            <div key={t._id} className="flex items-center justify-between gap-4 p-4 bg-white/5 border border-white/10 rounded-xl">
+                            <div key={t._id} className="flex items-center justify-between gap-4 p-4 bg-white border border-zinc-200/80 rounded-xl shadow-xs">
                                 <div className="min-w-0">
-                                    <p className="text-white text-sm font-bold">{currency} {money(t.amount)}</p>
+                                    <p className="text-zinc-900 text-sm font-bold">{currency} {money(t.amount)}</p>
                                     <p className="text-zinc-500 text-xs mt-0.5">{formatDate(t.created_at, isAr)}</p>
                                 </div>
                                 <div className="text-end flex-shrink-0">
                                     <p className={`text-xs font-bold ${
-                                        t.status === 'paid' ? 'text-emerald-400'
-                                            : t.status === 'pending' ? 'text-amber-400' : 'text-zinc-500'
+                                        t.status === 'paid' ? 'text-emerald-600'
+                                            : t.status === 'pending' ? 'text-amber-600' : 'text-zinc-500'
                                     }`}>
                                         {topupStatusLabel(t.status, isAr)}
                                     </p>
@@ -345,9 +342,9 @@ export default function WalletTab({ isAr }) {
 
             {/* ---- Ledger ---- */}
             <div>
-                <p className="text-white font-bold mb-4">{copy.history}</p>
+                <p className="text-zinc-900 font-bold mb-4">{copy.history}</p>
                 {history.length === 0 ? (
-                    <div className="p-6 bg-white/5 border border-white/10 rounded-2xl text-center">
+                    <div className="p-6 bg-zinc-50 border border-zinc-200 rounded-2xl text-center">
                         <p className="text-zinc-500 text-sm">{copy.emptyWallet}</p>
                     </div>
                 ) : (
@@ -357,10 +354,10 @@ export default function WalletTab({ isAr }) {
                             return (
                                 <div
                                     key={entry._id}
-                                    className="flex items-start justify-between gap-4 p-4 bg-white/5 border border-white/10 rounded-xl"
+                                    className="flex items-start justify-between gap-4 p-4 bg-white border border-zinc-200/80 rounded-xl shadow-xs"
                                 >
                                     <div className="min-w-0">
-                                        <p className="text-white text-sm font-bold">{walletTypeLabel(entry.type, isAr)}</p>
+                                        <p className="text-zinc-900 text-sm font-bold">{walletTypeLabel(entry.type, isAr)}</p>
                                         <p className="text-zinc-500 text-xs mt-0.5">{formatDate(entry.created_at, isAr)}</p>
                                         {entry.order?.reference && (
                                             <p className="text-zinc-500 text-xs mt-1">
@@ -370,11 +367,11 @@ export default function WalletTab({ isAr }) {
                                         {/* The reason matters most on a support adjustment —
                                             it is the only explanation the customer will get. */}
                                         {entry.reason && (
-                                            <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{entry.reason}</p>
+                                            <p className="text-zinc-600 text-xs mt-1 leading-relaxed">{entry.reason}</p>
                                         )}
                                     </div>
                                     <div className="text-end flex-shrink-0">
-                                        <p className={`font-black text-sm ${sign === '+' ? 'text-emerald-400' : 'text-red-400'}`}>
+                                        <p className={`font-black text-sm ${sign === '+' ? 'text-emerald-600' : 'text-red-500'}`}>
                                             {sign}{currency} {money(entry.amount)}
                                         </p>
                                         <p className="text-zinc-500 text-[11px] mt-0.5">
@@ -390,7 +387,7 @@ export default function WalletTab({ isAr }) {
                                 type="button"
                                 onClick={loadMore}
                                 disabled={loadingMore}
-                                className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-zinc-300 font-bold text-sm hover:bg-white/10 transition-colors disabled:opacity-50"
+                                className="w-full py-3 rounded-xl bg-zinc-100 border border-zinc-200 text-zinc-700 font-bold text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50"
                             >
                                 {loadingMore ? <Loader2 size={16} className="animate-spin mx-auto" /> : copy.loadMore}
                             </button>

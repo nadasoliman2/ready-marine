@@ -164,8 +164,8 @@ export default function CompanyTab({ isAr }) {
     if (!membership) {
         return (
             <div className="text-center py-12">
-                <Building2 size={40} className="text-zinc-600 mx-auto mb-3" />
-                <p className="text-white font-bold">{isAr ? `مش تابع لحساب ${ot.one}` : `You are not part of ${ot.aOne} account`}</p>
+                <Building2 size={40} className="text-zinc-400 mx-auto mb-3" />
+                <p className="text-zinc-900 font-bold">{isAr ? `مش تابع لحساب ${ot.one}` : `You are not part of ${ot.aOne} account`}</p>
                 <p className="text-zinc-500 text-sm mt-1">{isAr ? `لو ${ot.your} ${ot.v('مشتركة', 'مشترك')} في Ready Marine، هتوصلك دعوة على الإيميل أو الواتساب.` : `If your ${ot.one} uses Ready Marine, you will get an invitation by email or WhatsApp.`}</p>
             </div>
         );
@@ -174,13 +174,13 @@ export default function CompanyTab({ isAr }) {
     return (
         <div className="space-y-6">
             {error && (
-                <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-bold flex items-start gap-3">
+                <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-600 rounded-xl text-sm font-bold flex items-start gap-3">
                     <AlertCircle size={18} className="mt-0.5 shrink-0" /> {error}
                 </div>
             )}
 
             {notice && (
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-sm font-bold flex items-start gap-3">
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 rounded-xl text-sm font-bold flex items-start gap-3">
                     <CheckCircle2 size={18} className="mt-0.5 shrink-0" /> {notice}
                 </div>
             )}
@@ -188,17 +188,17 @@ export default function CompanyTab({ isAr }) {
             {memberships.map((m) => <MembershipCard key={m.company._id} membership={m} isAr={isAr} />)}
 
             {batchRows && batchRows.some((r) => r.waiting) && (
-                <div className="bg-white/5 border border-sky-500/20 rounded-2xl p-5">
-                    <p className="text-white font-bold mb-1 flex items-center gap-2"><Users size={16} className="text-sky-400" />{isAr ? 'أوردرات مستنية زمايلك' : 'Orders waiting for colleagues'}</p>
+                <div className="bg-zinc-50/70 border border-sky-500/20 rounded-2xl p-5">
+                    <p className="text-zinc-900 font-bold mb-1 flex items-center gap-2"><Users size={16} className="text-sky-500" />{isAr ? 'أوردرات مستنية زمايلك' : 'Orders waiting for colleagues'}</p>
                     <p className="text-xs text-zinc-500 mb-4">{isAr ? 'كل ما الدفعة تكمل أسرع، بتتحرك أسرع وبتوفّر أكتر.' : 'The sooner a batch fills, the sooner it ships and the more you save.'}</p>
                     <ul className="space-y-4">
                         {batchRows.filter((r) => r.waiting).map((row) => {
                             const busy = busyParcel === String(row.sub_order_id);
                             return (
-                                <li key={row.sub_order_id} className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-3">
+                                <li key={row.sub_order_id} className="rounded-xl bg-white border border-zinc-200 p-4 space-y-3">
                                     <div className="flex items-start justify-between gap-3">
                                         <div className="min-w-0">
-                                            <p className="text-sm font-bold text-white truncate">{row.vendor_name}</p>
+                                            <p className="text-sm font-bold text-zinc-900 truncate">{row.vendor_name}</p>
                                             <p className="text-[11px] text-zinc-500 truncate">{row.items.map((i) => `${i.title} × ${i.quantity}`).join('، ')}</p>
                                         </div>
                                         <span className="text-[11px] text-zinc-500 shrink-0" dir="ltr">{row.reference}</span>
@@ -210,10 +210,10 @@ export default function CompanyTab({ isAr }) {
                                         <button onClick={() => shareWithColleagues(row)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-sm font-bold text-white transition">
                                             <Share2 size={12} />{isAr ? 'قول لزمايلك' : 'Tell colleagues'}
                                         </button>
-                                        <button onClick={() => parcelAction(row, 'ship')} disabled={busy} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-sm font-bold text-white transition disabled:opacity-50">
+                                        <button onClick={() => parcelAction(row, 'ship')} disabled={busy} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-sm font-bold text-zinc-800 transition disabled:opacity-50">
                                             {busy ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}{isAr ? 'ابعته دلوقتي' : 'Ship it now'}
                                         </button>
-                                        <button onClick={() => parcelAction(row, 'cancel')} disabled={busy} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/30 hover:bg-red-500/10 text-sm font-bold text-red-400 transition disabled:opacity-50">
+                                        <button onClick={() => parcelAction(row, 'cancel')} disabled={busy} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/30 hover:bg-red-500/10 text-sm font-bold text-red-500 transition disabled:opacity-50">
                                             <XCircle size={12} />{isAr ? 'إلغاء' : 'Cancel'}
                                         </button>
                                     </div>
@@ -226,8 +226,8 @@ export default function CompanyTab({ isAr }) {
 
             {batchRows && batchRows.some((r) => !r.waiting && r.savings > 0) && (
                 <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5">
-                    <p className="text-white font-bold flex items-center gap-2"><Truck size={16} className="text-emerald-400" />{isAr ? 'وفّرت بالتجميع' : 'Saved by consolidating'}</p>
-                    <p className="text-2xl font-black text-emerald-400 mt-1 tabular-nums" dir="ltr">
+                    <p className="text-zinc-900 font-bold flex items-center gap-2"><Truck size={16} className="text-emerald-600" />{isAr ? 'وفّرت بالتجميع' : 'Saved by consolidating'}</p>
+                    <p className="text-2xl font-black text-emerald-600 mt-1 tabular-nums" dir="ltr">
                         {formatMoney(batchRows.filter((r) => !r.waiting).reduce((sum, r) => sum + Number(r.savings || 0), 0), isAr)}
                     </p>
                     <p className="text-xs text-zinc-500 mt-1">{isAr ? 'في آخر أوردراتك المجمّعة — رجعولك لليميت.' : 'On your recent consolidated orders — back on your limit.'}</p>
@@ -235,37 +235,37 @@ export default function CompanyTab({ isAr }) {
             )}
 
             {isEmployeeAnywhere && (
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-                    <p className="text-white font-bold mb-3 flex items-center gap-2"><ShoppingBag size={16} className="text-marine-primary" />{isAr ? `أوردراتي على حساب ${ot.the}` : `My orders on the ${ot.one} account`}</p>
+                <div className="bg-zinc-50/70 border border-zinc-200/80 rounded-2xl p-5">
+                    <p className="text-zinc-900 font-bold mb-3 flex items-center gap-2"><ShoppingBag size={16} className="text-marine-primary" />{isAr ? `أوردراتي على حساب ${ot.the}` : `My orders on the ${ot.one} account`}</p>
                     {orders === null ? (
                         <Loader2 size={18} className="animate-spin text-zinc-500" />
                     ) : orders.length === 0 ? (
                         <p className="text-sm text-zinc-500">{isAr ? `لسه ماطلبتش حاجة على حساب ${ot.the}.` : `Nothing ordered on the ${ot.one} account yet.`}</p>
                     ) : (
-                        <ul className="divide-y divide-white/10">
+                        <ul className="divide-y divide-zinc-200/80">
                             {orders.map((row) => (
                                 <li key={row._id} className="py-3">
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0">
-                                        <p className="text-sm text-white truncate">
+                                        <p className="text-sm text-zinc-900 truncate">
                                             {(row.order?.items || []).map((i) => `${i.title} × ${i.quantity}`).join('، ') || '—'}
                                         </p>
                                         <p className="text-[11px] text-zinc-500">
                                             {memberships.length > 1 && row.company_name ? `${row.company_name} · ` : ''}
                                             {formatDate(row.created_at, isAr)} · <span dir="ltr">{row.order?.reference}</span>
-                                            {row.kind === 'credit' && <span className="text-emerald-400"> · {isAr ? 'مرتجع / إلغاء' : 'Return / cancellation'}</span>}
+                                            {row.kind === 'credit' && <span className="text-emerald-600"> · {isAr ? 'مرتجع / إلغاء' : 'Return / cancellation'}</span>}
                                         </p>
                                     </div>
                                     <div className="text-end shrink-0">
-                                        <p className={`text-sm font-bold tabular-nums ${row.kind === 'credit' ? 'text-emerald-400' : 'text-white'}`} dir="ltr">{formatMoney(row.amount, isAr)}</p>
+                                        <p className={`text-sm font-bold tabular-nums ${row.kind === 'credit' ? 'text-emerald-600' : 'text-zinc-900'}`} dir="ltr">{formatMoney(row.amount, isAr)}</p>
                                         {row.personal_amount ? <p className="text-[11px] text-zinc-500" dir="ltr">+ {formatMoney(row.personal_amount, isAr)} {isAr ? 'منك' : 'by you'}</p> : null}
                                         {row.order?.settle && !row.order.settle.blocked && settling?.orderId !== row.order._id && (
-                                            <button onClick={() => openSettle(row.order)} className="mt-1.5 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-bold text-white transition">
+                                            <button onClick={() => openSettle(row.order)} className="mt-1.5 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-[11px] font-bold text-zinc-800 transition">
                                                 <Wallet size={11} />{isAr ? 'ادفعه أنا' : 'Pay it myself'}
                                             </button>
                                         )}
                                         {row.order?.settle?.settled && row.order.settle.blocked === 'NOTHING_TO_SETTLE' && (
-                                            <p className="mt-1 text-[11px] font-bold text-emerald-400">{isAr ? 'دفعته إنت' : 'Paid by you'}</p>
+                                            <p className="mt-1 text-[11px] font-bold text-emerald-600">{isAr ? 'دفعته إنت' : 'Paid by you'}</p>
                                         )}
                                     </div>
                                 </div>
@@ -293,14 +293,14 @@ function SettlePanel({ settling, busy, isAr, ot, onPay, onTopUp, onClose }) {
     const shortfall = Math.max(0, Math.ceil((amount - balance) * 100) / 100);
     const canTopUp = !!settling.wallet?.topup_enabled;
     return (
-        <div className="mt-3 rounded-xl bg-white/5 border border-white/10 p-4 space-y-3 text-sm">
-            <p className="text-white font-bold">{isAr ? `هتدفع ${formatMoney(amount, isAr)} بنفسك بدل ${ot.the}` : `You pay ${formatMoney(amount, isAr)} yourself instead of the ${ot.one}`}</p>
-            <p className="text-xs text-zinc-400 leading-relaxed">
+        <div className="mt-3 rounded-xl bg-zinc-50 border border-zinc-200 p-4 space-y-3 text-sm">
+            <p className="text-zinc-900 font-bold">{isAr ? `هتدفع ${formatMoney(amount, isAr)} بنفسك بدل ${ot.the}` : `You pay ${formatMoney(amount, isAr)} yourself instead of the ${ot.one}`}</p>
+            <p className="text-xs text-zinc-600 leading-relaxed">
                 {isAr
                     ? `المبلغ ده بيرجع لليميت بتاعك وبيتشال من حساب ${ot.the}. ولو الأوردر اتلغى أو رجع بعد كده، الفلوس بترجع لمحفظتك إنت.`
                     : `It goes back onto your limit and off the ${ot.one}'s account. If the order is later cancelled or returned, the money comes back to your wallet.`}
             </p>
-            <p className="text-xs text-zinc-400">{isAr ? 'رصيد محفظتك:' : 'Your wallet balance:'} <span className="text-white font-bold" dir="ltr">{formatMoney(balance, isAr)}</span></p>
+            <p className="text-xs text-zinc-600">{isAr ? 'رصيد محفظتك:' : 'Your wallet balance:'} <span className="text-zinc-900 font-bold" dir="ltr">{formatMoney(balance, isAr)}</span></p>
             <div className="flex flex-wrap gap-2">
                 {shortfall <= 0 ? (
                     <button onClick={onPay} disabled={busy} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-marine-cyan hover:bg-marine-cyan-dark text-sm font-bold text-white transition disabled:opacity-50">
@@ -312,9 +312,9 @@ function SettlePanel({ settling, busy, isAr, ot, onPay, onTopUp, onClose }) {
                         {isAr ? `ادفع ${formatMoney(shortfall, isAr)} بالكارت أو أي وسيلة دفع` : `Pay ${formatMoney(shortfall, isAr)} by card or another method`}
                     </button>
                 ) : (
-                    <p className="text-xs text-amber-400">{isAr ? 'رصيدك مش كفاية، وشحن المحفظة مقفول دلوقتي.' : 'Your balance is short and wallet top-ups are off right now.'}</p>
+                    <p className="text-xs text-amber-700">{isAr ? 'رصيدك مش كفاية، وشحن المحفظة مقفول دلوقتي.' : 'Your balance is short and wallet top-ups are off right now.'}</p>
                 )}
-                <button onClick={onClose} disabled={busy} className="px-3 py-1.5 rounded-lg text-sm text-zinc-400 hover:text-white">{isAr ? 'رجوع' : 'Back'}</button>
+                <button onClick={onClose} disabled={busy} className="px-3 py-1.5 rounded-lg text-sm text-zinc-500 hover:text-zinc-900">{isAr ? 'رجوع' : 'Back'}</button>
             </div>
             {shortfall > 0 && balance > 0 && canTopUp && (
                 <p className="text-[11px] text-zinc-500">{isAr ? `الـ ${formatMoney(balance, isAr)} اللي في محفظتك هتتحسب، وهتدفع الباقي بس.` : `The ${formatMoney(balance, isAr)} already in your wallet counts; you pay only the rest.`}</p>
@@ -335,36 +335,36 @@ function MembershipCard({ membership, isAr }) {
     };
 
     return (
-        <div className="space-y-4 rounded-3xl border border-white/10 p-4 sm:p-5">
+        <div className="space-y-4 rounded-3xl border border-zinc-200/80 bg-zinc-50/70 p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-2xl bg-marine-cyan/15 text-marine-primary flex items-center justify-center"><Building2 size={24} /></div>
                     <div>
-                        <h2 className="text-xl font-black text-white">{membership.company.name}</h2>
+                        <h2 className="text-xl font-black text-zinc-900">{membership.company.name}</h2>
                         <p className="text-xs text-zinc-500">
                             {[membership.is_employee && (isAr ? `${ot.member}` : `${ot.Member}`), membership.is_manager && (isAr ? 'مدير الحساب' : 'Account manager')].filter(Boolean).join(' · ')}
                         </p>
                     </div>
                 </div>
                 {membership.is_manager && (
-                    <Link href="/company" onClick={openPortal} className="inline-flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all">
+                    <Link href="/company" onClick={openPortal} className="inline-flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm">
                         <LayoutDashboard size={16} /> {isAr ? `لوحة ${ot.the}` : `${ot.One} portal`}
                     </Link>
                 )}
             </div>
 
             {suspended && (
-                <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-300 rounded-xl text-sm font-bold">
+                <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-800 rounded-xl text-sm font-bold">
                     {isAr ? `الطلب على حساب ${ot.the} موقوف مؤقتاً.` : `Ordering on the ${ot.one} account is temporarily paused.`}
                 </div>
             )}
             {membership.company.status === 'ended' && (
-                <div className="p-4 bg-white/5 border border-white/10 text-zinc-300 rounded-xl text-sm font-bold">
+                <div className="p-4 bg-zinc-100 border border-zinc-200 text-zinc-700 rounded-xl text-sm font-bold">
                     {isAr ? `العقد مع Ready Marine انتهى — لوحة ${ot.the} مفتوحة للفواتير والسداد بس.` : 'The contract with Ready Marine has ended — the portal stays open for invoices and payments only.'}
                 </div>
             )}
             {membership.is_employee && membership.deactivated && (
-                <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-300 rounded-xl text-sm font-bold flex items-start gap-2">
+                <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-800 rounded-xl text-sm font-bold flex items-start gap-2">
                     <PauseCircle size={18} className="shrink-0 mt-0.5" />
                     {isAr
                         ? `مدير حساب ${ot.the} وقّف طلبك على ${ot.v('حسابها', 'حسابه')}. كلّمه لو ده غلط. الأوردرات اللي طلبتها قبل كده بتكمل عادي.`
@@ -373,13 +373,13 @@ function MembershipCard({ membership, isAr }) {
             )}
 
             {membership.is_employee && !membership.deactivated && (
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
+                <div className="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
                     <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
-                            <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5"><Wallet size={12} />{isAr ? 'فاضلك الشهر ده' : 'Left this month'}</p>
-                            <p className="text-3xl font-black text-white mt-1 tabular-nums" dir="ltr">{noLimit ? formatLimit(null, isAr) : formatMoney(membership.remaining, isAr)}</p>
+                            <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5"><Wallet size={12} />{isAr ? 'فاضلك الشهر ده' : 'Left this month'}</p>
+                            <p className="text-3xl font-black text-zinc-900 mt-1 tabular-nums" dir="ltr">{noLimit ? formatLimit(null, isAr) : formatMoney(membership.remaining, isAr)}</p>
                         </div>
-                        <p className="text-xs text-zinc-400">
+                        <p className="text-xs text-zinc-600">
                             {noLimit
                                 ? (isAr ? `مفيش ليميت خاص بيك — بتطلب لحد السقف الشهري ${ot.toThe}.` : `No limit of your own — you may order up to the ${ot.one}'s monthly cap.`)
                                 : isAr
@@ -388,7 +388,7 @@ function MembershipCard({ membership, isAr }) {
                         </p>
                     </div>
                     {!noLimit && (
-                        <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
+                        <div className="mt-4 h-2 rounded-full bg-zinc-200 overflow-hidden">
                             <div className="h-full bg-marine-cyan rounded-full" style={{ width: `${used}%` }} />
                         </div>
                     )}
@@ -414,23 +414,23 @@ function MembershipCard({ membership, isAr }) {
             </div>
 
             {membership.is_employee && !membership.deactivated && (
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-                    <p className="text-white font-bold mb-3">{isAr ? 'طرق التوصيل المتاحة' : 'Delivery options'}</p>
+                <div className="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-sm">
+                    <p className="text-zinc-900 font-bold mb-3">{isAr ? 'طرق التوصيل المتاحة' : 'Delivery options'}</p>
                     <ul className="space-y-3 text-sm">
                         {membership.modes.consolidate && (
-                            <li className="flex items-start gap-3 text-zinc-300">
-                                <Truck size={18} className="text-emerald-400 mt-0.5 shrink-0" />
+                            <li className="flex items-start gap-3 text-zinc-600">
+                                <Truck size={18} className="text-emerald-600 mt-0.5 shrink-0" />
                                 <span>
-                                    <strong className="text-white">{isAr ? `تجميع على ${ot.theBranch} — أوفر` : `Consolidate to ${ot.branch} — cheaper`}</strong><br />
+                                    <strong className="text-zinc-900">{isAr ? `تجميع على ${ot.theBranch} — أوفر` : `Consolidate to ${ot.branch} — cheaper`}</strong><br />
                                     {isAr ? `أوردرك بيستنى زمايلك اللي طالبين من نفس المورد، ويتشحن معاهم طرد واحد على ${ot.theBranch} والشحن بيتقسم عليكم.` : `Your order waits for colleagues ordering from the same vendor and ships with them as one parcel to the ${ot.branch}, splitting the shipping.`}
                                 </span>
                             </li>
                         )}
                         {membership.modes.instant && (
-                            <li className="flex items-start gap-3 text-zinc-300">
-                                <Zap size={18} className="text-amber-400 mt-0.5 shrink-0" />
+                            <li className="flex items-start gap-3 text-zinc-600">
+                                <Zap size={18} className="text-amber-500 mt-0.5 shrink-0" />
                                 <span>
-                                    <strong className="text-white">{isAr ? 'فوري' : 'Instant'}</strong><br />
+                                    <strong className="text-zinc-900">{isAr ? 'فوري' : 'Instant'}</strong><br />
                                     {isAr ? `بيتحرك على طول بشحن كامل، على البيت أو ${ot.theBranch}.` : `Ships right away with full shipping, to home or the ${ot.branch}.`}
                                 </span>
                             </li>
@@ -444,9 +444,9 @@ function MembershipCard({ membership, isAr }) {
 
 function InfoCard({ icon: Icon, label, value, sub }) {
     return (
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
-            <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5"><Icon size={12} />{label}</p>
-            <p className="text-white font-bold mt-1">{value}</p>
+        <div className="bg-white border border-zinc-200/80 rounded-2xl p-4 shadow-sm">
+            <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5"><Icon size={12} />{label}</p>
+            <p className="text-zinc-900 font-bold mt-1">{value}</p>
             {sub && <p className="text-xs text-zinc-500 mt-0.5">{sub}</p>}
         </div>
     );
