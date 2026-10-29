@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useSyncExternalStore } from 'react';
+import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import { Search, ArrowRight, CarFront } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { garageCarLabel } from './company/useGarageCars';
@@ -203,7 +203,7 @@ function DesktopHero({ finder, slide, buttonRef }) {
 }
 
 /** The phone hero: the app design — an image banner, the search box, then "choose your car". */
-function PhoneHero({ finder, slide, buttonRef }) {
+function PhoneHero({ finder, slide, setSlide, buttonRef }) {
   const { language, t } = useApp();
   const {
     metadata, filters, garageCars, brandModels, selectedModel, openNext,
@@ -211,23 +211,25 @@ function PhoneHero({ finder, slide, buttonRef }) {
     dropQueued, handleSearch,
   } = finder;
   const heroImages = HERO_IMAGES;
+  const touchStartX = useRef(null);
+  const changeSlide = (direction) => setSlide((current) => (current + direction + heroImages.length) % heroImages.length);
+  const handleTouchStart = (event) => { touchStartX.current = event.touches[0].clientX; };
+  const handleTouchEnd = (event) => {
+    if (touchStartX.current === null) return;
+    const distance = event.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(distance) > 45) changeSlide(distance > 0 ? -1 : 1);
+    touchStartX.current = null;
+  };
   return (
     <>
-    {/* The app design, on every screen: the search box, an image banner, then "choose your
-        car" in a white card. A phone stacks them; a wide screen puts the banner beside the
-        card. The header carries the search from `md` up. */}
     <section className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 pt-3 pb-2 sm:pt-8 sm:pb-6 grid gap-3 sm:gap-4 lg:grid-cols-[1.35fr_1fr] lg:gap-6 lg:items-stretch">
+      <div className="max-w-7xl mx-auto px-3 pt-2 pb-4 sm:px-4 sm:pt-8 sm:pb-6 grid gap-3 sm:gap-4 lg:grid-cols-[1.35fr_1fr] lg:gap-6 lg:items-stretch">
       <div className="space-y-3 sm:space-y-4 flex flex-col">
-      {/* The search box first, right under the logo: it is what most visitors came for. */}
-      <SearchAutocomplete
-        placeholder={t.search}
-        formClassName="relative md:hidden"
-        inputClassName="w-full bg-white border border-zinc-200 shadow-sm rounded-2xl ps-4 pe-12 py-2.5 sm:py-3.5 text-base text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-marine-cyan"
-        buttonClassName="absolute end-4 top-1/2 -translate-y-1/2 text-marine-primary"
-      />
-
-      <div className="relative h-40 sm:h-72 lg:h-auto lg:flex-1 lg:min-h-[360px] rounded-3xl overflow-hidden bg-zinc-900 shadow-sm">
+      <div
+        className="relative h-[clamp(13.5rem,56vw,19rem)] sm:h-72 lg:h-auto lg:flex-1 lg:min-h-[360px] rounded-[1.35rem] overflow-hidden bg-zinc-900 shadow-sm touch-pan-y"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {heroImages.map((src, index) => (
           <img
             key={src}
@@ -240,11 +242,22 @@ function PhoneHero({ finder, slide, buttonRef }) {
             words sit on the left in both languages (shaded behind them), and the person
             stays clear — in Arabic too. */}
         <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/45 to-black/80" />
-        <div className="absolute inset-y-0 left-0 w-4/5 lg:w-3/4 flex flex-col justify-center p-5 sm:p-10">
-          <h1 className="text-[22px] sm:text-4xl lg:text-5xl font-black text-white leading-tight">{t.heroTitle}</h1>
-          <p className="mt-2 sm:mt-4 text-[11px] sm:text-base leading-relaxed text-white/80 line-clamp-3 max-w-xl">{t.heroDesc}</p>
+        <div className="absolute inset-y-0 start-0 w-[78%] sm:w-4/5 lg:w-3/4 flex flex-col justify-center p-4 sm:p-10 text-start rtl:text-right">
+          <h1 className="text-[clamp(1.35rem,6vw,2.25rem)] sm:text-4xl lg:text-5xl font-black text-white leading-[1.15]">{t.heroTitle}</h1>
+          <p className="mt-2 sm:mt-4 text-xs sm:text-base leading-relaxed text-white/80 line-clamp-2 sm:line-clamp-3 max-w-xl">{t.heroDesc}</p>
+        </div>
+        <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-1.5" aria-label={language === 'ar' ? 'شرائح العرض' : 'Hero slides'}>
+          {heroImages.map((src, index) => (
+            <button key={src} type="button" onClick={() => setSlide(index)} aria-label={`${language === 'ar' ? 'الشريحة' : 'Slide'} ${index + 1}`} aria-current={index === slide ? 'true' : undefined} className={`h-1.5 rounded-full transition-all ${index === slide ? 'w-6 bg-white' : 'w-1.5 bg-white/55'}`} />
+          ))}
         </div>
       </div>
+      <SearchAutocomplete
+        placeholder={t.search}
+        formClassName="relative md:hidden"
+        inputClassName="w-full bg-white border border-zinc-200 shadow-sm rounded-2xl ps-4 pe-12 py-2.5 text-base text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-marine-cyan"
+        buttonClassName="absolute end-4 top-1/2 -translate-y-1/2 text-marine-primary"
+      />
 
       </div>
 
@@ -346,12 +359,12 @@ export default function HeroSection() {
   if (wide === null) {
     return (
       <>
-        <div className="md:hidden"><PhoneHero finder={finder} slide={slide} /></div>
+        <div className="md:hidden"><PhoneHero finder={finder} slide={slide} setSlide={setSlide} buttonRef={finder.searchButtonRef} /></div>
         <div className="hidden md:block"><DesktopHero finder={finder} slide={slide} /></div>
       </>
     );
   }
   return wide
     ? <DesktopHero finder={finder} slide={slide} buttonRef={finder.searchButtonRef} />
-    : <PhoneHero finder={finder} slide={slide} buttonRef={finder.searchButtonRef} />;
+    : <PhoneHero finder={finder} slide={slide} setSlide={setSlide} buttonRef={finder.searchButtonRef} />;
 }
