@@ -223,10 +223,10 @@ function PhoneHero({ finder, slide, setSlide, buttonRef }) {
   return (
     <>
     <section className="bg-white">
-      <div className="max-w-7xl mx-auto px-3 pt-2 pb-4 sm:px-4 sm:pt-8 sm:pb-6 grid gap-3 sm:gap-4 lg:grid-cols-[1.35fr_1fr] lg:gap-6 lg:items-stretch">
-      <div className="space-y-3 sm:space-y-4 flex flex-col">
+      <div className="max-w-7xl mx-auto px-4 pt-5 pb-6 sm:px-6 sm:pt-10 sm:pb-8 grid gap-4 sm:gap-6 lg:grid-cols-[1.35fr_1fr] lg:gap-8 lg:items-stretch">
+      <div className="space-y-4 sm:space-y-5 flex flex-col">
       <div
-        className="relative h-[clamp(13.5rem,56vw,19rem)] sm:h-72 lg:h-auto lg:flex-1 lg:min-h-[360px] rounded-[1.35rem] overflow-hidden bg-zinc-900 shadow-sm touch-pan-y"
+        className="relative h-[clamp(12rem,48vw,17rem)] sm:h-72 lg:h-auto lg:flex-1 lg:min-h-[360px] rounded-2xl overflow-hidden bg-zinc-900 touch-pan-y"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -242,9 +242,9 @@ function PhoneHero({ finder, slide, setSlide, buttonRef }) {
             words sit on the left in both languages (shaded behind them), and the person
             stays clear — in Arabic too. */}
         <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/45 to-black/80" />
-        <div className="absolute inset-y-0 start-0 w-[78%] sm:w-4/5 lg:w-3/4 flex flex-col justify-center p-4 sm:p-10 text-start rtl:text-right">
+        <div className="absolute inset-y-0 start-0 w-[82%] sm:w-4/5 lg:w-3/4 flex flex-col justify-center p-5 sm:p-10 text-start rtl:text-right">
           <h1 className="text-[clamp(1.35rem,6vw,2.25rem)] sm:text-4xl lg:text-5xl font-black text-white leading-[1.15]">{t.heroTitle}</h1>
-          <p className="mt-2 sm:mt-4 text-xs sm:text-base leading-relaxed text-white/80 line-clamp-2 sm:line-clamp-3 max-w-xl">{t.heroDesc}</p>
+          <p className="mt-2 hidden sm:block sm:text-base leading-relaxed text-white/80 line-clamp-3 max-w-xl">{t.heroDesc}</p>
         </div>
         <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-1.5" aria-label={language === 'ar' ? 'شرائح العرض' : 'Hero slides'}>
           {heroImages.map((src, index) => (
@@ -261,9 +261,9 @@ function PhoneHero({ finder, slide, setSlide, buttonRef }) {
 
       </div>
 
-      <div className="bg-white rounded-3xl border border-zinc-100 shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-3.5 sm:p-6 space-y-2.5 sm:space-y-4 lg:self-center">
+      <div className="bg-zinc-50/80 rounded-2xl border border-zinc-100 p-4 sm:p-6 space-y-3 sm:space-y-4 lg:self-center">
         <div className="flex items-center gap-3">
-          <span className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-2xl bg-marine-cyan text-white flex items-center justify-center shadow-md shadow-red-600/20">
+          <span className="w-9 h-9 sm:w-11 sm:h-11 shrink-0 rounded-xl bg-marine-cyan text-white flex items-center justify-center">
             <CarFront size={22} />
           </span>
           <div className="min-w-0">
@@ -329,7 +329,7 @@ function PhoneHero({ finder, slide, setSlide, buttonRef }) {
           ref={buttonRef}
           type="button"
           onClick={handleSearch}
-          className="w-full flex items-center justify-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 sm:py-3.5 rounded-2xl transition-colors shadow-lg shadow-red-600/20"
+          className="w-full flex items-center justify-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold py-3 sm:py-3.5 rounded-xl transition-colors"
         >
           <span>{language === 'ar' ? 'عرض النتائج' : 'Show results'}</span>
           <ArrowRight size={18} className="rtl:rotate-180" />
