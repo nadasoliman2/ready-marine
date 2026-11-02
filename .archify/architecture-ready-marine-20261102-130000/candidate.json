@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Ready Marine — System Architecture & Components",
+    "subtitle": "Egypt's First Multi-Vendor Yacht & Marine Spare Parts Platform",
+    "output": ".archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+    "quality_profile": "showcase",
+    "viewBox": [1200, 750]
+  },
+  "components": [
+    {
+      "id": "client-users",
+      "type": "external",
+      "label": "Customers",
+      "sublabel": "Web & Mobile App",
+      "tag": "Buyers",
+      "pos": [40, 110],
+      "size": [160, 64]
+    },
+    {
+      "id": "client-vendors",
+      "type": "external",
+      "label": "Vendors",
+      "sublabel": "Merchants & Suppliers",
+      "tag": "Sellers",
+      "pos": [40, 270],
+      "size": [160, 64]
+    },
+    {
+      "id": "client-admin",
+      "type": "external",
+      "label": "Admin Ops",
+      "sublabel": "Platform Management",
+      "tag": "Admins",
+      "pos": [40, 430],
+      "size": [160, 64]
+    },
+    {
+      "id": "fe-storefront",
+      "type": "frontend",
+      "label": "Storefront & Catalog",
+      "sublabel": "Next.js 14 App Router :3000",
+      "tag": "SSR / ISR",
+      "pos": [260, 110],
+      "size": [160, 64]
+    },
+    {
+      "id": "fe-auth",
+      "type": "security",
+      "label": "Authentication UI",
+      "sublabel": "Google GSI & OTP Modal",
+      "tag": "Client Auth",
+      "pos": [260, 270],
+      "size": [160, 64]
+    },
+    {
+      "id": "fe-customer",
+      "type": "frontend",
+      "label": "Customer Center",
+      "sublabel": "Orders, Wallet & Family",
+      "tag": "Dashboard",
+      "pos": [260, 430],
+      "size": [160, 64]
+    },
+    {
+      "id": "fe-vendor",
+      "type": "frontend",
+      "label": "Vendor Portal",
+      "sublabel": "Products, Shipments & Ledger",
+      "tag": "B2B UI",
+      "pos": [260, 590],
+      "size": [160, 64]
+    },
+    {
+      "id": "api-gateway",
+      "type": "backend",
+      "label": "API Gateway & Router",
+      "sublabel": "Express.js :2000",
+      "tag": "REST Core",
+      "pos": [500, 110],
+      "size": [160, 64]
+    },
+    {
+      "id": "auth-service",
+      "type": "security",
+      "label": "Auth & Session Service",
+      "sublabel": "JWT, Argon2 & Google JWKS",
+      "tag": "OAuth 2.0",
+      "pos": [500, 270],
+      "size": [160, 64]
+    },
+    {
+      "id": "order-engine",
+      "type": "backend",
+      "label": "Order & Parcel Engine",
+      "sublabel": "Multi-Vendor Sub-Orders",
+      "tag": "State Machine",
+      "pos": [500, 430],
+      "size": [160, 64]
+    },
+    {
+      "id": "finance-engine",
+      "type": "backend",
+      "label": "Wallet & Ledger Service",
+      "sublabel": "Balance, Payouts & Points",
+      "tag": "Double-Entry",
+      "pos": [500, 590],
+      "size": [160, 64]
+    },
+    {
+      "id": "cron-worker",
+      "type": "backend",
+      "label": "Cron Worker Service",
+      "sublabel": "Order Sync & Tracking",
+      "tag": "Scheduled",
+      "pos": [740, 110],
+      "size": [160, 64]
+    },
+    {
+      "id": "mongodb",
+      "type": "database",
+      "label": "MongoDB Primary",
+      "sublabel": "readymarine DB :27017",
+      "tag": "Doc Store",
+      "pos": [740, 270],
+      "size": [160, 64]
+    },
+    {
+      "id": "redis",
+      "type": "database",
+      "label": "Redis Cache & Presence",
+      "sublabel": "In-Memory Store :6379",
+      "tag": "Cache",
+      "pos": [740, 430],
+      "size": [160, 64]
+    },
+    {
+      "id": "uploads",
+      "type": "cloud",
+      "label": "Media & Asset Storage",
+      "sublabel": "Product & Part Images",
+      "tag": "Static CDN",
+      "pos": [740, 590],
+      "size": [160, 64]
+    },
+    {
+      "id": "google-auth",
+      "type": "external",
+      "label": "Google Identity",
+      "sublabel": "GIS OAuth & JWKS Certs",
+      "tag": "Identity",
+      "pos": [980, 110],
+      "size": [160, 64]
+    },
+    {
+      "id": "bosta-shipping",
+      "type": "external",
+      "label": "Bosta Logistics API",
+      "sublabel": "AWB, Delivery & Webhooks",
+      "tag": "Shipping",
+      "pos": [980, 270],
+      "size": [160, 64]
+    },
+    {
+      "id": "resend-email",
+      "type": "external",
+      "label": "Resend Email Service",
+      "sublabel": "OTP & Order Notifications",
+      "tag": "Email Gateway",
+      "pos": [980, 430],
+      "size": [160, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Ready Marine Platform Stack (VPC)",
+      "wraps": [
+        "fe-storefront",
+        "fe-auth",
+        "fe-customer",
+        "fe-vendor",
+        "api-gateway",
+        "auth-service",
+        "order-engine",
+        "finance-engine",
+        "cron-worker",
+        "mongodb",
+        "redis",
+        "uploads"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Internal Backend & Data Tier",
+      "wraps": [
+        "api-gateway",
+        "auth-service",
+        "order-engine",
+        "finance-engine",
+        "cron-worker",
+        "mongodb",
+        "redis",
+        "uploads"
+      ]
+    }
+  ],
+  "connections": [
+    { "id": "c1", "from": "client-users", "to": "fe-storefront", "label": "Browse & Search", "variant": "emphasis" },
+    { "id": "c2", "from": "client-vendors", "to": "fe-vendor", "label": "Manage Catalog", "variant": "default" },
+    { "id": "c3", "from": "client-admin", "to": "fe-customer", "label": "Ops & Support", "variant": "default" },
+    { "id": "c4", "from": "fe-storefront", "to": "api-gateway", "label": "REST / JSON", "variant": "emphasis" },
+    { "id": "c5", "from": "fe-auth", "to": "auth-service", "label": "Auth Token", "variant": "security" },
+    { "id": "c6", "from": "fe-customer", "to": "order-engine", "label": "Orders & Checkout", "variant": "default" },
+    { "id": "c7", "from": "fe-vendor", "to": "finance-engine", "label": "Ledger & Payouts", "variant": "default" },
+    { "id": "c8", "from": "api-gateway", "to": "auth-service", "label": "JWT Guard", "variant": "security" },
+    { "id": "c9", "from": "auth-service", "to": "mongodb", "label": "User Record", "variant": "default" },
+    { "id": "c10", "from": "order-engine", "to": "mongodb", "label": "Parcels & Orders", "variant": "default" },
+    { "id": "c11", "from": "finance-engine", "to": "mongodb", "label": "Wallets & Ledger", "variant": "default" },
+    { "id": "c12", "from": "cron-worker", "to": "mongodb", "label": "Status Sweeps", "variant": "dashed" },
+    { "id": "c13", "from": "order-engine", "to": "redis", "label": "Cart & Stock", "variant": "dashed" },
+    { "id": "c14", "from": "auth-service", "to": "google-auth", "label": "Verify JWKS", "variant": "security" },
+    { "id": "c15", "from": "order-engine", "to": "bosta-shipping", "label": "Create AWB", "variant": "default" },
+    { "id": "c16", "from": "api-gateway", "to": "resend-email", "label": "Send OTP & Receipts", "variant": "default" },
+    { "id": "c17", "from": "api-gateway", "to": "uploads", "label": "Multipart Uploads", "variant": "default" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Storefront & Customer Layer",
+      "items": [
+        "Next.js 14 App Router with responsive Mobile PWA design",
+        "Vessel compatibility selector & marine search autocomplete",
+        "Customer portal with shared Family accounts & Loyalty points"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Multi-Vendor Marketplace Engine",
+      "items": [
+        "Automated sub-order splitting into vendor-specific parcels",
+        "Independent vendor dispatch, shipping rules & commission ledger",
+        "Integrated Bosta logistics with live tracking & webhook sync"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Security & External Integrations",
+      "items": [
+        "Google Identity Services (GSI) with RS256 JWKS verification",
+        "Argon2 & scrypt password hashing with HTTP-only cookies",
+        "Resend email gateway for receipts, verification & ticket alerts"
+      ]
+    }
+  ]
+}

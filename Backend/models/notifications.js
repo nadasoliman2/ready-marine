@@ -82,6 +82,9 @@ const notificationSchema = new Schema(
                 'earning_unfrozen',
                 'payouts_paused',
                 'payouts_resumed',
+                // Support Tickets
+                'ticket_reply',
+                'ticket_status_change',
             ],
             index: true,
         },

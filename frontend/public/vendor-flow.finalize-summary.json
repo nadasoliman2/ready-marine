@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/vendor-flow-20261102/candidate.json",
+    "sha256": "07620de0ce63f0c24f4d02fca4d9917a6d0b11a4f19a339b3d95ebc6d9be5293",
+    "bytes": 4895
+  },
+  "artifact": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/vendor-flow.html",
+    "sha256": "fc0a13679bb1faa32b395501bd5d9004553a603b3888314f1c3240bf16b54fea",
+    "bytes": 851968
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/vendor-flow.finalize.json",
+    "summaryReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/vendor-flow.finalize-summary.json",
+    "browserCheckReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/vendor-flow.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-02T11:02:56.682Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 2576,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "c6",
+            "from": "v-pack",
+            "to": "v-courier",
+            "label": "Handover Courier",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "bends": 3,
+          "stretch": 1.105,
+          "directCorridorBlockers": [
+            {
+              "id": "v-splitter",
+              "label": "Order Splitter",
+              "box": [
+                310,
+                410,
+                180,
+                64
+              ]
+            }
+          ]
+        }
+      ],
+      "truncated": false
+    },
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

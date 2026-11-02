@@ -86,6 +86,10 @@ const CUSTOMER_NOTIFICATION_TYPES = [
     'company_suspended',
     'company_billing_mode_changed',
     'company_reactivated',
+
+    // ---- Support Tickets ----
+    'ticket_reply',
+    'ticket_status_change',
 ];
 
 const customerNotificationSchema = new Schema(

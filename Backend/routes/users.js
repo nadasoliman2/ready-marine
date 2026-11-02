@@ -58,8 +58,9 @@ router.get('/profile', protect('user'), async (req, res) => {
                 profile_image: null,
                 account_status: 'guest',
                 is_guest: true,
+                
                 addresses: [],
-                cars: [],
+              
             });
         }
         const profile = await getUserProfile(req.user._id);
@@ -76,7 +77,13 @@ router.get('/profile', protect('user'), async (req, res) => {
 router.put('/profile', protect('user'), async (req, res) => {
     try {
         const profile = await updateProfile(req.user._id, req.body);
-        res.json({ message: 'Profile updated successfully', profile });
+        const isAr = req.body.preferred_language === 'ar' || req.user.preferred_language === 'ar';
+        const message = profile.pending_email
+            ? (isAr
+                ? `تم حفظ البيانات بنجاح. تم إرسال رمز التحقق إلى (${profile.pending_email}) لتأكيد بريدك الجديد.`
+                : `Profile saved. A verification code has been sent to (${profile.pending_email}) to confirm your new email.`)
+            : (isAr ? 'تم تحديث البيانات بنجاح' : 'Profile updated successfully');
+        res.json({ message, profile });
     } catch (error) {
         res.status(error.status || 500).json({ message: error.message });
     }
@@ -363,15 +370,15 @@ router.post('/cart', protect('user'), async (req, res) => {
  * @desc    Add car to user garage
  * @route   POST /api/users/cars
  */
-router.post('/cars', protect('user'), async (req, res) => {
-    try {
-        const { addCar } = require('../services/userService');
-        const cars = await addCar(req.user._id, req.body);
-        res.status(201).json({ message: 'Car added successfully', cars });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
+// router.post('/cars', protect('user'), async (req, res) => {
+//     try {
+//         const { addCar } = require('../services/userService');
+//         const cars = await addCar(req.user._id, req.body);
+//         res.status(201).json({ message: 'Car added successfully', cars });
+//     } catch (error) {
+//         res.status(400).json({ message: error.message });
+//     }
+// });
 
 /**
  * @desc    ReadyCar recommendations — parts for the user's cars and products for any car,
@@ -395,14 +402,14 @@ router.get('/recommendations', protect('user'), denyUnclaimedGuest, async (req, 
  * @desc    Remove car from user garage
  * @route   DELETE /api/users/cars/:id
  */
-router.delete('/cars/:id', protect('user'), denyUnclaimedGuest, async (req, res) => {
-    try {
-        const { deleteCar } = require('../services/userService');
-        const cars = await deleteCar(req.user._id, req.params.id);
-        res.json({ message: 'Car removed successfully', cars });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// router.delete('/cars/:id', protect('user'), denyUnclaimedGuest, async (req, res) => {
+//     try {
+//         const { deleteCar } = require('../services/userService');
+//         const cars = await deleteCar(req.user._id, req.params.id);
+//         res.json({ message: 'Car removed successfully', cars });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
 
 module.exports = router;

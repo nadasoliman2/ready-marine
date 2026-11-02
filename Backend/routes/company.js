@@ -306,37 +306,37 @@ router.delete('/offices/:id', async (req, res) => {
 
 /* ---------------- Company cars ---------------- */
 
-router.get('/cars', async (req, res) => {
-    try {
-        res.json(await companyService.listCars(req.user._id));
-    } catch (error) {
-        fail(res, error);
-    }
-});
+// router.get('/cars', async (req, res) => {
+//     try {
+//         res.json(await companyService.listCars(req.user._id));
+//     } catch (error) {
+//         fail(res, error);
+//     }
+// });
 
-router.post('/cars', async (req, res) => {
-    try {
-        res.status(201).json(await companyService.createCar(req.user._id, req.body || {}));
-    } catch (error) {
-        fail(res, error);
-    }
-});
+// router.post('/cars', async (req, res) => {
+//     try {
+//         res.status(201).json(await companyService.createCar(req.user._id, req.body || {}));
+//     } catch (error) {
+//         fail(res, error);
+//     }
+// });
 
-router.patch('/cars/:id', async (req, res) => {
-    try {
-        res.json(await companyService.updateCar(req.user._id, req.params.id, req.body || {}));
-    } catch (error) {
-        fail(res, error);
-    }
-});
+// router.patch('/cars/:id', async (req, res) => {
+//     try {
+//         res.json(await companyService.updateCar(req.user._id, req.params.id, req.body || {}));
+//     } catch (error) {
+//         fail(res, error);
+//     }
+// });
 
-router.delete('/cars/:id', async (req, res) => {
-    try {
-        res.json(await companyService.deleteCar(req.user._id, req.params.id));
-    } catch (error) {
-        fail(res, error);
-    }
-});
+// router.delete('/cars/:id', async (req, res) => {
+//     try {
+//         res.json(await companyService.deleteCar(req.user._id, req.params.id));
+//     } catch (error) {
+//         fail(res, error);
+//     }
+// });
 
 /* ---------------- Purchases (the company's ledger) ---------------- */
 

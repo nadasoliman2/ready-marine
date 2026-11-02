@@ -44,17 +44,17 @@ router.get('/unsubscribe', async (req, res) => {
                 <style>
                     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f4f5; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
                     .card { background: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); max-width: 480px; text-align: center; }
-                    .icon { width: 64px; height: 64px; background: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; }
+                    .icon { width: 64px; height: 64px; background: #EBF5FE; color: #006781; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; }
                     h1 { color: #09090b; font-size: 22px; margin-bottom: 12px; }
                     p { color: #71717a; font-size: 15px; line-height: 1.6; }
-                    a { display: inline-block; margin-top: 24px; padding: 12px 28px; background: #dc2626; color: #fff; text-decoration: none; border-radius: 12px; font-weight: bold; }
+                    a { display: inline-block; margin-top: 24px; padding: 12px 28px; background: #00A6CE; color: #fff; text-decoration: none; border-radius: 12px; font-weight: bold; box-shadow: 0 4px 14px rgba(0, 166, 206, 0.35); }
                 </style>
             </head>
             <body>
                 <div class="card">
                     <div class="icon">✓</div>
                     <h1>تم إلغاء الاشتراك بنجاح</h1>
-                    <p>لن تتلقى بعد الآن رسائل البريد الإلكتروني التسويقية المخصصة لسيارتك من Ready Marine على <strong>${email}</strong>.</p>
+                    <p>لن تتلقى بعد الآن رسائل البريد الإلكتروني التسويقية من Ready Marine على <strong>${email}</strong>.</p>
                     <p style="font-size: 13px; margin-top: 10px;">ستظل تتلقى فقط إشعارات الطلبات الهامة وتأكيد الحسابات.</p>
                     <a href="/">العودة إلى Ready Marine</a>
                 </div>

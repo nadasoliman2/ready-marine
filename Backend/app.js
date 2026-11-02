@@ -57,6 +57,8 @@ const app = express();
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)
 .then(async () => {
+    console.log(process.env.PORT);
+    console.log(process.env.MONGO_URI);
     console.log('MongoDB Connected');
     // Build the search index now, so the first visitor to type in the search box does not wait.
     require('./services/searchSuggestService').getIndex().catch(() => {});

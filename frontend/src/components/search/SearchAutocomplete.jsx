@@ -96,6 +96,7 @@ export default function SearchAutocomplete({
   inputClassName = '',
   buttonClassName = '',
   buttonContent,
+  autoFocus = false,
 }) {
   const { language, siteSettings } = useApp();
   const isAr = language === 'ar';
@@ -112,6 +113,12 @@ export default function SearchAutocomplete({
   const [recent, setRecent] = useState([]);
   const boxRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
 
   const trimmed = query.trim();
 

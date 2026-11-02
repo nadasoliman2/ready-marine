@@ -110,134 +110,111 @@ function ProductCard({ product, showBadge }) {
 
   return (
     <>
-      <div ref={adRef} className="group bg-white rounded-2xl border border-zinc-200/90 hover:border-marine-cyan hover:shadow-lg overflow-hidden hover:-translate-y-0.5 transition-all duration-300 flex flex-col h-full shadow-xs">
+      <div ref={adRef} className="group bg-white rounded-xl sm:rounded-2xl border border-zinc-200/80 hover:border-marine-cyan hover:shadow-md overflow-hidden hover:-translate-y-0.5 transition-all duration-200 flex flex-col h-full shadow-2xs">
         <div className="relative">
-        <Link href={`/product/${productSlug}`} className="block" onClick={reportAdClick} tabIndex={-1} aria-hidden="true">
-          <div className="relative overflow-hidden aspect-square sm:aspect-[4/3] bg-marine-canvas">
-            <img
-              src={thumbUrl(product.images?.[0]?.url || product.image, 480)}
-              alt={title}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
-            />
-            {/* The part number and the maker, stamped on the photo like an OEM tag. */}
-            {partCode && (
-              <div className="absolute top-2 start-2 max-w-[55%] truncate bg-white/95 border border-marine-teal/15 text-marine-teal font-display text-[10px] font-medium tracking-[0.04em] px-2 py-0.5 rounded-md shadow-xs">
-                OEM #{partCode}
-              </div>
-            )}
-            {product.sponsored ? (
-              <div className="absolute top-2 end-2 bg-marine-warning text-white font-display text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded-md shadow-xs">
-                {isAr ? 'مموّل' : 'Sponsored'}
-              </div>
-            ) : hasDiscount ? (
-              <div className="absolute top-2 end-2 bg-red-600 text-white font-display text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
-                -{Math.round((1 - displayPrice / originalDisplayPrice) * 100)}%
-              </div>
-            ) : brandName ? (
-              <div className="absolute top-2 end-2 max-w-[45%] truncate bg-marine-teal text-white font-display text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded-md shadow-xs">
-                {brandName}
-              </div>
-            ) : null}
-            {hasVariants && (
-              <div className="absolute bottom-2 end-2 bg-white/95 text-marine-primary font-display text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded-md border border-marine-cyan/30 shadow-xs">
-                {isAr ? 'متعدد الخيارات' : 'Options'}
-              </div>
-            )}
-            {/* Set by the shop and the recommendations: a part made for the customer's vessel. */}
-            {product.fit === 'car' && (
-              <div className="absolute bottom-2 start-2 flex items-center gap-1 bg-marine-success text-white font-display text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
-                <BadgeCheck size={12} aria-hidden="true" />
-                {isAr ? 'مضمون التوافق' : 'Guaranteed fit'}
-              </div>
-            )}
-          </div>
-        </Link>
+          <Link href={`/product/${productSlug}`} className="block" onClick={reportAdClick} tabIndex={-1} aria-hidden="true">
+            <div className="relative overflow-hidden aspect-[4/3] bg-marine-canvas/70">
+              <img
+                src={thumbUrl(product.images?.[0]?.url || product.image, 480)}
+                alt={title}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-contain p-2 sm:p-2.5 group-hover:scale-105 transition-transform duration-300"
+              />
+              {/* Part code badge */}
+              {partCode && (
+                <div className="absolute top-1.5 start-1.5 max-w-[55%] truncate bg-white/90 border border-marine-teal/15 text-marine-teal font-display text-[9px] font-medium px-1.5 py-0.5 rounded shadow-xs">
+                  OEM #{partCode}
+                </div>
+              )}
+              {product.sponsored ? (
+                <div className="absolute top-1.5 end-1.5 bg-amber-500 text-white font-display text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-xs">
+                  {isAr ? 'مموّل' : 'Sponsored'}
+                </div>
+              ) : hasDiscount ? (
+                <div className="absolute top-1.5 end-1.5 bg-red-600 text-white font-display text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs">
+                  -{Math.round((1 - displayPrice / originalDisplayPrice) * 100)}%
+                </div>
+              ) : brandName ? (
+                <div className="absolute top-1.5 end-1.5 max-w-[45%] truncate bg-marine-teal text-white font-display text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-xs">
+                  {brandName}
+                </div>
+              ) : null}
+              {hasVariants && (
+                <div className="absolute bottom-1.5 end-1.5 bg-white/90 text-marine-primary font-display text-[9px] font-bold px-1.5 py-0.5 rounded border border-marine-cyan/30 shadow-xs">
+                  {isAr ? 'خيارات' : 'Options'}
+                </div>
+              )}
+              {product.fit === 'car' && (
+                <div className="absolute bottom-1.5 start-1.5 flex items-center gap-1 bg-marine-success text-white font-display text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs">
+                  <BadgeCheck size={11} aria-hidden="true" />
+                  {isAr ? 'مضمون' : 'Fits'}
+                </div>
+              )}
+            </div>
+          </Link>
         </div>
 
-        <Link href={`/product/${productSlug}`} className="flex flex-col flex-1" onClick={reportAdClick}>
-          <div className="p-3.5 sm:p-4 flex flex-col flex-1">
+        <div className="p-2.5 sm:p-3 flex flex-col flex-1 justify-between">
+          <Link href={`/product/${productSlug}`} className="block flex-1" onClick={reportAdClick}>
             {reasonBadge && (
-              <div className="mb-2">
-                <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border ${reasonBadge.cls}`}>
+              <div className="mb-1">
+                <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border ${reasonBadge.cls}`}>
                   <span>{reasonBadge.icon}</span>
                   <span>{reasonBadge.text}</span>
                 </span>
               </div>
             )}
-            <div className="flex items-center gap-1 mb-1.5">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={11}
-                    className={i < Math.round(product.rating) ? 'text-amber-400 fill-amber-400' : 'text-marine-frost fill-marine-frost'}
-                  />
-                ))}
-              </div>
-              <span className="text-marine-outline text-[11px]">({product.reviews_count || 0} {isAr ? 'تقييم' : 'reviews'})</span>
+            <div className="flex items-center gap-1 mb-1 text-[11px] text-zinc-500">
+              <Star size={11} className="text-amber-400 fill-amber-400 shrink-0" />
+              <span className="font-semibold text-zinc-700">{product.rating ? Number(product.rating).toFixed(1) : '5.0'}</span>
+              <span className="text-[10px] text-zinc-400">({product.reviews_count || 0})</span>
             </div>
 
-            <h3 className="text-marine-ink font-semibold text-xs sm:text-sm leading-snug mb-2 line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem]">
+            <h3 className="text-marine-ink font-bold text-xs sm:text-[13px] leading-tight line-clamp-2 mb-1 min-h-[2rem]">
               {title}
             </h3>
 
             {fitment && (
-              <div className="flex items-start gap-1 mb-3 bg-marine-mist border border-marine-cyan/20 text-marine-primary font-display text-[10px] font-medium tracking-[0.04em] px-2 py-1 rounded-sm line-clamp-2">
-                <BadgeCheck size={11} className="flex-shrink-0 mt-px" aria-hidden="true" />
-                <span>{isAr ? 'متوافق مع: ' : 'Fits: '}{fitment}</span>
-              </div>
+              <p className="text-[10px] text-marine-outline truncate flex items-center gap-1 mb-1">
+                <BadgeCheck size={11} className="text-marine-cyan shrink-0" aria-hidden="true" />
+                <span className="truncate">{fitment}</span>
+              </p>
             )}
+          </Link>
 
-            <div className="flex items-end justify-between gap-2 mt-auto">
-              <div className="min-w-0">
+          {/* Bottom row: Price and Add-to-cart button */}
+          <div className="pt-2 mt-auto flex flex-col gap-1.5 border-t border-zinc-100">
+            <div className="flex items-baseline justify-between gap-1">
+              <div>
                 {hasDiscount && (
-                  <div className="text-marine-outline text-[11px] line-through font-display">
+                  <span className="text-zinc-400 text-[10px] line-through font-display me-1.5 leading-none">
                     {originalDisplayPrice.toLocaleString()} {currency}
-                  </div>
+                  </span>
                 )}
-                <div className="flex items-baseline gap-1">
-                  {hasVariants && <span className="text-marine-outline text-[11px]">{isAr ? 'من' : 'From'}</span>}
-                  <span className="font-display text-marine-navy font-bold text-base sm:text-xl">{displayPrice.toLocaleString()}</span>
-                  <span className="font-display text-marine-muted text-[11px]">{currency}</span>
-                </div>
+                <span className="font-display text-marine-navy font-black text-sm sm:text-base leading-none">
+                  {displayPrice.toLocaleString()}
+                </span>
+                <span className="font-display text-zinc-500 text-[10px] font-medium ms-0.5">{currency}</span>
               </div>
-              <span className={`hidden sm:inline-block flex-shrink-0 font-display text-[9px] font-bold uppercase tracking-[0.06em] px-1.5 py-1 rounded-sm border ${isOutOfStock ? 'text-red-600 border-red-200 bg-red-50' : 'text-marine-success border-marine-success/25 bg-marine-success/10'}`}>
-                {stockLabel}
-              </span>
+              {hasVariants && <span className="text-zinc-400 text-[9px] font-medium">{isAr ? 'متعدد الخيارات' : 'Options'}</span>}
             </div>
-          </div>
-        </Link>
 
-        <div className="grid gap-2 px-3 pb-3 sm:px-4 sm:pb-4">
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            disabled={disabled}
-            title={disabledTitle}
-            className={`flex items-center justify-center gap-2 font-display font-bold text-xs uppercase tracking-[0.04em] py-2.5 rounded-xl border transition-all duration-200 shadow-xs ${
-              disabled
-                ? 'bg-zinc-100 text-zinc-400 border-zinc-200 cursor-not-allowed'
-                : 'bg-marine-cyan hover:bg-marine-cyan-dark border-marine-cyan text-white shadow-marine-cyan/20 hover:shadow-md'
-            }`}
-          >
-            <ShoppingCart size={14} />
-            <span>{isAr ? 'أضف إلى السلة' : 'Add to cart'}</span>
-          </button>
-          {/* <button
-            type="button"
-            onClick={handleBuyNow}
-            disabled={disabled}
-            title={disabledTitle}
-            className={`font-display font-bold text-[11px] uppercase tracking-[0.06em] py-2.5 rounded transition-colors ${
-              disabled
-                ? 'bg-marine-haze text-marine-line cursor-not-allowed'
-                : 'bg-marine-cyan hover:bg-marine-cyan-dark text-white'
-            }`}
-          >
-            {t.buyNow}
-          </button> */}
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={disabled}
+              title={disabledTitle}
+              className={`w-full h-8 sm:h-8.5 rounded-lg flex items-center justify-center gap-1.5 text-xs font-bold transition-all shadow-xs active:scale-98 ${
+                disabled
+                  ? 'bg-zinc-100 text-zinc-400 border border-zinc-200 cursor-not-allowed'
+                  : 'bg-marine-cyan hover:bg-marine-cyan-dark text-white'
+              }`}
+            >
+              <ShoppingCart size={13} />
+              <span>{isAr ? 'أضف إلى السلة' : 'Add to cart'}</span>
+            </button>
+          </div>
         </div>
       </div>
 

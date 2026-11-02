@@ -15,24 +15,62 @@ const getUserProfile = async (userId) => {
 const updateProfile = async (userId, data) => {
     const { name, email, phone, preferred_language } = data;
     const { canonicalEmail } = require('./shared/emailIdentity');
-    const cleanEmail = email ? canonicalEmail(email) : email;
-    // Another spelling of an address someone else already uses (dots or a +alias on
-    // Gmail) is the SAME inbox — refused in words rather than by a raw index error.
-    if (cleanEmail && await User.exists({ email: cleanEmail, _id: { $ne: userId } })) {
-        const err = new Error('This email is already used by another account');
-        err.status = 409;
+    const cleanEmail = email ? canonicalEmail(email) : undefined;
+
+    const user = await User.findById(userId);
+    if (!user) {
+        const err = new Error('User not found');
+        err.status = 404;
         throw err;
     }
-    const update = { name, email: cleanEmail, phone };
-    // Drives the language of this account's emails and in-app notifications.
-    if (preferred_language === 'en' || preferred_language === 'ar') {
-        update.preferred_language = preferred_language;
+
+    let emailVerificationInitiated = false;
+
+    // Handle email update: if different from current active email, do NOT overwrite directly!
+    // Instead stage into `pending_email` and send verification OTP code to the new destination.
+    if (cleanEmail && cleanEmail !== user.email) {
+        // Check uniqueness against existing active accounts and pending changes
+        const taken = await User.findOne({
+            _id: { $ne: userId },
+            $or: [{ email: cleanEmail }, { pending_email: cleanEmail }],
+        }).select('_id');
+
+        if (taken) {
+            const err = new Error('This email is already used by another account');
+            err.status = 409;
+            throw err;
+        }
+
+        const contactVerificationService = require('./contactVerificationService');
+        await contactVerificationService.sendVerificationCode(userId, {
+            target: 'email',
+            value: cleanEmail,
+            language: preferred_language || user.preferred_language || 'ar',
+            role: 'user',
+        });
+        emailVerificationInitiated = true;
+    } else if (cleanEmail && cleanEmail === user.email && user.pending_email) {
+        // User reverted back to original email: drop pending change
+        user.pending_email = null;
     }
-    return await User.findByIdAndUpdate(
-        userId,
-        update,
-        { returnDocument: "after", runValidators: true }
-    ).select('-password');
+
+    // Update other non-email fields
+    if (name !== undefined) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+    if (preferred_language === 'en' || preferred_language === 'ar') {
+        user.preferred_language = preferred_language;
+    }
+
+    await user.save();
+
+    const result = await User.findById(userId)
+        .select('-password')
+        .lean();
+
+    return {
+        ...result,
+        email_verification_pending: emailVerificationInitiated || !!result.pending_email,
+    };
 };
 
 /**

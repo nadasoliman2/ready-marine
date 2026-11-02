@@ -1,4 +1,6 @@
 const https = require("https");
+const path = require("path");
+const fs = require("fs");
 const { SiteSettings } = require("../models/site_settings");
 
 const escapeHtml = (value) => String(value || "")
@@ -158,13 +160,68 @@ const getPasswordResetCopy = (language, role, resetUrl) => {
         };
 };
 
-const getSiteLogoUrl = async (verificationUrl) => {
+const getLogoAttachmentAndHtml = async () => {
     try {
         const settings = await SiteSettings.findOne().lean();
-        return resolvePublicUrl(settings?.logo_url, verificationUrl);
+        const rawUrl = settings?.logo_light_url || settings?.logo_url;
+        if (!rawUrl) {
+            return {
+                logoHtml: `<div style="font-size:24px;font-weight:900;letter-spacing:.02em;margin-bottom:18px;text-align:center;"><span style="color:#006781;">Ready</span> <span style="color:#00A6CE;">Marine</span></div>`,
+                attachment: null,
+            };
+        }
+
+        // Try to locate local file for inline CID attachment (works universally including Gmail)
+        let relativePath = '';
+        try {
+            if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
+                relativePath = new URL(rawUrl).pathname;
+            } else {
+                relativePath = rawUrl;
+            }
+        } catch {
+            relativePath = rawUrl;
+        }
+
+        if (relativePath.startsWith('/')) relativePath = relativePath.slice(1);
+        const localFilePath = path.join(__dirname, '../public', relativePath);
+
+        if (fs.existsSync(localFilePath) && fs.statSync(localFilePath).isFile()) {
+            const fileBuf = fs.readFileSync(localFilePath);
+            const ext = path.extname(localFilePath).slice(1) || 'png';
+            const base64Content = fileBuf.toString('base64');
+            return {
+                logoHtml: `<img src="cid:site-logo" alt="Ready Marine" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`,
+                attachment: {
+                    filename: path.basename(localFilePath),
+                    content: base64Content,
+                    contentId: 'site-logo',
+                    content_id: 'site-logo',
+                    contentType: `image/${ext === 'svg' ? 'svg+xml' : ext}`,
+                },
+            };
+        }
+
+        // If it's a real public URL (not localhost), we can use it directly
+        const isLocal = /^(https?:\/\/)?(localhost|127\.0\.0\.1)(:\d+)?/i.test(rawUrl);
+        if (!isLocal && /^https?:\/\//i.test(rawUrl)) {
+            return {
+                logoHtml: `<img src="${escapeHtml(rawUrl)}" alt="Ready Marine" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`,
+                attachment: null,
+            };
+        }
+
+        // Localhost URL but local file not found: fallback to clean branded text logo
+        return {
+            logoHtml: `<div style="font-size:24px;font-weight:900;letter-spacing:.02em;margin-bottom:18px;text-align:center;"><span style="color:#006781;">Ready</span> <span style="color:#00A6CE;">Marine</span></div>`,
+            attachment: null,
+        };
     } catch (error) {
-        console.error("Failed to load site logo for verification email:", error.message);
-        return "";
+        console.error("Failed to load site logo for email:", error.message);
+        return {
+            logoHtml: `<div style="font-size:24px;font-weight:900;letter-spacing:.02em;margin-bottom:18px;text-align:center;"><span style="color:#006781;">Ready</span> <span style="color:#00A6CE;">Marine</span></div>`,
+            attachment: null,
+        };
     }
 };
 
@@ -173,13 +230,77 @@ const sendBrandedActionEmail = async ({ to, name, actionUrl, copy }) => {
         throw new Error("RESEND_TOKEN is not configured");
     }
 
-    const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || "Ready Marine <onboarding@resend.dev>";
-    const safeName = escapeHtml(name || copy.fallbackName);
-    const safeActionUrl = escapeHtml(actionUrl);
-    const logoUrl = await getSiteLogoUrl(actionUrl);
-    const logoHtml = logoUrl
-        ? `<img src="${escapeHtml(logoUrl)}" alt="Ready Marine" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`
-        : `<div style="font-size:24px;font-weight:900;color:#111827;letter-spacing:.02em;margin-bottom:18px;text-align:center;">Ready<span style="color:#DC2626;">Car</span></div>`;
+  const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || "Ready Marine <onboarding@resend.dev>";
+const safeName = escapeHtml(name || copy.fallbackName);
+const safeActionUrl = escapeHtml(actionUrl);
+const { logoHtml, attachment } = await getLogoAttachmentAndHtml();
+
+const body = {
+    from,
+    to: [to],
+    subject: copy.subject,
+    html: `
+        <div lang="${copy.lang}" dir="${copy.dir}" style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,'Helvetica Neue',sans-serif;color:#111827;">
+            <div style="max-width:640px;margin:0 auto;padding:32px 16px;">
+                <div style="background:#ffffff;border:1px solid #dbe2e6;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(14,42,56,.08);">
+
+                    <div style="height:5px;background:linear-gradient(90deg,#00A6CE 0%,#006781 100%);"></div>
+
+                    <div style="padding:32px 26px 28px;text-align:${copy.align};">
+
+                        <!-- Logo -->
+                        ${logoHtml}
+
+                        <!-- Eyebrow -->
+                        <p style="margin:0 0 10px;color:#006781;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;">
+                            ${copy.eyebrow}
+                        </p>
+
+                        <!-- Title -->
+                        <h1 style="margin:0 0 16px;color:#09090b;font-size:25px;line-height:1.3;font-weight:800;">
+                            ${copy.title}
+                        </h1>
+
+                        <!-- Greeting -->
+                        <p style="margin:0 0 12px;color:#3f3f46;font-size:15px;line-height:1.7;">
+                            ${copy.greeting} ${safeName},
+                        </p>
+
+                        <!-- Body -->
+                        <p style="margin:0 0 22px;color:#3f3f46;font-size:14px;line-height:1.8;">
+                            ${copy.body}
+                        </p>
+
+                        <!-- Button -->
+                        <div style="text-align:center;margin:26px 0;">
+                            <a href="${safeActionUrl}" style="display:inline-block;background:#00A6CE;color:#ffffff;text-decoration:none;padding:11px 24px;border-radius:9px;font-weight:700;font-size:14px;line-height:1.5;box-shadow:0 4px 12px rgba(0,166,206,0.25);">
+                                ${copy.button}
+                            </a>
+                        </div>
+
+                        <!-- Expiry -->
+                        <p style="margin:0 0 16px;color:#71717a;font-size:12px;line-height:1.7;">
+                            ${copy.expiry}
+                        </p>
+
+                        <!-- Fallback URL -->
+                        <p style="margin:0;color:#a1a1aa;font-size:12px;line-height:1.7;">
+                            ${copy.fallback}<br />
+                            <a href="${safeActionUrl}" style="color:#00A6CE;word-break:break-all;text-decoration:underline;">
+                                ${safeActionUrl}
+                            </a>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
+    text: copy.text(name),
+};
+    if (attachment) {
+        body.attachments = [attachment];
+    }
 
     return await postJson({
         hostname: "api.resend.com",
@@ -187,38 +308,7 @@ const sendBrandedActionEmail = async ({ to, name, actionUrl, copy }) => {
         headers: {
             Authorization: `Bearer ${process.env.RESEND_TOKEN}`,
         },
-        body: {
-            from,
-            to: [to],
-            subject: copy.subject,
-            html: `
-                <div lang="${copy.lang}" dir="${copy.dir}" style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,'Helvetica Neue',sans-serif;color:#111827;">
-                    <div style="max-width:640px;margin:0 auto;padding:32px 16px;">
-                        <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(15,23,42,.08);">
-                            <div style="height:6px;background:#DC2626;"></div>
-                            <div style="padding:34px 28px 30px;text-align:${copy.align};">
-                                ${logoHtml}
-                                <p style="margin:0 0 10px;color:#DC2626;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;">${copy.eyebrow}</p>
-                                <h1 style="margin:0 0 14px;color:#09090b;font-size:28px;line-height:1.2;font-weight:900;">${copy.title}</h1>
-                                <p style="margin:0 0 12px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.greeting} ${safeName},</p>
-                                <p style="margin:0 0 24px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.body}</p>
-                                <div style="text-align:center;margin:30px 0;">
-                                    <a href="${safeActionUrl}" style="display:inline-block;background:#DC2626;color:#ffffff;text-decoration:none;padding:14px 24px;border-radius:12px;font-weight:800;font-size:15px;">
-                                        ${copy.button}
-                                    </a>
-                                </div>
-                                <p style="margin:0 0 16px;color:#71717a;font-size:13px;line-height:1.7;">${copy.expiry}</p>
-                                <p style="margin:0;color:#a1a1aa;font-size:12px;line-height:1.7;">
-                                    ${copy.fallback}<br />
-                                    <a href="${safeActionUrl}" style="color:#DC2626;word-break:break-all;">${safeActionUrl}</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `,
-            text: copy.text(name),
-        },
+        body,
     });
 };
 
@@ -587,7 +677,7 @@ const sendOtpEmail = async ({ to, name, code, expiryMinutes = 10, language = "en
 
     const isAr = language === "ar";
     const from = process.env.RESEND_FROM || process.env.EMAIL_FROM || "Ready Marine <onboarding@resend.dev>";
-    const logoUrl = await getSiteLogoUrl("");
+    const { logoHtml, attachment } = await getLogoAttachmentAndHtml();
     const safeName = escapeHtml(name || (isAr ? "مرحباً" : "there"));
     const safeCode = escapeHtml(code);
 
@@ -613,45 +703,47 @@ const sendOtpEmail = async ({ to, name, code, expiryMinutes = 10, language = "en
             warning: "Ready Marine staff will never ask you for this code. If you did not request it, ignore this email.",
         };
 
-    const logoHtml = logoUrl
-        ? `<img src="${escapeHtml(logoUrl)}" alt="Ready Marine" width="150" style="display:block;width:150px;max-width:150px;height:auto;margin:0 auto 18px;" />`
-        : `<div style="font-size:24px;font-weight:900;color:#111827;letter-spacing:.02em;margin-bottom:18px;text-align:center;">Ready<span style="color:#DC2626;">Car</span></div>`;
+    const body = {
+        from,
+        to: [to],
+        subject: copy.subject,
+        html: `
+            <div lang="${copy.lang}" dir="${copy.dir}" style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,'Helvetica Neue',sans-serif;color:#111827;">
+                <div style="max-width:640px;margin:0 auto;padding:32px 16px;">
+                    <div style="background:#ffffff;border:1px solid #dbe2e6;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(14,42,56,.08);">
+                        <div style="height:6px;background:linear-gradient(90deg, #00A6CE 0%, #006781 100%);"></div>
+                        <div style="padding:34px 28px 30px;text-align:${copy.align};">
+                            ${logoHtml}
+                            <p style="margin:0 0 10px;color:#006781;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;">${copy.eyebrow}</p>
+                            <h1 style="margin:0 0 14px;color:#09090b;font-size:26px;line-height:1.2;font-weight:900;">${copy.title}</h1>
+                            <p style="margin:0 0 12px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.greeting} ${safeName},</p>
+                            <p style="margin:0 0 22px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.body}</p>
+                            <div style="text-align:center;margin:26px 0;">
+                                <div style="display:inline-block;background:#F6FAFF;border:1px solid #BCC8CE;border-radius:14px;padding:18px 28px;font-size:34px;font-weight:900;letter-spacing:.32em;color:#0E2A38;font-family:'Courier New',monospace;box-shadow:0 2px 8px rgba(14,42,56,0.04);">
+                                    ${safeCode}
+                                </div>
+                            </div>
+                            <p style="margin:0 0 14px;color:#71717a;font-size:13px;line-height:1.7;">${copy.expiry}</p>
+                            <p style="margin:0;color:#a1a1aa;font-size:12px;line-height:1.7;">${copy.warning}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        text: isAr
+            ? `رمز التحقق الخاص بك: ${code} — ينتهي خلال ${expiryMinutes} دقائق.`
+            : `Your Ready Marine verification code is ${code}. It expires in ${expiryMinutes} minutes.`,
+    };
+
+    if (attachment) {
+        body.attachments = [attachment];
+    }
 
     return await postJson({
         hostname: "api.resend.com",
         path: "/emails",
         headers: { Authorization: `Bearer ${process.env.RESEND_TOKEN}` },
-        body: {
-            from,
-            to: [to],
-            subject: copy.subject,
-            html: `
-                <div lang="${copy.lang}" dir="${copy.dir}" style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,'Helvetica Neue',sans-serif;color:#111827;">
-                    <div style="max-width:640px;margin:0 auto;padding:32px 16px;">
-                        <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(15,23,42,.08);">
-                            <div style="height:6px;background:#DC2626;"></div>
-                            <div style="padding:34px 28px 30px;text-align:${copy.align};">
-                                ${logoHtml}
-                                <p style="margin:0 0 10px;color:#DC2626;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;">${copy.eyebrow}</p>
-                                <h1 style="margin:0 0 14px;color:#09090b;font-size:26px;line-height:1.2;font-weight:900;">${copy.title}</h1>
-                                <p style="margin:0 0 12px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.greeting} ${safeName},</p>
-                                <p style="margin:0 0 22px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.body}</p>
-                                <div style="text-align:center;margin:26px 0;">
-                                    <div style="display:inline-block;background:#f4f4f5;border:1px solid #e4e4e7;border-radius:14px;padding:18px 28px;font-size:34px;font-weight:900;letter-spacing:.32em;color:#09090b;font-family:'Courier New',monospace;">
-                                        ${safeCode}
-                                    </div>
-                                </div>
-                                <p style="margin:0 0 14px;color:#71717a;font-size:13px;line-height:1.7;">${copy.expiry}</p>
-                                <p style="margin:0;color:#a1a1aa;font-size:12px;line-height:1.7;">${copy.warning}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `,
-            text: isAr
-                ? `رمز التحقق الخاص بك: ${code} — ينتهي خلال ${expiryMinutes} دقائق.`
-                : `Your Ready Marine verification code is ${code}. It expires in ${expiryMinutes} minutes.`,
-        },
+        body,
     });
 };
 
@@ -709,18 +801,18 @@ const buildAbandonedCartEmail = async ({ name, items, moreCount = 0, cartUrl, un
     catch (error) { console.error("Failed to load the site logos for the cart reminder:", error.message); }
     const logoHtml = buildEmailLogoHtml(logos);
 
-    // Each line its own card, spaced like the car campaign's product cards.
+    // Each line its own card, styled in the Ready Marine aesthetic.
     const rows = items.map((item) => `
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e4e4e7;border-radius:14px;background:#ffffff;margin:0 0 12px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #dbe2e6;border-radius:16px;background:#ffffff;margin:0 0 14px;overflow:hidden;box-shadow:0 2px 8px rgba(14,42,56,0.04);">
             <tr>
-                <td width="94" style="padding:14px;vertical-align:middle;">
-                    <a href="${escapeHtml(item.link)}"><img src="${escapeHtml(item.imageUrl)}" alt="" width="80" height="80" style="display:block;width:80px;height:80px;object-fit:cover;border-radius:10px;background:#f4f4f5;" /></a>
+                <td width="94" style="padding:14px;vertical-align:middle;background:#F6FAFF;border-${copy.align === 'right' ? 'left' : 'right'}:1px solid #f0f4f8;text-align:center;">
+                    <a href="${escapeHtml(item.link)}"><img src="${escapeHtml(item.imageUrl)}" alt="" width="80" height="80" style="display:block;width:80px;height:80px;object-fit:cover;border-radius:10px;background:#ffffff;" /></a>
                 </td>
-                <td style="padding:14px 14px 14px 4px;vertical-align:middle;text-align:${copy.align};">
-                    <a href="${escapeHtml(item.link)}" style="color:#09090b;text-decoration:none;font-weight:700;font-size:15px;line-height:1.5;">${escapeHtml(item.title)}</a>
-                    ${item.variantLabel ? `<div style="color:#71717a;font-size:13px;line-height:1.6;margin-top:2px;">${escapeHtml(item.variantLabel)}</div>` : ""}
-                    <div style="color:#71717a;font-size:13px;line-height:1.6;margin-top:2px;">${copy.quantity}: ${Number(item.quantity) || 1}</div>
-                    <div style="color:#DC2626;font-size:16px;font-weight:800;line-height:1.5;margin-top:6px;white-space:nowrap;">${escapeHtml(money(item.price))}</div>
+                <td style="padding:14px 16px;vertical-align:middle;text-align:${copy.align};background:#ffffff;">
+                    <a href="${escapeHtml(item.link)}" style="color:#1E272E;text-decoration:none;font-weight:700;font-size:15px;line-height:1.5;">${escapeHtml(item.title)}</a>
+                    ${item.variantLabel ? `<div style="color:#6D797E;font-size:13px;line-height:1.6;margin-top:2px;">${escapeHtml(item.variantLabel)}</div>` : ""}
+                    <div style="color:#6D797E;font-size:13px;line-height:1.6;margin-top:2px;">${copy.quantity}: ${Number(item.quantity) || 1}</div>
+                    <div style="color:#0E2A38;font-size:16px;font-weight:900;line-height:1.5;margin-top:6px;white-space:nowrap;">${escapeHtml(money(item.price))}</div>
                 </td>
             </tr>
         </table>`).join("");
@@ -756,29 +848,29 @@ const buildAbandonedCartEmail = async ({ name, items, moreCount = 0, cartUrl, un
 </head>
 <body style="margin:0;padding:0;background-color:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#111827;direction:${copy.dir};text-align:${copy.align};">
     <div class="rc-outer" style="max-width:640px;margin:0 auto;padding:24px 10px;">
-        <div style="background-color:#ffffff;border:1px solid #e4e4e7;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.06);">
-            <div style="height:6px;background:linear-gradient(90deg, #DC2626 0%, #ef4444 100%);"></div>
+        <div style="background-color:#ffffff;border:1px solid #dbe2e6;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(14,42,56,0.08);">
+            <div style="height:6px;background:linear-gradient(90deg, #00A6CE 0%, #006781 100%);"></div>
             <div style="padding:22px 16px 14px;text-align:center;border-bottom:1px solid #f4f4f5;">
                 ${logoHtml}
             </div>
             <div class="rc-pad" style="padding:28px 22px 26px;text-align:${copy.align};background:#ffffff;">
-                <p style="margin:0 0 10px;color:#DC2626;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;">${copy.eyebrow}</p>
+                <p style="margin:0 0 10px;color:#006781;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;">${copy.eyebrow}</p>
                 <h1 class="rc-h1" style="margin:0 0 14px;color:#09090b;font-size:28px;line-height:1.25;font-weight:900;">${copy.title}</h1>
                 <p style="margin:0 0 12px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.greeting} ${safeName},</p>
                 <p style="margin:0 0 18px;color:#3f3f46;font-size:16px;line-height:1.7;">${copy.body}</p>
                 <div style="margin:24px 0 0;">${rows}</div>
                 ${moreCount > 0 ? `<p style="margin:4px 0 0;color:#71717a;font-size:13px;">${escapeHtml(copy.more(moreCount))}</p>` : ""}
                 <div style="text-align:center;margin:28px 0 30px;">
-                    <a href="${safeCartUrl}" class="rc-cta" style="display:inline-block;background-color:#DC2626;color:#ffffff;text-decoration:none;padding:15px 36px;border-radius:14px;font-weight:900;font-size:16px;box-shadow:0 8px 20px rgba(220,38,38,0.3);">
+                    <a href="${safeCartUrl}" class="rc-cta" style="display:inline-block;background-color:#00A6CE;color:#ffffff;text-decoration:none;padding:15px 36px;border-radius:14px;font-weight:900;font-size:16px;box-shadow:0 8px 20px rgba(0,166,206,0.35);">
                         ${copy.button}
                     </a>
                 </div>
                 <p style="margin:0;color:#a1a1aa;font-size:12px;line-height:1.7;">
                     ${copy.fallback}<br />
-                    <a href="${safeCartUrl}" style="color:#DC2626;word-break:break-all;">${safeCartUrl}</a>
+                    <a href="${safeCartUrl}" style="color:#00A6CE;word-break:break-all;">${safeCartUrl}</a>
                 </p>
             </div>
-            ${unsubscribeUrl ? `<div style="padding:16px;text-align:center;background:#fafafa;border-top:1px solid #f4f4f5;font-size:12px;"><a href="${escapeHtml(unsubscribeUrl)}" style="color:#a1a1aa;text-decoration:underline;">${copy.unsubscribe}</a></div>` : ""}
+            ${unsubscribeUrl ? `<div style="padding:16px;text-align:center;background:#fafafa;border-top:1px solid #f4f4f5;font-size:12px;"><a href="${escapeHtml(unsubscribeUrl)}" style="color:#6D797E;text-decoration:underline;">${copy.unsubscribe}</a></div>` : ""}
         </div>
     </div>
 </body>
@@ -819,6 +911,47 @@ const sendAbandonedCartEmail = async ({ to, idempotencyKey, ...content }) => {
     });
 };
 
+/**
+ * Send an email notification when support replies to a ticket.
+ */
+const sendTicketReplyEmail = async ({ to, name, ticketId, ticketTitle, replyContent, senderName, language = "en" }) => {
+    const isAr = language === "ar";
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    const actionUrl = `${frontendUrl}/${isAr ? 'ar' : 'en'}/support/tickets/${ticketId}`;
+
+    const snippet = (replyContent || '').length > 250
+        ? replyContent.slice(0, 250) + '...'
+        : replyContent;
+
+    const copy = isAr ? {
+        dir: "rtl", lang: "ar", align: "right",
+        subject: `Ready Marine — رد جديد على تذكرة الدعم: ${ticketTitle}`,
+        fallbackName: "العميل",
+        eyebrow: "خدمة العملاء والدعم الفني",
+        title: "لديك رد جديد على تذكرة الدعم",
+        greeting: "مرحباً",
+        body: `قام ${senderName || 'فريق الدعم'} بالرد على تذكرتك "${ticketTitle}":\n\n"${snippet}"\n\nيمكنك قراءة الرد بالكامل والمتابعة مباشرة من خلال الرابط أدناه.`,
+        button: "عرض التذكرة والرد",
+        expiry: "فريق الدعم في ريدي مارين متاح لمساعدتك دائماً.",
+        fallback: "إذا لم يعمل الزر، افتح هذا الرابط في المتصفح:",
+        text: (n) => `مرحباً${n ? ` ${n}` : ""}, لديك رد جديد على تذكرتك "${ticketTitle}": ${actionUrl}`,
+    } : {
+        dir: "ltr", lang: "en", align: "left",
+        subject: `Ready Marine — New reply to your support ticket: ${ticketTitle}`,
+        fallbackName: "there",
+        eyebrow: "Customer Support",
+        title: "New reply on your ticket",
+        greeting: "Hello",
+        body: `${senderName || 'Support Team'} replied to your ticket "${ticketTitle}":\n\n"${snippet}"\n\nYou can read the full reply and respond directly from the link below.`,
+        button: "View Ticket & Reply",
+        expiry: "Ready Marine support team is always here to help.",
+        fallback: "If the button does not work, open this link in your browser:",
+        text: (n) => `Hello${n ? ` ${n}` : ""}, new reply on ticket "${ticketTitle}": ${actionUrl}`,
+    };
+
+    return await sendBrandedActionEmail({ to, name, actionUrl, copy });
+};
+
 module.exports = {
     sendVerificationEmail,
     sendPasswordResetEmail,
@@ -833,4 +966,5 @@ module.exports = {
     sendOtpEmail,
     sendAbandonedCartEmail,
     buildAbandonedCartEmail,
+    sendTicketReplyEmail,
 };

@@ -252,9 +252,8 @@ export default function RegisterPage() {
     setVerificationChannel('email');
   };
 
-  // A phone: a plain white page, as the sign-in. From `sm` up — and for the code step and
-  // Google's second step, whose parts are drawn for the dark card — the dark page as before.
-  const light = !googleStep && !otpStage;
+  // Clean light design consistent across sign-up, vendor, and OTP stages
+  const light = true;
 
   return (
     <div className={`min-h-screen flex justify-center relative overflow-hidden ${light ? 'bg-white sm:bg-zinc-50 sm:items-center sm:py-12 sm:px-4' : 'bg-[#111315] items-center py-12 px-4'}`} dir={isAr ? 'rtl' : 'ltr'}>
@@ -266,38 +265,45 @@ export default function RegisterPage() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-marine-cyan rounded-full blur-[128px] opacity-10 -translate-x-1/2 translate-y-1/4" />
       </div>
 
-      <div className={`relative z-10 w-full ${role === 'vendor' ? 'max-w-2xl' : 'max-w-md'} transition-all duration-500 ${light
+      <div className={`relative z-10 w-full ${otpStage || role !== 'vendor' ? 'max-w-md' : 'max-w-2xl'} transition-all duration-500 ${light
         ? 'px-5 pb-8 sm:bg-white sm:border sm:border-zinc-100 sm:rounded-3xl sm:shadow-[0_20px_60px_rgba(0,0,0,0.08)] sm:p-8 sm:my-10'
         : 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.6)] p-8 my-10'}`}>
         {otpStage ? (
           <div className="animate-in fade-in duration-300">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-marine-cyan/15 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-5">
-                <MessageCircle size={30} />
+            <div className="text-center mb-6">
+              <AuthLogo />
+              <div className="w-14 h-14 bg-marine-mist text-marine-primary rounded-2xl border border-marine-cyan/20 flex items-center justify-center mx-auto mt-4 mb-3 shadow-2xs">
+                <MessageCircle size={26} />
               </div>
-              <h1 className="text-2xl font-black text-white tracking-tight">{vc.enterCode}</h1>
-              <p className="text-zinc-400 mt-2 text-sm">
-                {vc.codeSentTo} <span dir="ltr" className="font-bold text-white">{otpStage.masked_destination}</span>
+              <h1 className="text-xl sm:text-2xl font-black text-zinc-900 tracking-tight">{vc.enterCode}</h1>
+              <p className="text-zinc-500 mt-1.5 text-xs sm:text-sm">
+                {vc.codeSentTo}
               </p>
+              <div className="mt-2.5 inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-zinc-100 text-zinc-900 border border-zinc-200 font-mono font-bold text-xs sm:text-sm dir-ltr shadow-2xs">
+                <span dir="ltr">{otpStage.masked_destination}</span>
+              </div>
             </div>
 
             {otpError && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl text-center">
+              <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-600 text-xs sm:text-sm rounded-xl text-center font-medium animate-in fade-in">
                 {otpError}
               </div>
             )}
 
-            <OtpInput
-              value={otpCode}
-              onChange={setOtpCode}
-              onComplete={handleVerifyOtp}
-              disabled={loading}
-            />
+            <div className="py-2">
+              <OtpInput
+                variant="light"
+                value={otpCode}
+                onChange={setOtpCode}
+                onComplete={handleVerifyOtp}
+                disabled={loading}
+              />
+            </div>
 
             {/* WhatsApp codes arrive noticeably slower than email, so say so
                 rather than letting the registrant conclude it failed. */}
             {otpStage.channel === 'whatsapp' && (
-              <p className="text-zinc-500 text-xs text-center mt-4 leading-relaxed">
+              <p className="text-zinc-500 text-xs text-center mt-3 leading-relaxed">
                 {vc.whatsappDelayNote}
               </p>
             )}
@@ -306,18 +312,18 @@ export default function RegisterPage() {
               type="button"
               onClick={() => handleVerifyOtp()}
               disabled={loading || otpCode.length !== 6}
-              className="w-full bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-all mt-6 flex items-center justify-center gap-2"
+              className="w-full bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-all mt-6 flex items-center justify-center gap-2 shadow-[0_4px_14px_0_rgba(0,166,206,0.39)] hover:shadow-[0_6px_20px_rgba(0,166,206,0.23)] text-sm"
             >
               {loading && <Loader2 size={18} className="animate-spin" />}
               {vc.verify}
             </button>
 
-            <div className="mt-5 text-center space-y-2">
+            <div className="mt-5 text-center space-y-2.5">
               <button
                 type="button"
                 onClick={handleResendOtp}
                 disabled={resendIn > 0 || loading}
-                className="text-sm font-bold text-marine-primary hover:text-red-400 disabled:text-zinc-500 disabled:cursor-not-allowed transition-colors"
+                className="text-xs sm:text-sm font-bold text-marine-primary hover:text-marine-cyan disabled:text-zinc-400 disabled:cursor-not-allowed transition-colors"
               >
                 {resendIn > 0 ? vc.resendIn(resendIn) : vc.resendCode}
               </button>
@@ -326,7 +332,7 @@ export default function RegisterPage() {
                   <button
                     type="button"
                     onClick={restartWithEmail}
-                    className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-800 transition-colors font-medium"
                   >
                     <ArrowLeft size={12} className="rtl:rotate-180" /> {vc.changeMethod}
                   </button>

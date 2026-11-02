@@ -8,7 +8,9 @@
     "prebuild": "npm run lint:nested-components",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",
@@ -20,6 +22,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/node": "25.6.0",
     "@types/react": "19.2.14",
     "autoprefixer": "^10.4.18",

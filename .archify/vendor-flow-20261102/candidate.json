@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Ready Marine — Vendor Journey & Lifecycle Architecture",
+    "subtitle": "Complete end-to-end multi-vendor flow: onboarding, cataloging, parcel fulfillment and payouts",
+    "output": ".archify/vendor-flow-20261102/vendor-flow.html",
+    "quality_profile": "showcase",
+    "viewBox": [1080, 720]
+  },
+  "components": [
+    {
+      "id": "v-signup",
+      "type": "frontend",
+      "label": "Store Onboarding",
+      "sublabel": "Location & Bosta Sync",
+      "tag": "Step 1",
+      "pos": [40, 90],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-plan",
+      "type": "security",
+      "label": "Subscription Plan",
+      "sublabel": "Trial / Pro Packages",
+      "tag": "Step 2",
+      "pos": [310, 90],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-catalog",
+      "type": "frontend",
+      "label": "Catalog & Fitment",
+      "sublabel": "Parts & Engine Fitment",
+      "tag": "Step 3",
+      "pos": [40, 250],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-storefront",
+      "type": "cloud",
+      "label": "Live Marketplace",
+      "sublabel": "Storefront Search & Buy",
+      "tag": "Step 4",
+      "pos": [310, 250],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-splitter",
+      "type": "backend",
+      "label": "Order Splitter",
+      "sublabel": "Multi-Vendor Parcels",
+      "tag": "Step 5",
+      "pos": [310, 410],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-pack",
+      "type": "frontend",
+      "label": "Pack & Smart AWB",
+      "sublabel": "Bosta Barcode Label",
+      "tag": "Step 6",
+      "pos": [40, 410],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-courier",
+      "type": "external",
+      "label": "Bosta Courier",
+      "sublabel": "Pickup & Marina Delivery",
+      "tag": "Step 7",
+      "pos": [580, 410],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-escrow",
+      "type": "database",
+      "label": "14-Day Escrow",
+      "sublabel": "Pending Clearance Window",
+      "tag": "Step 8",
+      "pos": [580, 560],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-wallet",
+      "type": "database",
+      "label": "Available Wallet",
+      "sublabel": "Midnight Clearance Credit",
+      "tag": "Step 9",
+      "pos": [840, 560],
+      "size": [180, 64]
+    },
+    {
+      "id": "v-payout",
+      "type": "external",
+      "label": "Instant Payout",
+      "sublabel": "Vodafone Cash & InstaPay",
+      "tag": "Step 10",
+      "pos": [840, 410],
+      "size": [180, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Vendor Portal Interface (/dashboard)",
+      "wraps": [
+        "v-signup",
+        "v-catalog",
+        "v-pack"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Marketplace, Logistics & Payout Engine",
+      "wraps": [
+        "v-plan",
+        "v-storefront",
+        "v-splitter",
+        "v-courier",
+        "v-escrow",
+        "v-wallet",
+        "v-payout"
+      ]
+    }
+  ],
+  "connections": [
+    { "id": "c1", "from": "v-signup", "to": "v-plan", "label": "Select Package", "variant": "emphasis" },
+    { "id": "c2", "from": "v-plan", "to": "v-catalog", "label": "Enable Upload", "variant": "emphasis" },
+    { "id": "c3", "from": "v-catalog", "to": "v-storefront", "label": "Publish Parts", "variant": "emphasis" },
+    { "id": "c4", "from": "v-storefront", "to": "v-splitter", "label": "Customer Buys", "variant": "emphasis" },
+    { "id": "c5", "from": "v-splitter", "to": "v-pack", "label": "Vendor Parcel", "variant": "emphasis" },
+    { "id": "c6", "from": "v-pack", "to": "v-courier", "label": "Handover Courier", "variant": "emphasis" },
+    { "id": "c7", "from": "v-courier", "to": "v-escrow", "label": "Delivered Parcel", "variant": "emphasis" },
+    { "id": "c8", "from": "v-escrow", "to": "v-wallet", "label": "Midnight Clearance", "variant": "emphasis" },
+    { "id": "c9", "from": "v-wallet", "to": "v-payout", "label": "Instant Cashout", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Automated Parcel Splitting",
+      "items": [
+        "When an order contains items from multiple vendors, each vendor receives a discrete sub-order parcel",
+        "Vendors print their own Bosta AWB shipping labels directly from the portal"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Bosta Pickup Integration",
+      "items": [
+        "Vendor workshop locations sync directly with Bosta Pickup Location IDs",
+        "Couriers arrive at the vendor warehouse to pick up packaged marine parts"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Double-Entry Ledger & Payouts",
+      "items": [
+        "Earnings remain in pending escrow for the 14-day statutory return period",
+        "Cleared funds are paid out instantly to mobile cash wallets or bank accounts via Paymob"
+      ]
+    }
+  ]
+}

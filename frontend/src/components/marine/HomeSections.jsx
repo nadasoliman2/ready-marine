@@ -31,8 +31,8 @@ export function AnnouncementBar() {
   return (
     <div className="bg-marine-navy text-white">
       <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-4 text-[11px] font-display tracking-[0.06em] uppercase">
-        <span className="bg-marine-cyan px-1.5 py-0.5 rounded-sm font-bold flex-shrink-0">{isAr ? 'جديد' : 'New'}</span>
-        <span className="truncate flex-1">
+        <span className="bg-marine-cyan px-1.5 py-0.5 rounded-sm font-bold flex-shrink-0 text-white">{isAr ? 'جديد' : 'New'}</span>
+        <span className="truncate flex-1 text-slate-200 font-medium">
           {isAr
             ? 'أول منصة متعددة التجار لقطع غيار اليخوت والمراكب في مصر — توصيل في نفس اليوم للرئيسية والموانئ'
             : "Egypt's first multi-vendor yacht & marine spare parts platform — same-day marina & port delivery"}
@@ -150,19 +150,18 @@ export function MarineHero() {
 
   return (
     <>
-      {/* 1. Mobile Viewport (md:hidden): ReadyCar style compact hero card & search, NO vehicle form */}
-      <div className="md:hidden bg-slate-50 px-4 pt-3 pb-3 space-y-3">
-        {/* Mobile Search Bar */}
+      {/* 1. Mobile Viewport (md:hidden): Compact ReadyCar-style banner card matching screenshot */}
+      <div className="md:hidden px-3.5 pt-3 pb-3 space-y-3 bg-[#f8fafc]">
+        {/* Mobile Search Bar directly above banner */}
         <SearchAutocomplete
           placeholder={isAr ? 'ابحث برقم القطعة، الاسم، الماركة...' : 'Search by part number, name, brand...'}
-          formClassName="relative w-full"
-          inputClassName="w-full bg-white border border-slate-200/90 rounded-xl px-4 py-2.5 pe-11 text-sm text-marine-ink placeholder:text-slate-400 focus:outline-none focus:border-marine-cyan focus:ring-2 focus:ring-marine-cyan/20 shadow-xs"
-          buttonClassName="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-marine-primary"
+          inputClassName="w-full bg-white border border-slate-200 text-marine-ink placeholder-slate-400 rounded-xl px-4 py-2.5 pe-10 text-xs sm:text-sm focus:outline-none focus:border-marine-cyan shadow-2xs"
+          buttonClassName="absolute end-3 top-1/2 -translate-y-1/2 text-marine-primary"
         />
 
-        {/* ReadyCar-style Banner Card */}
-        <div className="relative rounded-2xl overflow-hidden min-h-[185px] p-5 flex flex-col justify-between shadow-sm bg-[#061d2d]">
-          {/* Yacht Background */}
+        {/* Compact Hero Card with Yacht Image & Dark Marine Gradient */}
+        <div className="relative min-h-[185px] sm:min-h-[200px] rounded-2xl overflow-hidden p-5 flex flex-col justify-between shadow-sm bg-[#061d2d]">
+          {/* Background Yacht photo */}
           <img
             src="/images/hero-yacht.png"
             alt="Ready Marine"
@@ -192,7 +191,7 @@ export function MarineHero() {
               className="inline-flex items-center gap-1.5 bg-[#0099b8] hover:bg-[#00829e] text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-colors"
             >
               <span>{isAr ? 'تسوق الآن' : 'Shop Now'}</span>
-              {/* <ArrowRight size={13} className="rtl:rotate-180" /> */}
+              <ArrowRight size={13} className="rtl:rotate-180" />
             </Link>
           </div>
         </div>
@@ -404,7 +403,7 @@ export function CoreCategories() {
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
             <Link href="/products" className="font-display text-[11px] font-bold uppercase tracking-[0.08em] text-marine-primary hover:underline flex items-center gap-1">
-              {isAr ? `كل الأقسام (${categories.length})` : `All ${categories.length} Categories`}<ArrowRight size={12} className="rtl:rotate-180" />
+              {isAr ? 'كل الأقسام' : `All Categories`}<ArrowRight size={12} className="rtl:rotate-180" />
             </Link>
             <div className="hidden sm:flex gap-2" dir="ltr">
               {[[-1, ChevronLeft, edges.left], [1, ChevronRight, edges.right]].map(([dir, Arrow, enabled]) => (
@@ -437,7 +436,7 @@ export function CoreCategories() {
                 className="group flex-none w-[150px] sm:w-[170px] snap-start bg-white border border-marine-teal/15 rounded-lg overflow-hidden text-center hover:border-marine-cyan hover:shadow-aura hover:-translate-y-0.5 transition-all"
               >
                 {cat.image ? (
-                  <span className="block aspect-square overflow-hidden bg-gradient-to-b from-white to-marine-mist p-4">
+                  <span className="block aspect-square overflow-hidden bg-gradient-to-b from-white to-marine-mist ">
                     <img
                       src={thumbUrl(resolveAssetUrl(cat.image), 320)}
                       alt=""

@@ -184,6 +184,28 @@ router.post('/:id/messages', protect('vendor', 'user'), async (req, res) => {
 
         const updated = await Ticket.findById(ticket._id).lean();
         emitToTicket(ticket._id, 'ticket:updated', updated);
+
+        // Notify Admins about the new reply
+        try {
+            const { createNotification } = require('../models/notifications');
+            const { User } = require('../models/users');
+            const admins = await User.find({ role: 'admin' }).select('_id').lean();
+            const authorDisplayName = req.user.name || req.user.store_name || req.user.email || 'Author';
+            await Promise.allSettled(
+                admins.map((a) =>
+                    createNotification(
+                        a._id,
+                        'ticket_reply',
+                        'رد جديد على تذكرة دعم',
+                        `قام ${authorDisplayName} بالرد على التذكرة: "${ticket.title}"`,
+                        { link: `/admin/dashboard/tickets/${ticket._id}`, ticketId: String(ticket._id) }
+                    )
+                )
+            );
+        } catch (adminNotifyErr) {
+            console.error('[Ticket Reply] Admin notification failed:', adminNotifyErr.message);
+        }
+
         res.json({ success: true, ticket: updated });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });

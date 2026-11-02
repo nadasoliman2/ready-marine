@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/cron-jobs-20261102/candidate.json",
+    "sha256": "d496ae530ad6f68425d92be2ff851cd421b8cbfa1191c5e496746b035b716f51",
+    "bytes": 6117
+  },
+  "artifact": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/cron-jobs.html",
+    "sha256": "85fa4ab8402c133ca6c59188f2e457c4845d475b65c5fd20c0a2908291e48219",
+    "bytes": 861460
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/cron-jobs.finalize.json",
+    "summaryReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/cron-jobs.finalize-summary.json",
+    "browserCheckReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/cron-jobs.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-02T11:02:56.682Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 2116,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 7,
+      "routesOverSuggestedBends": 3,
+      "routesOverSuggestedStretch": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "c1",
+            "from": "cron-engine",
+            "to": "fast-sweeps",
+            "label": "1m - 10m triggers",
+            "collectionIndex": 0,
+            "artifactIndex": 1
+          },
+          "right": {
+            "id": "c2",
+            "from": "cron-engine",
+            "to": "courier-sweeps",
+            "label": "20m cycle",
+            "collectionIndex": 1,
+            "artifactIndex": 2
+          },
+          "point": [
+            136.1,
+            262
+          ],
+          "sharedNode": "cron-engine"
+        },
+        {
+          "left": {
+            "id": "c3",
+            "from": "cron-engine",
+            "to": "hourly-sweeps",
+            "label": "hourly offset",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "right": {
+            "id": "c4",
+            "from": "cron-engine",
+            "to": "midnight-sweeps",
+            "label": "00:00 daily",
+            "collectionIndex": 3,
+            "artifactIndex": 4
+          },
+          "point": [
+            136.09999999999997,
+            412
+          ],
+          "sharedNode": "cron-engine"
+        },
+        {
+          "left": {
+            "id": "c3",
+            "from": "cron-engine",
+            "to": "hourly-sweeps",
+            "label": "hourly offset",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "right": {
+            "id": "c9",
+            "from": "midnight-sweeps",
+            "to": "worker-finance",
+            "label": "clearance",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "point": [
+            236,
+            412
+          ]
+        },
+        {
+          "left": {
+            "id": "c5",
+            "from": "fast-sweeps",
+            "to": "worker-finance",
+            "label": "payout sync",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "c6",
+            "from": "courier-sweeps",
+            "to": "worker-shipping",
+            "label": "polling sweep",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "point": [
+            444,
+            246
+          ]
+        },
+        {
+          "left": {
+            "id": "c5",
+            "from": "fast-sweeps",
+            "to": "worker-finance",
+            "label": "payout sync",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "c7",
+            "from": "hourly-sweeps",
+            "to": "worker-shipping",
+            "label": "bundle &amp; deadlines",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "point": [
+            487,
+            325
+          ]
+        },
+        {
+          "left": {
+            "id": "c7",
+            "from": "hourly-sweeps",
+            "to": "worker-shipping",
+            "label": "bundle &amp; deadlines",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "right": {
+            "id": "c9",
+            "from": "midnight-sweeps",
+            "to": "worker-finance",
+            "label": "clearance",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "point": [
+            487,
+            339
+          ]
+        },
+        {
+          "left": {
+            "id": "c8",
+            "from": "hourly-sweeps",
+            "to": "worker-notifications",
+            "label": "review invites",
+            "collectionIndex": 7,
+            "artifactIndex": 8
+          },
+          "right": {
+            "id": "c10",
+            "from": "midnight-sweeps",
+            "to": "worker-vendors",
+            "label": "check expiry",
+            "collectionIndex": 9,
+            "artifactIndex": 10
+          },
+          "point": [
+            444,
+            559
+          ]
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "c7",
+            "from": "hourly-sweeps",
+            "to": "worker-shipping",
+            "label": "bundle &amp; deadlines",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "bends": 3,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "c12",
+            "from": "worker-shipping",
+            "to": "db-mongo",
+            "label": "update parcel",
+            "collectionIndex": 11,
+            "artifactIndex": 12
+          },
+          "bends": 4,
+          "stretch": 1.372
+        },
+        {
+          "relationship": {
+            "id": "c15",
+            "from": "worker-vendors",
+            "to": "db-mongo",
+            "label": "unpublish items",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "bends": 3,
+          "stretch": 1.274
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "cron-engine has 4 relationships facing its right side, which fits 3 ports: make that side at least 74px, or move some of those neighbours so they face another side of cron-engine.",
+      "cron-engine → fast-sweeps and cron-engine → courier-sweeps cross next to cron-engine: move node fast-sweeps or courier-sweeps so the two reach cron-engine from different sides (for example one level with it, one directly above or below it).",
+      "cron-engine → hourly-sweeps and cron-engine → midnight-sweeps cross next to cron-engine: move node hourly-sweeps or midnight-sweeps so the two reach cron-engine from different sides (for example one level with it, one directly above or below it).",
+      "cron-engine → hourly-sweeps crosses midnight-sweeps → worker-finance: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "fast-sweeps → worker-finance crosses courier-sweeps → worker-shipping: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "fast-sweeps → worker-finance crosses hourly-sweeps → worker-shipping: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "hourly-sweeps → worker-shipping crosses midnight-sweeps → worker-finance: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "hourly-sweeps → worker-notifications crosses midnight-sweeps → worker-vendors: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

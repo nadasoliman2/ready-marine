@@ -22,11 +22,11 @@ import { authApi } from '../../lib/api';
 import ShippingZoneSelect from '../ShippingZoneSelect';
 
 // Shared by every text field in the second step.
-const FIELD_CLASS = 'peer w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white transition-all focus:border-marine-cyan focus:bg-white/10 focus:outline-none ltr:pl-11 rtl:pr-11';
-const FIELD_ICON_CLASS = 'absolute top-1/2 -translate-y-1/2 text-zinc-500 transition-colors peer-focus:text-marine-primary ltr:left-4 rtl:right-4';
+const FIELD_CLASS = 'peer w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3.5 text-sm text-zinc-900 transition-all placeholder:text-zinc-400 focus:border-marine-cyan focus:bg-white focus:outline-none ltr:pl-11 rtl:pr-11';
+const FIELD_ICON_CLASS = 'absolute top-1/2 -translate-y-1/2 text-zinc-400 transition-colors peer-focus:text-marine-primary ltr:left-4 rtl:right-4';
 
 const GSI_SRC = 'https://accounts.google.com/gsi/client';
-const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '732103860740-49ru84vjpv21njjuv80u5m305u024vm5.apps.googleusercontent.com';
 
 /** Load the GSI script once per page, no matter how many buttons mount. */
 let gsiPromise = null;
@@ -288,7 +288,7 @@ export default function GoogleAuthButton({
     // form is still perfectly usable, so this stays silent.
     if (!CLIENT_ID) return null;
 
-    /* ---------------- Step 2: everything Google did not give us -------------- */
+    /* ---------------- Step 2: everything Google did not give us (Clean Light Theme) -------------- */
     if (pendingSignup) {
         // Step 1 is behind us; the bar completes as the account is created.
         const progress = creating ? 100 : 50;
@@ -297,10 +297,10 @@ export default function GoogleAuthButton({
             <div className="animate-in fade-in duration-300">
                 <div className="mb-6 flex items-start justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-black tracking-tight text-white">
+                        <h1 className="text-xl sm:text-2xl font-black tracking-tight text-zinc-900">
                             {isVendorSignup ? c.vendorTitle : c.title}
                         </h1>
-                        <p className="mt-2 text-sm text-zinc-400">
+                        <p className="mt-1 text-xs sm:text-sm text-zinc-500">
                             {isVendorSignup ? c.vendorSubtitle : c.subtitle}
                         </p>
                     </div>
@@ -308,7 +308,7 @@ export default function GoogleAuthButton({
                         type="button"
                         onClick={abandonSignup}
                         disabled={creating}
-                        className="mt-1 text-zinc-500 transition-colors hover:text-white disabled:opacity-40"
+                        className="mt-1 text-zinc-400 transition-colors hover:text-zinc-700 disabled:opacity-40"
                         aria-label={c.cancel}
                     >
                         <X size={18} />
@@ -318,11 +318,11 @@ export default function GoogleAuthButton({
                 {/* Progress */}
                 <div className="mb-6">
                     <div className="mb-2 flex items-center justify-between text-xs">
-                        <span className="font-bold text-white">{c.stepCounter}</span>
-                        <span className="text-zinc-500">{progress}%</span>
+                        <span className="font-bold text-zinc-800">{c.stepCounter}</span>
+                        <span className="text-zinc-500 font-medium">{progress}%</span>
                     </div>
                     <div
-                        className="h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+                        className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-100"
                         role="progressbar"
                         aria-valuenow={progress}
                         aria-valuemin={0}
@@ -334,38 +334,38 @@ export default function GoogleAuthButton({
                         />
                     </div>
                     <div className="mt-3 flex items-center gap-2 text-[11px]">
-                        <span className="inline-flex items-center gap-1 font-medium text-emerald-400">
+                        <span className="inline-flex items-center gap-1 font-bold text-emerald-600">
                             <Check size={12} /> {c.stepGoogle}
                         </span>
-                        <span className="text-zinc-600">›</span>
-                        <span className="font-bold text-white">
+                        <span className="text-zinc-400">›</span>
+                        <span className="font-bold text-zinc-800">
                             {isVendorSignup ? c.vendorStepDetails : c.stepDetails}
                         </span>
                     </div>
                 </div>
 
                 {/* What Google did supply */}
-                <div className="mb-5 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3">
+                <div className="mb-5 flex items-center gap-3 rounded-2xl border border-zinc-200/80 bg-zinc-50 p-3.5">
                     {pendingSignup.picture ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                             src={pendingSignup.picture}
                             alt=""
-                            className="h-10 w-10 flex-shrink-0 rounded-full object-cover"
+                            className="h-10 w-10 flex-shrink-0 rounded-full object-cover ring-2 ring-white shadow-xs"
                             referrerPolicy="no-referrer"
                         />
                     ) : null}
                     <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-white">{pendingSignup.name}</p>
-                        <p className="truncate text-xs text-zinc-400" dir="ltr">{pendingSignup.email}</p>
+                        <p className="truncate text-sm font-bold text-zinc-900">{pendingSignup.name}</p>
+                        <p className="truncate text-xs text-zinc-500 font-medium" dir="ltr">{pendingSignup.email}</p>
                     </div>
-                    <span className="flex-shrink-0 rounded-full bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-400">
+                    <span className="flex-shrink-0 rounded-full bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 text-[11px] font-bold text-emerald-700">
                         {c.fromGoogle}
                     </span>
                 </div>
 
                 {signupError && (
-                    <div className="mb-5 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-center text-sm text-red-400">
+                    <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm font-medium text-red-600">
                         {signupError}
                     </div>
                 )}
@@ -374,7 +374,7 @@ export default function GoogleAuthButton({
                     {isVendorSignup && (
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <label className="mb-1.5 block text-sm font-medium text-zinc-300">{c.storeNameLabel}</label>
+                                <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-700">{c.storeNameLabel}</label>
                                 <div className="relative">
                                     <input
                                         autoFocus
@@ -389,7 +389,7 @@ export default function GoogleAuthButton({
                                 </div>
                             </div>
                             <div>
-                                <label className="mb-1.5 block text-sm font-medium text-zinc-300">{c.storeUsernameLabel}</label>
+                                <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-700">{c.storeUsernameLabel}</label>
                                 <div className="relative">
                                     <input
                                         required
@@ -407,7 +407,7 @@ export default function GoogleAuthButton({
                     )}
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-zinc-300">{c.phoneLabel}</label>
+                        <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-700">{c.phoneLabel}</label>
                         <div className="relative">
                             <input
                                 autoFocus
@@ -417,14 +417,14 @@ export default function GoogleAuthButton({
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 placeholder="01xxxxxxxxx"
-                                className="peer w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white transition-all focus:border-marine-cyan focus:bg-white/10 focus:outline-none ltr:pl-11 rtl:pr-11"
+                                className={FIELD_CLASS}
                             />
                             <Phone
                                 size={18}
-                                className="absolute top-1/2 -translate-y-1/2 text-zinc-500 transition-colors peer-focus:text-marine-primary ltr:left-4 rtl:right-4"
+                                className={FIELD_ICON_CLASS}
                             />
                         </div>
-                        <p className="mt-1.5 text-[11px] text-zinc-500">
+                        <p className="mt-1 text-[11px] text-zinc-500">
                             {isVendorSignup ? c.vendorPhoneHint : c.phoneHint}
                         </p>
                     </div>
@@ -432,7 +432,7 @@ export default function GoogleAuthButton({
                     {isVendorSignup && (
                         <>
                             <ShippingZoneSelect
-                                dark
+                                dark={false}
                                 required
                                 country={storeForm.shipping_country || ''}
                                 city={storeForm.shipping_city || ''}
@@ -441,7 +441,7 @@ export default function GoogleAuthButton({
                                 }
                             />
                             <div>
-                                <label className="mb-1.5 block text-sm font-medium text-zinc-300">{c.addressLabel}</label>
+                                <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-700">{c.addressLabel}</label>
                                 <div className="relative">
                                     <input
                                         required
@@ -458,9 +458,9 @@ export default function GoogleAuthButton({
                     )}
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-zinc-300">
+                        <label className="mb-1.5 block text-xs sm:text-sm font-bold text-zinc-700">
                             {c.passwordLabel}{' '}
-                            <span className="font-normal text-zinc-500">({c.optional})</span>
+                            <span className="font-normal text-zinc-400">({c.optional})</span>
                         </label>
                         <div className="relative">
                             <input
@@ -468,28 +468,28 @@ export default function GoogleAuthButton({
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="peer w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-white transition-all focus:border-marine-cyan focus:bg-white/10 focus:outline-none ltr:pl-11 ltr:pr-11 rtl:pl-11 rtl:pr-11"
+                                className={FIELD_CLASS}
                             />
                             <Lock
                                 size={18}
-                                className="absolute top-1/2 -translate-y-1/2 text-zinc-500 transition-colors peer-focus:text-marine-primary ltr:left-4 rtl:right-4"
+                                className={FIELD_ICON_CLASS}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword((visible) => !visible)}
-                                className="absolute top-1/2 -translate-y-1/2 text-zinc-500 transition-colors hover:text-zinc-200 focus:text-marine-primary focus:outline-none ltr:right-4 rtl:left-4"
+                                className="absolute top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-700 focus:text-marine-primary focus:outline-none ltr:right-4 rtl:left-4"
                                 aria-label={showPassword ? (isAr ? 'إخفاء كلمة المرور' : 'Hide password') : (isAr ? 'إظهار كلمة المرور' : 'Show password')}
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
-                        <p className="mt-1.5 text-[11px] leading-snug text-zinc-500">{c.passwordHint}</p>
+                        <p className="mt-1 text-[11px] leading-snug text-zinc-500">{c.passwordHint}</p>
                     </div>
 
                     <button
                         type="submit"
                         disabled={creating}
-                        className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-marine-cyan py-3.5 font-bold text-white shadow-[0_4px_14px_0_rgba(0,166,206,0.39)] transition-all hover:-translate-y-0.5 hover:bg-marine-cyan-dark disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-marine-cyan py-3.5 font-bold text-white shadow-[0_4px_14px_0_rgba(0,166,206,0.39)] hover:shadow-[0_6px_20px_rgba(0,166,206,0.23)] transition-all hover:-translate-y-0.5 hover:bg-marine-cyan-dark disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 text-sm"
                     >
                         {creating && <Loader2 size={18} className="animate-spin" />}
                         {isVendorSignup
@@ -502,7 +502,7 @@ export default function GoogleAuthButton({
                     type="button"
                     onClick={abandonSignup}
                     disabled={creating}
-                    className="mt-5 w-full text-center text-xs text-zinc-500 transition-colors hover:text-zinc-300 disabled:opacity-40"
+                    className="mt-4 w-full text-center text-xs text-zinc-500 hover:text-zinc-800 transition-colors disabled:opacity-40 font-medium"
                 >
                     {c.useAnother}
                 </button>

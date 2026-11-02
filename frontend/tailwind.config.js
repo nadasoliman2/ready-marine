@@ -35,8 +35,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-space-grotesk)', 'var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-cairo)', 'var(--font-inter)', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['var(--font-space-grotesk)', 'var(--font-cairo)', 'system-ui', 'sans-serif'],
+        cairo: ['var(--font-cairo)', 'sans-serif'],
       },
       boxShadow: {
         pod: '0 8px 24px -4px rgba(26, 77, 104, 0.08), 0 2px 6px -1px rgba(0, 166, 206, 0.06)',

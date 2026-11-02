@@ -158,22 +158,22 @@ export default function VerifyContactPrompt() {
         const rowBusy = busy === target;
 
         return (
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+            <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4">
                 <div className="flex items-center gap-3 mb-3">
                     <Icon size={16} className="text-marine-primary flex-shrink-0" />
                     <div className="min-w-0 flex-1">
                         <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">{label}</p>
-                        <p className="text-white text-sm font-bold truncate" dir="ltr">{liveValue}</p>
+                        <p className="text-zinc-900 text-sm font-bold truncate" dir="ltr">{liveValue}</p>
                         {pending && pending !== liveValue && (
-                            <p className="text-amber-400 text-[11px] mt-0.5 truncate" dir="ltr">
+                            <p className="text-amber-600 text-[11px] mt-0.5 truncate font-medium" dir="ltr">
                                 {vc.pendingChangeNote(pending)}
                             </p>
                         )}
                     </div>
                     <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1 flex-shrink-0 ${
                         verified
-                            ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
-                            : 'bg-amber-500/15 text-amber-400 border border-amber-500/25'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold'
+                            : 'bg-amber-50 text-amber-700 border border-amber-200 font-bold'
                     }`}>
                         {verified ? <CheckCircle2 size={11} /> : <AlertCircle size={11} />}
                         {verified ? vc.verified : vc.notVerified}
@@ -181,7 +181,7 @@ export default function VerifyContactPrompt() {
                 </div>
 
                 {feedback.target === target && feedback.text && (
-                    <p className={`text-xs font-bold mb-3 ${feedback.type === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <p className={`text-xs font-bold mb-3 ${feedback.type === 'success' ? 'text-emerald-600' : 'text-red-600'}`}>
                         {feedback.text}
                     </p>
                 )}
@@ -191,14 +191,14 @@ export default function VerifyContactPrompt() {
                         <button
                             onClick={() => sendCode(target)}
                             disabled={rowBusy}
-                            className="flex items-center gap-1.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
+                            className="flex items-center gap-1.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
                         >
                             {rowBusy ? <Loader2 size={13} className="animate-spin" /> : <MessageCircle size={13} />}
                             {vc.sendCode}
                         </button>
                         <button
                             onClick={() => setStage((s) => ({ ...s, [target]: 'editing' }))}
-                            className="flex items-center gap-1.5 text-zinc-400 hover:text-white text-xs font-bold transition-colors"
+                            className="flex items-center gap-1.5 text-zinc-500 hover:text-zinc-800 text-xs font-bold transition-colors"
                         >
                             <Pencil size={12} /> {vc.edit}
                         </button>
@@ -213,20 +213,20 @@ export default function VerifyContactPrompt() {
                             value={drafts[target]}
                             onChange={(e) => setDrafts((d) => ({ ...d, [target]: e.target.value }))}
                             placeholder={target === 'email' ? 'name@example.com' : '01xxxxxxxxx'}
-                            className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-marine-cyan"
+                            className="w-full bg-white border border-zinc-200 text-zinc-900 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-marine-cyan"
                         />
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => sendCode(target, true)}
                                 disabled={rowBusy || !drafts[target]}
-                                className="flex items-center gap-1.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
+                                className="flex items-center gap-1.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
                             >
                                 {rowBusy && <Loader2 size={13} className="animate-spin" />}
                                 {vc.saveAndSend}
                             </button>
                             <button
                                 onClick={() => cancelEdit(target)}
-                                className="text-zinc-400 hover:text-white text-xs font-bold transition-colors"
+                                className="text-zinc-500 hover:text-zinc-800 text-xs font-bold transition-colors"
                             >
                                 {vc.cancel}
                             </button>
@@ -236,13 +236,14 @@ export default function VerifyContactPrompt() {
 
                 {current === 'code' && (
                     <div className="space-y-3">
-                        <p className="text-zinc-400 text-xs">
+                        <p className="text-zinc-500 text-xs">
                             {target === 'email' ? vc.emailCodeNote : vc.whatsappNote}
                             {target === 'phone' && (
-                                <span className="block text-zinc-500 mt-1">{vc.whatsappDelayNote}</span>
+                                <span className="block text-zinc-400 mt-1">{vc.whatsappDelayNote}</span>
                             )}
                         </p>
                         <OtpInput
+                            variant="light"
                             value={codes[target]}
                             onChange={(v) => setCodes((c) => ({ ...c, [target]: v }))}
                             onComplete={(v) => confirmCode(target, v)}
@@ -253,7 +254,7 @@ export default function VerifyContactPrompt() {
                             <button
                                 onClick={() => confirmCode(target)}
                                 disabled={rowBusy || codes[target].length !== 6}
-                                className="flex items-center gap-1.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
+                                className="flex items-center gap-1.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
                             >
                                 {rowBusy && <Loader2 size={13} className="animate-spin" />}
                                 {vc.confirmNow}
@@ -261,7 +262,7 @@ export default function VerifyContactPrompt() {
                             <button
                                 onClick={() => sendCode(target)}
                                 disabled={rowBusy}
-                                className="text-zinc-400 hover:text-white text-xs font-bold transition-colors disabled:opacity-50"
+                                className="text-zinc-500 hover:text-zinc-800 text-xs font-bold transition-colors disabled:opacity-50"
                             >
                                 {vc.resendCode}
                             </button>
@@ -293,23 +294,23 @@ export default function VerifyContactPrompt() {
 
             {open && (
                 <Overlay className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4" dir={isAr ? 'rtl' : 'ltr'}>
-                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={snooze} />
-                    <div className="relative bg-[#09090b] border border-white/10 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={snooze} />
+                    <div className="relative bg-white border border-zinc-200 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
                         <button
                             onClick={snooze}
                             aria-label={vc.later}
-                            className="absolute top-4 end-4 text-zinc-500 hover:text-white transition-colors"
+                            className="absolute top-4 end-4 text-zinc-400 hover:text-zinc-700 transition-colors"
                         >
                             <X size={18} />
                         </button>
 
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="w-11 h-11 rounded-full bg-marine-cyan/15 text-marine-primary flex items-center justify-center flex-shrink-0">
+                            <div className="w-11 h-11 rounded-2xl bg-marine-mist text-marine-primary flex items-center justify-center flex-shrink-0 border border-marine-cyan/20">
                                 <ShieldCheck size={22} />
                             </div>
-                            <h3 className="text-xl font-black text-white">{vc.confirmYourDetails}</h3>
+                            <h3 className="text-xl font-black text-zinc-900">{vc.confirmYourDetails}</h3>
                         </div>
-                        <p className="text-zinc-400 text-sm mb-6 leading-relaxed">{vc.confirmIntro}</p>
+                        <p className="text-zinc-500 text-sm mb-6 leading-relaxed">{vc.confirmIntro}</p>
 
                         <div className="space-y-3">
                             {renderRow('phone')}
@@ -318,7 +319,7 @@ export default function VerifyContactPrompt() {
 
                         <button
                             onClick={snooze}
-                            className="w-full mt-6 bg-white/5 hover:bg-white/10 text-zinc-400 py-3 rounded-xl font-bold text-sm transition-all"
+                            className="w-full mt-6 bg-zinc-100 hover:bg-zinc-200 text-zinc-600 py-3 rounded-xl font-bold text-sm transition-all"
                         >
                             {vc.later}
                         </button>

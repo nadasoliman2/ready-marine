@@ -101,7 +101,6 @@ const guestSessionPayload = (user) => ({
     account_status: user.account_status,
     phone_verified_at: user.phone_verified_at || null,
     is_guest: guestDisclosureBlocked(user),
-    cars: [],
 });
 
 /**
@@ -371,7 +370,6 @@ const verifyOtpLogin = async ({ phone, code, rememberMe = false }) => {
             role: 'user',
             account_status: user.account_status,
             is_guest: false,
-            cars: user.cars || [],
         },
     };
 };

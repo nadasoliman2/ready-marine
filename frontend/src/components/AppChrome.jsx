@@ -51,10 +51,10 @@ export default function AppChrome({ children }) {
 
   return (
     // On a phone the page ends above the bottom bar, so the footer is not hidden under it.
-    <div className="min-h-screen flex flex-col bg-marine-canvas pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+    <div className="min-h-screen flex flex-col bg-marine-canvas pb-[calc(3.25rem+env(safe-area-inset-bottom))] md:pb-0">
       {/* Pinned on every screen. On a phone that is the black bar and the app bar — plus the
           search box above the logo once the page is scrolled (Header) — and no red menu. */}
-      <div className="sticky top-0 z-50 shadow-pod bg-white">
+      <div className="sticky top-0 z-[100] md:shadow-pod md:bg-white pointer-events-auto">
         <TopBar />
         <Header />
         <Navigation />
@@ -62,7 +62,7 @@ export default function AppChrome({ children }) {
       {/* Renders itself only for a signed-in customer with an unconfirmed
           email or phone; silent for everyone else. */}
       <VerifyContactPrompt />
-      <main className="flex-1">
+      <main className="flex-1 relative z-0">
         {children}
       </main>
       <Footer />

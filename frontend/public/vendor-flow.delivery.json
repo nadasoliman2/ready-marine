@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "cbd37cb6-279f-4e75-b93c-0dcdf9ecbf2a",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/vendor-flow-20261102/candidate.json",
+  "output": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/vendor-flow.html",
+  "specification": {
+    "sha256": "07620de0ce63f0c24f4d02fca4d9917a6d0b11a4f19a339b3d95ebc6d9be5293",
+    "bytes": 4895
+  },
+  "artifact": {
+    "sha256": "fc0a13679bb1faa32b395501bd5d9004553a603b3888314f1c3240bf16b54fea",
+    "bytes": 851968
+  }
+}

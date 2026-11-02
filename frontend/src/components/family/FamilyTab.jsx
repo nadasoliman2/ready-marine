@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from '../LocaleLink';
 import {
     Users, UserPlus, MapPin, Mail, Trash2, Send, Loader2, ShieldCheck,
-    LogOut, Inbox, ChevronRight, AlertCircle, Home,
+    LogOut, Inbox, ChevronRight, AlertCircle, Home, X,
 } from 'lucide-react';
 import { familyApi } from '../../lib/api';
 import { resolveAssetUrl } from '../../lib/assets';
@@ -117,19 +117,16 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-                <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
-                    <Users className="text-marine-primary" /> {copy.family}
-                </h3>
-                {isOrganizer && (
+            {isOrganizer && (
+                <div className="flex justify-end">
                     <button
                         onClick={() => setShowInvite(true)}
-                        className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg"
+                        className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm"
                     >
-                        <UserPlus size={18} /> {copy.inviteMember}
+                        <UserPlus size={16} /> {copy.inviteMember}
                     </button>
-                )}
-            </div>
+                </div>
+            )}
 
             {message.text && (
                 <div className={`p-4 rounded-xl text-sm font-bold flex items-start gap-3 ${
@@ -438,82 +435,95 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                 </>
             )}
 
-            {/* ---------------- Invite modal ---------------- */}
+            {/* ---------------- Invite modal (Bottom Sheet on mobile / Centered on Desktop) ---------------- */}
             {showInvite && (
-                <Overlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+                <Overlay className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-4 overflow-y-auto" dir={isAr ? 'rtl' : 'ltr'}>
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowInvite(false)} />
-                    <div className="relative bg-white border border-zinc-200 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
-                        <h4 className="text-xl font-black text-zinc-900 mb-6 flex items-center gap-2">
-                            <UserPlus size={20} className="text-marine-primary" /> {copy.inviteMember}
-                        </h4>
+                    <div className="relative bg-white border border-zinc-200/90 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90dvh] sm:max-h-[85vh] overflow-hidden z-10 sm:my-auto animate-in slide-in-from-bottom sm:slide-in-from-bottom-4 duration-200">
+                        {/* 1. STICKY HEADER */}
+                        <div className="px-5 sm:px-6 py-4 border-b border-zinc-100 flex items-center justify-between shrink-0 bg-white">
+                            <h4 className="text-base sm:text-lg font-black text-zinc-900 flex items-center gap-2.5">
+                                <span className="p-2 rounded-xl bg-marine-mist text-marine-primary shrink-0">
+                                    <UserPlus size={18} />
+                                </span>
+                                <span>{copy.inviteMember}</span>
+                            </h4>
+                            <button
+                                type="button"
+                                onClick={() => setShowInvite(false)}
+                                className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-800 transition-colors flex items-center justify-center shrink-0"
+                                aria-label={copy.cancel}
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
 
-                        <form onSubmit={submitInvite} className="space-y-5">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.emailOrPhone}</label>
-                                <input
-                                    type="text" required value={inviteForm.identifier}
-                                    onChange={(e) => setInviteForm({ ...inviteForm, identifier: e.target.value })}
-                                    className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white"
-                                    placeholder="01xxxxxxxxx"
-                                />
-                                {/* Says plainly that the person does not need an
-                                    account. Without this the organizer has no way
-                                    to know the number is worth trying, and would
-                                    keep asking relatives for an email they may
-                                    not have. */}
-                                <p className="text-zinc-500 text-[11px]">{copy.inviteNoAccountHint}</p>
+                        {/* 2. FORM: SCROLLABLE BODY + STICKY FOOTER */}
+                        <form onSubmit={submitInvite} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                            <div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4 overscroll-contain">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.emailOrPhone}</label>
+                                    <input
+                                        type="text" required value={inviteForm.identifier}
+                                        onChange={(e) => setInviteForm({ ...inviteForm, identifier: e.target.value })}
+                                        className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-2.5 focus:outline-none focus:border-marine-cyan focus:bg-white text-sm"
+                                        placeholder="01xxxxxxxxx"
+                                    />
+                                    <p className="text-zinc-500 text-[11px]">{copy.inviteNoAccountHint}</p>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.relationshipQuestion}</label>
+                                    <select
+                                        value={inviteForm.relationship}
+                                        onChange={(e) => setInviteForm({ ...inviteForm, relationship: e.target.value })}
+                                        className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-2.5 focus:outline-none focus:border-marine-cyan focus:bg-white text-sm"
+                                    >
+                                        {RELATIONSHIPS.map((value) => (
+                                            <option key={value} value={value} className="text-zinc-900">
+                                                {getRelationshipLabel(value, isAr)}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <p className="text-zinc-500 text-[11px]">
+                                        {isAr
+                                            ? 'الصلة وصفية فقط ولا تمنح أي صلاحيات إضافية.'
+                                            : 'Relationship is descriptive only — it does not change any permissions.'}
+                                    </p>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.addressesToShare}</label>
+                                    <AddressPicker
+                                        addresses={overview?.addresses || []}
+                                        selectedIds={inviteForm.shared_address_ids}
+                                        onChange={(ids) => setInviteForm({ ...inviteForm, shared_address_ids: ids })}
+                                        isAr={isAr}
+                                    />
+                                </div>
+
+                                <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 space-y-2">
+                                    <p className="text-zinc-900 text-xs font-black uppercase tracking-widest">{copy.privacyTitle}</p>
+                                    <ul className="text-zinc-600 text-xs space-y-1.5 list-disc list-inside">
+                                        <li>{copy.privacyCanView}</li>
+                                        <li>{copy.privacyCannotEdit}</li>
+                                        <li>{copy.privacyNoPayment}</li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.relationshipQuestion}</label>
-                                <select
-                                    value={inviteForm.relationship}
-                                    onChange={(e) => setInviteForm({ ...inviteForm, relationship: e.target.value })}
-                                    className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 focus:outline-none focus:border-marine-cyan focus:bg-white"
-                                >
-                                    {RELATIONSHIPS.map((value) => (
-                                        <option key={value} value={value} className="text-zinc-900">
-                                            {getRelationshipLabel(value, isAr)}
-                                        </option>
-                                    ))}
-                                </select>
-                                <p className="text-zinc-500 text-[11px]">
-                                    {isAr
-                                        ? 'الصلة وصفية فقط ولا تمنح أي صلاحيات إضافية.'
-                                        : 'Relationship is descriptive only — it does not change any permissions.'}
-                                </p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-zinc-700 uppercase tracking-widest">{copy.addressesToShare}</label>
-                                <AddressPicker
-                                    addresses={overview?.addresses || []}
-                                    selectedIds={inviteForm.shared_address_ids}
-                                    onChange={(ids) => setInviteForm({ ...inviteForm, shared_address_ids: ids })}
-                                    isAr={isAr}
-                                />
-                            </div>
-
-                            <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 space-y-2">
-                                <p className="text-zinc-900 text-xs font-black uppercase tracking-widest">{copy.privacyTitle}</p>
-                                <ul className="text-zinc-600 text-xs space-y-1.5 list-disc list-inside">
-                                    <li>{copy.privacyCanView}</li>
-                                    <li>{copy.privacyCannotEdit}</li>
-                                    <li>{copy.privacyNoPayment}</li>
-                                </ul>
-                            </div>
-
-                            <div className="flex gap-4 pt-2">
+                            {/* 3. STICKY FOOTER */}
+                            <div className="p-4 sm:px-6 sm:py-4 border-t border-zinc-100 bg-white flex items-center gap-3 shrink-0 shadow-xs">
                                 <button
                                     type="submit" disabled={busy}
-                                    className="flex-1 bg-marine-cyan text-white py-3 rounded-xl font-bold hover:bg-marine-cyan-dark transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                    className="flex-1 bg-marine-cyan hover:bg-marine-cyan-dark text-white py-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
                                     {busy && <Loader2 size={16} className="animate-spin" />}
-                                    {copy.sendInvitation}
+                                    <span>{copy.sendInvitation}</span>
                                 </button>
                                 <button
                                     type="button" onClick={() => setShowInvite(false)}
-                                    className="flex-1 bg-zinc-100 text-zinc-700 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-all"
+                                    className="px-6 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all"
                                 >
                                     {copy.cancel}
                                 </button>
@@ -523,22 +533,39 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                 </Overlay>
             )}
 
-            {/* ---------------- Shared-address editor ---------------- */}
+            {/* ---------------- Shared-address editor (Bottom Sheet on mobile / Centered on Desktop) ---------------- */}
             {editingMember && (
-                <Overlay className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+                <Overlay className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-4 overflow-y-auto" dir={isAr ? 'rtl' : 'ltr'}>
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setEditingMember(null)} />
-                    <div className="relative bg-white border border-zinc-200 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
-                        <h4 className="text-xl font-black text-zinc-900 mb-2">{copy.manageSharedAddresses}</h4>
-                        <p className="text-zinc-500 text-sm mb-6">{editingMember.user?.name}</p>
+                    <div className="relative bg-white border border-zinc-200/90 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90dvh] sm:max-h-[85vh] overflow-hidden z-10 sm:my-auto animate-in slide-in-from-bottom sm:slide-in-from-bottom-4 duration-200">
+                        {/* 1. STICKY HEADER */}
+                        <div className="px-5 sm:px-6 py-4 border-b border-zinc-100 flex items-center justify-between shrink-0 bg-white">
+                            <div>
+                                <h4 className="text-base sm:text-lg font-black text-zinc-900">{copy.manageSharedAddresses}</h4>
+                                <p className="text-zinc-500 text-xs mt-0.5">{editingMember.user?.name}</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setEditingMember(null)}
+                                className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-800 transition-colors flex items-center justify-center shrink-0"
+                                aria-label={copy.cancel}
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
 
-                        <AddressPicker
-                            addresses={overview?.addresses || []}
-                            selectedIds={editingAddressIds}
-                            onChange={setEditingAddressIds}
-                            isAr={isAr}
-                        />
+                        {/* 2. SCROLLABLE BODY */}
+                        <div className="p-5 sm:p-6 overflow-y-auto flex-1 overscroll-contain">
+                            <AddressPicker
+                                addresses={overview?.addresses || []}
+                                selectedIds={editingAddressIds}
+                                onChange={setEditingAddressIds}
+                                isAr={isAr}
+                            />
+                        </div>
 
-                        <div className="flex gap-4 pt-6">
+                        {/* 3. STICKY FOOTER */}
+                        <div className="p-4 sm:px-6 sm:py-4 border-t border-zinc-100 bg-white flex items-center gap-3 shrink-0 shadow-xs">
                             <button
                                 disabled={busy}
                                 onClick={async () => {
@@ -547,13 +574,13 @@ export default function FamilyTab({ isAr, currency, onUnreadChange }) {
                                     );
                                     if (ok) setEditingMember(null);
                                 }}
-                                className="flex-1 bg-marine-cyan text-white py-3 rounded-xl font-bold hover:bg-marine-cyan-dark transition-all disabled:opacity-50"
+                                className="flex-1 bg-marine-cyan hover:bg-marine-cyan-dark text-white py-3 rounded-xl font-bold text-xs sm:text-sm transition-all disabled:opacity-50 shadow-xs"
                             >
                                 {copy.save}
                             </button>
                             <button
                                 onClick={() => setEditingMember(null)}
-                                className="flex-1 bg-zinc-100 text-zinc-700 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-all"
+                                className="px-6 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all"
                             >
                                 {copy.cancel}
                             </button>

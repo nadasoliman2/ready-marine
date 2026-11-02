@@ -91,9 +91,8 @@ const buildEmailLogoHtml = ({ logoUrl, logoDarkUrl }) => {
                         ${logoDarkUrl ? `<!--[if !mso]><!--><div class="rc-logo-dark" style="display:none;max-height:0;overflow:hidden;">${logoImg(logoDarkUrl, '')}</div><!--<![endif]-->` : ''}
                     </div>
                 </div>`
-        // No logo uploaded: the brand in text, READY red and CAR dark — a mail app that darkens
-        // the email turns the text white itself.
-        : `<div style="font-size:26px;font-weight:900;color:#111827;letter-spacing:0.02em;text-align:center;margin-bottom:10px;"><span style="color:#DC2626;">Ready</span>Car</div>`;
+        // No logo uploaded: the brand in text, Ready Marine styled in primary and cyan
+        : `<div style="font-size:26px;font-weight:900;letter-spacing:0.02em;text-align:center;margin-bottom:10px;"><span style="color:#006781;">Ready</span> <span style="color:#00A6CE;">Marine</span></div>`;
 };
 
 /** Outlook's dark mode: swap to the white-CAR logo. Its own block: Gmail drops a whole block it cannot read. */
@@ -286,7 +285,7 @@ const buildPersonalizedEmailHtml = ({
         ? `${getFrontendUrl()}/${isAr ? 'ar' : 'en'}/products?category_id=${encodeURIComponent(String(tag.category_id))}`
         : (tag.link || `${getFrontendUrl()}/${isAr ? 'ar' : 'en'}/products`));
     const tagsHtml = tags.map((tag) => `
-        <a href="${escapeHtml(tagLink(tag))}" target="_blank" style="display:inline-block;padding:6px 12px;margin:3px 2px;background-color:#ffffff;border:1px solid #e4e4e7;border-radius:20px;color:#18181b;font-size:13px;font-weight:700;text-decoration:none;">
+        <a href="${escapeHtml(tagLink(tag))}" target="_blank" style="display:inline-block;padding:6px 14px;margin:3px 2px;background-color:#ffffff;border:1px solid #dbe2e6;border-radius:20px;color:#0E2A38;font-size:13px;font-weight:700;text-decoration:none;">
             ${escapeHtml(tagLabel(tag, isAr))}
         </a>
     `).join('');
@@ -300,33 +299,41 @@ const buildPersonalizedEmailHtml = ({
         const p1 = formattedProducts[i];
         const p2 = formattedProducts[i + 1];
 
-        // Two cards a row on every screen, as the big shops' emails do. On a phone the card
-        // tightens (the `rc-*` classes in <head>): smaller padding and type, and the button
-        // stays on one line. The picture sits in a box of fixed height, scaled to fit inside
-        // it — Gmail ignores object-fit, so a fixed height on the <img> itself stretched it.
-        // The button is the brand red: Gmail's dark mode turned the black one light grey.
+        // Two cards a row on every screen, styled after the Ready Marine ProductCard frontend.
+        // Clean card border, cool marine-canvas (#F6FAFF) image container, marine-navy price (#0E2A38),
+        // and vibrant marine-cyan button (#00A6CE).
         const renderCard = (p) => {
             if (!p) return '<td class="rc-cell" width="50%" style="padding:6px;"></td>';
+            const discountPercent = p.hasDiscount && p.originalPrice > p.price
+                ? Math.round((1 - p.price / p.originalPrice) * 100)
+                : 0;
             return `
                 <td class="rc-cell" width="50%" valign="top" style="padding:6px;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #ececef;border-radius:14px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #dbe2e6;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(14,42,56,0.04);">
                         <tr>
-                            <td class="rc-img" height="160" align="center" valign="middle" style="height:160px;padding:10px;text-align:center;background:#ffffff;border-radius:14px 14px 0 0;">
+                            <td class="rc-img" height="150" align="center" valign="middle" style="height:150px;padding:12px;text-align:center;background:#F6FAFF;border-radius:15px 15px 0 0;position:relative;">
                                 <a href="${escapeHtml(p.link)}" target="_blank" style="text-decoration:none;">
-                                    <img src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(p.title)}" width="200" style="display:inline-block;width:auto;height:auto;max-width:100%;max-height:140px;border:0;" />
+                                    <img src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(p.title)}" width="180" style="display:inline-block;width:auto;height:auto;max-width:100%;max-height:130px;border:0;" />
                                 </a>
                             </td>
                         </tr>
                         <tr>
-                            <td class="rc-body" style="padding:12px 14px 14px;text-align:${align};">
-                                <a href="${escapeHtml(p.link)}" target="_blank" class="rc-title" style="display:block;text-decoration:none;color:#09090b;font-size:14px;font-weight:700;line-height:20px;height:40px;overflow:hidden;margin-bottom:8px;">
+                            <td class="rc-body" style="padding:12px 14px 14px;text-align:${align};background:#ffffff;">
+                                ${discountPercent > 0 ? `
+                                <div style="margin-bottom:6px;">
+                                    <span style="display:inline-block;background:#EBF5FE;color:#006781;border:1px solid #BCC8CE;font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;">
+                                        -${discountPercent}% ${isAr ? 'خصم' : 'OFF'}
+                                    </span>
+                                </div>
+                                ` : ''}
+                                <a href="${escapeHtml(p.link)}" target="_blank" class="rc-title" style="display:block;text-decoration:none;color:#1E272E;font-size:13px;font-weight:700;line-height:19px;height:38px;overflow:hidden;margin-bottom:8px;">
                                     ${escapeHtml(p.title)}
                                 </a>
-                                <div style="margin-bottom:10px;white-space:nowrap;">
-                                    <span class="rc-price" style="font-size:17px;font-weight:900;color:#DC2626;">${Number(p.price).toLocaleString('en-US')} ج.م</span>
-                                    ${p.hasDiscount ? `<span style="font-size:12px;color:#a1a1aa;text-decoration:line-through;margin:0 6px;">${Number(p.originalPrice).toLocaleString('en-US')}</span>` : ''}
+                                <div style="margin-bottom:12px;white-space:nowrap;">
+                                    <span class="rc-price" style="font-size:16px;font-weight:900;color:#0E2A38;">${Number(p.price).toLocaleString('en-US')} ج.م</span>
+                                    ${p.hasDiscount ? `<span style="font-size:11px;color:#a1a1aa;text-decoration:line-through;margin:0 6px;">${Number(p.originalPrice).toLocaleString('en-US')}</span>` : ''}
                                 </div>
-                                <a href="${escapeHtml(p.link)}" target="_blank" class="rc-btn" style="display:block;text-align:center;background:#DC2626;color:#ffffff;font-size:13px;font-weight:800;line-height:18px;padding:9px 6px;border-radius:10px;text-decoration:none;white-space:nowrap;">
+                                <a href="${escapeHtml(p.link)}" target="_blank" class="rc-btn" style="display:block;text-align:center;background:#00A6CE;color:#ffffff;font-size:13px;font-weight:800;line-height:18px;padding:9px 6px;border-radius:10px;text-decoration:none;white-space:nowrap;box-shadow:0 3px 10px rgba(0,166,206,0.25);">
                                     ${isAr ? 'عرض القطعة' : 'View'}
                                 </a>
                             </td>
@@ -383,23 +390,23 @@ ${EMAIL_DARK_MODE_STYLE}
 <body style="margin:0;padding:0;background-color:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#111827;direction:${dir};text-align:${align};">
     <div class="rc-outer" style="max-width:640px;margin:0 auto;padding:12px 4px;">
         <!-- Card Container -->
-        <div style="background-color:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.06);border:1px solid #e4e4e7;">
+        <div style="background-color:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(14,42,56,0.08);border:1px solid #dbe2e6;">
             
-            <!-- Red Top Brand Bar -->
-            <div style="height:6px;background:linear-gradient(90deg, #DC2626 0%, #ef4444 100%);"></div>
+            <!-- Top Marine Brand Bar -->
+            <div style="height:6px;background:linear-gradient(90deg, #00A6CE 0%, #006781 100%);"></div>
 
             <!-- Header / Logo -->
             <div style="padding:20px 16px 14px;text-align:center;border-bottom:1px solid #f4f4f5;">
                 ${logoHtml}
-                <div style="display:inline-block;padding:4px 12px;background:#fef2f2;border:1px solid #fee2e2;border-radius:20px;color:#DC2626;font-size:12px;font-weight:800;letter-spacing:.04em;">
-                    ${isAr ? 'عروض وتوصيات مخصصة لسيارتك' : 'Tailored For Your Car'}
+                <div style="display:inline-block;padding:5px 14px;background:#EBF5FE;border:1px solid #BCC8CE;border-radius:20px;color:#006781;font-size:12px;font-weight:800;letter-spacing:.03em;">
+                    ${isAr ? 'عروض وتوصيات مخصصة لمركبتك' : 'Tailored For You'}
                 </div>
             </div>
 
             <!-- Hero Section -->
             <div class="rc-pad" style="padding:20px 14px;background:#ffffff;">
                 <h1 class="rc-h1" style="margin:0 0 12px;font-size:22px;line-height:1.35;font-weight:900;color:#09090b;">
-                    ${isAr ? `مختارة بعناية لسيارتك: ${carName}` : `Handpicked for your ${carName}`}
+                    ${isAr ? `مختارة بعناية لمركبتك: ${carName}` : `Handpicked for your ${carName}`}
                 </h1>
                 
                 <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#3f3f46;">
@@ -413,9 +420,9 @@ ${EMAIL_DARK_MODE_STYLE}
                 ` : ''}
 
                 <!-- Quick Tags / Pills (Like Alibaba) -->
-                <div style="margin:16px 0 20px;text-align:center;padding:10px 6px;background:#f8fafc;border-radius:16px;border:1px dashed #e2e8f0;">
-                    <div style="font-size:12px;font-weight:800;color:#71717a;text-transform:uppercase;margin-bottom:8px;">
-                        ${isAr ? 'أقسام سريعة لسيارتك' : 'Quick categories for your car'}
+                <div style="margin:16px 0 20px;text-align:center;padding:12px 8px;background:#F6FAFF;border-radius:16px;border:1px dashed #BCC8CE;">
+                    <div style="font-size:12px;font-weight:800;color:#006781;text-transform:uppercase;margin-bottom:8px;">
+                        ${isAr ? 'أقسام سريعة' : 'Quick categories'}
                     </div>
                     <div>
                         ${tagsHtml}
@@ -429,7 +436,7 @@ ${EMAIL_DARK_MODE_STYLE}
                         ${isAr ? 'فقط لأجلك' : 'Just For You'}
                     </h2>
                     <p style="margin:0;font-size:13px;color:#71717a;">
-                        ${isAr ? 'أهم القطع والإكسسوارات المتوافقة مع سيارتك بأفضل الأسعار' : 'Top compatible parts & accessories at the best prices'}
+                        ${isAr ? 'أهم القطع والإكسسوارات المتوافقة مع احتياجاتك بأفضل الأسعار' : 'Top compatible parts & accessories at the best prices'}
                     </p>
                 </div>
 
@@ -441,7 +448,7 @@ ${EMAIL_DARK_MODE_STYLE}
 
                 <!-- Main CTA Button -->
                 <div style="text-align:center;margin:20px 0 8px;">
-                    <a href="${escapeHtml(finalCtaLink)}" target="_blank" class="rc-cta" style="display:inline-block;background-color:#DC2626;color:#ffffff;font-size:15px;font-weight:900;padding:15px 36px;border-radius:14px;text-decoration:none;box-shadow:0 8px 20px rgba(220,38,38,0.3);">
+                    <a href="${escapeHtml(finalCtaLink)}" target="_blank" class="rc-cta" style="display:inline-block;background-color:#00A6CE;color:#ffffff;font-size:15px;font-weight:900;padding:15px 36px;border-radius:14px;text-decoration:none;box-shadow:0 8px 20px rgba(0,166,206,0.35);">
                         ${escapeHtml(finalCtaText)}
                     </a>
                 </div>
@@ -450,10 +457,10 @@ ${EMAIL_DARK_MODE_STYLE}
             <!-- Footer -->
             <div style="padding:16px 14px;background:#fafafa;border-top:1px solid #f4f4f5;text-align:center;font-size:12px;line-height:1.8;color:#71717a;">
                 <p style="margin:0 0 6px;">
-                    ${isAr ? `تصلك هذه الرسالة لأنك قمت بتسجيل سيارة (${carName}) في حسابك لدى Ready Marine.` : `You are receiving this email because you registered (${carName}) in your Ready Marine account.`}
+                    ${isAr ? `تصلك هذه الرسالة لأنك مسجل في Ready Marine (${carName}).` : `You are receiving this email because you are registered with Ready Marine (${carName}).`}
                 </p>
                 <p style="margin:0;">
-                    ${unsubscribeUrl ? `<a href="${escapeHtml(unsubscribeUrl)}" target="_blank" style="color:#a1a1aa;text-decoration:underline;">${isAr ? 'إلغاء الاشتراك من الرسائل التسويقية' : 'Unsubscribe from marketing emails'}</a>` : ''}
+                    ${unsubscribeUrl ? `<a href="${escapeHtml(unsubscribeUrl)}" target="_blank" style="color:#6D797E;text-decoration:underline;">${isAr ? 'إلغاء الاشتراك من الرسائل التسويقية' : 'Unsubscribe from marketing emails'}</a>` : ''}
                 </p>
             </div>
 

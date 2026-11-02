@@ -133,10 +133,8 @@ export default function LoginPage() {
     router.refresh();
   };
 
-  // A phone: a plain white page, as in the app design — the title bar, the logo, the form.
-  // From `sm` up, and while Google's second step owns the card (it is drawn for the dark
-  // card), the dark page as before.
-  const light = !googleStep;
+  // Clean light design consistent across initial sign-in and Google step
+  const light = true;
 
   return (
     <div className={`min-h-screen flex justify-center relative overflow-hidden ${light ? 'bg-white sm:bg-zinc-50 sm:items-center sm:py-12 sm:px-4' : 'bg-[#111315] items-center py-12 px-4'}`} dir={isAr ? 'rtl' : 'ltr'}>

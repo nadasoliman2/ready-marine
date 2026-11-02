@@ -17,7 +17,7 @@ const BRANDING_FIELDS = ['logo_url', 'logo_light_url', 'favicon_url'];
 // /uploads is served `immutable` for 30 days, so a branding file replaced under its old name
 // never reaches a browser that already has it. Bump this after replacing one in place; the
 // backend ignores the query string. (New uploads get new names and need no bump.)
-const BRANDING_CACHE_VERSION = 3;
+const BRANDING_CACHE_VERSION = 5;
 
 /**
  * The backend saves a branding upload as an absolute URL built from BACKEND_PUBLIC_URL at

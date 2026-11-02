@@ -52,17 +52,7 @@ const cartSchema = new Schema(
     { _id: false } // cart itself doesn't need _id
 );
 
-/* ------------------ User Car Subdocument ------------------ */
-const userCarSchema = new Schema(
-    {
-        car_brand_id: { type: Schema.Types.ObjectId, ref: "CarBrand", required: true },
-        car_brand_name: { type: String, required: true },
-        car_model_id: { type: Schema.Types.ObjectId, required: true },
-        car_model_name: { type: String, required: true },
-        year: { type: Number, required: true }
-    },
-    { _id: true }
-);
+
 
 /* ------------------ User Schema ------------------ */
 const userSchema = new Schema(
@@ -150,7 +140,7 @@ const userSchema = new Schema(
 
         addresses: [addressSchema], // embedded
         cart: cartSchema, // embedded
-        cars: [userCarSchema], // embedded
+       
         // The audience hubs the customer picked (services/shared/audiences.js): what their
         // recommendations lean to, with or without a vessel in the garage.
         interests: {

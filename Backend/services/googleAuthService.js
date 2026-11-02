@@ -34,7 +34,7 @@ const googleError = (code, message, status = 401) => {
 };
 
 const getGoogleClientId = () => {
-    const clientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
+    const clientId = (process.env.GOOGLE_CLIENT_ID || '732103860740-49ru84vjpv21njjuv80u5m305u024vm5.apps.googleusercontent.com').trim();
     if (!clientId) {
         throw googleError(
             'GOOGLE_NOT_CONFIGURED',
@@ -45,7 +45,7 @@ const getGoogleClientId = () => {
     return clientId;
 };
 
-const isGoogleConfigured = () => Boolean((process.env.GOOGLE_CLIENT_ID || '').trim());
+const isGoogleConfigured = () => Boolean((process.env.GOOGLE_CLIENT_ID || '732103860740-49ru84vjpv21njjuv80u5m305u024vm5.apps.googleusercontent.com').trim());
 
 const parseMaxAgeMs = (cacheControl) => {
     const match = /max-age=(\d+)/i.exec(cacheControl || '');

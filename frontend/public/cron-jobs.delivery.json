@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "6c53b96a-21df-46b5-af56-3d5a980c4c0e",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/cron-jobs-20261102/candidate.json",
+  "output": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/cron-jobs.html",
+  "specification": {
+    "sha256": "d496ae530ad6f68425d92be2ff851cd421b8cbfa1191c5e496746b035b716f51",
+    "bytes": 6117
+  },
+  "artifact": {
+    "sha256": "85fa4ab8402c133ca6c59188f2e457c4845d475b65c5fd20c0a2908291e48219",
+    "bytes": 861460
+  }
+}

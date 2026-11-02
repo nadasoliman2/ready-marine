@@ -308,7 +308,7 @@ const authenticateUser = async (identifier, password, options = {}) => {
         const token = generateToken({ id: user._id, role: 'user' }, process.env.JWT_SECRET_USER, getLoginDuration(options.rememberMe));
         return {
             token,
-            user: { id: user._id, name: user.name, email: user.email, profile_image: user.profile_image || null, role: 'user', cars: user.cars || [] }
+            user: { id: user._id, name: user.name, email: user.email, profile_image: user.profile_image || null, role: 'user' }
         };
     }
     
@@ -482,7 +482,7 @@ const createAccountFromVerification = async (verification, { issueToken = true, 
 
         const result = {
             role: 'user',
-            user: { id: user._id, name: user.name, email: user.email, profile_image: user.profile_image || null, role: 'user', cars: [] }
+            user: { id: user._id, name: user.name, email: user.email, profile_image: user.profile_image || null, role: 'user' }
         };
         if (token) result.token = token;
         return result;
@@ -711,7 +711,7 @@ const userSessionPayload = (user) => ({
     email: user.email,
     profile_image: user.profile_image || null,
     role: 'user',
-    cars: user.cars || [],
+   
 });
 
 /**

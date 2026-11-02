@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Ready Marine — Scheduled Cron Jobs & Sweepers",
+    "subtitle": "Automated background workers, interval schedules, and reconciliation pipelines",
+    "output": ".archify/cron-jobs-20261102/cron-jobs-architecture.html",
+    "quality_profile": "showcase",
+    "viewBox": [1020, 700]
+  },
+  "components": [
+    {
+      "id": "cron-engine",
+      "type": "messagebus",
+      "label": "node-cron Engine",
+      "sublabel": "Background Daemon (app.js)",
+      "tag": "Master Clock",
+      "pos": [40, 310],
+      "size": [160, 64]
+    },
+    {
+      "id": "fast-sweeps",
+      "type": "backend",
+      "label": "Fast Sweeps",
+      "sublabel": "1m - 10m intervals",
+      "tag": "Chat & Payouts",
+      "pos": [260, 90],
+      "size": [160, 64]
+    },
+    {
+      "id": "courier-sweeps",
+      "type": "backend",
+      "label": "Courier Tracking",
+      "sublabel": "Every 20m (staggered)",
+      "tag": "Logistics Sync",
+      "pos": [260, 230],
+      "size": [160, 64]
+    },
+    {
+      "id": "hourly-sweeps",
+      "type": "backend",
+      "label": "Hourly Sweeps",
+      "sublabel": "5, 10, 15, 20, 25, 30 min",
+      "tag": "Reviews & Alerts",
+      "pos": [260, 380],
+      "size": [160, 64]
+    },
+    {
+      "id": "midnight-sweeps",
+      "type": "backend",
+      "label": "Midnight Sweeps",
+      "sublabel": "00:00 Daily Schedule",
+      "tag": "Clearance & Expiry",
+      "pos": [260, 520],
+      "size": [160, 64]
+    },
+    {
+      "id": "worker-shipping",
+      "type": "cloud",
+      "label": "Shipping Service",
+      "sublabel": "bostaFulfillmentService",
+      "tag": "Parcels",
+      "pos": [490, 160],
+      "size": [160, 64]
+    },
+    {
+      "id": "worker-finance",
+      "type": "database",
+      "label": "Finance Service",
+      "sublabel": "vendorEarningsService",
+      "tag": "Ledger",
+      "pos": [490, 300],
+      "size": [160, 64]
+    },
+    {
+      "id": "worker-vendors",
+      "type": "security",
+      "label": "Vendor Service",
+      "sublabel": "vendorSubscriptionService",
+      "tag": "Subscriptions",
+      "pos": [490, 440],
+      "size": [160, 64]
+    },
+    {
+      "id": "worker-notifications",
+      "type": "frontend",
+      "label": "Alerts Service",
+      "sublabel": "reviews & abandoned carts",
+      "tag": "Customer Comms",
+      "pos": [490, 580],
+      "size": [160, 64]
+    },
+    {
+      "id": "ext-bosta",
+      "type": "external",
+      "label": "Bosta Shipping",
+      "sublabel": "Logistics API & Tracking",
+      "tag": "External",
+      "pos": [720, 160],
+      "size": [160, 64]
+    },
+    {
+      "id": "ext-paymob",
+      "type": "external",
+      "label": "Paymob Payouts",
+      "sublabel": "Wallets & Bank Transfers",
+      "tag": "External",
+      "pos": [720, 300],
+      "size": [160, 64]
+    },
+    {
+      "id": "db-mongo",
+      "type": "database",
+      "label": "MongoDB Store",
+      "sublabel": "Orders, Vendors, Users",
+      "tag": "Primary DB",
+      "pos": [720, 440],
+      "size": [160, 64]
+    },
+    {
+      "id": "ext-channels",
+      "type": "external",
+      "label": "Messaging Channels",
+      "sublabel": "WhatsApp & Resend Email",
+      "tag": "Outbound",
+      "pos": [720, 580],
+      "size": [160, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Schedule Cadence Tiers",
+      "wraps": ["fast-sweeps", "courier-sweeps", "hourly-sweeps", "midnight-sweeps"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Core Background Services",
+      "wraps": ["worker-shipping", "worker-finance", "worker-vendors", "worker-notifications"]
+    }
+  ],
+  "connections": [
+    { "id": "c1", "from": "cron-engine", "to": "fast-sweeps", "label": "1m - 10m triggers", "variant": "emphasis" },
+    { "id": "c2", "from": "cron-engine", "to": "courier-sweeps", "label": "20m cycle", "variant": "emphasis" },
+    { "id": "c3", "from": "cron-engine", "to": "hourly-sweeps", "label": "hourly offset", "variant": "emphasis" },
+    { "id": "c4", "from": "cron-engine", "to": "midnight-sweeps", "label": "00:00 daily", "variant": "emphasis" },
+
+    { "id": "c5", "from": "fast-sweeps", "to": "worker-finance", "label": "payout sync" },
+    { "id": "c6", "from": "courier-sweeps", "to": "worker-shipping", "label": "polling sweep" },
+    { "id": "c7", "from": "hourly-sweeps", "to": "worker-shipping", "label": "bundle & deadlines" },
+    { "id": "c8", "from": "hourly-sweeps", "to": "worker-notifications", "label": "review invites" },
+    { "id": "c9", "from": "midnight-sweeps", "to": "worker-finance", "label": "clearance" },
+    { "id": "c10", "from": "midnight-sweeps", "to": "worker-vendors", "label": "check expiry" },
+
+    { "id": "c11", "from": "worker-shipping", "to": "ext-bosta", "label": "query status" },
+    { "id": "c12", "from": "worker-shipping", "to": "db-mongo", "label": "update parcel" },
+    { "id": "c13", "from": "worker-finance", "to": "ext-paymob", "label": "payout query" },
+    { "id": "c14", "from": "worker-finance", "to": "db-mongo", "label": "release funds" },
+    { "id": "c15", "from": "worker-vendors", "to": "db-mongo", "label": "unpublish items" },
+    { "id": "c16", "from": "worker-notifications", "to": "ext-channels", "label": "send invites" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Self-Healing Fallback",
+      "items": [
+        "Sweeps act as a safety net if webhooks from Bosta or Paymob fail or get delayed",
+        "Ensures orders and parcel journeys always reach completion automatically"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Staggered Minute Execution",
+      "items": [
+        "Hourly sweeps are intentionally separated across minutes (5, 10, 15, 20, 25, 30)",
+        "Prevents database locks and keeps server CPU smooth and responsive"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Financial Ledger Safety",
+      "items": [
+        "Vendor earnings remain locked during the return guarantee period",
+        "Midnight clearance automatically releases funds into vendor wallets safely"
+      ]
+    }
+  ]
+}

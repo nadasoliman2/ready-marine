@@ -64,8 +64,8 @@ export default function AdminLogin() {
             <Anchor size={14} />
             Admin Portal
           </div>
-          <h1 className="font-display text-2xl font-bold text-marine-ink">Welcome back</h1>
-          <p className="text-marine-muted text-sm mt-1">Sign in to manage Ready Marine</p>
+          {/* <h1 className="font-display text-2xl font-bold text-marine-ink">Welcome back</h1>
+          <p className="text-marine-muted text-sm mt-1">Sign in to manage Ready Marine</p> */}
         </div>
 
         {error && (

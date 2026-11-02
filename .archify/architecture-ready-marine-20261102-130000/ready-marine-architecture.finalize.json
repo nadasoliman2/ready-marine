@@ -1,0 +1,1390 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "startedAt": "2026-11-02T11:03:41.393Z",
+  "specification": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/candidate.json",
+    "sha256": "874e7039cb683a5cbd1394d723a75badd2dbdac825d32fc99e11eda1485b9e9f",
+    "bytes": 8005
+  },
+  "artifact": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+    "sha256": "28e3508b628b8b0265500aec707b2b1cc8afced699ece83a6b419d6bb62523c7",
+    "bytes": 874645
+  },
+  "stages": {
+    "validate": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": null,
+      "execution": "embedded-in-deliver",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.10.0_2/bin/node",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.agents/skills/archify/bin/archify.mjs",
+        "deliver",
+        "architecture",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/candidate.json",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+        "--quality",
+        "showcase",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": true,
+        "command": "validate",
+        "specification": {
+          "sha256": "874e7039cb683a5cbd1394d723a75badd2dbdac825d32fc99e11eda1485b9e9f",
+          "bytes": 8005
+        },
+        "validation": {
+          "checksPassed": 9,
+          "checkCount": 9,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        }
+      }
+    },
+    "deliver": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 384,
+      "command": [
+        "/opt/homebrew/Cellar/node/26.10.0_2/bin/node",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.agents/skills/archify/bin/archify.mjs",
+        "deliver",
+        "architecture",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/candidate.json",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+        "--quality",
+        "showcase",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "receiptId": "c6e16881-e66c-4924-9447-6887b954f4cd",
+        "ok": true,
+        "command": "deliver",
+        "type": "architecture",
+        "input": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/candidate.json",
+        "output": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+        "specification": {
+          "sha256": "874e7039cb683a5cbd1394d723a75badd2dbdac825d32fc99e11eda1485b9e9f",
+          "bytes": 8005
+        },
+        "artifact": {
+          "sha256": "28e3508b628b8b0265500aec707b2b1cc8afced699ece83a6b419d6bb62523c7",
+          "bytes": 874645
+        },
+        "validation": {
+          "checksPassed": 9,
+          "checkCount": 9,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        },
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      }
+    },
+    "check": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 184,
+      "command": [
+        "/opt/homebrew/Cellar/node/26.10.0_2/bin/node",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.agents/skills/archify/bin/archify.mjs",
+        "check",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+        "--require-provenance"
+      ],
+      "receipt": {
+        "ok": true,
+        "file": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+        "artifact": {
+          "sha256": "28e3508b628b8b0265500aec707b2b1cc8afced699ece83a6b419d6bb62523c7",
+          "bytes": 874645
+        },
+        "checks": [
+          {
+            "name": "single_svg",
+            "ok": true,
+            "details": [
+              "found 1 <svg> block(s)"
+            ]
+          },
+          {
+            "name": "finite_svg",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "orthogonal_arrows",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "label_route_clearance",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "relationship_crossings",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "relationship_corridors",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "container_border_runs",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "route_rhythm",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "legend_clearance",
+            "ok": true,
+            "details": []
+          }
+        ],
+        "composition": {
+          "schemaVersion": 1,
+          "profile": "showcase",
+          "status": "pass",
+          "summary": {
+            "errors": 0,
+            "warnings": 0
+          },
+          "metrics": {
+            "properCrossings": 0,
+            "resolvedCrossovers": 12,
+            "ambiguousCorridors": 0,
+            "arrowheadCollisions": 0,
+            "containerBorderRuns": 0,
+            "labelRouteClearanceIssues": 0,
+            "labelCanvasOverflowIssues": 0,
+            "minLabelRouteClearance": 5,
+            "desktopReadabilityIssues": 0,
+            "viewportHeightIssues": 0,
+            "minProjectedNodeTextPx": 6.2,
+            "maxBends": 5,
+            "routesOverSuggestedBends": 8,
+            "maxStretch": 1.335,
+            "routesOverSuggestedStretch": 0,
+            "minSegmentPx": 24,
+            "minInteriorSegmentPx": 35,
+            "shortSegmentCount": 0,
+            "shortEndpointSegmentCount": 0,
+            "shortInteriorSegmentCount": 0,
+            "microSegmentCount": 0
+          },
+          "suggestedLimits": {
+            "bendsPerRelationship": 2,
+            "stretch": 1.35,
+            "segmentPx": 16,
+            "microSegmentPx": 8
+          },
+          "routeReview": {
+            "crossings": [
+              {
+                "left": {
+                  "id": "c2",
+                  "from": "client-vendors",
+                  "to": "fe-vendor",
+                  "label": "Manage Catalog",
+                  "collectionIndex": 1,
+                  "artifactIndex": 2
+                },
+                "right": {
+                  "id": "c3",
+                  "from": "client-admin",
+                  "to": "fe-customer",
+                  "label": "Ops &amp; Support",
+                  "collectionIndex": 2,
+                  "artifactIndex": 3
+                },
+                "point": [
+                  257,
+                  518
+                ]
+              },
+              {
+                "left": {
+                  "id": "c9",
+                  "from": "auth-service",
+                  "to": "mongodb",
+                  "label": "User Record",
+                  "collectionIndex": 8,
+                  "artifactIndex": 9
+                },
+                "right": {
+                  "id": "c17",
+                  "from": "api-gateway",
+                  "to": "uploads",
+                  "label": "Multipart Uploads",
+                  "collectionIndex": 16,
+                  "artifactIndex": 17
+                },
+                "point": [
+                  736.4000000000002,
+                  295
+                ]
+              },
+              {
+                "left": {
+                  "id": "c10",
+                  "from": "order-engine",
+                  "to": "mongodb",
+                  "label": "Parcels &amp; Orders",
+                  "collectionIndex": 9,
+                  "artifactIndex": 10
+                },
+                "right": {
+                  "id": "c15",
+                  "from": "order-engine",
+                  "to": "bosta-shipping",
+                  "label": "Create AWB",
+                  "collectionIndex": 14,
+                  "artifactIndex": 15
+                },
+                "point": [
+                  700,
+                  337
+                ],
+                "sharedNode": "order-engine"
+              },
+              {
+                "left": {
+                  "id": "c10",
+                  "from": "order-engine",
+                  "to": "mongodb",
+                  "label": "Parcels &amp; Orders",
+                  "collectionIndex": 9,
+                  "artifactIndex": 10
+                },
+                "right": {
+                  "id": "c17",
+                  "from": "api-gateway",
+                  "to": "uploads",
+                  "label": "Multipart Uploads",
+                  "collectionIndex": 16,
+                  "artifactIndex": 17
+                },
+                "point": [
+                  736.4000000000001,
+                  309
+                ]
+              },
+              {
+                "left": {
+                  "id": "c11",
+                  "from": "finance-engine",
+                  "to": "mongodb",
+                  "label": "Wallets &amp; Ledger",
+                  "collectionIndex": 10,
+                  "artifactIndex": 11
+                },
+                "right": {
+                  "id": "c15",
+                  "from": "order-engine",
+                  "to": "bosta-shipping",
+                  "label": "Create AWB",
+                  "collectionIndex": 14,
+                  "artifactIndex": 15
+                },
+                "point": [
+                  820,
+                  337
+                ]
+              },
+              {
+                "left": {
+                  "id": "c11",
+                  "from": "finance-engine",
+                  "to": "mongodb",
+                  "label": "Wallets &amp; Ledger",
+                  "collectionIndex": 10,
+                  "artifactIndex": 11
+                },
+                "right": {
+                  "id": "c17",
+                  "from": "api-gateway",
+                  "to": "uploads",
+                  "label": "Multipart Uploads",
+                  "collectionIndex": 16,
+                  "artifactIndex": 17
+                },
+                "point": [
+                  903,
+                  426.00000000000017
+                ]
+              },
+              {
+                "left": {
+                  "id": "c12",
+                  "from": "cron-worker",
+                  "to": "mongodb",
+                  "label": "Status Sweeps",
+                  "collectionIndex": 11,
+                  "artifactIndex": 12
+                },
+                "right": {
+                  "id": "c14",
+                  "from": "auth-service",
+                  "to": "google-auth",
+                  "label": "Verify JWKS",
+                  "collectionIndex": 13,
+                  "artifactIndex": 14
+                },
+                "point": [
+                  820,
+                  198
+                ]
+              },
+              {
+                "left": {
+                  "id": "c12",
+                  "from": "cron-worker",
+                  "to": "mongodb",
+                  "label": "Status Sweeps",
+                  "collectionIndex": 11,
+                  "artifactIndex": 12
+                },
+                "right": {
+                  "id": "c16",
+                  "from": "api-gateway",
+                  "to": "resend-email",
+                  "label": "Send OTP &amp; Receipts",
+                  "collectionIndex": 15,
+                  "artifactIndex": 16
+                },
+                "point": [
+                  819.9999999999999,
+                  267
+                ]
+              },
+              {
+                "left": {
+                  "id": "c14",
+                  "from": "auth-service",
+                  "to": "google-auth",
+                  "label": "Verify JWKS",
+                  "collectionIndex": 13,
+                  "artifactIndex": 14
+                },
+                "right": {
+                  "id": "c16",
+                  "from": "api-gateway",
+                  "to": "resend-email",
+                  "label": "Send OTP &amp; Receipts",
+                  "collectionIndex": 15,
+                  "artifactIndex": 16
+                },
+                "point": [
+                  728.4000000000001,
+                  198
+                ]
+              },
+              {
+                "left": {
+                  "id": "c14",
+                  "from": "auth-service",
+                  "to": "google-auth",
+                  "label": "Verify JWKS",
+                  "collectionIndex": 13,
+                  "artifactIndex": 14
+                },
+                "right": {
+                  "id": "c17",
+                  "from": "api-gateway",
+                  "to": "uploads",
+                  "label": "Multipart Uploads",
+                  "collectionIndex": 16,
+                  "artifactIndex": 17
+                },
+                "point": [
+                  736.4000000000002,
+                  198
+                ]
+              },
+              {
+                "left": {
+                  "id": "c15",
+                  "from": "order-engine",
+                  "to": "bosta-shipping",
+                  "label": "Create AWB",
+                  "collectionIndex": 14,
+                  "artifactIndex": 15
+                },
+                "right": {
+                  "id": "c16",
+                  "from": "api-gateway",
+                  "to": "resend-email",
+                  "label": "Send OTP &amp; Receipts",
+                  "collectionIndex": 15,
+                  "artifactIndex": 16
+                },
+                "point": [
+                  977,
+                  302
+                ]
+              },
+              {
+                "left": {
+                  "id": "c15",
+                  "from": "order-engine",
+                  "to": "bosta-shipping",
+                  "label": "Create AWB",
+                  "collectionIndex": 14,
+                  "artifactIndex": 15
+                },
+                "right": {
+                  "id": "c17",
+                  "from": "api-gateway",
+                  "to": "uploads",
+                  "label": "Multipart Uploads",
+                  "collectionIndex": 16,
+                  "artifactIndex": 17
+                },
+                "point": [
+                  736.4000000000002,
+                  337
+                ]
+              }
+            ],
+            "detours": [
+              {
+                "relationship": {
+                  "id": "c1",
+                  "from": "client-users",
+                  "to": "fe-storefront",
+                  "label": "Browse &amp; Search",
+                  "collectionIndex": 0,
+                  "artifactIndex": 1
+                },
+                "bends": 3,
+                "stretch": 1.279
+              },
+              {
+                "relationship": {
+                  "id": "c2",
+                  "from": "client-vendors",
+                  "to": "fe-vendor",
+                  "label": "Manage Catalog",
+                  "collectionIndex": 1,
+                  "artifactIndex": 2
+                },
+                "bends": 4,
+                "stretch": 1
+              },
+              {
+                "relationship": {
+                  "id": "c3",
+                  "from": "client-admin",
+                  "to": "fe-customer",
+                  "label": "Ops &amp; Support",
+                  "collectionIndex": 2,
+                  "artifactIndex": 3
+                },
+                "bends": 3,
+                "stretch": 1.279
+              },
+              {
+                "relationship": {
+                  "id": "c6",
+                  "from": "fe-customer",
+                  "to": "order-engine",
+                  "label": "Orders &amp; Checkout",
+                  "collectionIndex": 5,
+                  "artifactIndex": 6
+                },
+                "bends": 3,
+                "stretch": 1.27
+              },
+              {
+                "relationship": {
+                  "id": "c11",
+                  "from": "finance-engine",
+                  "to": "mongodb",
+                  "label": "Wallets &amp; Ledger",
+                  "collectionIndex": 10,
+                  "artifactIndex": 11
+                },
+                "bends": 4,
+                "stretch": 1.335
+              },
+              {
+                "relationship": {
+                  "id": "c15",
+                  "from": "order-engine",
+                  "to": "bosta-shipping",
+                  "label": "Create AWB",
+                  "collectionIndex": 14,
+                  "artifactIndex": 15
+                },
+                "bends": 3,
+                "stretch": 1
+              },
+              {
+                "relationship": {
+                  "id": "c16",
+                  "from": "api-gateway",
+                  "to": "resend-email",
+                  "label": "Send OTP &amp; Receipts",
+                  "collectionIndex": 15,
+                  "artifactIndex": 16
+                },
+                "bends": 5,
+                "stretch": 1
+              },
+              {
+                "relationship": {
+                  "id": "c17",
+                  "from": "api-gateway",
+                  "to": "uploads",
+                  "label": "Multipart Uploads",
+                  "collectionIndex": 16,
+                  "artifactIndex": 17
+                },
+                "bends": 4,
+                "stretch": 1.068
+              }
+            ]
+          },
+          "leadingSpace": {
+            "measured": false,
+            "reviewSuggested": false
+          },
+          "desktopReadability": {
+            "budgetBasis": "legacy-930",
+            "readerContract": "declared-wide-v1",
+            "availableDiagramWidth": 930,
+            "actualBudgetPx": 930,
+            "limit": "legacy",
+            "requestedTargetPx": null,
+            "requestedTargetMet": null,
+            "hardFloorPx": 6,
+            "hardFloorMet": true,
+            "minimumOwner": {
+              "kind": "edge",
+              "id": "c1",
+              "from": "client-users",
+              "to": "fe-storefront"
+            },
+            "minimumSourceTextPx": 8,
+            "minimumProjectedTextPx": 6.2,
+            "semanticTextCount": 55
+          },
+          "issues": []
+        },
+        "provenance": "current",
+        "deliveryReceiptId": "c6e16881-e66c-4924-9447-6887b954f4cd"
+      }
+    },
+    "browser-check": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 5189,
+      "command": [
+        "/opt/homebrew/Cellar/node/26.10.0_2/bin/node",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.agents/skills/archify/bin/archify.mjs",
+        "browser-check",
+        "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+        "--json",
+        "--require-provenance"
+      ],
+      "execution": "in-process",
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": true,
+        "command": "browser-check",
+        "evidenceKind": "automated-browser",
+        "status": "pass",
+        "visualReview": "not-requested",
+        "provenance": "current",
+        "deliveryReceiptId": "c6e16881-e66c-4924-9447-6887b954f4cd",
+        "artifact": {
+          "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+          "sha256": "28e3508b628b8b0265500aec707b2b1cc8afced699ece83a6b419d6bb62523c7",
+          "bytes": 874645
+        },
+        "state": {
+          "detail": "read",
+          "motion": "still"
+        },
+        "chrome": {
+          "status": "available",
+          "executable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        },
+        "diagnostics": [],
+        "containment": {
+          "status": "pass",
+          "policy": "fit-or-reader-declared-readable-vertical-scroll",
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "theme": "light",
+              "innerWidth": 1440,
+              "innerHeight": 900,
+              "scrollWidth": 1440,
+              "scrollHeight": 900,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1183,
+              "diagramWidth": 1153,
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 78,
+                "diagramChromePx": 78,
+                "svgPx": 721,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 7.6866666666666665,
+              "minimumProjectedNonEdgeTextPx": 8.647499999999999,
+              "minimumProjectedEdgeTextPx": 7.6866666666666665,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "theme": "light",
+              "innerWidth": 1600,
+              "innerHeight": 1000,
+              "scrollWidth": 1600,
+              "scrollHeight": 1000,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1237,
+              "diagramWidth": 1207,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 754,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "theme": "light",
+              "innerWidth": 1920,
+              "innerHeight": 1080,
+              "scrollWidth": 1920,
+              "scrollHeight": 1080,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1365,
+              "diagramWidth": 1335,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 834,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "theme": "light",
+              "innerWidth": 2048,
+              "innerHeight": 1320,
+              "scrollWidth": 2048,
+              "scrollHeight": 1320,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1740,
+              "diagramWidth": 1690,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 94,
+                "diagramChromePx": 94,
+                "svgPx": 1056,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 44,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            }
+          ]
+        },
+        "themeStates": {
+          "status": "pass",
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "requestedTheme": "light",
+              "resolvedTheme": "light",
+              "ok": true
+            },
+            {
+              "width": 1440,
+              "height": 900,
+              "requestedTheme": "dark",
+              "resolvedTheme": "dark",
+              "ok": true
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "requestedTheme": "dark",
+              "resolvedTheme": "dark",
+              "ok": true
+            }
+          ]
+        },
+        "readability": {
+          "status": "pass",
+          "minimumProjectedNodeTextPx": 6,
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "theme": "light",
+              "innerWidth": 1440,
+              "innerHeight": 900,
+              "scrollWidth": 1440,
+              "scrollHeight": 900,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1183,
+              "diagramWidth": 1153,
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 78,
+                "diagramChromePx": 78,
+                "svgPx": 721,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 7.6866666666666665,
+              "minimumProjectedNonEdgeTextPx": 8.647499999999999,
+              "minimumProjectedEdgeTextPx": 7.6866666666666665,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "theme": "light",
+              "innerWidth": 1600,
+              "innerHeight": 1000,
+              "scrollWidth": 1600,
+              "scrollHeight": 1000,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1237,
+              "diagramWidth": 1207,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 754,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "theme": "light",
+              "innerWidth": 1920,
+              "innerHeight": 1080,
+              "scrollWidth": 1920,
+              "scrollHeight": 1080,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1365,
+              "diagramWidth": 1335,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 834,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "theme": "light",
+              "innerWidth": 2048,
+              "innerHeight": 1320,
+              "scrollWidth": 2048,
+              "scrollHeight": 1320,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1740,
+              "diagramWidth": 1690,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 94,
+                "diagramChromePx": 94,
+                "svgPx": 1056,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 44,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            }
+          ]
+        },
+        "viewerChrome": {
+          "status": "pass",
+          "viewports": [
+            {
+              "width": 1440,
+              "height": 900,
+              "theme": "light",
+              "innerWidth": 1440,
+              "innerHeight": 900,
+              "scrollWidth": 1440,
+              "scrollHeight": 900,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1183,
+              "diagramWidth": 1153,
+              "pageComposition": {
+                "bodyPaddingPx": 12,
+                "headerPx": 78,
+                "diagramChromePx": 78,
+                "svgPx": 721,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 7.6866666666666665,
+              "minimumProjectedNonEdgeTextPx": 8.647499999999999,
+              "minimumProjectedEdgeTextPx": 7.6866666666666665,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1600,
+              "height": 1000,
+              "theme": "light",
+              "innerWidth": 1600,
+              "innerHeight": 1000,
+              "scrollWidth": 1600,
+              "scrollHeight": 1000,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1237,
+              "diagramWidth": 1207,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 754,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 1920,
+              "height": 1080,
+              "theme": "light",
+              "innerWidth": 1920,
+              "innerHeight": 1080,
+              "scrollWidth": 1920,
+              "scrollHeight": 1080,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1365,
+              "diagramWidth": 1335,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 86,
+                "diagramChromePx": 84,
+                "svgPx": 834,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 54,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            },
+            {
+              "width": 2048,
+              "height": 1320,
+              "theme": "light",
+              "innerWidth": 2048,
+              "innerHeight": 1320,
+              "scrollWidth": 2048,
+              "scrollHeight": 1320,
+              "overflowX": false,
+              "overflowY": false,
+              "verticalScrollAccepted": false,
+              "overflowDisposition": "contained",
+              "readerLayout": "adaptive",
+              "readerOverflow": null,
+              "readerFit": "authored-height",
+              "diagramType": "architecture",
+              "documentScrollUnclipped": true,
+              "ok": true,
+              "readerWidth": 1740,
+              "diagramWidth": 1690,
+              "pageComposition": {
+                "bodyPaddingPx": 64,
+                "headerPx": 94,
+                "diagramChromePx": 94,
+                "svgPx": 1056,
+                "cardsPx": 0,
+                "viewBoxHeight": 750
+              },
+              "viewBoxWidth": 1200,
+              "minimumProjectedNodeTextPx": 8,
+              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedEdgeTextPx": 8,
+              "minimumProjectedNodeText": "Browse & Search",
+              "minimumProjectedNodeTextDetail": "edge",
+              "minimumProjectedNodeTextOwner": {
+                "kind": "edge",
+                "id": "c1",
+                "from": "client-users",
+                "to": "fe-storefront"
+              },
+              "minimumRequiredNodeTextPx": 6,
+              "readabilityOk": true,
+              "hasLegend": true,
+              "hasNavigationDock": true,
+              "legendDockIntersectionArea": 0,
+              "dockStageIntersectionArea": 0,
+              "dockStageGap": 10,
+              "requiredDockStageGap": 10,
+              "viewerChromeStageOk": true,
+              "viewerChromeReserve": 44,
+              "viewerChromeActive": true,
+              "viewerChromeOk": true,
+              "resolvedTheme": "light"
+            }
+          ]
+        },
+        "captures": {
+          "status": "not-requested",
+          "screenshots": [],
+          "contactSheet": null
+        },
+        "sidecars": {
+          "receipt": "ready-marine-architecture.browser-check.json",
+          "files": []
+        }
+      }
+    }
+  },
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "diagnostics": [],
+  "evidence": {
+    "receipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.finalize.json",
+    "summaryReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.finalize-summary.json",
+    "browserCheckReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.browser-check.json"
+  },
+  "visualReview": "not-requested",
+  "finishedAt": "2026-11-02T11:03:47.264Z",
+  "durationMs": 5870,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-02T11:02:56.682Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}

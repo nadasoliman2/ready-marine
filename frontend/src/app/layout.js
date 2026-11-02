@@ -1,13 +1,14 @@
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter, Space_Grotesk, Cairo } from 'next/font/google';
 import './globals.css';
 import Providers from './providers';
 import { cookies, headers } from 'next/headers';
 import AppChrome from '../components/AppChrome';
 
-// Inter for body text, Space Grotesk for headings, prices, labels and part numbers
-// (Tailwind's `font-sans` / `font-display`).
+// Inter for English body text, Space Grotesk for Latin headings & prices,
+// and Cairo for modern, clean, geometric Arabic typography across the platform.
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-space-grotesk' });
+const cairo = Cairo({ subsets: ['arabic', 'latin'], display: 'swap', variable: '--font-cairo' });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://readymarine.store';
 
@@ -122,7 +123,7 @@ export default function RootLayout({ children }) {
           `
         }} />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
+      <body className={`${inter.variable} ${spaceGrotesk.variable} ${cairo.variable} font-sans`}>
         <Providers initialLanguage={initialLanguage} initialTheme={initialTheme}>
           <AppChrome>{children}</AppChrome>
         </Providers>

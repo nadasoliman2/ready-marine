@@ -34,7 +34,7 @@ export default function Home() {
       <WorkshopPartners />
       <PartnersSection />
       <CorporateClientsSection />
-      <AuthorizedBrands />
+
       <VendorsSlider />
   
     </>

@@ -91,16 +91,13 @@ export default function FriendsTab({ isAr, currency, onUnreadChange }) {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-                <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-3">
-                    <Users className="text-marine-primary" /> {copy.friends}
-                </h3>
+            <div className="flex justify-end">
                 <button
                     onClick={() => { setShowInvite(true); setInviteForm({ identifier: '', shared_address_ids: [] }); }}
                     disabled={!hasOwnAddress}
-                    className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-lg"
+                    className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm"
                 >
-                    <UserPlus size={18} /> {copy.inviteFriend}
+                    <UserPlus size={16} /> {copy.inviteFriend}
                 </button>
             </div>
 
@@ -550,11 +547,11 @@ export default function FriendsTab({ isAr, currency, onUnreadChange }) {
     );
 }
 
-function Dialog({ children, onClose }) {
+function Dialog({ children, onClose, isAr = true }) {
     return (
-        <Overlay className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <Overlay className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-4 overflow-y-auto" dir={isAr ? 'rtl' : 'ltr'}>
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-            <div className="relative bg-white border border-zinc-200 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white border border-zinc-200/90 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90dvh] sm:max-h-[85vh] overflow-y-auto z-10 sm:my-auto p-6 sm:p-8 animate-in slide-in-from-bottom sm:slide-in-from-bottom-4 duration-200">
                 {children}
             </div>
         </Overlay>

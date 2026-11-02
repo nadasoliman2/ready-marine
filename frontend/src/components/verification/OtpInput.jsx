@@ -19,7 +19,15 @@ import { useEffect, useRef, useState } from 'react';
  * Kept always left-to-right even in Arabic: a numeric code is read in the order it was
  * sent, and mirroring the boxes under RTL makes people type it backwards.
  */
-export default function OtpInput({ value, onChange, onComplete, disabled, autoFocus = true, length = 6 }) {
+export default function OtpInput({
+    value,
+    onChange,
+    onComplete,
+    disabled,
+    autoFocus = true,
+    length = 6,
+    variant = 'dark', // 'dark' | 'light'
+}) {
     const inputRef = useRef(null);
     const [focused, setFocused] = useState(false);
     // The code that was last handed to `onComplete`, so a re-render with the same six
@@ -27,6 +35,7 @@ export default function OtpInput({ value, onChange, onComplete, disabled, autoFo
     const completedRef = useRef('');
 
     const code = String(value || '').replace(/\D/g, '').slice(0, length);
+    const isLight = variant === 'light';
 
     useEffect(() => {
         if (autoFocus) inputRef.current?.focus();
@@ -71,8 +80,16 @@ export default function OtpInput({ value, onChange, onComplete, disabled, autoFo
                     <div
                         key={index}
                         aria-hidden="true"
-                        className={`w-11 h-14 sm:w-12 sm:h-16 flex items-center justify-center text-2xl font-black rounded-xl bg-white/5 border-2 text-white transition-colors ${
-                            active ? 'border-marine-cyan' : 'border-white/10'
+                        className={`w-11 h-14 sm:w-13 sm:h-16 flex items-center justify-center text-2xl font-black rounded-2xl border-2 transition-all ${
+                            isLight
+                                ? active
+                                    ? 'border-marine-cyan bg-white text-zinc-900 shadow-pod scale-105'
+                                    : digit
+                                    ? 'border-zinc-300 bg-zinc-50 text-zinc-900 font-mono'
+                                    : 'border-zinc-200 bg-zinc-50 text-zinc-900'
+                                : active
+                                    ? 'border-marine-cyan bg-white/10 text-white'
+                                    : 'border-white/10 bg-white/5 text-white'
                         } ${disabled ? 'opacity-50' : ''}`}
                     >
                         {digit}

@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/candidate.json",
+    "sha256": "874e7039cb683a5cbd1394d723a75badd2dbdac825d32fc99e11eda1485b9e9f",
+    "bytes": 8005
+  },
+  "artifact": {
+    "path": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.html",
+    "sha256": "28e3508b628b8b0265500aec707b2b1cc8afced699ece83a6b419d6bb62523c7",
+    "bytes": 874645
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.finalize.json",
+    "summaryReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.finalize-summary.json",
+    "browserCheckReceipt": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/ready-marine-architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-02T11:02:56.682Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 5870,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 12,
+      "routesOverSuggestedBends": 8
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "c2",
+            "from": "client-vendors",
+            "to": "fe-vendor",
+            "label": "Manage Catalog",
+            "collectionIndex": 1,
+            "artifactIndex": 2
+          },
+          "right": {
+            "id": "c3",
+            "from": "client-admin",
+            "to": "fe-customer",
+            "label": "Ops &amp; Support",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "point": [
+            257,
+            518
+          ]
+        },
+        {
+          "left": {
+            "id": "c9",
+            "from": "auth-service",
+            "to": "mongodb",
+            "label": "User Record",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "right": {
+            "id": "c17",
+            "from": "api-gateway",
+            "to": "uploads",
+            "label": "Multipart Uploads",
+            "collectionIndex": 16,
+            "artifactIndex": 17
+          },
+          "point": [
+            736.4000000000002,
+            295
+          ]
+        },
+        {
+          "left": {
+            "id": "c10",
+            "from": "order-engine",
+            "to": "mongodb",
+            "label": "Parcels &amp; Orders",
+            "collectionIndex": 9,
+            "artifactIndex": 10
+          },
+          "right": {
+            "id": "c15",
+            "from": "order-engine",
+            "to": "bosta-shipping",
+            "label": "Create AWB",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            700,
+            337
+          ],
+          "sharedNode": "order-engine"
+        },
+        {
+          "left": {
+            "id": "c10",
+            "from": "order-engine",
+            "to": "mongodb",
+            "label": "Parcels &amp; Orders",
+            "collectionIndex": 9,
+            "artifactIndex": 10
+          },
+          "right": {
+            "id": "c17",
+            "from": "api-gateway",
+            "to": "uploads",
+            "label": "Multipart Uploads",
+            "collectionIndex": 16,
+            "artifactIndex": 17
+          },
+          "point": [
+            736.4000000000001,
+            309
+          ]
+        },
+        {
+          "left": {
+            "id": "c11",
+            "from": "finance-engine",
+            "to": "mongodb",
+            "label": "Wallets &amp; Ledger",
+            "collectionIndex": 10,
+            "artifactIndex": 11
+          },
+          "right": {
+            "id": "c15",
+            "from": "order-engine",
+            "to": "bosta-shipping",
+            "label": "Create AWB",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            820,
+            337
+          ]
+        },
+        {
+          "left": {
+            "id": "c11",
+            "from": "finance-engine",
+            "to": "mongodb",
+            "label": "Wallets &amp; Ledger",
+            "collectionIndex": 10,
+            "artifactIndex": 11
+          },
+          "right": {
+            "id": "c17",
+            "from": "api-gateway",
+            "to": "uploads",
+            "label": "Multipart Uploads",
+            "collectionIndex": 16,
+            "artifactIndex": 17
+          },
+          "point": [
+            903,
+            426.00000000000017
+          ]
+        },
+        {
+          "left": {
+            "id": "c12",
+            "from": "cron-worker",
+            "to": "mongodb",
+            "label": "Status Sweeps",
+            "collectionIndex": 11,
+            "artifactIndex": 12
+          },
+          "right": {
+            "id": "c14",
+            "from": "auth-service",
+            "to": "google-auth",
+            "label": "Verify JWKS",
+            "collectionIndex": 13,
+            "artifactIndex": 14
+          },
+          "point": [
+            820,
+            198
+          ]
+        },
+        {
+          "left": {
+            "id": "c12",
+            "from": "cron-worker",
+            "to": "mongodb",
+            "label": "Status Sweeps",
+            "collectionIndex": 11,
+            "artifactIndex": 12
+          },
+          "right": {
+            "id": "c16",
+            "from": "api-gateway",
+            "to": "resend-email",
+            "label": "Send OTP &amp; Receipts",
+            "collectionIndex": 15,
+            "artifactIndex": 16
+          },
+          "point": [
+            819.9999999999999,
+            267
+          ]
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "c1",
+            "from": "client-users",
+            "to": "fe-storefront",
+            "label": "Browse &amp; Search",
+            "collectionIndex": 0,
+            "artifactIndex": 1
+          },
+          "bends": 3,
+          "stretch": 1.279
+        },
+        {
+          "relationship": {
+            "id": "c2",
+            "from": "client-vendors",
+            "to": "fe-vendor",
+            "label": "Manage Catalog",
+            "collectionIndex": 1,
+            "artifactIndex": 2
+          },
+          "bends": 4,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "c3",
+            "from": "client-admin",
+            "to": "fe-customer",
+            "label": "Ops &amp; Support",
+            "collectionIndex": 2,
+            "artifactIndex": 3
+          },
+          "bends": 3,
+          "stretch": 1.279
+        },
+        {
+          "relationship": {
+            "id": "c6",
+            "from": "fe-customer",
+            "to": "order-engine",
+            "label": "Orders &amp; Checkout",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "bends": 3,
+          "stretch": 1.27
+        },
+        {
+          "relationship": {
+            "id": "c11",
+            "from": "finance-engine",
+            "to": "mongodb",
+            "label": "Wallets &amp; Ledger",
+            "collectionIndex": 10,
+            "artifactIndex": 11
+          },
+          "bends": 4,
+          "stretch": 1.335
+        },
+        {
+          "relationship": {
+            "id": "c15",
+            "from": "order-engine",
+            "to": "bosta-shipping",
+            "label": "Create AWB",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "bends": 3,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "c16",
+            "from": "api-gateway",
+            "to": "resend-email",
+            "label": "Send OTP &amp; Receipts",
+            "collectionIndex": 15,
+            "artifactIndex": 16
+          },
+          "bends": 5,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "c17",
+            "from": "api-gateway",
+            "to": "uploads",
+            "label": "Multipart Uploads",
+            "collectionIndex": 16,
+            "artifactIndex": 17
+          },
+          "bends": 4,
+          "stretch": 1.068
+        }
+      ],
+      "truncated": true
+    },
+    "hints": [
+      "client-vendors → fe-vendor crosses client-admin → fe-customer: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "auth-service → mongodb crosses api-gateway → uploads: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "order-engine → mongodb and order-engine → bosta-shipping cross next to order-engine: move node mongodb or bosta-shipping so the two reach order-engine from different sides (for example one level with it, one directly above or below it).",
+      "order-engine → mongodb crosses api-gateway → uploads: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "finance-engine → mongodb crosses order-engine → bosta-shipping: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "finance-engine → mongodb crosses api-gateway → uploads: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "cron-worker → mongodb crosses auth-service → google-auth: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "cron-worker → mongodb crosses api-gateway → resend-email: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

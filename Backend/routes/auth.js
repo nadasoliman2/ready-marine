@@ -209,7 +209,7 @@ router.get('/me', protect('user', 'vendor'), (req, res) => {
             phone: req.user.phone,
             profile_image: req.user.profile_image || null,
             role: 'user',
-            cars: req.user.cars || [],
+           
             // Drives the post-login prompt asking the customer to confirm
             // whichever contact detail they have not proved yet.
             email_verified: !!req.user.email_verified_at,
@@ -388,7 +388,10 @@ const googleFail = (res, error) => {
  * @route   GET /api/auth/google/config
  */
 router.get('/google/config', (req, res) => {
-    res.json({ enabled: isGoogleConfigured() });
+    res.json({
+        enabled: isGoogleConfigured(),
+        client_id: process.env.GOOGLE_CLIENT_ID || '732103860740-49ru84vjpv21njjuv80u5m305u024vm5.apps.googleusercontent.com',
+    });
 });
 
 /**

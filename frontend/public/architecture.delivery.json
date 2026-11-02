@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "115c6fcc-887f-4186-8e64-1c790e7e402d",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/.archify/architecture-ready-marine-20261102-130000/candidate.json",
+  "output": "/Users/nadaemad/Documents/tech-oriented/readt-marine/ready-marine/frontend/public/architecture.html",
+  "specification": {
+    "sha256": "7d3c0d4cc58be30d129095e7a88cb347865d7eafa465d9b7e939206517a522f8",
+    "bytes": 7983
+  },
+  "artifact": {
+    "sha256": "e8a49045e4b9648de4eaacc30be00d77ff1fc760463e5dd0fffbe15c853ff1e4",
+    "bytes": 874543
+  }
+}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   Home, LayoutGrid, Wrench, Menu, User, ChevronLeft, ChevronDown, Briefcase, Store,
   Newspaper, Truck, Phone, Mail, ShieldCheck, FileText, PackageSearch, LayoutDashboard,
-  Anchor,
+  Anchor, X,
 } from 'lucide-react';
 import Link from './LocaleLink';
 import Overlay from './Overlay';
@@ -64,15 +64,23 @@ function MorePage({ onClose, openCategory }) {
 
   const isStaff = isMounted && (user?.role === 'vendor' || user?.role === 'admin');
   const signedIn = isMounted && user;
-  const accountHref = !signedIn ? '/login' : isStaff ? (user.role === 'admin' ? '/admin/dashboard' : '/dashboard') : '/profile?tab=info';
+  const accountHref = !signedIn ? '/login' : isStaff ? (user.role === 'admin' ? '/admin/dashboard' : '/dashboard') : '/profile';
   const row = (href, icon, label) => (
     <MenuRow key={href} href={href} onClick={onClose} icon={icon} label={label} active={pathname === href.split('?')[0]} />
   );
 
   return (
-    <Overlay className="md:hidden fixed inset-0 z-[95] bg-marine-canvas flex flex-col animate-in fade-in duration-200" dir={isAr ? 'rtl' : 'ltr'}>
-      <header className="bg-white border-b border-marine-teal/15 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 px-4 text-center">
+    <Overlay className="md:hidden fixed inset-0 z-[200] bg-marine-canvas flex flex-col animate-in fade-in duration-200" dir={isAr ? 'rtl' : 'ltr'}>
+      <header className="bg-white border-b border-marine-teal/15 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 px-4 flex items-center justify-between">
         <h2 className="text-lg font-bold text-marine-ink">{isAr ? 'المزيد' : 'More'}</h2>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={isAr ? 'إغلاق' : 'Close'}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+        >
+          <X size={20} />
+        </button>
       </header>
 
       <div className="flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-[calc(5rem+env(safe-area-inset-bottom))] space-y-5">
@@ -92,7 +100,7 @@ function MorePage({ onClose, openCategory }) {
             </span>
             <span className="block text-xs text-white/60 mt-0.5">
               {!signedIn
-                ? (isAr ? 'تابع طلباتك واحفظ قواربك' : 'Track your orders and save your boats')
+                ? (isAr ? 'تابع طلباتك وإعدادات حسابك' : 'Track your orders and account settings')
                 : (isAr ? 'حسابي وطلباتي' : 'My account and orders')}
             </span>
           </span>
@@ -168,15 +176,20 @@ export default function MobileBottomNav() {
   useEffect(() => { setPanel(null); }, [pathname]);
   useEffect(() => {
     const onSearch = () => setPanel(null);
+    const onOpenMore = () => setPanel('more');
     window.addEventListener(SEARCH_FILTER_EVENT, onSearch);
-    return () => window.removeEventListener(SEARCH_FILTER_EVENT, onSearch);
+    window.addEventListener('open-mobile-more', onOpenMore);
+    return () => {
+      window.removeEventListener(SEARCH_FILTER_EVENT, onSearch);
+      window.removeEventListener('open-mobile-more', onOpenMore);
+    };
   }, []);
 
   // Checkout has its own buttons at the bottom of the screen.
   if (pathname.startsWith('/checkout')) return null;
 
-  const itemClass = (active) => `flex-1 flex flex-col items-center justify-center gap-1 pt-2 pb-1.5 text-[11px] font-bold transition-colors ${
-    active ? 'text-marine-primary' : 'text-marine-outline active:text-marine-ink'
+  const itemClass = (active) => `flex-1 flex flex-col items-center justify-center gap-0.5 pt-1 pb-1 text-[10px] font-semibold transition-colors ${
+    active ? 'text-marine-primary' : 'text-slate-400 hover:text-slate-600 active:text-marine-ink'
   }`;
   const onPage = (href) => !panel && (pathname === href || pathname.startsWith(`${href}/`));
 
@@ -184,23 +197,23 @@ export default function MobileBottomNav() {
     <>
       <nav
         aria-label={isAr ? 'القائمة السفلية' : 'Bottom menu'}
-        className="md:hidden fixed bottom-0 inset-x-0 z-[100] bg-white border-t border-marine-teal/15 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)]"
+        className="md:hidden fixed bottom-0 inset-x-0 z-[100] bg-white border-t border-slate-200/80 shadow-[0_-2px_12px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]"
       >
-        <div className="flex items-stretch h-16">
+        <div className="flex items-stretch h-[50px]">
           <Link href="/" className={itemClass(!panel && pathname === '/')}>
-            <Home size={22} />
+            <Home size={19} />
             <span>{t.home}</span>
           </Link>
           <Link href="/products" className={itemClass(onPage('/products') || onPage('/product'))}>
-            <LayoutGrid size={22} />
+            <LayoutGrid size={19} />
             <span>{isAr ? 'المنتجات' : 'Products'}</span>
           </Link>
           <Link href="/services" className={itemClass(onPage('/services'))}>
-            <Wrench size={22} />
+            <Wrench size={19} />
             <span>{t.services || (isAr ? 'الخدمات' : 'Services')}</span>
           </Link>
           <button type="button" onClick={() => setPanel(panel === 'more' ? null : 'more')} className={itemClass(panel === 'more')}>
-            <Menu size={22} />
+            <Menu size={19} />
             <span>{isAr ? 'المزيد' : 'More'}</span>
           </button>
         </div>

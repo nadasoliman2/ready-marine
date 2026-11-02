@@ -3898,6 +3898,11 @@ router.put('/tickets/:id', protect('admin'), async (req, res) => {
             updateFields.adminNote = adminNote;
         }
 
+        const currentDoc = await Ticket.findById(req.params.id).select('status authorId authorRole title').lean();
+        if (!currentDoc) {
+            return res.status(404).json({ success: false, message: 'Ticket not found' });
+        }
+
         const ticket = await Ticket.findByIdAndUpdate(
             req.params.id,
             updateFields,
@@ -3906,6 +3911,31 @@ router.put('/tickets/:id', protect('admin'), async (req, res) => {
 
         if (!ticket) {
             return res.status(404).json({ success: false, message: 'Ticket not found' });
+        }
+
+        // Notify customer on status update (e.g. resolved or closed)
+        if (status && status !== currentDoc.status && ticket.authorRole === 'user') {
+            try {
+                const { notifyCustomer } = require('../services/customerNotificationService');
+                const statusLabelAr = status === 'resolved' ? 'تم حل تذكرة الدعم' : status === 'closed' ? 'تم إغلاق تذكرة الدعم' : 'تحديث تذكرة الدعم';
+                const statusLabelEn = status === 'resolved' ? 'Your ticket was resolved' : status === 'closed' ? 'Your ticket was closed' : 'Ticket updated';
+                await notifyCustomer(
+                    ticket.authorId,
+                    'ticket_status_change',
+                    {
+                        title_ar: statusLabelAr,
+                        title_en: statusLabelEn,
+                        message_ar: `تم تغيير حالة تذكرتك "${ticket.title}" إلى: ${status === 'resolved' ? 'تم الحل' : status === 'closed' ? 'مغلقة' : status}`,
+                        message_en: `Your ticket "${ticket.title}" status changed to: ${status}`,
+                    },
+                    {
+                        link: `/support/tickets/${ticket._id}`,
+                        data: { ticketId: String(ticket._id), status },
+                    }
+                );
+            } catch (notifyErr) {
+                console.error('[Ticket Status] Customer notification failed:', notifyErr.message);
+            }
         }
 
         res.json({ success: true, ticket });
@@ -3955,6 +3985,62 @@ router.post('/tickets/:id/messages', protect('admin'), async (req, res) => {
 
         const updated = await Ticket.findById(ticket._id).lean();
         emitToTicket(ticket._id, 'ticket:updated', updated);
+
+        // Notify the customer or vendor about the reply
+        if (ticket.authorRole === 'user') {
+            try {
+                const { notifyCustomer } = require('../services/customerNotificationService');
+                await notifyCustomer(
+                    ticket.authorId,
+                    'ticket_reply',
+                    {
+                        title_ar: 'رد جديد على تذكرة الدعم',
+                        title_en: 'New reply on your support ticket',
+                        message_ar: `قام فريق الدعم بالرد على تذكرتك: "${ticket.title}"`,
+                        message_en: `Support team replied to your ticket: "${ticket.title}"`,
+                    },
+                    {
+                        link: `/support/tickets/${ticket._id}`,
+                        data: { ticketId: String(ticket._id) },
+                    }
+                );
+            } catch (notifyErr) {
+                console.error('[Ticket Reply] Customer notification failed:', notifyErr.message);
+            }
+
+            // Send email notification to customer
+            try {
+                const user = await User.findById(ticket.authorId).select('name email preferred_language').lean();
+                if (user?.email) {
+                    const { sendTicketReplyEmail } = require('../services/emailService');
+                    await sendTicketReplyEmail({
+                        to: user.email,
+                        name: user.name || '',
+                        ticketId: ticket._id,
+                        ticketTitle: ticket.title,
+                        replyContent: content.trim(),
+                        senderName: req.user.username || 'فريق الدعم',
+                        language: user.preferred_language || 'ar',
+                    });
+                }
+            } catch (emailErr) {
+                console.error('[Ticket Reply] Customer email failed:', emailErr.message);
+            }
+        } else if (ticket.authorRole === 'vendor') {
+            try {
+                const { createNotification } = require('../models/notifications');
+                await createNotification(
+                    ticket.authorId,
+                    'ticket_reply',
+                    'رد جديد على تذكرة الدعم',
+                    `قام فريق الدعم بالرد على تذكرتك: "${ticket.title}"`,
+                    { link: `/dashboard/tickets/${ticket._id}`, ticketId: String(ticket._id) }
+                );
+            } catch (vendorNotifyErr) {
+                console.error('[Ticket Reply] Vendor notification failed:', vendorNotifyErr.message);
+            }
+        }
+
         res.json({ success: true, ticket: updated });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });

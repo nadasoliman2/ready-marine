@@ -17,6 +17,12 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
     max-width: 100%;
+    font-family: var(--font-cairo), var(--font-inter), system-ui, -apple-system, sans-serif;
+  }
+
+  html[lang="en"] body,
+  [dir="ltr"] body {
+    font-family: var(--font-inter), var(--font-cairo), system-ui, -apple-system, sans-serif;
   }
 }
 
