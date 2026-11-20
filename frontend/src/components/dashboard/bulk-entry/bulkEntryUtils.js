@@ -27,9 +27,10 @@ export function blankRow() {
         status: 'draft',
         price: '', discount_type: '', discount_value: '',
         category_id: '', product_brand_id: '',
+        target_audiences: [],
         is_universal: true, for_trunk: false, stock_management: true,
         stock_status: 'instock', quantity: 1,
-        images: [], compatible_cars: [], variation_types: [], variants: [],
+        images: [], compatible_vessels: [], variation_types: [], variants: [],
         weight: '', dimensions: { length: '', width: '', height: '' }, shipping_class_id: '',
         // The catalog entry this row came from, when it came from the picker.
         // Never rendered as a column: the vendor is not shown the link, and a
@@ -86,7 +87,7 @@ export function isRowEmpty(row) {
         !str(row.price) && (row.images?.length || 0) === 0 &&
         !str(row.subtitle_en) && !str(row.description_en) &&
         !str(row.subtitle_ar) && !str(row.description_ar) &&
-        !row.category_id && (row.compatible_cars?.length || 0) === 0
+        !row.category_id && (row.compatible_vessels?.length || 0) === 0
     );
 }
 
@@ -104,18 +105,16 @@ export function validateRow(row, refs) {
     if (!row.part_type) E('Part Type', partTypeRequiredText(lang === 'ar'));
     if (!(price > 0)) E('Price', L(lang, 'Price must be positive', 'يجب أن يكون السعر رقماً موجباً'));
 
-    if (!row.category_id) E('Category', L(lang, 'Pick a category', 'اختر فئة'));
+    if (!row.category_id) E('Category', L(lang, 'Category is required', 'الفئة مطلوبة وإلزامية'));
     else if (refs?.leafIds && !refs.leafIds.has(String(row.category_id))) E('Category', L(lang, 'Choose a final (most specific) category', 'اختر فئة نهائية (الأكثر تحديداً)'));
+
+    if (!row.product_brand_id) E('Brand', L(lang, 'Select a product brand', 'الماركة المصنعة مطلوبة'));
 
     if ((row.images?.length || 0) === 0) E('Images', L(lang, 'Add at least one image', 'أضف صورة واحدة على الأقل'));
 
     const en = str(row.title_en) && str(row.subtitle_en) && str(row.description_en);
     const ar = str(row.title_ar) && str(row.subtitle_ar) && str(row.description_ar);
     if (!en && !ar) E('Content', L(lang, 'Complete the EN or AR set (title, subtitle, description)', 'أكمل مجموعة إنجليزية أو عربية (عنوان، عنوان فرعي، وصف)'));
-
-    const cars = row.compatible_cars || [];
-    if (row.is_universal === false && cars.length === 0) E('Compatibility', L(lang, 'Add compatible cars or mark Universal', 'أضف سيارات متوافقة أو فعّل "عام"'));
-    if (row.is_universal === true && cars.length > 0) E('Compatibility', L(lang, 'Remove cars or turn off Universal', 'احذف السيارات أو أوقف "عام"'));
 
     // Same discount rules the server enforces, so the row lights up before submit.
     const discountError = validateDiscount(row.price, row.discount_type || null, row.discount_value, lang === 'ar');
@@ -148,6 +147,8 @@ export function rowToPayload(row) {
         ...rest,
         discount_type,
         discount_value: discount_type && row.discount_value !== '' ? row.discount_value : null,
-        compatible_cars: row.is_universal ? [] : (row.compatible_cars || []),
+        target_audiences: Array.isArray(row.target_audiences) ? row.target_audiences : [],
+        is_universal: true,
+        compatible_vessels: [],
     };
 }

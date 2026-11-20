@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import {
-  Mail, Send, Sparkles, Car, Users, RefreshCw, Eye, Smartphone, Monitor,
+  Mail, Send, Sparkles, Ship, Users, RefreshCw, Eye, Smartphone, Monitor,
   CheckCircle2, AlertCircle, Plus, Trash2, Search, ArrowRight, Loader2,
   Calendar, Layers, ExternalLink, ShieldAlert
 } from 'lucide-react';
@@ -94,7 +94,7 @@ function ProductPicker({ car, selectedIds, onPick, isAr }) {
       {open && (
         <div className="absolute z-30 start-0 end-0 top-full mt-1 bg-white dark:bg-[#181B1F] border border-zinc-200 dark:border-white/10 rounded-xl shadow-xl max-h-72 overflow-y-auto divide-y divide-zinc-100 dark:divide-white/5">
           {car.brand_id && shown.length > 0 && (
-            <p className="px-3 py-2 text-[11px] font-bold text-zinc-400">{isAr ? 'منتجات تناسب العربية المختارة' : 'Products that fit the chosen car'}</p>
+            <p className="px-3 py-2 text-[11px] font-bold text-zinc-400">{isAr ? 'منتجات تناسب الماركة المختارة' : 'Products that fit the chosen brand'}</p>
           )}
           {shown.map((p) => (
             <button
@@ -114,7 +114,7 @@ function ProductPicker({ car, selectedIds, onPick, isAr }) {
           {!loading && shown.length === 0 && (
             <p className="px-3 py-4 text-center text-xs text-zinc-400">
               {query.trim()
-                ? (isAr ? `مفيش منتجات باسم "${query.trim()}"${car.brand_id ? ' للعربية دي' : ''}` : `No products match "${query.trim()}"${car.brand_id ? ' for this car' : ''}`)
+                ? (isAr ? `مفيش منتجات باسم "${query.trim()}"${car.brand_id ? ' للمركب ده' : ''}` : `No products match "${query.trim()}"${car.brand_id ? ' for this vessel' : ''}`)
                 : (isAr ? 'مفيش منتجات تانية للإضافة' : 'No more products to add')}
             </p>
           )}
@@ -174,7 +174,7 @@ function ProductItemCard({ product, onRemove, isAr }) {
 /** Top-level helper for past campaigns table row */
 function CampaignRow({ campaign, isAr, onViewDetails }) {
   const car = campaign.target_filter || {};
-  const carName = [car.brand_name, car.model_name, car.year].filter(Boolean).join(' ') || (isAr ? 'جميع السيارات' : 'All cars');
+  const carName = [car.brand_name, car.model_name, car.year].filter(Boolean).join(' ') || (isAr ? 'جميع المراكب' : 'All vessels');
   // toLocaleString, not toLocaleDateString: a date-only formatter throws on `timeStyle`.
   const dateStr = campaign.createdAt ? new Date(campaign.createdAt).toLocaleString(isAr ? 'ar-EG' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
 
@@ -215,7 +215,7 @@ function CampaignRow({ campaign, isAr, onViewDetails }) {
       </td>
       <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300 font-medium">
         <div className="flex items-center gap-1.5">
-          <Car size={14} className="text-marine-primary shrink-0" />
+          <Ship size={14} className="text-marine-primary shrink-0" />
           <span>{carName}</span>
         </div>
       </td>
@@ -264,10 +264,10 @@ export default function CarCampaignsPage() {
   const [messageBody, setMessageBody] = useState('');
   // Each tag carries both names: a customer reads the email in their account's language.
   const [categoryTags, setCategoryTags] = useState([
-    { label: 'فلاتر وزيوت', label_en: 'Filters & Oils', link: '' },
-    { label: 'تيل وطنابير الفرامل', label_en: 'Brakes', link: '' },
-    { label: 'مستلزمات وعناية', label_en: 'Car Care', link: '' },
-    { label: 'بطاريات وإضاءة', label_en: 'Batteries & Lights', link: '' },
+    { label: 'محركات وقطع غيار', label_en: 'Engines & Parts', link: '' },
+    { label: 'رفاصات ومراوح', label_en: 'Propellers', link: '' },
+    { label: 'زيوت وفلاتر بحرية', label_en: 'Marine Oils & Filters', link: '' },
+    { label: 'ملاحة وإلكترونيات', label_en: 'Navigation & Electronics', link: '' },
   ]);
   const [customCtaText, setCustomCtaText] = useState('');
   const [customCtaLink, setCustomCtaLink] = useState('');
@@ -300,7 +300,7 @@ export default function CarCampaignsPage() {
     let alive = true;
     adminApi.getCarBrandsAdmin()
       .then((res) => {
-        if (alive) setCarBrands(res.carBrands || []);
+        if (alive) setCarBrands(res.carBrands || res.vesselBrands || res.productBrands || res.brands || []);
       })
       .catch((err) => console.error('Failed to load brands:', err))
       .finally(() => { if (alive) setLoadingBrands(false); });
@@ -362,7 +362,7 @@ export default function CarCampaignsPage() {
     if (currentBrand) {
       const carName = [currentBrand.name, currentModel?.name, selectedYear].filter(Boolean).join(' ');
       const nextTitle = `عروض وتوصيات ${carName}`;
-      const nextSubject = `عروض خاصة لسيارتك ${carName}: قطع غيار معتمدة وتوصيات مختارة`;
+      const nextSubject = `عروض خاصة لمركبك (${carName}): قطع غيار بحرية وتوصيات مختارة`;
       const auto = autoTextRef.current;
       setTitle((prev) => (!prev || prev === auto.title ? nextTitle : prev));
       setSubject((prev) => (!prev || prev === auto.subject ? nextSubject : prev));
@@ -377,14 +377,14 @@ export default function CarCampaignsPage() {
       setGeneratingPreview(true);
       adminApi.previewCarCampaignHtml({
         recipient_name: previewLang === 'ar' ? 'أحمد محمد' : 'Ahmed Mohamed',
-        // The car as picked — the make alone, or with a model and a year. Nothing made up.
+        // The car/vessel as picked — the make alone, or with a model and a year. Nothing made up.
         brand_name: currentBrand?.name || '',
         model_name: currentModel?.name || '',
         year: selectedYear ? Number(selectedYear) : null,
-        subject: subject || 'عروض وتوصيات لسيارتك',
+        subject: subject || (previewLang === 'ar' ? 'عروض وتوصيات لمركبك ⛵' : 'Marine parts offers for your boat ⛵'),
         message_body: messageBody || (previewLang === 'ar'
-          ? 'يسعدنا تقديم باقة مختارة من أفضل قطع الغيار المتوافقة تماماً مع سيارتك بأفضل الأسعار.'
-          : 'A handpicked set of the best parts that fit your car, at the best prices.'),
+          ? 'يسعدنا تقديم باقة مختارة من أفضل قطع الغيار والمعدات المتوافقة مع مركبك بأفضل الأسعار.'
+          : 'A handpicked set of the best marine parts and accessories for your boat, at the best prices.'),
         category_tags: categoryTags,
         product_ids: products.map((p) => p._id),
         custom_cta_text: customCtaText,
@@ -459,7 +459,7 @@ export default function CarCampaignsPage() {
         model_id: selectedModelId,
         model_name: currentModel?.name || '',
         year: selectedYear ? Number(selectedYear) : null,
-        subject: subject || 'عروض سيارتك - تجربة',
+        subject: subject || (previewLang === 'ar' ? 'عروض مركبك - تجربة' : 'Boat offers - test'),
         message_body: messageBody,
         category_tags: categoryTags,
         product_ids: products.map((p) => p._id),
@@ -482,7 +482,7 @@ export default function CarCampaignsPage() {
       return;
     }
     if (audienceCount === 0) {
-      alert(isAr ? 'لا يوجد أي عملاء مسجلين بهذه السيارة يمتلكون بريداً إلكترونياً.' : 'No users found matching this car filter.');
+      alert(isAr ? 'لا يوجد أي عملاء مسجلين بهذه الماركة يمتلكون بريداً إلكترونياً.' : 'No users found matching this filter.');
       return;
     }
 
@@ -529,12 +529,12 @@ export default function CarCampaignsPage() {
             <span>{isAr ? 'أدوات التسويق' : 'Marketing Tools'}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white">
-            {isAr ? 'حملات السيارات البريدية' : 'Car Email Campaigns'}
+            {isAr ? 'الحملات البريدية' : 'Email Campaigns'}
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
             {isAr
-              ? 'إرسال إيميلات مخصصة لمالكي السيارات المسجلة مع منتجات متوافقة على طراز إيميلات علي بابا'
-              : 'Targeted recommendation emails for registered car owners styled like Alibaba'}
+              ? 'إرسال إيميلات ترويجية وإعلانية للعملاء عند نزول منتجات جديدة وتحديثات المتجر'
+              : 'Send promotional and new product announcement emails to customers'}
           </p>
         </div>
 
@@ -559,7 +559,7 @@ export default function CarCampaignsPage() {
               <div className="flex items-center justify-between gap-2 border-b border-zinc-100 dark:border-white/5 pb-3">
                 <div className="flex items-center gap-2 font-black text-zinc-900 dark:text-white">
                   <span className="w-6 h-6 rounded-lg bg-marine-cyan text-white flex items-center justify-center text-xs font-black">1</span>
-                  <span>{isAr ? 'تحديد السيارة والجمهور المستهدف' : 'Car Fitment & Audience'}</span>
+                  <span>{isAr ? 'تحديد الجمهور المستهدف والماركة' : 'Target Audience & Brand'}</span>
                 </div>
                 {countingAudience ? (
                   <span className="text-xs text-zinc-400 flex items-center gap-1">
@@ -568,11 +568,10 @@ export default function CarCampaignsPage() {
                 ) : null}
               </div>
 
-              {/* Searchable, the makes with their logos — the same lists as the rest of the
-                  dashboard. The make alone is enough; a model and a year narrow it. */}
+              {/* Searchable brands */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className={LABEL}>{isAr ? 'ماركة السيارة' : 'Make'}</label>
+                  <label className={LABEL}>{isAr ? 'ماركة المحرك أو القارب (اختياري - للكل اتركه فارغاً)' : 'Engine / Boat Brand (Optional - for all leave empty)'}</label>
                   <SearchableSelect
                     value={selectedBrandId}
                     onChange={(v) => {
@@ -581,7 +580,7 @@ export default function CarCampaignsPage() {
                       setSelectedYear('');
                     }}
                     options={carBrands.map((b) => ({ value: b._id, label: b.name, keywords: (b.name_aliases || []).join(' '), image: b.image }))}
-                    placeholder={loadingBrands ? (isAr ? 'جارِ التحميل…' : 'Loading…') : (isAr ? 'اختر الماركة' : 'Select make')}
+                    placeholder={loadingBrands ? (isAr ? 'جارِ التحميل…' : 'Loading…') : (isAr ? 'كل الماركات / كل القوارب والعملاء' : 'All brands / all vessels')}
                     disabled={loadingBrands}
                     isAr={isAr}
                     buttonClassName={INPUT}
@@ -589,7 +588,7 @@ export default function CarCampaignsPage() {
                 </div>
 
                 <div>
-                  <label className={LABEL}>{isAr ? 'الموديل (اختياري)' : 'Model (Optional)'}</label>
+                  <label className={LABEL}>{isAr ? 'الموديل / القدرة الحصانية (اختياري)' : 'Model / Horsepower (Optional)'}</label>
                   <SearchableSelect
                     value={selectedModelId}
                     onChange={(v) => {
@@ -621,7 +620,7 @@ export default function CarCampaignsPage() {
               {/* Live Audience Result Badge */}
               <div className={`p-4 rounded-xl flex items-center justify-between gap-3 ${
                 audienceCount > 0
-                  ? 'bg-red-50/80 dark:bg-marine-cyan/10 border border-red-200 dark:border-marine-cyan/20'
+                  ? 'bg-marine-cyan/10 border border-marine-cyan/20'
                   : 'bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5'
               }`}>
                 <div className="flex items-center gap-3">
@@ -676,7 +675,7 @@ export default function CarCampaignsPage() {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder={isAr ? 'مثال: عروض تويوتا كورولا - خريف 2026' : 'e.g. Toyota Corolla Autumn Campaign'}
+                  placeholder={isAr ? 'مثال: عروض محركات ياماها وسوزوكي - صيف 2026' : 'e.g. Yamaha & Suzuki Outboards Campaign'}
                   className={INPUT}
                 />
               </div>
@@ -689,20 +688,20 @@ export default function CarCampaignsPage() {
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder={isAr ? 'مثال: عروض خاصة لسيارتك {car_model} - Ready Marine' : 'e.g. Special parts for your {car_model}'}
+                  placeholder={isAr ? 'مثال: عروض وتوصيات خاصة لمركبك {car_model} - Ready Marine' : 'e.g. Special parts & accessories for your {car_model} - Ready Marine'}
                   className={INPUT}
                 />
               </div>
 
               <div>
                 <label className={LABEL}>
-                  {isAr ? 'نصائح صيانة أو معلومات مخصصة للسيارة (اختياري)' : 'Car Maintenance Tips / Custom Text (Optional)'}
+                  {isAr ? 'نصائح صيانة أو تفاصيل إضافية عن المنتج (اختياري)' : 'Product Tips / Custom Text (Optional)'}
                 </label>
                 <textarea
                   rows={3}
                   value={messageBody}
                   onChange={(e) => setMessageBody(e.target.value)}
-                  placeholder={isAr ? 'اكتب نصيحة دورية أو عرضاً خاصاً لمالكي هذا الموديل (مثلاً: مواعيد فحص السيور، أو كود خصم إضافي)' : 'Write advice, seasonal tips or discount code for this specific model'}
+                  placeholder={isAr ? 'اكتب نصيحة دورية أو تفاصيل العرض لمالكي هذا المحرك أو القارب (مثلاً: مواعيد فحص ريش طلمبة المياه وتغيير الزيوت البحرية، أو كود خصم إضافي)' : 'Write advice, seasonal tips or promo code for this specific boat or engine'}
                   className={INPUT}
                 />
               </div>
@@ -785,7 +784,7 @@ export default function CarCampaignsPage() {
             </div>
 
             {/* Step 4: Testing & Dispatch */}
-            <div className={`${CARD} p-5 space-y-4 border-2 border-red-500/20`}>
+            <div className={`${CARD} p-5 space-y-4 border-2 border-marine-cyan/20`}>
               <div className="border-b border-zinc-100 dark:border-white/5 pb-3">
                 <div className="flex items-center gap-2 font-black text-zinc-900 dark:text-white">
                   <span className="w-6 h-6 rounded-lg bg-marine-cyan text-white flex items-center justify-center text-xs font-black">4</span>
@@ -951,7 +950,7 @@ export default function CarCampaignsPage() {
               <thead className="bg-zinc-50 dark:bg-white/[0.02] text-zinc-500 text-xs border-b border-zinc-100 dark:border-white/5">
                 <tr>
                   <th className="text-start px-4 py-3">{isAr ? 'اسم الحملة' : 'Campaign'}</th>
-                  <th className="text-start px-4 py-3">{isAr ? 'السيارة المستهدفة' : 'Target Car'}</th>
+                  <th className="text-start px-4 py-3">{isAr ? 'الجمهور / الماركة' : 'Target / Brand'}</th>
                   <th className="text-center px-4 py-3">{isAr ? 'المستهدفين' : 'Targeted'}</th>
                   <th className="text-center px-4 py-3">{isAr ? 'تم الإرسال' : 'Sent'}</th>
                   <th className="text-center px-4 py-3">{isAr ? 'الحالة' : 'Status'}</th>
@@ -1002,7 +1001,7 @@ export default function CarCampaignsPage() {
 
             <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
               {isAr
-                ? `أنت على وشك إرسال هذه الرسالة إلى (${audienceCount}) عميل يمتلكون سيارة (${currentBrand?.name || ''} ${currentModel?.name || ''} ${selectedYear || ''}). سيتم الإرسال على دفعات لتفادي تصنيف الرسائل كـ Spam.`
+                ? `أنت على وشك إرسال هذه الحملة إلى (${audienceCount}) عميل ${currentBrand?.name ? `مهتمين بماركة (${currentBrand.name})` : 'من عملاء المتجر'}. سيتم الإرسال على دفعات لتفادي تصنيف الرسائل كـ Spam.`
                 : `You are about to dispatch this campaign to (${audienceCount}) recipients.`}
             </p>
 

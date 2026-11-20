@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Link from '../LocaleLink';
 import { resolveAssetUrl } from '../../lib/assets';
+import UserAvatar from '../UserAvatar';
 import ProfileHeaderBar from './ProfileHeaderBar';
 
 export default function SettingsDetailPersonalInfo({
@@ -92,15 +93,13 @@ export default function SettingsDetailPersonalInfo({
       <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-sm flex items-center gap-4">
         <div className="relative shrink-0">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-marine-primary to-marine-cyan flex items-center justify-center text-white text-xl font-black shadow-sm overflow-hidden ring-2 ring-zinc-100">
-            {profile?.profile_image ? (
-              <img
-                src={resolveAssetUrl(profile.profile_image)}
-                alt={profile?.name || 'Profile'}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              profile?.name?.[0]?.toUpperCase() || 'U'
-            )}
+            <UserAvatar
+              src={profile?.profile_image}
+              name={profile?.name}
+              fallback="initials"
+              fallbackClassName="text-xl font-black text-white"
+              className="w-full h-full"
+            />
           </div>
           <label
             className="absolute -bottom-1 -end-1 w-6 h-6 rounded-full bg-marine-primary text-white border border-white shadow flex items-center justify-center cursor-pointer hover:bg-marine-cyan transition-colors"

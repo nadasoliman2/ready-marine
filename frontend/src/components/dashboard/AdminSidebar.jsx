@@ -4,7 +4,7 @@ import { usePathname } from '../../lib/navigation';
 import Link from '../LocaleLink';
 import {
   LayoutDashboard, Package, PackageOpen, Store, X, Settings, LogOut,
-  Bell, Wrench, ShoppingCart, Ticket, FolderTree, Car, CarFront,
+  Bell, Wrench, ShoppingCart, Ticket, FolderTree, Ship,
   BadgePercent, Users, UserCheck, CreditCard, FileText, Truck, Mail,
   Newspaper, RotateCcw, Wallet, Megaphone, Boxes, Sparkles,
   Library, AlertTriangle, ShieldCheck, Star, Landmark, Building2,
@@ -41,8 +41,8 @@ export default function AdminSidebar({ isOpen, setIsOpen }) {
       title: isAr ? 'إعداد الكتالوج' : 'Catalog Setup',
       items: [
         { name: isAr ? 'الفئات' : 'Categories', icon: FolderTree, href: '/admin/dashboard/categories', module: 'categories' },
-        { name: isAr ? 'الماركات' : 'Product Brands', icon: BadgePercent, href: '/admin/dashboard/product-brands', module: 'product_brands' },
-        { name: isAr ? 'تسوق حسب الماركة' : 'Brands / Models', icon: Car, href: '/admin/dashboard/car-brands', module: 'car_brands' },
+        { name: isAr ? 'الماركات' : 'Brands', icon: BadgePercent, href: '/admin/dashboard/product-brands', module: 'product_brands' },
+        { name: isAr ? 'المجموعات المخصصة' : 'Custom Audiences', icon: Sparkles, href: '/admin/dashboard/target-audiences', module: 'catalog' },
         { name: isAr ? 'الكتالوج' : 'Catalog', icon: Library, href: '/admin/dashboard/catalog', module: 'catalog' },
       ],
     },
@@ -50,8 +50,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }) {
       title: isAr ? 'مراجعة المنتجات' : 'Product Review',
       items: [
         { name: isAr ? 'بانتظار الموافقة' : 'Pending Approval', icon: Bell, href: '/admin/dashboard/pending-products', module: 'products' },
-        { name: isAr ? 'مراجعة التوافق' : 'Fitment Check', icon: CarFront, href: '/admin/dashboard/fitment-check', module: 'products' },
-        { name: isAr ? 'مراجعة الصور' : 'Image Check', icon: ImageOff, href: '/admin/dashboard/image-check', module: 'products' },
+        // { name: isAr ? 'مراجعة الصور' : 'Image Check', icon: ImageOff, href: '/admin/dashboard/image-check', module: 'products' },
         { name: isAr ? 'صور المنتجات' : 'Product Images', icon: Wand2, href: '/admin/dashboard/image-studio', module: 'products' },
         { name: isAr ? 'جميع المنتجات' : 'All Products', icon: Package, href: '/admin/dashboard/products', module: 'products' },
         { name: isAr ? 'باقات المنتجات' : 'Product Bundles', icon: Boxes, href: '/admin/dashboard/bundles', module: 'bundles' },
@@ -84,7 +83,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }) {
         { name: isAr ? 'المستخدمون' : 'Users', icon: Users, href: '/admin/dashboard/users', module: 'users' },
         { name: isAr ? 'تقارير العملاء' : 'Customer Reports', icon: FileBarChart, href: '/admin/dashboard/reports', module: 'users' },
         { name: isAr ? 'إيميلات تذكير السلة' : 'Cart Reminder Emails', icon: MailCheck, href: '/admin/dashboard/cart-reminders', module: 'users' },
-        { name: isAr ? 'حملات السيارات البريدية' : 'Car Email Campaigns', icon: Mail, href: '/admin/dashboard/car-campaigns', module: 'car_campaigns' },
+        { name: isAr ? 'الحملات البريدية' : 'Email Campaigns', icon: Mail, href: '/admin/dashboard/car-campaigns', module: 'car_campaigns' },
         { name: isAr ? 'الكوبونات' : 'Coupons', icon: Ticket, href: '/admin/dashboard/coupons', module: 'coupons' },
         { name: isAr ? 'برنامج الولاء' : 'Loyalty Program', icon: Sparkles, href: '/admin/dashboard/loyalty', module: 'loyalty' },
         { name: isAr ? 'طلبات الإعلانات' : 'Ad Requests', icon: Megaphone, href: '/admin/dashboard/ad-requests', module: 'ads' },

@@ -93,9 +93,36 @@ export function addedLines(previous, next) {
     });
 }
 
-/* ---------- the guest's chat session ---------- */
+/* ---------- the guest's chat session & phone ---------- */
 
 const SESSION_KEY = 'readymarine-chat-session';
+const PHONE_KEY = 'readymarine-chat-phone';
+
+export function storedPhone() {
+    try {
+        const p = window.localStorage.getItem(PHONE_KEY) || '';
+        return p.trim();
+    } catch {
+        return '';
+    }
+}
+
+export function savePhone(phone) {
+    try {
+        if (phone) window.localStorage.setItem(PHONE_KEY, String(phone).trim());
+        else window.localStorage.removeItem(PHONE_KEY);
+    } catch {
+        // private mode
+    }
+}
+
+export function forgetPhone() {
+    try {
+        window.localStorage.removeItem(PHONE_KEY);
+    } catch {
+        // nothing
+    }
+}
 
 export function storedSession() {
     try {

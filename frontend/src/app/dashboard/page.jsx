@@ -484,8 +484,8 @@ export default function DashboardIndex() {
             {stats.products.low_stock > 0 && (
               <span className="text-amber-700 dark:text-amber-300">
                 {isAr
-                  ? `${count(stats.products.low_stock)} منتج مخزونه على وشك النفاد`
-                  : `${count(stats.products.low_stock)} running low`}
+                  ? `${count(stats.products.low_stock)} منتج مخزونه قليل (٥ قطع أو أقل)`
+                  : `${count(stats.products.low_stock)} low stock (5 or fewer units)`}
               </span>
             )}
             <ArrowRight size={14} className="text-amber-700 dark:text-amber-300 rtl:rotate-180 ms-auto" />

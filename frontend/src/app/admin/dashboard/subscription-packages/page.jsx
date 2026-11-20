@@ -392,7 +392,7 @@ export default function SubscriptionPackagesPage() {
                                                 onClick={() => setForm(prev => ({ ...prev, is_free_trial: !prev.is_free_trial, trial_days: '' }))}
                                                 className={`relative w-11 h-6 rounded-full transition-colors ${form.is_free_trial ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-zinc-700'}`}
                                             >
-                                                <div className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.is_free_trial ? 'translate-x-5' : 'translate-x-0'}`} />
+                                                <div className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.is_free_trial ? 'rtl:-translate-x-5 ltr:translate-x-5' : 'translate-x-0'}`} />
                                             </div>
                                             <div>
                                                 <span className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
@@ -437,7 +437,7 @@ export default function SubscriptionPackagesPage() {
                                                 onClick={() => setForm(prev => ({ ...prev, grants_vendors_page: !prev.grants_vendors_page }))}
                                                 className={`relative w-11 h-6 rounded-full transition-colors ${form.grants_vendors_page ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-zinc-700'}`}
                                             >
-                                                <div className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.grants_vendors_page ? 'translate-x-5' : 'translate-x-0'}`} />
+                                                <div className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.grants_vendors_page ? 'rtl:-translate-x-5 ltr:translate-x-5' : 'translate-x-0'}`} />
                                             </div>
                                             <span className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                                                 <Store size={14} className="text-emerald-500" />
@@ -450,7 +450,7 @@ export default function SubscriptionPackagesPage() {
                                                 onClick={() => setForm(prev => ({ ...prev, grants_home_slider: !prev.grants_home_slider }))}
                                                 className={`relative w-11 h-6 rounded-full transition-colors ${form.grants_home_slider ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-zinc-700'}`}
                                             >
-                                                <div className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.grants_home_slider ? 'translate-x-5' : 'translate-x-0'}`} />
+                                                <div className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.grants_home_slider ? 'rtl:-translate-x-5 ltr:translate-x-5' : 'translate-x-0'}`} />
                                             </div>
                                             <span className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                                                 <Home size={14} className="text-emerald-500" />

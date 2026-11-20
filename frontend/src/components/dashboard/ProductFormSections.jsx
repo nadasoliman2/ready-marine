@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Info } from 'lucide-react';
 import NestedCategorySelector from './NestedCategorySelector';
 import ImageUploader from './ImageUploader';
@@ -59,9 +60,14 @@ export default function ProductFormSections({
     const { language, t, siteSettings } = useApp();
     const isAr = language === 'ar';
 
-    // Brand and category narrow each other; changing one clears the other if it no longer fits.
+    // Product brands from the single Brand table
+    const combinedBrands = useMemo(() => {
+        const prodBrands = metadata?.productBrands || [];
+        return [...prodBrands].sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
+    }, [metadata?.productBrands]);
+
     const linked = useLinkedBrandCategory({
-        brands: metadata?.productBrands || [],
+        brands: combinedBrands,
         categories: metadata?.categories || [],
         brandId: form?.product_brand_id || '',
         categoryId: form?.category_id || '',
@@ -112,10 +118,12 @@ export default function ProductFormSections({
                         <div className="space-y-4">
                             <div className="space-y-1">
                                 <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t.manufacturerBrand || 'Manufacturer Brand'}</label>
-                                <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm({ ...form, product_brand_id: v })} options={brandOptions(linked.brands)} placeholder={t.allBrands || 'Select Brand'} isAr={language === 'ar'} buttonClassName={`${inputCls} pe-9`} />
+                                <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm({ ...form, product_brand_id: v })} options={brandOptions(linked.brands)} placeholder={t.allBrands || 'Select Brand'} isAr={language === 'ar'} buttonClassName={`${inputCls} pe-9`} allowCustom={true} />
                             </div>
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t.productCategory || 'Category'}</label>
+                                <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                                    {t.productCategory || 'Category'} <span className="text-red-500 ms-1">*</span>
+                                </label>
                                 <NestedCategorySelector categories={metadata?.categories || []} allowedIds={linked.allowedCategoryIds} initialValue={form.category_id} onChange={(leafId) => setForm({ ...form, category_id: leafId })} />
                             </div>
                         </div>
@@ -153,16 +161,55 @@ export default function ProductFormSections({
                                     </span>
                                 </div>
                             ) : (
-                                <input type="number" min="0" value={form.quantity} disabled={!form.stock_management} onChange={e => setForm({ ...form, quantity: e.target.value })} className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white" />
+                                <>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        value={form.stock_status === 'outofstock' ? 0 : (form.quantity ?? '')}
+                                        disabled={form.stock_status === 'outofstock'}
+                                        onChange={e => {
+                                            const val = e.target.value;
+                                            const num = Number(val);
+                                            setForm(prev => ({
+                                                ...prev,
+                                                quantity: val,
+                                                stock_management: true,
+                                                stock_status: num > 0 ? 'instock' : (val === '0' ? 'outofstock' : prev.stock_status)
+                                            }));
+                                        }}
+                                        placeholder={form.stock_status === 'outofstock' ? (isAr ? '0 (نفذ المخزون)' : '0 (Out of stock)') : (isAr ? 'حدد الكمية المتوفرة...' : 'Enter quantity...')}
+                                        className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white"
+                                    />
+                                    {form.stock_status === 'outofstock' && (
+                                        <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                                            {isAr ? 'المنتج محدد كـ "نفذ المخزون" — الكمية 0 تلقائياً. لتحديد كمية اختر "متوفر".' : 'Product is marked out of stock. Select "In Stock" to enter quantity.'}
+                                        </p>
+                                    )}
+                                </>
                             )}
                         </div>
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{isAr ? 'حالة المخزون' : 'Stock Status'}</label>
                             <select
-                                value={form.stock_status}
-                                disabled={!form.stock_management}
-                                onChange={e => setForm({ ...form, stock_status: e.target.value })}
-                                className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white transition-colors"
+                                value={form.stock_status || 'instock'}
+                                onChange={e => {
+                                    const val = e.target.value;
+                                    setForm(prev => {
+                                        let nextQty = prev.quantity;
+                                        if (val === 'instock' && (!nextQty || Number(nextQty) <= 0)) {
+                                            nextQty = 1;
+                                        } else if (val === 'outofstock') {
+                                            nextQty = 0;
+                                        }
+                                        return {
+                                            ...prev,
+                                            stock_status: val,
+                                            quantity: nextQty,
+                                            stock_management: true
+                                        };
+                                    });
+                                }}
+                                className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white transition-colors"
                             >
                                 <option value="instock">{isAr ? 'متوفر' : 'In Stock'}</option>
                                 <option value="outofstock">{isAr ? 'نفذ المخزون' : 'Out of Stock'}</option>
@@ -195,21 +242,7 @@ export default function ProductFormSections({
             )}
 
 
-            {shows('trunk') && (
-                <Section
-                    title={isAr ? 'مستلزمات على المركب' : 'Onboard Essentials'}
-                    hint={t.forTrunkDesc || (isAr ? 'حدد المنتج ده كحاجة لازم تكون في كل عربية — هيظهر في صفحة شنطة العربية' : 'Mark this product as something every car should carry — it appears on the Car Trunk page')}
-                    right={
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{t.forTrunk || (isAr ? 'من أساسيات الشنطة' : 'Trunk essential')}</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" checked={!!form.for_trunk} onChange={e => setForm({ ...form, for_trunk: e.target.checked })} />
-                                <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-amber-500"></div>
-                            </label>
-                        </div>
-                    }
-                />
-            )}
+
 
             {shows('audiences') && (
                 <Section
@@ -220,32 +253,7 @@ export default function ProductFormSections({
                 </Section>
             )}
 
-            {shows('compatibility') && (
-                <Section
-                    numbered={n()}
-                    title={isAr ? 'توافق المركبات' : 'Vehicle Compatibility'}
-                    hint={isAr ? 'حدد المركبات التي تناسب هذه القطعة.' : 'Define exactly which vehicles this part fits.'}
-                    right={
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{isAr ? 'قطعة عامة' : 'Set as Universal'}</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" checked={form.is_universal} onChange={e => setForm({ ...form, is_universal: e.target.checked })} />
-                                <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-marine-cyan"></div>
-                            </label>
-                        </div>
-                    }
-                >
-                    {!form.is_universal ? (
-                        <CompatibilityBuilder compatibleCars={form.compatible_cars} setCompatibleCars={(cars) => setForm({ ...form, compatible_cars: cars })} carBrands={metadata?.carBrands || []} />
-                    ) : (
-                        <div className="text-center py-8">
-                            <div className="w-12 h-12 bg-marine-mist dark:bg-marine-cyan/10 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-3"><Info size={24} /></div>
-                            <h4 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'هذه قطعة عامة' : 'This is a Universal Part'}</h4>
-                            <p className="text-sm text-zinc-500 mt-1">{isAr ? 'تناسب جميع المركبات.' : 'It fits all vehicles. Toggle off "Set as Universal" to define specific models.'}</p>
-                        </div>
-                    )}
-                </Section>
-            )}
+
         </div>
     );
 }

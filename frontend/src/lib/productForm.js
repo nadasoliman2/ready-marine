@@ -16,7 +16,7 @@ export function blankProductForm() {
         stock_status: 'instock',
         quantity: 1,
         images: [],
-        compatible_cars: [],
+        compatible_vessels: [],
         variation_types: [],
         variants: [],
         weight: '',
@@ -33,7 +33,7 @@ export function blankProductForm() {
  * screen takes the slim default and fetches one make's models when it is picked.
  */
 export async function fetchProductMetadata() {
-    const base = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+    const base = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
     const res = await fetch(`${base}/products/filters?detail=full`);
     if (!res.ok) throw new Error('Could not load product metadata');
     return res.json();

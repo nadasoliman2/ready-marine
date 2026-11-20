@@ -28,12 +28,12 @@ export default function BulkFixModal({ count, metadata, carBrands, loadCarBrands
     ...(categoryId ? { category_id: categoryId } : {}),
     ...(partType ? { part_type: partType } : {}),
     ...(fitment === 'universal' ? { fitment: { is_universal: true } } : {}),
-    ...(fitment === 'cars' ? { fitment: { is_universal: false, compatible_cars: cars } } : {}),
+    ...(fitment === 'cars' ? { fitment: { is_universal: false, compatible_vessels: cars } } : {}),
   };
   const nothing = Object.keys(set).length === 0;
 
   const apply = async (publish) => {
-    if (fitment === 'cars' && !cars.length) { setError(isAr ? 'اختار عربية واحدة على الأقل.' : 'Choose at least one car.'); return; }
+    if (fitment === 'cars' && !cars.length) { setError(isAr ? 'اختار مركباً أو محركاً واحداً على الأقل.' : 'Choose at least one vessel.'); return; }
     setBusy(publish ? 'publish' : 'save');
     setError('');
     try {
@@ -72,12 +72,12 @@ export default function BulkFixModal({ count, metadata, carBrands, loadCarBrands
             </select></label>
 
           <div>
-            <span className={LABEL}>{isAr ? 'العربيات المناسبة' : 'Fitting cars'}</span>
+            <span className={LABEL}>{isAr ? 'المراكب والمحركات المناسبة' : 'Fitting vessels/engines'}</span>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { id: '', ar: 'من غير تغيير', en: 'No change' },
-                { id: 'universal', ar: 'عام (أي عربية)', en: 'Universal' },
-                { id: 'cars', ar: 'عربيات محددة', en: 'Specific cars' },
+                { id: 'universal', ar: 'مسح التوافق المحدد', en: 'No specific fitment' },
+                { id: 'cars', ar: 'مراكب/محركات محددة', en: 'Specific vessels' },
               ].map((o) => (
                 <button key={o.id || 'none'} type="button" onClick={() => setFitment(o.id)}
                   className={`rounded-xl border px-3 py-2 text-xs font-bold ${fitment === o.id ? 'border-marine-cyan bg-red-50 dark:bg-marine-cyan/10 text-marine-primary' : 'border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300'}`}>
@@ -90,7 +90,7 @@ export default function BulkFixModal({ count, metadata, carBrands, loadCarBrands
                 {carBrands
                   ? <CompatibilityBuilder compatibleCars={cars} setCompatibleCars={setCars} carBrands={carBrands} searchable allowCustomYears />
                   : <div className="flex justify-center py-4"><Loader2 size={20} className="animate-spin text-marine-primary" /></div>}
-                <p className="text-[11px] text-zinc-400 mt-1">{isAr ? 'العربيات دي هتحل محل اللي متسجّل على المنتجات.' : 'These cars replace what the products have.'}</p>
+                <p className="text-[11px] text-zinc-400 mt-1">{isAr ? 'المراكب دي هتحل محل اللي متسجّل على المنتجات.' : 'These vessels replace what the products have.'}</p>
               </div>
             )}
           </div>

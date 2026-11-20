@@ -12,6 +12,7 @@ import CompanyBadge, { CompanyPortalMenuLink } from './company/CompanyBadge';
 import { familyCopy } from '../lib/familyLocalization';
 import { resolveAssetUrl } from '../lib/assets';
 import BrandMark from './marine/BrandMark';
+import UserAvatar from './UserAvatar';
 
 /** EN · العربية side by side in the top bar, the current one highlighted. */
 function LanguagePicker() {
@@ -212,7 +213,13 @@ export default function Header() {
               className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-[#0a2540] flex items-center justify-center overflow-hidden transition-colors shadow-2xs"
             >
               {isMounted && user?.profile_image ? (
-                <img src={resolveAssetUrl(user.profile_image)} alt="" className="w-full h-full object-cover" />
+                <UserAvatar
+                  src={user.profile_image}
+                  name={user.name}
+                  size={40}
+                  iconSize={19}
+                  className="w-full h-full"
+                />
               ) : (
                 <User size={19} />
               )}
@@ -244,23 +251,42 @@ export default function Header() {
           <div className="flex items-center gap-1.5 sm:gap-2 ms-auto">
             {isMounted ? (
               user ? (
-                <div className="relative group/user py-2">
-                  <button className={ICON_BUTTON}>
+                <div className="relative group/user py-1.5">
+                  <button
+                    aria-label={accountLabel}
+                    className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-[#0a2540] flex items-center justify-center overflow-hidden transition-colors shadow-2xs shrink-0"
+                  >
                     {user.profile_image ? (
-                      <img src={resolveAssetUrl(user.profile_image)} alt={user.name || 'Profile'} className="w-6 h-6 rounded-sm object-cover" />
+                      <UserAvatar
+                        src={user.profile_image}
+                        name={user.name}
+                        size={40}
+                        iconSize={20}
+                        className="w-full h-full"
+                      />
                     ) : (
-                      <User size={20} />
+                      <User size={20} className="text-[#0a2540]" />
                     )}
-                    <span className={ICON_LABEL}>{accountLabel}</span>
                   </button>
 
                   {/* Invisible bridge */}
                   <div className="absolute top-full right-0 w-full h-2 z-[95]" />
 
                   <div className="absolute top-full end-0 mt-0 w-56 bg-white border border-marine-teal/15 rounded-lg shadow-pod py-2 z-[100] hidden group-hover/user:block animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div className="px-5 py-3 border-b border-marine-teal/10 mb-1">
-                      <p className="text-marine-ink font-semibold text-sm truncate">{user.name}</p>
-                      <p className="font-display text-marine-primary text-[10px] font-bold uppercase tracking-[0.08em] mt-0.5 truncate">{user.role || 'User'}</p>
+                    <div className="px-4 py-3 border-b border-marine-teal/10 mb-1 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden shrink-0">
+                        <UserAvatar
+                          src={user.profile_image}
+                          name={user.name}
+                          size={40}
+                          iconSize={20}
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-marine-ink font-semibold text-sm truncate">{user.name}</p>
+                        <p className="font-display text-marine-primary text-[10px] font-bold uppercase tracking-[0.08em] mt-0.5 truncate">{user.role || 'User'}</p>
+                      </div>
                     </div>
 
                     {user.role === 'vendor' || user.role === 'admin' ? (

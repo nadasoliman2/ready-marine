@@ -39,7 +39,7 @@ function buildVariants(variationTypes) {
     price: null,
     discount_type: null,
     discount_value: null,
-    stock: 0,
+    stock: 1,
   }));
 }
 
@@ -78,6 +78,45 @@ export default function VariationBuilder({ variationTypes, variants, onChange, l
 
   const [newOptionInput, setNewOptionInput] = useState({});
   const [collapsed, setCollapsed] = useState({});
+
+  // Sync types if incoming variationTypes changes externally (e.g. async fetch)
+  useEffect(() => {
+    if (!variationTypes || !variationTypes.length) return;
+    const currentSerialized = types.map(t => `${t.name}:${t.options.map(o => o.value).join(',')}`).join('|');
+    const incomingSerialized = variationTypes.map(t => `${t.name}:${(t.options || []).map(o => o.value).join(',')}`).join('|');
+    if (currentSerialized !== incomingSerialized) {
+      setTypes(
+        variationTypes.map(vt => ({
+          key: vt._id || `type-${Math.random().toString(36).slice(2)}`,
+          name: vt.name,
+          options: (vt.options || []).map(o => ({
+            key: o._id || `opt-${Math.random().toString(36).slice(2)}`,
+            value: o.value,
+          })),
+        }))
+      );
+    }
+  }, [variationTypes]);
+
+  // Sync variant data if incoming variants changes externally
+  useEffect(() => {
+    if (!variants || !variants.length) return;
+    setVariantData(prev => {
+      const map = { ...prev };
+      variants.forEach(v => {
+        const label = (v.selected_options || []).map(o => o.option_value).join(' / ');
+        if (!map[label]) {
+          map[label] = {
+            price: v.price ?? '',
+            discount_type: v.discount_type ?? '',
+            discount_value: v.discount_value ?? '',
+            stock: v.stock ?? 1,
+          };
+        }
+      });
+      return map;
+    });
+  }, [variants]);
 
   // Compute generated variants whenever types change
   const generatedVariants = buildVariants(types);

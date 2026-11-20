@@ -92,8 +92,8 @@ export default function ChatMessage({ line, language, signedIn, onAddCard, onNav
             <div className="rc-chat-msg-in flex flex-col items-end">
                 <div
                     dir="auto"
-                    className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-ee-md px-3.5 py-2 text-[13.5px] leading-[21px] text-white shadow-[0_6px_16px_rgba(0,166,206,0.22)] ${
-                        line.state === 'failed' ? 'bg-zinc-400' : 'bg-gradient-to-br from-[#ef4444] to-[#b91c1c]'
+                    className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl rounded-ee-sm px-4 py-2 text-[13px] font-semibold text-white shadow-sm ${
+                        line.state === 'failed' ? 'bg-zinc-400' : 'bg-gradient-to-br from-marine-cyan via-[#0095ba] to-marine-primary'
                     } ${line.state === 'sending' ? 'opacity-80' : ''}`}
                 >
                     {line.audio ? (
@@ -121,12 +121,12 @@ export default function ChatMessage({ line, language, signedIn, onAddCard, onNav
         <div className="rc-chat-msg-in">
             {(hasText || line.image) && (
                 <div className="flex items-end gap-2">
-                    <span className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-zinc-800 to-zinc-950 text-white shadow ring-2 ring-white">
-                        <Sparkles size={13} className="text-red-400" />
+                    <span className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-marine-teal to-marine-navy text-white shadow">
+                        <Sparkles size={12} className="text-amber-300" />
                     </span>
                     <div className="min-w-0 max-w-[86%]">
                         {hasText && (
-                            <div dir="auto" className="inline-block max-w-full break-words rounded-2xl rounded-es-md border border-zinc-100 bg-white px-3.5 py-2 text-[13.5px] leading-[21px] text-zinc-800 shadow-[0_4px_14px_rgba(0,0,0,0.05)]">
+                            <div dir="auto" className="inline-block max-w-full break-words rounded-2xl rounded-es-sm border border-zinc-200/80 bg-white p-3 text-[13px] leading-[21px] text-zinc-900 shadow-xs">
                                 {teammate && <span className="mb-0.5 block text-[10.5px] font-bold text-emerald-600">Ready Marine</span>}
                                 {renderRich(line.text)}
                             </div>

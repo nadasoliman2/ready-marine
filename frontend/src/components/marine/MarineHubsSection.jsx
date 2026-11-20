@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import Link from '../LocaleLink';
 import { useApp } from '../../context/AppContext';
+import { audienceApi } from '../../lib/api';
 import { MARINE_HUBS } from '../../lib/marineHubs';
 
 /*
@@ -307,9 +308,11 @@ const ALL_SLIDES = SLIDER_CARDS_DATA.flatMap((card) => card.slides);
  * its neighbours peeking in, always advancing on its own (a swipe or a dot only moves it
  * along). Moves by measuring where the next card sits, so it works the same in RTL.
  */
-function MobileHubsCarousel({ isAr }) {
+function MobileHubsCarousel({ isAr, slides = ALL_SLIDES }) {
   const trackRef = useRef(null);
   const [active, setActive] = useState(0);
+
+  const activeSlides = slides && slides.length > 0 ? slides : ALL_SLIDES;
 
   const goTo = useCallback((index) => {
     const track = trackRef.current;
@@ -321,9 +324,9 @@ function MobileHubsCarousel({ isAr }) {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => goTo((active + 1) % ALL_SLIDES.length), 4000);
+    const timer = setInterval(() => goTo((active + 1) % activeSlides.length), 4000);
     return () => clearInterval(timer);
-  }, [active, goTo]);
+  }, [active, goTo, activeSlides.length]);
 
   // The card nearest the middle is the current one.
   const onScroll = () => {
@@ -347,9 +350,9 @@ function MobileHubsCarousel({ isAr }) {
         onScroll={onScroll}
         className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-[5vw]"
       >
-        {ALL_SLIDES.map((slide, i) => (
+        {activeSlides.map((slide, i) => (
           <Link
-            key={slide.slug}
+            key={slide.slug || i}
             href={`/hub/${slide.slug}`}
             className="relative flex-none w-[78vw] aspect-[3/4] snap-center overflow-hidden rounded-2xl bg-marine-navy shadow-lg"
           >
@@ -369,9 +372,9 @@ function MobileHubsCarousel({ isAr }) {
 
       <div className="mt-4 flex items-center justify-center gap-3">
         <div className="flex items-center gap-1.5">
-          {ALL_SLIDES.map((slide, i) => (
+          {activeSlides.map((slide, i) => (
             <button
-              key={slide.slug}
+              key={slide.slug || i}
               type="button"
               onClick={() => goTo(i)}
               aria-label={`${i + 1}`}
@@ -388,9 +391,31 @@ export default function FeaturedHubs() {
   const { language } = useApp();
   const isAr = language === 'ar';
 
-  const largeCard = SLIDER_CARDS_DATA[0];
-  const smallCardTop = SLIDER_CARDS_DATA[1];
-  const smallCardBottom = SLIDER_CARDS_DATA[2];
+  const [sliderData, setSliderData] = useState({
+    large: SLIDER_CARDS_DATA[0],
+    small_top: SLIDER_CARDS_DATA[1],
+    small_bottom: SLIDER_CARDS_DATA[2],
+  });
+
+  useEffect(() => {
+    audienceApi.getSlider()
+      .then((res) => {
+        if (res && res.slider) {
+          setSliderData(res.slider);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const largeCard = sliderData.large || SLIDER_CARDS_DATA[0];
+  const smallCardTop = sliderData.small_top || SLIDER_CARDS_DATA[1];
+  const smallCardBottom = sliderData.small_bottom || SLIDER_CARDS_DATA[2];
+
+  const allSlides = [
+    ...(largeCard.slides || []),
+    ...(smallCardTop.slides || []),
+    ...(smallCardBottom.slides || []),
+  ];
 
   return (
     <section id="marine-hubs" className="py-10 sm:py-14">
@@ -409,7 +434,7 @@ export default function FeaturedHubs() {
         </div>
 
         {/* The Exact 3-Cards Layout: 1 Large Dominant Card + 2 Stacked Cards */}
-        <MobileHubsCarousel isAr={isAr} />
+        <MobileHubsCarousel isAr={isAr} slides={allSlides.length ? allSlides : ALL_SLIDES} />
 
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2 lg:h-[520px] gap-3 sm:gap-4">
           {/* Large Card: occupies 2 columns & 2 rows on desktop */}

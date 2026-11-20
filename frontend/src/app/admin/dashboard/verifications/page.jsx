@@ -259,7 +259,7 @@ function StatusBadge({ expired, isAr }) {
 function StatCard({ icon: Icon, label, value, tone = 'red' }) {
   const color = tone === 'amber'
     ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300'
-    : 'bg-red-50 text-marine-primary dark:bg-marine-cyan/10';
+    : 'bg-marine-cyan/10 text-marine-primary dark:bg-marine-cyan/10';
 
   return (
     <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 p-5 shadow-sm">

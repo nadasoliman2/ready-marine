@@ -274,7 +274,7 @@ export default function LandingControl() {
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white rounded-xl font-bold shadow-lg shadow-red-500/20 transition-all"
+          className="flex items-center gap-2 px-6 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white rounded-xl font-bold shadow-lg transition-all"
         >
           {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
           <span>{isAr ? 'حفظ التغييرات' : 'Save Changes'}</span>

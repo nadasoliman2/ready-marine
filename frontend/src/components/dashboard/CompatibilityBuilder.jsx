@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2, X, Car, ChevronRight, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, X, Ship, ChevronRight, AlertCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import SearchableSelect from '../SearchableSelect';
 import BrandLogo from '../BrandLogo';
@@ -129,19 +129,19 @@ export default function CompatibilityBuilder({ compatibleCars, setCompatibleCars
             value={addingBrandId}
             onChange={setAddingBrandId}
             options={(carBrands || []).map(b => ({ value: b._id, label: b.name, keywords: (b.name_aliases || []).join(' '), image: b.image }))}
-            placeholder={t.selectCarBrandToAdd || 'Select Car Brand...'}
+            placeholder={t.selectCarBrandToAdd || (isAr ? 'اختر ماركة قارب...' : 'Select Boat Brand...')}
             isAr={isAr}
             buttonClassName="bg-white dark:bg-[#09090b] border border-zinc-300 dark:border-white/10 rounded-lg ps-3 pe-9 py-2 text-sm text-zinc-900 dark:text-white focus:border-marine-cyan focus:outline-none"
           />
         ) : (
         <div className="relative flex-1">
-          <Car size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <Ship size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
           <select 
             value={addingBrandId} 
             onChange={e => setAddingBrandId(e.target.value)}
             className="w-full bg-white dark:bg-[#09090b] border border-zinc-300 dark:border-white/10 rounded-lg pl-10 pr-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white appearance-none"
           >
-            <option value="">{t.selectCarBrandToAdd || 'Select Car Brand...'}</option>
+            <option value="">{t.selectCarBrandToAdd || (isAr ? 'اختر ماركة قارب...' : 'Select Boat Brand...')}</option>
             {carBrands?.map(b => (
               <option key={b._id} value={b._id}>{b.name}</option>
             ))}
@@ -164,8 +164,8 @@ export default function CompatibilityBuilder({ compatibleCars, setCompatibleCars
       <div className="space-y-4">
         {compatibleCars.length === 0 ? (
           <div className="bg-zinc-50 dark:bg-white/[0.02] border border-dashed border-zinc-200 dark:border-white/10 rounded-xl p-8 text-center">
-            <Car size={32} className="mx-auto text-zinc-300 dark:text-zinc-600 mb-3" />
-            <p className="text-sm text-zinc-500">{t.noCompatibleCarsAdded || 'No car brands added yet. Start by selecting a brand above.'}</p>
+            <Ship size={32} className="mx-auto text-zinc-300 dark:text-zinc-600 mb-3" />
+            <p className="text-sm text-zinc-500">{t.noCompatibleCarsAdded || (isAr ? 'لم تتم إضافة ماركات قوارب بعد. ابدأ باختيار ماركة أعلاه.' : 'No boat brands added yet. Start by selecting a brand above.')}</p>
           </div>
         ) : (
           compatibleCars.map((compCar, bIdx) => {
@@ -177,7 +177,7 @@ export default function CompatibilityBuilder({ compatibleCars, setCompatibleCars
                   <div className="flex items-center gap-2">
                     {/* The make's logo, as in the list it was picked from. */}
                     <div className="w-8 h-8 rounded-lg bg-zinc-50 dark:bg-[#0E1012] flex items-center justify-center border border-zinc-100 dark:border-white/5 overflow-hidden">
-                      <BrandLogo image={matchedBrand?.image} name={compCar.brand_name} className="w-6 h-6" fallback={<Car size={16} className="text-marine-primary" />} />
+                      <BrandLogo image={matchedBrand?.image} name={compCar.brand_name} className="w-6 h-6" fallback={<Ship size={16} className="text-marine-primary" />} />
                     </div>
                     <h4 className="font-bold text-zinc-900 dark:text-white text-base">{compCar.brand_name}</h4>
                   </div>

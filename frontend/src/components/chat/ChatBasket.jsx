@@ -211,7 +211,7 @@ export function ChatOrderCard({ order, language, signedIn, onNavigate }) {
                             <Link
                                 href="/profile?tab=orders"
                                 onClick={onNavigate}
-                                className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 text-[12px] font-bold text-white hover:bg-zinc-800"
+                                className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-marine-cyan text-[12px] font-bold text-white hover:bg-zinc-800"
                             >
                                 <PackageCheck size={14} /> {copy.viewOrders}
                             </Link>

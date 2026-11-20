@@ -7,7 +7,8 @@
     "lint:nested-components": "ESLINT_USE_FLAT_CONFIG=false eslint --no-eslintrc --no-inline-config -c .eslintrc.nested-components.json --ext .js,.jsx,.ts,.tsx src",
     "prebuild": "npm run lint:nested-components",
     "build": "next build",
-    "start": "next start",
+    "postbuild": "cp -r public .next/standalone/ 2>/dev/null || true; cp -r .next/static .next/standalone/.next/ 2>/dev/null || true",
+    "start": "node .next/standalone/server.js",
     "lint": "next lint",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"

@@ -5,6 +5,7 @@ import { useRouter } from '../../../../../lib/navigation';
 import { adminApi, downloadFile } from '../../../../../lib/api';
 import { searchOptions } from '../../../../../lib/searchSuggest';
 import { useApp } from '../../../../../context/AppContext';
+import { localizeBulkError, localizeGeneralError } from '../../../../../lib/dashboardLocalization';
 import {
   Upload, Download, FileSpreadsheet, CheckCircle2, XCircle,
   AlertTriangle, ArrowLeft, ChevronDown, ChevronUp, Loader2,
@@ -46,8 +47,9 @@ function SuccessRow({ item, t }) {
   );
 }
 
-function FailedRow({ item, router, t }) {
+function FailedRow({ item, router, t, language }) {
   const [open, setOpen] = useState(false);
+  const isAr = language === 'ar';
   return (
     <div className="border border-red-500/30 rounded-lg overflow-hidden">
       <button
@@ -61,8 +63,21 @@ function FailedRow({ item, router, t }) {
           {item.title && <span className="text-zinc-400 text-sm mx-2 truncate">— {item.title}</span>}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
+          {item.savedAsDraft && item.draftId && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/admin/dashboard/products/${item.draftId}/edit`);
+              }}
+              className="flex items-center gap-1.5 text-xs hover:bg-amber-500 text-amber-300 border border-amber-500/40 px-2.5 py-1 rounded-lg font-bold transition-colors z-10"
+              title={isAr ? 'تعديل واستكمال المسودة في صفحة تعديل المنتج' : 'Edit & complete product draft'}
+            >
+              <ExternalLink size={12} /> {isAr ? 'تعديل واستكمال المنتج' : 'Edit Product'}
+            </button>
+          )}
           {item.savedAsDraft && (
-            <span className="flex items-center gap-1 text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
+            <span className="flex items-center gap-1 text-xs font-semibold text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
               <AlertTriangle size={11} /> {t.draftSaved}
             </span>
           )}
@@ -73,19 +88,27 @@ function FailedRow({ item, router, t }) {
 
       {open && (
         <div className="px-4 py-3 bg-[#0E1012] space-y-2">
-          {item.errors.map((err, i) => (
-            <div key={i} className="flex gap-2 text-sm">
-              <span className="font-mono text-xs bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded flex-shrink-0">{err.field}</span>
-              <span className="text-zinc-300">{err.message}</span>
-            </div>
-          ))}
+          {item.errors.map((err, i) => {
+            const loc = localizeBulkError(err, language);
+            return (
+              <div key={i} className="flex gap-2 text-sm items-start">
+                <span className="font-mono text-xs bg-red-500/20 text-red-300 px-2 py-0.5 rounded flex-shrink-0 font-bold">{loc.field}</span>
+                <span className="text-zinc-300">{loc.message}</span>
+              </div>
+            );
+          })}
           {item.savedAsDraft && item.draftId && (
-            <button
-              onClick={() => router.push(`/admin/dashboard/products/${item.draftId}/edit`)}
-              className="mt-2 flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium transition-colors"
-            >
-              <ExternalLink size={13} /> {t.completeDraft}
-            </button>
+            <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-3">
+              <p className="text-xs text-zinc-400">
+                {isAr ? 'تم حفظ بيانات الصف كمسودة حتى لا تفقد مدخلاتك. يمكنك استكمالها أو تعديلها الآن:' : 'Row saved as a draft. You can complete it manually:'}
+              </p>
+              <button
+                onClick={() => router.push(`/admin/dashboard/products/${item.draftId}/edit`)}
+                className="flex items-center gap-1.5 text-xs hover:bg-amber-500 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg font-bold transition-colors shrink-0"
+              >
+                <ExternalLink size={13} /> {isAr ? 'تعديل واستكمال المسودة يدوياً' : t.completeDraft}
+              </button>
+            </div>
           )}
         </div>
       )}
@@ -229,7 +252,7 @@ export default function AdminBulkUploadPage() {
       setResult(data);
       setSelectedFile(null);
     } catch (err) {
-      setError(err.message || t.uploadFailed);
+      setError(localizeGeneralError(err, language) || t.uploadFailed);
     } finally {
       setUploading(false);
     }
@@ -426,7 +449,7 @@ export default function AdminBulkUploadPage() {
             <div className="space-y-2">
               <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{t.failedLabel}</p>
               <div className="space-y-2 max-h-[480px] overflow-y-auto pr-1">
-                {result.failed.map((item) => <FailedRow key={`${item.row}-${item.sku}`} item={item} router={router} t={t} />)}
+                {result.failed.map((item) => <FailedRow key={`${item.row}-${item.sku}`} item={item} router={router} t={t} language={language} />)}
               </div>
             </div>
           )}

@@ -20,7 +20,7 @@ export default function BrandsSlider() {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`);
         if (res.ok) {
           const data = await res.json();
-          const allBrands = data.carBrands || [];
+          const allBrands = data.productBrands || data.brands || [];
           let featured = allBrands.filter(b => b.is_featured);
           if (featured.length === 0 && allBrands.length > 0) {
             featured = allBrands.slice(0, 15);
@@ -77,7 +77,7 @@ export default function BrandsSlider() {
         <div className="flex items-end justify-between mb-10">
           <div>
             <p className="text-marine-primary text-sm font-semibold uppercase tracking-widest mb-1">Brands</p>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#09090b]">{t.carBrands || 'Shop by Car Brand'}</h2>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#09090b]">{language === 'ar' ? 'تسوق حسب الماركة' : 'Shop by Brand'}</h2>
           </div>
           <div className="flex items-center gap-4">
             <Link 
@@ -115,7 +115,7 @@ export default function BrandsSlider() {
           {brands.map(brand => (
             <Link
               key={brand._id}
-              href={`/products?car_brand_id=${brand._id}`}
+              href={`/products?product_brand_id=${brand._id}`}
               className="group flex-none w-44 sm:w-48"
             >
               <div className="bg-white rounded-2xl border border-zinc-100 hover:border-marine-cyan/40 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 overflow-hidden p-4 flex flex-col items-center gap-3">

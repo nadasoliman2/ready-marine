@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { Car, Loader2, Package, Search, SlidersHorizontal, Store, X, Save, Plus, Upload, Table2 } from 'lucide-react';
+import { Ship, Loader2, Package, Search, SlidersHorizontal, Store, X, Save, Plus, Upload, Table2 } from 'lucide-react';
 import { useRouter } from '../../../../lib/navigation';
 import { adminApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
@@ -16,7 +16,6 @@ import usePageSize from '../../../../lib/usePageSize';
 import useStoredFilters from '../../../../lib/useStoredFilters';
 import { searchOptions } from '../../../../lib/searchSuggest';
 import { useLinkedBrandCategory } from '../../../../lib/brandCategoryLink';
-import { useBrandModels } from '../../../../lib/carBrandModels';
 import Overlay from '../../../../components/Overlay';
 import SearchableSelect from '../../../../components/SearchableSelect';
 import { brandOptions } from '../../../../lib/pickerOptions';
@@ -42,9 +41,6 @@ export default function AdminProductsPage() {
   const [filterStatus, setFilterStatus] = useState('');
   const [vendorSearch, setVendorSearch] = useState('');
   const [filterVendor, setFilterVendor] = useState('');
-  // Compatibility: universal / for specific cars / none set, and a car the product names.
-  const [filterFitment, setFilterFitment] = useState('');
-  const [filterCar, setFilterCar] = useState({ car_brand_id: '', car_model_id: '', car_year: '' });
   const [editingProduct, setEditingProduct] = useState(null);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = usePageSize('admin.products', 10);
@@ -53,19 +49,13 @@ export default function AdminProductsPage() {
   // The search, the filters and the page survive opening a product and coming back.
   const filtersReady = useStoredFilters(
     'admin.products',
-    { search: searchTerm, filterCategory, filterBrand, filterStatus, filterVendor, filterFitment, filterCar, page },
+    { search: searchTerm, filterCategory, filterBrand, filterStatus, filterVendor, page },
     (saved) => {
       setSearch(typeof saved.search === 'string' ? saved.search : '');
       setFilterCategory(saved.filterCategory || '');
       setFilterBrand(saved.filterBrand || '');
       setFilterStatus(saved.filterStatus || '');
       setFilterVendor(saved.filterVendor || '');
-      setFilterFitment(saved.filterFitment || '');
-      setFilterCar({
-        car_brand_id: saved.filterCar?.car_brand_id || '',
-        car_model_id: saved.filterCar?.car_model_id || '',
-        car_year: saved.filterCar?.car_year || '',
-      });
       setPage(Math.max(1, Number(saved.page) || 1));
     },
   );
@@ -127,7 +117,6 @@ export default function AdminProductsPage() {
         page, limit: pageSize, status: filterStatus,
         category_id: filterCategory, product_brand_id: filterBrand, vendor_id: filterVendor,
         search: searchTerm,
-        fitment: filterFitment, ...filterCar,
       });
       if (requestRef.current !== requestId) return;
       setProducts(data.products || []);
@@ -138,13 +127,19 @@ export default function AdminProductsPage() {
     } finally {
       if (requestRef.current === requestId) setProductsLoading(false);
     }
-  }, [page, pageSize, filterStatus, filterCategory, filterBrand, filterVendor, searchTerm, filterFitment, filterCar]);
+  }, [page, pageSize, filterStatus, filterCategory, filterBrand, filterVendor, searchTerm]);
 
   useEffect(() => { if (filtersReady) loadProducts(); }, [filtersReady, loadProducts]);
 
+  // Product brands from the single Brand table
+  const combinedBrands = useMemo(() => {
+    const prodBrands = metadata?.productBrands || [];
+    return [...prodBrands].sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
+  }, [metadata?.productBrands]);
+
   // Category and brand filters narrow each other (lib/brandCategoryLink).
   const linkedFilters = useLinkedBrandCategory({
-    brands: metadata?.productBrands || [],
+    brands: combinedBrands,
     categories: metadata?.categories || [],
     brandId: filterBrand,
     categoryId: filterCategory,
@@ -161,17 +156,13 @@ export default function AdminProductsPage() {
 
   // A changed filter starts again at page 1 — but not the filters arriving from last time,
   // which come with the page they were left on.
-  const filterSignature = JSON.stringify([searchTerm, filterCategory, filterBrand, filterVendor, filterStatus, filterFitment, filterCar]);
+  const filterSignature = JSON.stringify([searchTerm, filterCategory, filterBrand, filterVendor, filterStatus]);
   const lastSignatureRef = useRef(null);
   useEffect(() => {
     if (!filtersReady) return;
     if (lastSignatureRef.current !== null && lastSignatureRef.current !== filterSignature) setPage(1);
     lastSignatureRef.current = filterSignature;
   }, [filtersReady, filterSignature]);
-
-  const carBrand = (metadata?.carBrands || []).find((b) => String(b._id) === String(filterCar.car_brand_id));
-  const carModels = useBrandModels(carBrand);
-  const carModel = carModels.find((m) => String(m._id) === String(filterCar.car_model_id));
 
   const handleProductUpdated = (updatedProduct) => {
     setProducts(prev => prev.map(product => product._id === updatedProduct._id ? updatedProduct : product));
@@ -277,46 +268,6 @@ export default function AdminProductsPage() {
             isAr={isAr}
           />
         </div>
-
-        {/* Compatibility */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[auto_1fr_1fr_1fr_1fr] gap-3 items-center">
-          <span className="hidden lg:flex items-center gap-1.5 text-xs font-bold text-zinc-500 px-1">
-            <Car size={14} /> {isAr ? 'التوافق' : 'Fitment'}
-          </span>
-          <select value={filterFitment} onChange={e => setFilterFitment(e.target.value)} className={inputClass}>
-            <option value="">{isAr ? 'كل أنواع التوافق' : 'Any fitment'}</option>
-            <option value="universal">{isAr ? 'عام (يناسب أي عربية)' : 'Universal (fits any car)'}</option>
-            <option value="specific">{isAr ? 'لعربيات محددة' : 'For specific cars'}</option>
-            <option value="none">{isAr ? 'من غير توافق متسجّل' : 'No fitment set'}</option>
-          </select>
-          {/* Searchable, the makes with their logos; the placeholder clears the choice. */}
-          <SearchableSelect
-            value={filterCar.car_brand_id}
-            onChange={(v) => setFilterCar({ car_brand_id: v, car_model_id: '', car_year: '' })}
-            options={(metadata?.carBrands || []).map(b => ({ value: b._id, label: b.name, keywords: (b.name_aliases || []).join(' '), image: b.image }))}
-            placeholder={isAr ? 'كل الماركات' : 'Any car make'}
-            isAr={isAr}
-            buttonClassName={inputClass}
-          />
-          <SearchableSelect
-            value={filterCar.car_model_id}
-            onChange={(v) => setFilterCar(prev => ({ ...prev, car_model_id: v, car_year: '' }))}
-            options={carModels.map(m => ({ value: m._id, label: m.name }))}
-            placeholder={isAr ? 'كل الموديلات' : 'Any model'}
-            disabled={!filterCar.car_brand_id}
-            isAr={isAr}
-            buttonClassName={inputClass}
-          />
-          <SearchableSelect
-            value={filterCar.car_year}
-            onChange={(v) => setFilterCar(prev => ({ ...prev, car_year: v }))}
-            options={(carModel?.years || []).map(y => ({ value: String(y.year), label: String(y.year) }))}
-            placeholder={isAr ? 'كل السنين' : 'Any year'}
-            disabled={!filterCar.car_model_id}
-            isAr={isAr}
-            buttonClassName={inputClass}
-          />
-        </div>
       </div>
 
       <div className="rounded-xl overflow-hidden border border-zinc-200 dark:border-white/5">
@@ -346,8 +297,6 @@ export default function AdminProductsPage() {
           reviewBasePath="/admin/dashboard/products"
           showVendor
           categories={metadata?.categories || null}
-          // Every make with its models, for the fitment popup: fetched the first time it opens.
-          loadCarBrands={() => adminApi.getFilterMetadata(['carBrands'], { detail: 'full' }).then((m) => m.carBrands || [])}
         />
         </div>
         )}
@@ -477,11 +426,12 @@ function ProductEditModal({ product, metadata, language, currency, onClose, onSa
     category_id: product.category_id?._id || product.category_id || '',
     product_brand_id: product.product_brand_id?._id || product.product_brand_id || '',
     stock_management: product.stock_management ?? true,
+    stock_status: product.stock_status || 'instock',
     quantity: product.quantity ?? 0,
   });
   // Brand and category narrow each other; changing one clears the other if it no longer fits.
   const linkedForm = useLinkedBrandCategory({
-    brands: metadata?.productBrands || [],
+    brands: combinedBrands,
     categories: metadata?.categories || [],
     brandId: form.product_brand_id,
     categoryId: form.category_id,
@@ -507,7 +457,7 @@ function ProductEditModal({ product, metadata, language, currency, onClose, onSa
         price: Number(form.price),
         discount_type: form.discount_type || null,
         discount_value: form.discount_type && form.discount_value !== '' ? Number(form.discount_value) : null,
-        quantity: form.quantity === '' ? null : Number(form.quantity),
+        quantity: form.stock_status === 'outofstock' ? 0 : (form.quantity === '' ? null : Number(form.quantity)),
       };
       const data = await adminApi.updateProduct(product._id, payload);
       onSaved(data.product);
@@ -574,7 +524,57 @@ function ProductEditModal({ product, metadata, language, currency, onClose, onSa
             </label>
             <Field label={`${isAr ? 'السعر' : 'Price'} (${currency})`} type="number" value={form.price} onChange={value => setForm({ ...form, price: value })} />
             <DiscountFields form={form} setForm={setForm} isAr={isAr} labelCls="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2" inputCls={inputClass} />
-            <Field label={isAr ? 'الكمية' : 'Quantity'} type="number" value={form.quantity} onChange={value => setForm({ ...form, quantity: value })} required={false} />
+            <label className="block">
+              <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">{isAr ? 'حالة المخزون' : 'Stock Status'}</span>
+              <select
+                value={form.stock_status || 'instock'}
+                onChange={e => {
+                  const val = e.target.value;
+                  setForm(prev => {
+                    let nextQty = prev.quantity;
+                    if (val === 'instock' && (!nextQty || Number(nextQty) <= 0)) {
+                      nextQty = 1;
+                    } else if (val === 'outofstock') {
+                      nextQty = 0;
+                    }
+                    return {
+                      ...prev,
+                      stock_status: val,
+                      quantity: nextQty,
+                      stock_management: true
+                    };
+                  });
+                }}
+                className={inputClass}
+              >
+                <option value="instock">{isAr ? 'متوفر' : 'In Stock'}</option>
+                <option value="outofstock">{isAr ? 'نفذ المخزون' : 'Out of Stock'}</option>
+                <option value="onbackorder">{isAr ? 'طلب مسبق (Backorder)' : 'On Backorder'}</option>
+              </select>
+            </label>
+            <div>
+              <Field
+                label={isAr ? 'الكمية' : 'Quantity'}
+                type="number"
+                value={form.stock_status === 'outofstock' ? 0 : (form.quantity ?? '')}
+                disabled={form.stock_status === 'outofstock'}
+                onChange={value => {
+                  const num = Number(value);
+                  setForm(prev => ({
+                    ...prev,
+                    quantity: value,
+                    stock_management: true,
+                    stock_status: num > 0 ? 'instock' : (value === '0' ? 'outofstock' : prev.stock_status)
+                  }));
+                }}
+                required={false}
+              />
+              {form.stock_status === 'outofstock' && (
+                <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-1">
+                  {isAr ? 'المنتج محدد كـ "نفذ المخزون" — الكمية 0 تلقائياً. لتحديد كمية اختر "متوفر".' : 'Product is out of stock. Select "In Stock" to enter quantity.'}
+                </p>
+              )}
+            </div>
             <label className="flex items-center gap-3 pt-7 text-sm font-bold text-zinc-700 dark:text-zinc-300">
               <input type="checkbox" checked={form.stock_management} onChange={e => setForm({ ...form, stock_management: e.target.checked })} className="accent-marine-cyan" />
               {isAr ? 'تتبع المخزون' : 'Track stock'}

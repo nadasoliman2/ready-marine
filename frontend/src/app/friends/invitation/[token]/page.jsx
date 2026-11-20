@@ -227,6 +227,8 @@ export default function FriendInvitationPage() {
                     <img
                         src={resolveAssetUrl(preview.inviter.profile_image)}
                         alt={inviterName}
+                        referrerPolicy="no-referrer"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         className="w-16 h-16 rounded-full object-cover border border-zinc-200"
                     />
                 ) : (

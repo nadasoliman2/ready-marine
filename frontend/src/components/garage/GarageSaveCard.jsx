@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from '../LocaleLink';
-import { ArrowRight, Car, Check } from 'lucide-react';
+import { ArrowRight, Ship, Check } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { userApi } from '../../lib/api';
 import { stripLocale } from '../../lib/locale';
@@ -37,7 +37,7 @@ function PromptRow({ title, sub, cta, href, onClick, busy = false, onNavigate })
   const body = (
     <>
       <span className="shrink-0 w-8 h-8 rounded-xl bg-white text-marine-primary flex items-center justify-center shadow-sm">
-        <Car size={16} />
+        <Ship size={16} />
       </span>
       <span className="flex-1 min-w-0">
         <span className="block text-marine-ink text-sm font-bold leading-snug">{title}</span>
@@ -87,13 +87,13 @@ export default function GarageSaveCard({ car }) {
     try {
       const res = await userApi.addCar(toSave);
       login({ ...user, cars: res.cars });
-      setNotice({ ok: true, text: isAr ? `اتحفظت ${carName(toSave)} في جراجك` : `${carName(toSave)} is saved to your garage` });
+      setNotice({ ok: true, text: isAr ? `تم حفظ ${carName(toSave)} في مرساك` : `${carName(toSave)} is saved to your marina` });
     } catch (err) {
       setNotice({
         ok: false,
         text: /maximum/i.test(err.message || '')
-          ? (isAr ? 'جراجك فيه 5 عربيات بالفعل — امسح واحدة الأول من البروفايل.' : 'Your garage already has 5 cars — remove one in your profile first.')
-          : (err.message || (isAr ? 'معرفناش نحفظ العربية.' : 'The car could not be saved.')),
+          ? (isAr ? 'مرساك فيه 5 قوارب بالفعل — احذف واحداً أولاً من حسابك.' : 'Your marina already has 5 vessels — remove one in your profile first.')
+          : (err.message || (isAr ? 'تعذر حفظ القارب.' : 'The vessel could not be saved.')),
       });
     } finally {
       setSaving(false);
@@ -116,7 +116,7 @@ export default function GarageSaveCard({ car }) {
   if (notice) {
     return (
       <p className={`flex items-center gap-2 rounded-lg px-4 py-3 mb-6 text-sm font-bold ${notice.ok ? 'bg-emerald-50 border border-emerald-100 text-emerald-700' : 'bg-red-50 border border-marine-cyan/25 text-red-700'}`}>
-        {notice.ok ? <Check size={16} className="shrink-0" /> : <Car size={16} className="shrink-0" />}
+        {notice.ok ? <Check size={16} className="shrink-0" /> : <Ship size={16} className="shrink-0" />}
         {notice.text}
       </p>
     );

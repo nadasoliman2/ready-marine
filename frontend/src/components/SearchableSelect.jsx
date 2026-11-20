@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Check, ChevronDown, Loader2, Search, X } from 'lucide-react';
+import { Check, ChevronDown, Loader2, Plus, Search, X } from 'lucide-react';
 import Overlay from './Overlay';
 import { highlightSegments, searchOptions } from '../lib/searchSuggest';
 import BrandLogo from './BrandLogo';
@@ -23,7 +23,7 @@ function MarkedLabel({ text, query }) {
  * over) the field.
  */
 function OptionsPanel({
-  listId, options, value, query, setQuery, active, setActive, onPick, onClose, onKeyDown, placeholder, isAr, anchor, phone, showSearch, withImages,
+  listId, options, value, query, setQuery, active, setActive, onPick, onClose, onKeyDown, placeholder, isAr, anchor, phone, showSearch, withImages, allowCustom,
 }) {
   const searchRef = useRef(null);
   const listRef = useRef(null);
@@ -36,8 +36,22 @@ function OptionsPanel({
     listRef.current?.querySelector(`[data-index="${active}"]`)?.scrollIntoView({ block: 'nearest' });
   }, [active]);
 
+  const hasExactMatch = options.some(opt => String(opt.label || '').toLowerCase().trim() === query.trim().toLowerCase());
+
   const list = (
     <ul ref={listRef} id={listId} role="listbox" className={`overflow-y-auto overscroll-contain flex-1 min-h-0 ${phone ? 'px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]' : 'py-1'}`}>
+      {allowCustom && query.trim() && !hasExactMatch && (
+        <li className="px-2 py-1.5 border-b border-zinc-100 dark:border-white/5">
+          <button
+            type="button"
+            onClick={() => onPick(query.trim())}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-start text-xs font-bold bg-marine-cyan/15 hover:bg-marine-cyan/25 text-marine-cyan transition-colors"
+          >
+            <Plus size={14} className="shrink-0" />
+            <span className="truncate">{isAr ? `إضافة "${query.trim()}" كماركة جديدة` : `Add "${query.trim()}" as custom`}</span>
+          </button>
+        </li>
+      )}
       {value && !query && (
         <li>
           <button
@@ -157,7 +171,7 @@ function OptionsPanel({
  * drops `autoOpen` there.
  */
 export default function SearchableSelect({
-  value, onChange, options, placeholder, disabled = false, isAr = false, className = '', autoOpen = false, onOpen, buttonClassName = '',
+  value, onChange, options, placeholder, disabled = false, isAr = false, className = '', autoOpen = false, onOpen, buttonClassName = '', allowCustom = false,
 }) {
   const listId = useId();
   const triggerRef = useRef(null);
@@ -168,7 +182,7 @@ export default function SearchableSelect({
   const [phone, setPhone] = useState(false);
 
   const selected = options.find((opt) => String(opt.value) === String(value));
-  const showSearch = options.length >= SEARCH_FROM;
+  const showSearch = allowCustom || options.length >= SEARCH_FROM;
   const withImages = useMemo(() => options.some((opt) => opt.image), [options]);
   const waiting = autoOpen && !disabled && !open && options.length === 0;
 
@@ -302,8 +316,8 @@ export default function SearchableSelect({
         {selected?.image && <BrandLogo image={selected.image} name={selected.label} className="w-5 h-5" />}
         {/* Two lines rather than a cut name ("Land Cruiser Prado", "Car Brand" in a narrow
             field). A form that sets its own look still shows the empty field's hint in grey. */}
-        <span className={`flex-1 min-w-0 line-clamp-2 break-words leading-snug ${!selected && buttonClassName ? 'text-zinc-400' : ''}`}>
-          {selected ? selected.label : placeholder}
+        <span className={`flex-1 min-w-0 line-clamp-2 break-words leading-snug ${!selected && !value && buttonClassName ? 'text-zinc-400' : ''}`}>
+          {selected ? selected.label : (value || placeholder)}
         </span>
       </button>
       {waiting ? (
@@ -335,6 +349,7 @@ export default function SearchableSelect({
           phone={phone}
           showSearch={showSearch}
           withImages={withImages}
+          allowCustom={allowCustom}
         />
       )}
     </div>

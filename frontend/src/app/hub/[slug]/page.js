@@ -11,13 +11,37 @@ import Link from '../../../components/LocaleLink';
 import { Search, ChevronRight, SlidersHorizontal, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { MobileListingTop, MobileListingTools } from '../../../components/products/MobileListingHeader';
 import { getHubBySlug, MARINE_HUBS } from '../../../lib/marineHubs';
+import { audienceApi } from '../../../lib/api';
 
 function HubDetailContent({ slug }) {
-  const hub = getHubBySlug(slug);
+  const staticHub = getHubBySlug(slug);
+  const [hub, setHub] = useState(staticHub);
   const searchParams = useSearchParams();
   const router = useRouter();
   const { language, t, isMounted } = useApp();
   const isAr = language === 'ar';
+
+  useEffect(() => {
+    audienceApi.getBySlug(slug)
+      .then((res) => {
+        if (res && res.audience) {
+          const aud = res.audience;
+          setHub((prev) => ({
+            ...prev,
+            slug: aud.slug,
+            audienceKey: aud.key || aud.slug || slug,
+            titleAr: aud.name_ar || prev?.titleAr || aud.name_en,
+            titleEn: aud.name_en || prev?.titleEn || aud.name_ar,
+            badgeAr: aud.badge_ar || prev?.badgeAr || '',
+            badgeEn: aud.badge_en || prev?.badgeEn || '',
+            descriptionAr: aud.description_ar || prev?.descriptionAr || '',
+            descriptionEn: aud.description_en || prev?.descriptionEn || '',
+            image: aud.image || prev?.image || '/images/hubs/yacht-luxury.png',
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [slug]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [metadata, setMetadata] = useState({ categories: [], carBrands: [], productBrands: [] });
@@ -57,8 +81,9 @@ function HubDetailContent({ slug }) {
   }, [filters, router, slug]);
 
   const filtersQuery = useMemo(() => {
-    return [filtersToQuery(filters), `audience=${hub.audienceKey}`].filter(Boolean).join('&');
-  }, [filters, hub.audienceKey]);
+    const targetKey = hub?.audienceKey || slug;
+    return [filtersToQuery(filters), `audience=${targetKey}`].filter(Boolean).join('&');
+  }, [filters, hub?.audienceKey, slug]);
 
   const list = useInfiniteProducts(filtersQuery, Math.max(1, Number(filters.page) || 1));
   const products = list.products;
@@ -70,7 +95,7 @@ function HubDetailContent({ slug }) {
   const badge = isAr ? hub.badgeAr : hub.badgeEn;
   const target = isAr ? hub.targetAr : hub.targetEn;
   const desc = isAr ? hub.descriptionAr : hub.descriptionEn;
-  const checklist = isAr ? hub.checklistAr : hub.checklistEn;
+  const checklist = (isAr ? hub.checklistAr : hub.checklistEn) || [];
 
   return (
     <div className="bg-slate-50 min-h-screen pb-16" dir={isAr ? 'rtl' : 'ltr'}>

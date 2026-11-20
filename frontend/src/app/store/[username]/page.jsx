@@ -22,8 +22,11 @@ import {
   Phone, 
   Mail,
   SlidersHorizontal,
-  LayoutGrid
+  LayoutGrid,
+  X,
+  Sparkles
 } from 'lucide-react';
+import BrandLogo from '../../../components/BrandLogo';
 
 // The stores opened in the last few minutes, by the name in their address: coming back from
 // one of a store's products shows the store at once, its list where the visitor left it
@@ -79,7 +82,7 @@ function StoreContent() {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters`);
         if (res.ok) {
           const data = await res.json();
           setMetadata(data);
@@ -144,10 +147,19 @@ function StoreContent() {
   const list = useInfiniteProducts(filtersQuery, Math.max(1, Number(filters.page) || 1));
   const products = list.products;
 
+  const [searchInput, setSearchInput] = useState(filters.search || '');
+  useEffect(() => {
+    setSearchInput(filters.search || '');
+  }, [filters.search]);
+
   const handleKeywordSearch = (e) => {
     e.preventDefault();
-    const val = e.target.search.value;
-    setFilters(prev => ({ ...prev, search: val, page: 1 }));
+    setFilters(prev => ({ ...prev, search: searchInput.trim(), page: 1 }));
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setFilters(prev => ({ ...prev, search: '', page: 1 }));
   };
 
   const defaultLocation = vendor?.locations?.find(loc => loc.is_default) || vendor?.locations?.[0] || null;
@@ -212,20 +224,20 @@ function StoreContent() {
                     {isAr ? 'متجر معتمد' : 'Verified Store'}
                   </span>
                 </div>
-                <p className="text-marine-primary font-bold text-lg">@{vendor?.store_username}</p>
+                {/* <p className="text-marine-primary font-bold text-lg">@{vendor?.store_username}</p> */}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-2">
-                <div className="flex items-center justify-center md:justify-start gap-3 text-marine-outline">
+                {/* <div className="flex items-center justify-center md:justify-start gap-3 text-marine-outline">
                   <MapPin size={18} className="text-marine-primary" />
                   <span className="text-sm font-medium">{storeLocation || (isAr ? 'لم يتم تحديد الموقع' : 'Location not set')}</span>
-                </div>
-                <div className="flex items-center justify-center md:justify-start gap-3 text-marine-outline">
+                </div> */}
+                {/* <div className="flex items-center justify-center md:justify-start gap-3 text-marine-outline">
                   <Calendar size={18} className="text-marine-primary" />
                   <span className="text-sm font-medium">
                     {isAr ? 'عضو منذ' : 'Member since'} {vendor?.created_at ? formatLocalizedDate(vendor.created_at, isAr, { year: 'numeric', month: 'long' }) : '2024'}
                   </span>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-center md:justify-start gap-3 text-marine-outline">
                    <LayoutGrid size={18} className="text-marine-primary" />
                    <span className="text-sm font-medium">
@@ -236,54 +248,115 @@ function StoreContent() {
 
               {/* The store's track record. Sits with the rest of the header facts rather
                   than beside the reviews, because it is what a visitor scans first. */}
-              <VendorTrustStats
+              {/* <VendorTrustStats
                 completedOrders={vendor?.completed_orders_count}
                 rating={vendor?.rating}
                 reviewsCount={vendor?.reviews_count}
                 isAr={isAr}
                 tone="dark"
                 className="justify-center md:justify-start pt-1"
-              />
+              /> */}
             </div>
 
             {/* Contact / Quick Info Box */}
             <div className="hidden lg:flex flex-col gap-3 min-w-[240px]">
-              <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-4 rounded-xl space-y-3">
+              {/* <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-4 rounded-xl space-y-3">
                 {vendor?.phone && (
-                  <div className="flex items-center gap-3 text-xs font-bold text-white/70">
-                    <Phone size={14} className="text-marine-primary" />
+                  <a href={`tel:${vendor.phone}`} className="flex items-center gap-3 text-xs font-bold text-white/70 hover:text-white transition-colors">
+                    <Phone size={14} className="text-marine-primary shrink-0" />
                     <span>{vendor.phone}</span>
-                  </div>
+                  </a>
                 )}
                 {vendor?.email && (
-                  <div className="flex items-center gap-3 text-xs font-bold text-white/70">
-                    <Mail size={14} className="text-marine-primary" />
+                  <a href={`mailto:${vendor.email}`} className="flex items-center gap-3 text-xs font-bold text-white/70 hover:text-white transition-colors">
+                    <Mail size={14} className="text-marine-primary shrink-0" />
                     <span className="truncate">{vendor.email}</span>
-                  </div>
+                  </a>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
       </div>
 
-      {/* SEARCH AND FILTERS */}
-      <div className="max-w-7xl mx-auto px-4 -translate-y-1/2">
-        <form onSubmit={handleKeywordSearch} className="relative group max-w-2xl mx-auto">
+      {/* SEARCH BAR */}
+      <div className="max-w-7xl mx-auto px-4 relative z-20 -mt-7 sm:-mt-8">
+        <form onSubmit={handleKeywordSearch} className="relative max-w-2xl mx-auto">
           <input 
             name="search"
             type="text"
-            defaultValue={filters.search}
-            placeholder={isAr ? 'ابحث في هذا المتجر...' : "Search in this store..."}
-            className="w-full bg-white border border-marine-teal/15 shadow-2xl rounded-xl px-8 py-5 text-lg font-bold outline-none focus:border-marine-cyan transition-all duration-300 pr-16"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder={isAr ? 'ابحث في منتجات هذا المتجر...' : "Search in this store..."}
+            className="w-full h-13 sm:h-14 bg-white border border-slate-200 shadow-xl shadow-marine-navy/15 rounded-2xl ps-5 pe-24 sm:pe-28 text-sm sm:text-base font-semibold text-slate-800 placeholder:text-slate-400 outline-none focus:border-marine-cyan focus:ring-4 focus:ring-marine-cyan/15 transition-all"
           />
-          <button className="absolute end-4 top-1/2 -translate-y-1/2 bg-marine-cyan p-3 rounded-lg text-white hover:bg-marine-cyan-dark transition-colors shadow-lg">
-            <Search size={22} />
+          {searchInput && (
+            <button
+              type="button"
+              onClick={handleClearSearch}
+              className="absolute end-16 sm:end-20 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+              title={isAr ? 'مسح البحث' : 'Clear search'}
+            >
+              <X size={16} />
+            </button>
+          )}
+          <button 
+            type="submit" 
+            className="absolute end-2 top-1/2 -translate-y-1/2 bg-marine-cyan hover:bg-marine-teal text-white h-9 sm:h-10 px-3 sm:px-4 rounded-xl flex items-center gap-1.5 font-bold text-xs sm:text-sm shadow-sm transition-all"
+          >
+            <Search size={16} />
+            <span className="hidden sm:inline">{isAr ? 'بحث' : 'Search'}</span>
           </button>
         </form>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 pb-20">
+      {/* BRANDS QUICK FILTER */}
+      {metadata?.productBrands && metadata.productBrands.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 mt-6 mb-2">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            <span className="text-xs font-bold text-slate-500 shrink-0 flex items-center gap-1.5 ms-1">
+              <Sparkles size={14} className="text-marine-cyan" />
+              {isAr ? 'الماركات:' : 'Brands:'}
+            </span>
+            <button
+              type="button"
+              onClick={() => setFilters(prev => ({ ...prev, product_brand_id: '', page: 1 }))}
+              className={`shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                !filters.product_brand_id
+                  ? 'bg-marine-navy text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:border-marine-cyan/50 hover:bg-slate-50'
+              }`}
+            >
+              {isAr ? 'الكل' : 'All'}
+            </button>
+            {metadata.productBrands.slice(0, 16).map((brand) => {
+              const isSelected = String(filters.product_brand_id) === String(brand._id);
+              return (
+                <button
+                  key={brand._id}
+                  type="button"
+                  onClick={() => setFilters(prev => ({
+                    ...prev,
+                    product_brand_id: isSelected ? '' : brand._id,
+                    page: 1
+                  }))}
+                  className={`shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    isSelected
+                      ? 'bg-marine-cyan text-white shadow-xs ring-2 ring-marine-cyan/20'
+                      : 'bg-white text-slate-700 border border-slate-200/80 hover:border-marine-cyan/50 hover:bg-slate-50'
+                  }`}
+                >
+                  <BrandLogo image={brand.image} name={brand.name} className="w-4 h-4 rounded-full" letterClassName="text-[9px]" />
+                  <span className="capitalize">{brand.name}</span>
+                  {isSelected && <X size={12} className="ms-0.5" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 pb-20 pt-4 sm:pt-6">
         <div className="flex flex-col lg:flex-row gap-8">
           
           {/* Sidebar Toggle (Mobile) */}

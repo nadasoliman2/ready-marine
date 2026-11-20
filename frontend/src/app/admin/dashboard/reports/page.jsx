@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Car, Download, FileBarChart, Loader2, Search, ShoppingCart, Users, Package, Layers } from 'lucide-react';
+import { Ship, Download, FileBarChart, Loader2, Search, ShoppingCart, Users, Package, Layers } from 'lucide-react';
 import { adminApi, downloadFile } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import PaginationControls from '../../../../components/dashboard/PaginationControls';
@@ -15,7 +15,6 @@ const TD = 'px-4 py-3 text-zinc-700 dark:text-zinc-300';
 
 const TABS = [
   { id: 'carts', icon: ShoppingCart, ar: 'منتجات في السلة', en: 'Products in carts' },
-  { id: 'cars', icon: Car, ar: 'عربيات العملاء', en: 'Customer cars' },
 ];
 
 /** Typing settles for a moment before the report is asked again. */
@@ -199,7 +198,7 @@ function CarsReport({ isAr, fmtDate }) {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-        <Stat icon={Car} label={isAr ? 'عربيات متسجلة' : 'Cars'} value={report?.totals?.cars} />
+        <Stat icon={Ship} label={isAr ? 'مراكب متسجلة' : 'Vessels'} value={report?.totals?.cars} />
         <Stat icon={Users} label={isAr ? 'عملاء' : 'Customers'} value={report?.totals?.customers} />
         <Stat icon={Layers} label={isAr ? 'ماركات' : 'Makes'} value={report?.totals?.brands} />
       </div>
@@ -232,9 +231,9 @@ function CarsReport({ isAr, fmtDate }) {
             <section key={group.brand} className={`${CARD} overflow-hidden`}>
               <header className="flex items-center justify-between gap-3 px-4 py-3 bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
                 <h2 className="flex items-center gap-2 font-black text-zinc-900 dark:text-white">
-                  <Car size={16} className="text-marine-primary" /> {group.brand || '—'}
+                  <Ship size={16} className="text-marine-primary" /> {group.brand || '—'}
                 </h2>
-                <span className="text-xs font-bold text-zinc-500">{group.count} {isAr ? 'عربية' : group.count === 1 ? 'car' : 'cars'}</span>
+                <span className="text-xs font-bold text-zinc-500">{group.count} {isAr ? 'مركب' : group.count === 1 ? 'vessel' : 'vessels'}</span>
               </header>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm min-w-[980px]">

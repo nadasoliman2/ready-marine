@@ -64,21 +64,21 @@ export default function ReviewFeed({ subject, subjectId, title, emptyText, initi
 
     return (
         <div className="space-y-4 pt-4">
-            <h3 className="text-marine-ink font-bold text-2xl">{title || copy.reviewsTitle}</h3>
+            <h3 className="text-slate-900 font-extrabold text-xl sm:text-2xl tracking-tight">{title || copy.reviewsTitle}</h3>
 
             {summary.count === 0 ? (
-                <div className="bg-marine-canvas p-8 rounded-xl border border-marine-teal/15 text-center">
-                    <Star size={34} className="text-marine-line mx-auto mb-3" />
-                    <p className="text-marine-outline font-bold text-sm">{emptyText || copy.noReviews}</p>
+                <div className="bg-white p-8 rounded-2xl border border-slate-200/80 text-center shadow-2xs">
+                    <Star size={34} className="text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-500 font-bold text-sm">{emptyText || copy.noReviews}</p>
                 </div>
             ) : (
-                <div className="bg-marine-canvas rounded-xl border border-marine-teal/15 overflow-hidden">
+                <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-2xs">
                     {/* Summary + star breakdown */}
-                    <div className="p-8 flex flex-col sm:flex-row gap-8 border-b border-marine-teal/15">
+                    <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:gap-8 border-b border-slate-100">
                         <div className="text-center flex-shrink-0">
-                            <p className="text-5xl font-bold text-marine-ink">{summary.rating.toFixed(1)}</p>
+                            <p className="text-5xl font-black text-slate-900">{summary.rating.toFixed(1)}</p>
                             <StarRating value={Math.round(summary.rating)} size={16} className="mt-2" />
-                            <p className="text-marine-outline text-xs mt-2">{copy.basedOn(summary.count)}</p>
+                            <p className="text-slate-500 text-xs mt-2">{copy.basedOn(summary.count)}</p>
                         </div>
 
                         <div className="flex-1 space-y-1.5 min-w-0">
@@ -87,12 +87,12 @@ export default function ReviewFeed({ subject, subjectId, title, emptyText, initi
                                 const pct = summary.count > 0 ? (count / summary.count) * 100 : 0;
                                 return (
                                     <div key={star} className="flex items-center gap-3">
-                                        <span className="text-marine-muted text-xs font-bold w-3 tabular-nums">{star}</span>
+                                        <span className="text-slate-500 text-xs font-bold w-3 tabular-nums">{star}</span>
                                         <Star size={12} className="fill-amber-400 text-amber-400 flex-shrink-0" />
-                                        <div className="flex-1 h-2 bg-marine-frost rounded-full overflow-hidden">
+                                        <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                                             <div className="h-full bg-amber-400 rounded-full" style={{ width: `${pct}%` }} />
                                         </div>
-                                        <span className="text-marine-outline text-xs w-6 text-end tabular-nums">{count}</span>
+                                        <span className="text-slate-400 text-xs w-6 text-end tabular-nums">{count}</span>
                                     </div>
                                 );
                             })}

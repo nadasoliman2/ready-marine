@@ -4,8 +4,8 @@
 import { L } from './catalog';
 
 export const FINDING_TYPES = {
-    universal_but_named: { en: 'Marked for every car, title names one', ar: 'متسجل لأي عربية والعنوان بيحدد عربية' },
-    missing_car: { en: 'Car named, not in the fitment', ar: 'عربية مذكورة ومش متسجلة' },
+    universal_but_named: { en: 'Marked for every vessel, title names one', ar: 'متسجل لأي قارب/محرك والعنوان بيحدد نوعاً معيناً' },
+    missing_car: { en: 'Vessel named, not in the fitment', ar: 'قارب/محرك مذكور ومش متسجل' },
     model_without_years: { en: 'Model with no years', ar: 'موديل من غير سنين' },
     years_not_covered: { en: 'Years named, not in the fitment', ar: 'سنين مذكورة ومش متسجلة' },
     years_narrower: { en: 'Title gives years, fitment says all', ar: 'العنوان بيحدد سنين والتوافق لكل السنين' },
@@ -47,8 +47,8 @@ export const findingText = (f, lang) => {
     switch (f.type) {
         case 'universal_but_named':
             return L(lang,
-                `Marked as fitting every car, but the title names: ${f.cars.map((c) => carName(c) + writtenNote(c, lang)).join(', ')}.`,
-                `المنتج متسجل إنه يركب على أي عربية، بس العنوان بيذكر: ${f.cars.map((c) => carName(c) + writtenNote(c, lang)).join('، ')}.`);
+                `Marked as fitting every vessel, but the title names: ${f.cars.map((c) => carName(c) + writtenNote(c, lang)).join(', ')}.`,
+                `المنتج متسجل إنه يركب على أي قارب أو محرك، بس العنوان بيذكر: ${f.cars.map((c) => carName(c) + writtenNote(c, lang)).join('، ')}.`);
         case 'missing_car':
             return L(lang,
                 `The ${f.source === 'title' ? 'title' : 'description'} names ${carName(f.car)}${writtenNote(f.car, lang)}, and the fitment does not have it.`,

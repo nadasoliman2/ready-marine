@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useSyncExternalStore } from 'react';
-import { Search, ArrowRight, CarFront } from 'lucide-react';
+import { Search, ArrowRight, Ship } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { garageCarLabel } from './company/useGarageCars';
 import SearchableSelect from './SearchableSelect';
@@ -250,11 +250,11 @@ function PhoneHero({ finder, slide, buttonRef }) {
 
       <div className="bg-white rounded-3xl border border-zinc-100 shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-3.5 sm:p-6 space-y-2.5 sm:space-y-4 lg:self-center">
         <div className="flex items-center gap-3">
-          <span className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-2xl bg-marine-cyan text-white flex items-center justify-center shadow-md shadow-red-600/20">
-            <CarFront size={22} />
+          <span className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-2xl bg-marine-cyan text-white flex items-center justify-center shadow-md shadow-marine-cyan/20">
+            <Ship size={22} />
           </span>
           <div className="min-w-0">
-            <h2 className="text-lg font-black text-zinc-900 leading-tight">{language === 'ar' ? 'اختار عربيتك' : 'Choose your car'}</h2>
+            <h2 className="text-lg font-black text-zinc-900 leading-tight">{language === 'ar' ? 'اختار مركبك' : 'Choose your vessel'}</h2>
             <p className="text-xs text-zinc-500">{language === 'ar' ? 'وشوف القطع المناسبة ليها' : 'and see the parts that fit it'}</p>
           </div>
         </div>

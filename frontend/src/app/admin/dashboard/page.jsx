@@ -527,7 +527,7 @@ export default function AdminDashboardIndex() {
             />
 
             {/* 19. Car Brands */}
-            <SectionAnalyticsCard
+            {/* <SectionAnalyticsCard
               href="/admin/dashboard/car-brands"
               title={isAr ? 'الماركات البحرية' : 'Marine Brands'}
               icon={Ship}
@@ -536,7 +536,7 @@ export default function AdminDashboardIndex() {
                 { label: isAr ? 'الموديلات' : 'Models', value: isAr ? 'متزامنة' : 'Synced' },
               ]}
               isAr={isAr}
-            />
+            /> */}
 
             {/* 20. Categories */}
             <SectionAnalyticsCard

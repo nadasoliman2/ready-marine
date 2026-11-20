@@ -3,9 +3,9 @@
  * Required on every product form and bulk upload.
  */
 export const PART_TYPES = [
-    { value: 'original', en: 'Original', ar: 'أصلي', hint_en: "The car maker's own part", hint_ar: 'قطعة الشركة المصنّعة للعربية' },
-    { value: 'oem', en: 'OEM', ar: 'OEM', hint_en: "By the maker's supplier, same spec", hint_ar: 'من مورّد المصنّع بنفس المواصفات' },
-    { value: 'aftermarket', en: 'Aftermarket', ar: 'تجاري', hint_en: 'A third-party part made to fit', hint_ar: 'قطعة من شركة تانية بتركب على العربية' },
+    { value: 'original', en: 'Original', ar: 'أصلي', hint_en: "The manufacturer's genuine part", hint_ar: 'قطعة الشركة المصنّعة الأصلية للقارب أو المحرك' },
+    { value: 'oem', en: 'OEM', ar: 'OEM', hint_en: "By the manufacturer's supplier, same spec", hint_ar: 'من مورّد المصنّع بنفس المواصفات' },
+    { value: 'aftermarket', en: 'Aftermarket', ar: 'تجاري', hint_en: 'A compatible aftermarket part made to fit', hint_ar: 'قطعة بديلة متوافقة تركب على القارب أو المحرك' },
 ];
 
 export const partTypeLabel = (value, isAr) => {

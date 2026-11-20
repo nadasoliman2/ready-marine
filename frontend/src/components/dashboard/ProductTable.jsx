@@ -10,7 +10,6 @@ import useRowLink from '../../lib/useRowLink';
 import { PART_TYPES, partTypeLabel } from '../../lib/partType';
 import { computeDiscountPrice, validateDiscount } from '../../lib/productPricing';
 import { formatLocalizedDate } from '../../lib/dateFormat';
-import { CompatibilityModal } from './bulk-entry/FieldModals';
 
 /*
  * The products table of the admin and the vendor dashboards.
@@ -37,11 +36,11 @@ const COLUMNS = [
   { key: 'stock', ar: 'المخزون', en: 'Stock', default: true },
   { key: 'vendor', ar: 'التاجر', en: 'Vendor', default: true, admin: true },
   { key: 'category', ar: 'الفئة', en: 'Category', default: true },
-  { key: 'brand', ar: 'الماركة', en: 'Brand', default: false },
+  { key: 'brand', ar: 'الماركة المصنعة', en: 'Brand', default: true },
+  { key: 'audiences', ar: 'المجموعات المخصصة', en: 'Target Audiences', default: false },
   { key: 'part_type', ar: 'نوع القطعة', en: 'Part type', default: false },
   { key: 'part_number', ar: 'رقم القطعة', en: 'Part number', default: false },
   { key: 'sku', ar: 'SKU', en: 'SKU', default: false },
-  { key: 'fitment', ar: 'التوافق', en: 'Fitment', default: true, admin: true },
   { key: 'sold', ar: 'المبيعات', en: 'Sold', default: false },
   { key: 'rating', ar: 'التقييم', en: 'Rating', default: false },
   { key: 'created', ar: 'تاريخ الإضافة', en: 'Added', default: false },
@@ -159,11 +158,17 @@ function CellEditor({ kind, draft, setDraft, options = [], dir = 'ltr', width = 
   // stock
   return (
     <span className="inline-flex items-center gap-1.5">
-      <label className="inline-flex items-center gap-1 text-[10px] text-zinc-500">
-        <input type="checkbox" checked={draft.tracked} onChange={(e) => setDraft({ ...draft, tracked: e.target.checked })} className="accent-marine-cyan" />
-        {isAr ? 'تتبع' : 'Track'}
-      </label>
-      <input autoFocus type="number" min="0" step="1" dir="ltr" disabled={!draft.tracked} value={draft.quantity} onChange={(e) => setDraft({ ...draft, quantity: e.target.value })} className={`${EDIT_INPUT} w-20 disabled:opacity-40`} />
+      <input
+        autoFocus
+        type="number"
+        min="0"
+        step="1"
+        dir="ltr"
+        value={draft.quantity ?? ''}
+        onChange={(e) => setDraft({ tracked: true, quantity: e.target.value })}
+        className={`${EDIT_INPUT} w-24`}
+        placeholder={isAr ? 'الكمية...' : 'Quantity...'}
+      />
     </span>
   );
 }
@@ -178,6 +183,12 @@ function EditableCell({ canEdit, display, initial, toPatch, onSave, isAr, align 
   const [draft, setDraft] = useState(initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!editing) {
+      setDraft(initial);
+    }
+  }, [initial, editing]);
 
   const start = () => { setDraft(initial); setError(''); setEditing(true); };
   const save = async () => {
@@ -234,52 +245,17 @@ function Switch({ checked, onChange, disabled }) {
   );
 }
 
-/** "Toyota Corolla, Kia +2": the cars a product fits, short. */
-const carsSummary = (cars) => {
-  const names = (cars || []).map((c) => (c.all_models || !(c.models || []).length
-    ? c.brand_name
-    : `${c.brand_name} ${(c.models || []).slice(0, 2).map((m) => m.model_name).join('/')}${(c.models || []).length > 2 ? '…' : ''}`)).filter(Boolean);
-  return names.slice(0, 2).join('، ') + (names.length > 2 ? ` +${names.length - 2}` : '');
-};
-
-/** The fitment cell: the universal switch and, when not universal, the cars as a button. */
-function FitmentCell({ product, canEdit, isAr, busy, error, onUniversal, onOpen }) {
-  const summary = carsSummary(product.compatible_cars);
-  if (!canEdit) {
-    return <span className="text-zinc-600 dark:text-zinc-300">{product.is_universal ? (isAr ? 'عام: أي عربية' : 'Universal') : (summary || (isAr ? 'من غير توافق' : 'No fitment'))}</span>;
-  }
-  return (
-    <div data-no-row-link="" className="space-y-1">
-      <div className="flex items-center gap-2">
-        <Switch checked={product.is_universal} disabled={busy} onChange={onUniversal} />
-        {busy && <Loader2 size={13} className="animate-spin text-marine-primary" />}
-        {product.is_universal
-          ? <span className="text-zinc-400">{isAr ? 'عام' : 'Universal'}</span>
-          : (
-            <button type="button" onClick={onOpen} title={summary || ''}
-              className={`max-w-[180px] truncate text-start px-2 py-1 rounded ${summary ? 'text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/5' : 'text-red-500 ring-1 ring-red-300/70 bg-red-50 dark:bg-red-500/10'}`}>
-              {summary || (isAr ? '+ أضف عربيات' : '+ Add cars')}
-            </button>
-          )}
-      </div>
-      {error && <p className="text-[10px] font-bold text-red-500 whitespace-normal max-w-[220px]">{error}</p>}
-    </div>
-  );
-}
-
 /**
  * @param columnsKey  where this screen keeps its column choice ('admin.products', 'vendor.products')
  * @param editable    the fields that can be edited in place: title, price, discount, stock, sku,
  *                    part_number, part_type, category
  * @param categories  the category tree, for editing the category in place
- * @param loadCarBrands  () => Promise<car makes with their models>, for the fitment popup
- *                       (fetched the first time it opens)
  */
 export default function ProductTable({
-  products: initialProducts, onEdit, onDelete, language, updateProduct = vendorApi.updateProduct, showVendor = false,
+  products: initialProducts, onEdit, onDelete, onUpdate, language, updateProduct = vendorApi.updateProduct, showVendor = false,
   reviewBasePath = '/dashboard/products', columnsKey = showVendor ? 'admin.products' : 'vendor.products',
-  editable = showVendor ? ['title', 'price', 'discount', 'stock', 'sku', 'part_number', 'part_type', 'category', 'fitment'] : ['price', 'discount', 'stock'],
-  categories = null, loadCarBrands = null,
+  editable = showVendor ? ['title', 'price', 'discount', 'stock', 'sku', 'part_number', 'part_type', 'category'] : ['price', 'discount', 'stock'],
+  categories = null,
 }) {
   const rowLink = useRowLink();
   const { t, siteSettings } = useApp();
@@ -295,11 +271,6 @@ export default function ProductTable({
 
   const [products, setProducts] = useState(initialProducts);
   const [togglingId, setTogglingId] = useState(null);
-  // The fitment popup: which product, the makes it needs, and each row's save in progress.
-  const [fitmentFor, setFitmentFor] = useState(null);
-  const [carBrands, setCarBrands] = useState(null);
-  const [fitmentBusy, setFitmentBusy] = useState({});
-  const [fitmentError, setFitmentError] = useState({});
 
   useEffect(() => {
     if (togglingId === null) {
@@ -318,8 +289,10 @@ export default function ProductTable({
     )) return;
     setTogglingId(product._id);
     try {
-      await updateProduct(product._id, { status: newStatus });
-      setProducts(prev => prev.map(p => p._id === product._id ? { ...p, status: newStatus } : p));
+      const res = await updateProduct(product._id, { status: newStatus });
+      const updated = res?.product || { ...product, status: newStatus };
+      setProducts(prev => prev.map(p => p._id === product._id ? { ...p, ...updated } : p));
+      onUpdate?.(updated);
     } catch (err) {
       alert(isAr ? 'تعذر تحديث حالة المنتج.' : 'Failed to update product status.');
     } finally {
@@ -336,29 +309,12 @@ export default function ProductTable({
       const c = flatCategories.find((x) => String(x._id) === String(saved.category_id));
       if (c) saved.category_id = { _id: c._id, name: c.name, name_ar: c.name_ar };
     }
-    setProducts((prev) => prev.map((p) => (p._id === product._id ? mergeSaved(p, saved) : p)));
+    const merged = mergeSaved(product, saved);
+    setProducts((prev) => prev.map((p) => (p._id === product._id ? merged : p)));
+    onUpdate?.(merged);
   };
 
-  const openFitment = (product) => {
-    setFitmentFor(product);
-    if (!carBrands && loadCarBrands) loadCarBrands().then((list) => setCarBrands(list || [])).catch(() => setCarBrands([]));
-  };
 
-  const saveFitment = async (product, patch) => {
-    if (!patch.is_universal && !(patch.compatible_cars || []).length) {
-      setFitmentError((e) => ({ ...e, [product._id]: isAr ? 'اختار عربية واحدة على الأقل، أو خليه عام.' : 'Choose at least one car, or make it universal.' }));
-      return;
-    }
-    setFitmentBusy((b) => ({ ...b, [product._id]: true }));
-    setFitmentError((e) => ({ ...e, [product._id]: '' }));
-    try {
-      await saveField(product)(patch);
-    } catch (err) {
-      setFitmentError((e) => ({ ...e, [product._id]: err.message || (isAr ? 'تعذر الحفظ' : 'Could not save') }));
-    } finally {
-      setFitmentBusy((b) => ({ ...b, [product._id]: false }));
-    }
-  };
 
   if (!products || products.length === 0) {
     return (
@@ -420,14 +376,15 @@ export default function ProductTable({
                             toPatch={(d) => (!d.trim() ? (isAr ? 'العنوان مايبقاش فاضي' : 'The title cannot be empty') : d === (product[titleKey] || '') ? null : { [titleKey]: d.trim() })} />
                           <div className="flex items-center gap-2 mt-0.5 text-[10px] min-w-0">
                             <span className="text-zinc-500 font-bold tracking-wider truncate min-w-0">SKU: {product.sku}</span>
-                            {product.is_universal && (
-                              <span className="shrink-0 bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 px-1.5 py-0.5 rounded font-black tracking-widest uppercase text-[8px]">{t.universalFit || 'Universal'}</span>
-                            )}
-                            {product.variants?.length > 0 && (
+                            {product.variation_types?.length > 0 ? (
+                              <span className="shrink-0 bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400 px-1.5 py-0.5 rounded font-black tracking-wider text-[9px]">
+                                {product.variation_types.map(vt => `${vt.name}: ${(vt.options || []).map(o => o.value).join('/')}`).join(' • ')}
+                              </span>
+                            ) : product.variants?.length > 0 ? (
                               <span className="shrink-0 bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400 px-1.5 py-0.5 rounded font-black tracking-widest uppercase text-[8px]">
                                 {product.variants.length} {isAr ? 'تنويعات' : 'Variants'}
                               </span>
-                            )}
+                            ) : null}
                           </div>
                         </div>
                       </div>
@@ -437,7 +394,7 @@ export default function ProductTable({
                       <td className={TD}>
                         {isPending ? (
                           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
-                            <Bell size={11} />{isAr ? 'معلق' : 'Pending'}
+                            <Bell size={11} />{isAr ? 'قيد المراجعة' : 'Pending Review'}
                           </span>
                         ) : (
                           <button onClick={() => handleToggleStatus(product)} disabled={isToggling} title={isAr ? 'انقر لتغيير الحالة' : 'Click to toggle status'}
@@ -496,9 +453,13 @@ export default function ProductTable({
                           kind="stock"
                           toPatch={(d) => {
                             const q = Number(d.quantity);
-                            if (d.tracked && (!Number.isInteger(q) || q < 0)) return isAr ? 'الكمية رقم صحيح من صفر وطالع' : 'Quantity is a whole number, zero or more';
-                            if (d.tracked === !!product.stock_management && (!d.tracked || q === Number(product.quantity ?? 0))) return null;
-                            return { stock_management: d.tracked, ...(d.tracked ? { quantity: q } : {}) };
+                            if (d.quantity === '' || !Number.isInteger(q) || q < 0) return isAr ? 'الكمية رقم صحيح من صفر وطالع' : 'Quantity is a whole number, zero or more';
+                            if (product.stock_management && q === Number(product.quantity ?? 0)) return null;
+                            return {
+                              stock_management: true,
+                              quantity: q,
+                              stock_status: q > 0 ? 'instock' : 'outofstock',
+                            };
                           }} />
                       </td>
                     )}
@@ -548,13 +509,19 @@ export default function ProductTable({
                       </td>
                     )}
 
-                    {show('fitment') && (
+                    {show('audiences') && (
                       <td className={TD}>
-                        <FitmentCell product={product} canEdit={can('fitment') && !!loadCarBrands} isAr={isAr}
-                          busy={!!fitmentBusy[product._id]} error={fitmentError[product._id]}
-                          // On: universal at once. Off: choose the cars first; nothing changes until "Done".
-                          onUniversal={(on) => (on ? saveFitment(product, { is_universal: true, compatible_cars: [] }) : openFitment(product))}
-                          onOpen={() => openFitment(product)} />
+                        {product.target_audiences && product.target_audiences.length > 0 ? (
+                          <div className="flex flex-wrap gap-1 max-w-[200px]">
+                            {product.target_audiences.map((aud) => (
+                              <span key={aud} className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40">
+                                {aud}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-zinc-400 text-xs">—</span>
+                        )}
                       </td>
                     )}
 
@@ -573,7 +540,7 @@ export default function ProductTable({
 
                     {/* Actions */}
                     <td className={`px-6 py-3 ${isAr ? 'text-left' : 'text-right'}`}>
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                      <div className="flex items-center justify-end gap-1">
                         <ProductViewMenu product={product} reviewHref={`${reviewBasePath}/${product._id}`} language={language} />
                         <button onClick={() => onEdit(product)} className="p-2 text-zinc-400 hover:text-marine-primary hover:bg-marine-mist dark:hover:bg-marine-cyan/10 rounded-xl transition-colors" title={t.edit || 'Edit'}>
                           <Edit2 size={16} />
@@ -592,16 +559,6 @@ export default function ProductTable({
           </table>
         </div>
       </div>
-      {fitmentFor && (
-        // The online bulk upload's own popup; "Done" saves the cars and turns "universal" off.
-        <CompatibilityModal
-          key={`${fitmentFor._id}-${carBrands ? 'ready' : 'loading'}`}
-          row={fitmentFor}
-          refs={{ metadata: { carBrands: carBrands || [] } }}
-          onSave={(patch) => saveFitment(fitmentFor, patch)}
-          onClose={() => setFitmentFor(null)}
-        />
-      )}
     </div>
   );
 }

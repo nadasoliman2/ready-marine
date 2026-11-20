@@ -67,7 +67,7 @@ export function entryToFormPatch(entry) {
         gtin: entry.gtin || '',
         images: (entry.images || []).map((img) => ({ url: img.url, is_primary: !!img.is_primary })),
         is_universal: entry.is_universal !== false,
-        compatible_cars: JSON.parse(JSON.stringify(entry.compatible_cars || [])),
+        compatible_vessels: JSON.parse(JSON.stringify(entry.compatible_vessels || [])),
         // Variation *shapes* come from the catalog; the price and stock behind
         // each combination are the vendor's, so no variants are pre-created.
         variation_types: (entry.variation_types || []).map((vt) => ({

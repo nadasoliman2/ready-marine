@@ -3,7 +3,7 @@
 import Link from '../LocaleLink';
 import { usePathname } from '../../lib/navigation';
 import {
-    LayoutDashboard, Users, Layers, Building2, Car, Settings, LogOut, X, Store, ShoppingBag, Receipt, Wallet,
+    LayoutDashboard, Users, Layers, Building2, Ship, Settings, LogOut, X, Store, ShoppingBag, Receipt, Wallet,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { orgTerms } from '../../lib/orgTerms';
@@ -26,7 +26,7 @@ export default function CompanySidebar({ isOpen, setIsOpen, companyName, orgType
         ...(!onWallet || hasInvoices ? [{ name: isAr ? 'الفواتير' : 'Invoices', icon: Receipt, href: '/company/invoices' }] : []),
         { name: isAr ? 'الجروبات' : 'Groups', icon: Layers, href: '/company/groups' },
         { name: t.Branches, icon: Building2, href: '/company/offices' },
-        { name: isAr ? `عربيات ${t.the}` : `${t.One} cars`, icon: Car, href: '/company/cars' },
+        { name: isAr ? `مراكب وقوارب ${t.the}` : `${t.One} vessels`, icon: Ship, href: '/company/cars' },
         { name: isAr ? 'الإعدادات' : 'Settings', icon: Settings, href: '/company/settings' },
     ];
 

@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import Link from '../LocaleLink';
 import { resolveAssetUrl } from '../../lib/assets';
+import UserAvatar from '../UserAvatar';
 import { getOrderStatusLabel, getOrderStatusColor } from '../../lib/orderStatus';
 import { orgTerms } from '../../lib/orgTerms';
 import { walletCopy } from '../../lib/walletLocalization';
@@ -241,17 +242,13 @@ export default function CustomerMainMenu({
             {/* Avatar with Glow Ring & Optional Photo Change */}
             <div className="relative shrink-0">
               <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-marine-primary to-marine-cyan flex items-center justify-center text-white ring-2 ring-white/70 shadow-md overflow-hidden transition-transform group-hover:scale-105">
-                {profile?.profile_image ? (
-                  <img
-                    src={resolveAssetUrl(profile.profile_image)}
-                    alt={profile?.name || 'Profile'}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-xl sm:text-2xl font-black text-white">
-                    {profile?.name?.[0]?.toUpperCase() || user?.name?.[0]?.toUpperCase() || 'U'}
-                  </span>
-                )}
+                <UserAvatar
+                  src={profile?.profile_image}
+                  name={profile?.name || user?.name}
+                  fallback="initials"
+                  fallbackClassName="text-xl sm:text-2xl font-black text-white"
+                  className="w-full h-full"
+                />
               </div>
 
               {onProfilePhotoChange ? (

@@ -19,14 +19,14 @@ export const vendorEducationVideos = [
   {
     id: 'Gg128Z4WEnA',
     url: 'https://youtu.be/Gg128Z4WEnA?si=-A4hxrvtkjv2a3rK',
-    titleAr: 'إزاي ترفع منتجاتك بسرعة على Ready Marine | إضافة المنتجات وتوافق السيارات',
-    titleEn: 'How to upload your products quickly on Ready Marine | Adding products and car compatibility',
+    titleAr: 'إزاي ترفع منتجاتك بسرعة على Ready Marine | إضافة المنتجات والتوافق البحري',
+    titleEn: 'How to upload your products quickly on Ready Marine | Adding products and marine compatibility',
   },
   {
     id: 'Oz3YPqdQG6I',
     url: 'https://youtu.be/Oz3YPqdQG6I?si=ZTv6iLQniC9TI8hv',
-    titleAr: 'إزاي تضيف منتج بشكل تفصيلي على Ready Marine | شرح بيانات المنتج وتوافق السيارة',
-    titleEn: 'How to add a product in detail on Ready Marine | Product details and car compatibility',
+    titleAr: 'إزاي تضيف منتج بشكل تفصيلي على Ready Marine | شرح بيانات المنتج وتوافق القوارب',
+    titleEn: 'How to add a product in detail on Ready Marine | Product details and boat compatibility',
   },
 ];
 

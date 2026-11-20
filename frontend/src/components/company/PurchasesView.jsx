@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { FileSpreadsheet, ShoppingBag, Car, User, RotateCcw, Building2 } from 'lucide-react';
+import { FileSpreadsheet, ShoppingBag, Ship, User, RotateCcw, Building2 } from 'lucide-react';
 import { formatMoney, formatMonth, formatDate } from '../../lib/companyLocalization';
 import { CARD, INPUT, Button, StatCard, EmptyState, TableWrap, Th, Td, Pill } from './CompanyUI';
 import { usePortalTerms } from './OrgTermsContext';
@@ -29,7 +29,7 @@ export default function PurchasesView({ data, isAr, month, onMonthChange, onExpo
     const tabs = [
         { id: 'lines', label: isAr ? 'كل العمليات' : 'All lines' },
         { id: 'employees', label: isAr ? `ملخص ${ot.members}` : `By ${ot.member}` },
-        ...(data.by_car.length ? [{ id: 'cars', label: isAr ? `عربيات ${ot.the}` : `${ot.One} cars` }] : []),
+        ...(data.by_car.length ? [{ id: 'cars', label: isAr ? `مراكب ${ot.the}` : `${ot.One} vessels` }] : []),
     ];
 
     return (
@@ -46,7 +46,7 @@ export default function PurchasesView({ data, isAr, month, onMonthChange, onExpo
                     <select className={`${INPUT} w-full`} value={person} onChange={(e) => setPerson(e.target.value)}>
                         <option value="all">{isAr ? 'الكل' : 'Everyone'}</option>
                         {data.by_employee.map((p) => <option key={p.key} value={p.key}>{p.name}</option>)}
-                        {data.by_car.map((c) => <option key={c.key} value={`car:${c.key}`}>{isAr ? `عربية: ${c.name}` : `Car: ${c.name}`}</option>)}
+                        {data.by_car.map((c) => <option key={c.key} value={`car:${c.key}`}>{isAr ? `مركب: ${c.name}` : `Vessel: ${c.name}`}</option>)}
                     </select>
                 </label>
                 <div className="sm:ms-auto">
@@ -93,7 +93,7 @@ export default function PurchasesView({ data, isAr, month, onMonthChange, onExpo
                                         </Td>
                                         <Td align="start">
                                             <p className="font-bold text-zinc-900 dark:text-white flex items-center gap-1.5">
-                                                {r.beneficiary === 'car' ? <Car size={14} className="text-marine-primary" /> : <User size={14} className="text-zinc-400" />}
+                                                {r.beneficiary === 'car' ? <Ship size={14} className="text-marine-primary" /> : <User size={14} className="text-zinc-400" />}
                                                 {r.beneficiary === 'car' ? r.car_label : (r.user?.name || '—')}
                                             </p>
                                             <p className="text-[11px] text-zinc-500">
@@ -171,7 +171,7 @@ export default function PurchasesView({ data, isAr, month, onMonthChange, onExpo
                         <table className="w-full min-w-[520px]">
                             <thead className="border-b border-zinc-100 dark:border-white/5">
                                 <tr>
-                                    <Th align="start">{isAr ? 'العربية' : 'Car'}</Th>
+                                    <Th align="start">{isAr ? 'القارب / المركب' : 'Vessel'}</Th>
                                     <Th align="start">{isAr ? 'الأوردرات' : 'Orders'}</Th>
                                     <Th align="start">{isAr ? `على ${ot.the}` : 'Charged'}</Th>
                                     <Th align="start">{isAr ? 'الصافي' : 'Net'}</Th>

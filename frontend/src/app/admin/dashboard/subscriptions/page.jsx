@@ -47,18 +47,18 @@ function formatDateTime(dateStr) {
     return d.toLocaleString();
 }
 
-function StatusBadge({ status, isAr }) {
+function StatusBadge({ status, isAr, isClickable = false }) {
     const map = {
-        active:         { label: isAr ? 'نشط' : 'Active',          cls: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400', icon: <CheckCircle2 size={12} /> },
-        trial_active:   { label: isAr ? 'تجريبي' : 'Trial Active', cls: 'bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400',                 icon: <Gift size={12} /> },
-        expired:        { label: isAr ? 'منتهي' : 'Expired',       cls: 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400',                  icon: <AlertTriangle size={12} /> },
-        cancelled:      { label: isAr ? 'ملغي' : 'Cancelled',      cls: 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400',                  icon: <AlertTriangle size={12} /> },
-        not_subscribed: { label: isAr ? 'غير مشترك' : 'Not Subscribed', cls: 'bg-zinc-100 text-zinc-500 dark:bg-white/5 dark:text-zinc-400',            icon: <UserX size={12} /> },
-        suspended:      { label: isAr ? 'معلق' : 'Suspended',      cls: 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',          icon: <AlertTriangle size={12} /> },
+        active:         { label: isAr ? 'نشط' : 'Active',          cls: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-500/20', icon: <CheckCircle2 size={12} /> },
+        trial_active:   { label: isAr ? 'تجريبي' : 'Trial Active', cls: 'bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400 border border-sky-200/80 dark:border-sky-500/20',                 icon: <Gift size={12} /> },
+        expired:        { label: isAr ? 'منتهي' : 'Expired',       cls: 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border border-red-200/80 dark:border-red-500/20',                  icon: <AlertTriangle size={12} /> },
+        cancelled:      { label: isAr ? 'ملغي' : 'Cancelled',      cls: 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border border-red-200/80 dark:border-red-500/20',                  icon: <AlertTriangle size={12} /> },
+        not_subscribed: { label: isAr ? 'غير مشترك' : 'Not Subscribed', cls: 'bg-zinc-100 text-zinc-500 dark:bg-white/5 dark:text-zinc-400 border border-zinc-200 dark:border-white/10',            icon: <UserX size={12} /> },
+        suspended:      { label: isAr ? 'معلق' : 'Suspended',      cls: 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200/80 dark:border-amber-500/20',          icon: <AlertTriangle size={12} /> },
     };
     const s = map[status] || { label: status, cls: 'bg-zinc-100 text-zinc-500', icon: null };
     return (
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase ${s.cls}`}>
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase transition-all ${s.cls} ${isClickable ? 'hover:scale-105 hover:shadow-xs cursor-pointer' : ''}`}>
             {s.icon}{s.label}
         </span>
     );
@@ -93,6 +93,21 @@ export default function AdminSubscriptionsPage() {
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [cancelVendorId, setCancelVendorId] = useState('');
     const [cancelling, setCancelling] = useState(false);
+
+    /* --- subscription history modal state --- */
+    const [historyModalOpen, setHistoryModalOpen] = useState(false);
+    const [historyVendorId, setHistoryVendorId] = useState('');
+    const [historyVendorName, setHistoryVendorName] = useState('');
+    const [historyLoading, setHistoryLoading] = useState(false);
+    const [historyData, setHistoryData] = useState(null);
+    const [historyError, setHistoryError] = useState('');
+
+    /* --- renew / grant extension state --- */
+    const [showRenewForm, setShowRenewForm] = useState(false);
+    const [renewPackageId, setRenewPackageId] = useState('');
+    const [renewMonths, setRenewMonths] = useState(3);
+    const [renewLoading, setRenewLoading] = useState(false);
+    const [renewSuccess, setRenewSuccess] = useState('');
 
     /* --- not-subscribed tab state --- */
     const [activeTab, setActiveTab] = useState('subscriptions'); // 'subscriptions' | 'transactions' | 'not_subscribed'
@@ -238,6 +253,68 @@ export default function AdminSubscriptionsPage() {
         }
     };
 
+    const openHistoryModal = async (vendorId, vendorInfo) => {
+        if (!vendorId) return;
+        setHistoryVendorId(vendorId);
+        setHistoryVendorName(vendorInfo?.store_name || vendorInfo?.name || '');
+        setHistoryModalOpen(true);
+        setHistoryLoading(true);
+        setHistoryError('');
+        setShowRenewForm(false);
+        setRenewSuccess('');
+        try {
+            const data = await adminSubscriptionApi.getVendorSubscription(vendorId);
+            setHistoryData(data);
+            if (data?.package?._id) {
+                setRenewPackageId(data.package._id);
+            } else if (packages.length > 0) {
+                setRenewPackageId(packages[0]._id);
+            }
+        } catch (err) {
+            setHistoryError(err.message || (isAr ? 'فشل تحميل سجل الاشتراكات' : 'Failed to load subscription history'));
+        } finally {
+            setHistoryLoading(false);
+        }
+    };
+
+    const handleGrantOrRenew = async (e) => {
+        if (e) e.preventDefault();
+        if (!historyVendorId || !renewPackageId) return;
+        setRenewLoading(true);
+        setHistoryError('');
+        try {
+            await adminSubscriptionApi.grantVendorSubscription(historyVendorId, {
+                package_id: renewPackageId,
+                months: Number(renewMonths) || 1,
+            });
+            setRenewSuccess(isAr ? 'تم تمديد وتجديد الاشتراك بنجاح!' : 'Subscription extended successfully!');
+            setShowRenewForm(false);
+            const updated = await adminSubscriptionApi.getVendorSubscription(historyVendorId);
+            setHistoryData(updated);
+            loadSubscriptions();
+        } catch (err) {
+            setHistoryError(err.message || (isAr ? 'فشل تجديد الاشتراك' : 'Failed to renew subscription'));
+        } finally {
+            setRenewLoading(false);
+        }
+    };
+
+    const handleCancelFromHistory = async () => {
+        if (!historyVendorId) return;
+        if (!window.confirm(isAr ? 'هل أنت متأكد من إلغاء اشتراك هذا المتجر؟' : 'Are you sure you want to cancel this subscription?')) return;
+        setCancelling(true);
+        try {
+            await adminSubscriptionApi.cancelVendorSubscription(historyVendorId);
+            const updated = await adminSubscriptionApi.getVendorSubscription(historyVendorId);
+            setHistoryData(updated);
+            loadSubscriptions();
+        } catch (err) {
+            setHistoryError(err.message || (isAr ? 'فشل إلغاء الاشتراك' : 'Failed to cancel subscription'));
+        } finally {
+            setCancelling(false);
+        }
+    };
+
 
     const selectClass = 'bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm focus:outline-none';
 
@@ -366,15 +443,33 @@ export default function AdminSubscriptionsPage() {
                                                 </p>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <StatusBadge status={sub.status} isAr={isAr} />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => openHistoryModal(vendor?._id, vendor)}
+                                                    className="focus:outline-none transition-transform active:scale-95 text-start"
+                                                    title={isAr ? 'عرض سجل وتفاصيل الاشتراك' : 'View subscription history'}
+                                                >
+                                                    <StatusBadge status={sub.status} isAr={isAr} isClickable />
+                                                </button>
                                             </td>
                                             <td className={`px-6 py-4 ${isAr ? 'text-left' : 'text-right'}`}>
-                                                {isActive && (
-                                                    <button onClick={() => { setCancelVendorId(vendor?._id); setShowCancelModal(true); }}
-                                                        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-black bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400">
-                                                        {isAr ? 'إلغاء الاشتراك' : 'Cancel Sub'}
+                                                <div className="inline-flex items-center gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => openHistoryModal(vendor?._id, vendor)}
+                                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/10 transition-colors"
+                                                        title={isAr ? 'عرض السجل وتجديد الاشتراك' : 'History & Renew'}
+                                                    >
+                                                        <Clock size={13} />
+                                                        <span>{isAr ? 'سجل الاشتراك' : 'History'}</span>
                                                     </button>
-                                                )}
+                                                    {isActive && (
+                                                        <button onClick={() => { setCancelVendorId(vendor?._id); setShowCancelModal(true); }}
+                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 transition-colors">
+                                                            {isAr ? 'إلغاء' : 'Cancel'}
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </td>
                                         </tr>
                                     );
@@ -537,7 +632,14 @@ export default function AdminSubscriptionsPage() {
                                             </td>
                                             <td className="px-6 py-4 text-xs text-zinc-600 dark:text-zinc-300">{vendor.email}</td>
                                             <td className="px-6 py-4">
-                                                <StatusBadge status={vendor.subscription_status} isAr={isAr} />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => openHistoryModal(vendor._id, vendor)}
+                                                    className="focus:outline-none transition-transform active:scale-95 text-start"
+                                                    title={isAr ? 'منح اشتراك لهذا المتجر' : 'Grant subscription'}
+                                                >
+                                                    <StatusBadge status={vendor.subscription_status} isAr={isAr} isClickable />
+                                                </button>
                                             </td>
                                             <td className="px-6 py-4 text-xs font-bold text-zinc-600 dark:text-zinc-300">
                                                 {formatDate(vendor.created_at)}
@@ -584,6 +686,230 @@ export default function AdminSubscriptionsPage() {
                                 {isAr ? 'نعم، إلغاء' : 'Yes, Cancel'}
                             </button>
                         </div>
+                    </div>
+                </Overlay>
+            )}
+
+            {/* ── Subscription History & Management Modal ── */}
+            {historyModalOpen && (
+                <Overlay className="fixed inset-0 z-[80] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="w-full max-w-lg bg-white dark:bg-[#14171A] rounded-3xl border border-zinc-200 dark:border-white/10 shadow-2xl p-6 sm:p-7 relative overflow-hidden" dir={isAr ? 'rtl' : 'ltr'}>
+                        {/* Close button */}
+                        <button
+                            type="button"
+                            onClick={() => setHistoryModalOpen(false)}
+                            className="absolute top-5 start-5 p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-white rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors"
+                        >
+                            <X size={18} />
+                        </button>
+
+                        {/* Title Header */}
+                        <div className="text-center mb-6 pt-1">
+                            <div className="flex items-center justify-center gap-2 text-zinc-900 dark:text-white font-black text-xl">
+                                <Clock size={22} className="text-zinc-400" />
+                                <span>{isAr ? 'سجل الاشتراكات' : 'Subscription History'}</span>
+                            </div>
+                            <p className="text-sm font-bold text-zinc-500 mt-1">
+                                {historyData?.vendor?.store_name || historyVendorName || '-'}
+                            </p>
+                        </div>
+
+                        {historyLoading ? (
+                            <div className="py-16 flex flex-col items-center justify-center gap-3">
+                                <Loader2 size={32} className="animate-spin text-marine-primary" />
+                                <p className="text-xs text-zinc-400 font-bold">{isAr ? 'جاري تحميل سجل الاشتراكات...' : 'Loading history...'}</p>
+                            </div>
+                        ) : historyError && !historyData ? (
+                            <div className="py-12 text-center text-red-500 text-sm font-bold">
+                                {historyError}
+                            </div>
+                        ) : (
+                            <div className="space-y-6">
+                                {renewSuccess && (
+                                    <div className="p-3 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-2">
+                                        <CheckCircle2 size={16} />
+                                        <span>{renewSuccess}</span>
+                                    </div>
+                                )}
+
+                                {/* اللي حصل (Timeline) */}
+                                <div>
+                                    <h4 className="text-xs font-black text-zinc-400 mb-2.5">
+                                        {isAr ? 'اللي حصل' : 'What happened'}
+                                    </h4>
+                                    <div className="bg-zinc-50/70 dark:bg-white/[0.02] border border-zinc-200/80 dark:border-white/5 rounded-2xl p-4 max-h-48 overflow-y-auto space-y-3">
+                                        {historyData?.events && historyData.events.length > 0 ? (
+                                            historyData.events.map((ev, idx) => (
+                                                <div key={idx} className="flex flex-col gap-1 pb-2.5 border-b border-zinc-100 dark:border-white/5 last:border-b-0 last:pb-0">
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black ${
+                                                            ev.type === 'cancel'
+                                                                ? 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
+                                                                : ev.type === 'trial'
+                                                                ? 'bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-400'
+                                                                : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
+                                                        }`}>
+                                                            {ev.title || (isAr ? 'تحديث اشتراك' : 'Subscription update')}
+                                                        </span>
+                                                        <span className="text-[11px] text-zinc-400">
+                                                            {formatDateTime(ev.date)} · {ev.actor || (isAr ? 'الإدارة' : 'Admin')}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-xs text-zinc-600 dark:text-zinc-300 font-medium">
+                                                        {ev.from_date && ev.to_date
+                                                            ? (isAr ? `من ${formatDate(ev.from_date)} لـ ${formatDate(ev.to_date)} (${ev.months || 1} شهر)` : `From ${formatDate(ev.from_date)} to ${formatDate(ev.to_date)} (${ev.months || 1} mo)`)
+                                                            : ev.to_date
+                                                            ? (isAr ? `لحد ${formatDate(ev.to_date)} (${ev.months || 1} شهر)` : `Until ${formatDate(ev.to_date)} (${ev.months || 1} mo)`)
+                                                            : ev.note || '-'}
+                                                    </p>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="text-xs text-zinc-400 text-center py-4">
+                                                {isAr ? 'لا يوجد سجل حركات سابق لهذا المتجر' : 'No prior history found'}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* الاشتراكات (Active / Current Sub Card) */}
+                                <div>
+                                    <h4 className="text-xs font-black text-zinc-400 mb-2.5">
+                                        {isAr ? 'الاشتراكات' : 'Subscriptions'}
+                                    </h4>
+                                    {historyData?.hasActive && historyData?.subscription ? (
+                                        <div className="border border-emerald-400/50 bg-emerald-50/20 dark:bg-emerald-500/5 rounded-2xl p-4">
+                                            <div className="flex items-center justify-between gap-3 mb-2">
+                                                <span className="font-black text-zinc-900 dark:text-white text-base">
+                                                    {historyData.package?.name || historyData.package?.name_ar || 'Pro'}
+                                                </span>
+                                                <div className="flex items-center gap-1.5 flex-wrap">
+                                                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 inline-flex items-center gap-1">
+                                                        <CheckCircle2 size={11} />
+                                                        {isAr ? 'نشط' : 'Active'}
+                                                    </span>
+                                                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400">
+                                                        {isAr ? 'الحالي' : 'Current'}
+                                                    </span>
+                                                    {historyData.subscription.is_admin_grant && (
+                                                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400">
+                                                            {isAr ? 'منحة إدارية' : 'Admin grant'}
+                                                        </span>
+                                                    )}
+                                                    {historyData.subscription.is_free_trial && (
+                                                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400">
+                                                            {isAr ? 'تجريبي' : 'Trial'}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <p className="text-xs font-bold text-zinc-500 dark:text-zinc-400 tracking-wide">
+                                                {formatDate(historyData.subscription.started_at)} — {formatDate(historyData.subscription.expires_at)}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/[0.02] rounded-2xl p-4 text-center">
+                                            <p className="text-xs font-bold text-zinc-500">
+                                                {isAr ? 'لا يوجد اشتراك نشط حالياً لهذا المتجر' : 'No active subscription currently'}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* نموذج التجديد وتحديد مدة الاشتراك بالشهور (Renew Form) */}
+                                {showRenewForm && (
+                                    <div className="p-4 bg-zinc-50 dark:bg-white/[0.03] border border-marine-cyan/30 rounded-2xl space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h5 className="text-xs font-black text-marine-primary flex items-center gap-1.5">
+                                                <RefreshCw size={14} />
+                                                <span>{isAr ? 'تجديد / تمديد الاشتراك' : 'Renew / Extend Subscription'}</span>
+                                            </h5>
+                                            <button type="button" onClick={() => setShowRenewForm(false)} className="text-zinc-400 hover:text-zinc-600 text-xs">
+                                                {isAr ? 'إلغاء' : 'Cancel'}
+                                            </button>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <div>
+                                                <label className="block text-[11px] font-bold text-zinc-500 mb-1">
+                                                    {isAr ? 'نوع الباقة' : 'Package'}
+                                                </label>
+                                                <select
+                                                    value={renewPackageId}
+                                                    onChange={(e) => setRenewPackageId(e.target.value)}
+                                                    className="w-full bg-white dark:bg-[#14171A] border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-zinc-800 dark:text-white outline-none focus:border-marine-cyan"
+                                                >
+                                                    {packages.map(p => (
+                                                        <option key={p._id} value={p._id}>{p.name} ({p.max_products} منتج)</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-[11px] font-bold text-zinc-500 mb-1">
+                                                    {isAr ? 'تحديد مدة الاشتراك (بالشهور)' : 'Subscription Duration (Months)'}
+                                                </label>
+                                                <div className="flex items-center gap-1.5">
+                                                    {[1, 3, 6, 12].map((m) => (
+                                                        <button
+                                                            key={m}
+                                                            type="button"
+                                                            onClick={() => setRenewMonths(m)}
+                                                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                                                                Number(renewMonths) === m
+                                                                    ? 'bg-marine-primary text-white shadow-xs'
+                                                                    : 'bg-white dark:bg-[#14171A] border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300 hover:border-marine-cyan'
+                                                            }`}
+                                                        >
+                                                            {m} {isAr ? (m === 1 ? 'شهر' : m === 12 ? 'سنة' : 'شهور') : 'm'}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center justify-between pt-1">
+                                            <span className="text-[11px] text-zinc-500">
+                                                {isAr ? `سيتم منح / تمديد الاشتراك لمدة ${renewMonths} شهر.` : `Will extend subscription by ${renewMonths} months.`}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={handleGrantOrRenew}
+                                                disabled={renewLoading}
+                                                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl text-xs font-black shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+                                            >
+                                                {renewLoading ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+                                                <span>{isAr ? 'تأكيد التجديد' : 'Confirm'}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Action Buttons (Bottom) */}
+                                <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-white/5">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowRenewForm(!showRenewForm)}
+                                        className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-black shadow-sm transition-all cursor-pointer"
+                                    >
+                                        <RefreshCw size={14} />
+                                        <span>{isAr ? 'تجديد' : 'Renew'}</span>
+                                    </button>
+
+                                    {historyData?.hasActive && (
+                                        <button
+                                            type="button"
+                                            onClick={handleCancelFromHistory}
+                                            disabled={cancelling}
+                                            className="inline-flex items-center gap-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 px-4 py-2.5 rounded-xl text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
+                                        >
+                                            {cancelling ? <Loader2 size={14} className="animate-spin" /> : <AlertTriangle size={14} />}
+                                            <span>{isAr ? 'إلغاء الاشتراك' : 'Cancel Subscription'}</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </Overlay>
             )}

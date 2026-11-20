@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { vendorApi } from '../../../lib/api';
-import { Plus, Loader2, Upload, Table2, Search, X } from 'lucide-react';
+import { Plus, Loader2, Upload, Table2, Search, X, Clock, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import ProductTable from '../../../components/dashboard/ProductTable';
 import { resolveAssetUrl } from '../../../lib/assets';
-import { useRouter } from '../../../lib/navigation';
+import { useRouter, useSearchParams } from '../../../lib/navigation';
 import { useLinkedBrandCategory } from '../../../lib/brandCategoryLink';
 import SearchableSelect from '../../../components/SearchableSelect';
 import { brandOptions } from '../../../lib/pickerOptions';
@@ -40,7 +40,7 @@ const productMatchesQuery = (product, folded) => {
 
 const MAX_SUGGESTIONS = 8;
 
-export default function ProductsManagementPage() {
+function ProductsManagementContent() {
   const { language } = useApp();
   const isAr = language === 'ar';
   const [products, setProducts] = useState([]);
@@ -48,6 +48,9 @@ export default function ProductsManagementPage() {
   const [loading, setLoading] = useState(true);
   
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const statusNotice = searchParams.get('status_notice');
+  const [noticeDismissed, setNoticeDismissed] = useState(false);
   
   // Ribbon Filters
   const [search, setSearch] = useState('');
@@ -59,9 +62,34 @@ export default function ProductsManagementPage() {
   const searchBoxRef = useRef(null);
   const [filterCategory, setFilterCategory] = useState('');
   const [filterBrand, setFilterBrand] = useState('');
+
+  // Combine hand-entered product brands and boat/vessel brands so both are available in filters.
+  const combinedBrands = useMemo(() => {
+    const prodBrands = metadata?.productBrands || [];
+    const boatBrands = (metadata?.vesselBrands || metadata?.carBrands || []).map(cb => ({
+      ...cb,
+      source: 'VesselBrand',
+      is_vessel_brand: true,
+      categories: cb.categories || []
+    }));
+    const seenIds = new Set();
+    const seenNames = new Set();
+    const list = [];
+    for (const b of [...prodBrands, ...boatBrands]) {
+      const id = String(b._id || '');
+      const name = String(b.name || '').trim().toLowerCase();
+      if (id && seenIds.has(id)) continue;
+      if (name && seenNames.has(name)) continue;
+      if (id) seenIds.add(id);
+      if (name) seenNames.add(name);
+      list.push(b);
+    }
+    return list.sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
+  }, [metadata?.productBrands, metadata?.carBrands]);
+
   // Category and brand filters narrow each other (lib/brandCategoryLink).
   const linkedFilters = useLinkedBrandCategory({
-    brands: metadata?.productBrands || [],
+    brands: combinedBrands,
     categories: metadata?.categories || [],
     brandId: filterBrand,
     categoryId: filterCategory,
@@ -76,7 +104,7 @@ export default function ProductsManagementPage() {
       try {
         const [prodData, metaRes] = await Promise.all([
           vendorApi.getProducts(),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`)
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters`)
         ]);
         const metaData = await metaRes.json();
         setProducts(prodData);
@@ -255,6 +283,55 @@ export default function ProductsManagementPage() {
         </div>
       </div>
 
+      {/* Status Notice Banner */}
+      {!noticeDismissed && statusNotice === 'pending' && (
+        <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
+              <Clock size={20} className="text-amber-600 dark:text-amber-400" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm">{isAr ? 'تم إرسال المنتج للمراجعة بنجاح' : 'Product Submitted for Review'}</h4>
+              <p className="text-xs opacity-90 mt-0.5">
+                {isAr
+                  ? 'المنتج الآن قيد المراجعة من قِبل إدارة Ready Marine. ستجده أدناه بالحالة "قيد المراجعة" وسيُنشر في المتجر فور اعتماده.'
+                  : 'Your product is currently under review by Ready Marine admin. It is listed below as "Pending Review" and will appear in the shop once approved.'}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setNoticeDismissed(true)}
+            className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-xs font-bold transition-colors shrink-0"
+          >
+            {isAr ? 'إغلاق' : 'Close'}
+          </button>
+        </div>
+      )}
+
+      {!noticeDismissed && statusNotice === 'published' && (
+        <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <CheckCircle2 size={20} className="text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm">{isAr ? 'تم نشر المنتج بنجاح' : 'Product Published Successfully'}</h4>
+              <p className="text-xs opacity-90 mt-0.5">
+                {isAr ? 'تمت إضافة المنتج ونشره مباشرة في متجرك.' : 'Your product has been published directly to your store.'}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setNoticeDismissed(true)}
+            className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-xs font-bold transition-colors shrink-0"
+          >
+            {isAr ? 'إغلاق' : 'Close'}
+          </button>
+        </div>
+      )}
+
       {/* Ribbon Filters */}
       <div className="flex flex-wrap gap-3 mb-6 bg-white dark:bg-[#14171A] p-2 rounded-xl shadow-sm border border-zinc-200 dark:border-white/5">
         <div ref={searchBoxRef} className="relative flex-1 min-w-[200px]">
@@ -358,7 +435,18 @@ export default function ProductsManagementPage() {
         language={language}
         onEdit={(prod) => router.push(`/dashboard/products/${prod._id}/edit`)}
         onDelete={handleDelete}
+        onUpdate={(saved) => {
+          setProducts(prev => prev.map(p => p._id === saved._id ? { ...p, ...saved } : p));
+        }}
       />
     </div>
+  );
+}
+
+export default function ProductsManagementPage() {
+  return (
+    <Suspense fallback={<div className="h-full flex items-center justify-center"><Loader2 size={32} className="animate-spin text-marine-primary" /></div>}>
+      <ProductsManagementContent />
+    </Suspense>
   );
 }

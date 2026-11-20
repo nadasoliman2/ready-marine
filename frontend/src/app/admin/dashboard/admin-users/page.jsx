@@ -140,7 +140,7 @@ export default function AdminUsersPage() {
                 </div>
                 <button
                     onClick={() => setEditing({})}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-marine-cyan text-white text-sm font-black hover:bg-[#B91C1C] transition"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-marine-cyan text-white text-sm font-black transition"
                 >
                     <Plus size={16} />
                     {isAr ? 'حساب جديد' : 'New account'}
@@ -429,7 +429,7 @@ function AccountDialog({ account, modules, isAr, onClose, onSaved, onError }) {
                         {isAr ? 'إلغاء' : 'Cancel'}
                     </button>
                     <button type="submit" disabled={saving}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-marine-cyan text-white text-sm font-black hover:bg-[#B91C1C] transition disabled:opacity-40">
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-marine-cyan text-white text-sm font-black  transition disabled:opacity-40">
                         {saving && <Loader2 size={15} className="animate-spin" />}
                         {isNew ? (isAr ? 'إنشاء الحساب' : 'Create account') : (isAr ? 'حفظ' : 'Save')}
                     </button>

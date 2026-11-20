@@ -136,7 +136,7 @@ export default function AdminUsersPage() {
                 <tr key={user._id} {...rowLink(`/admin/dashboard/users/${user._id}`)} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black bg-red-50 text-marine-primary dark:bg-marine-cyan/10">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black bg-marine-cyan/10 text-marine-primary dark:bg-marine-cyan/10">
                         {(user.name || 'U').charAt(0).toUpperCase()}
                       </div>
                       <div>
@@ -208,7 +208,7 @@ function formatDate(value, withTime = false) {
 }
 
 function StatCard({ icon: Icon, label, value, tone = 'orange' }) {
-  const color = 'bg-red-50 text-marine-primary dark:bg-marine-cyan/10';
+  const color = 'bg-marine-cyan/10 text-marine-primary dark:bg-marine-cyan/10';
   return (
     <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 p-5 shadow-sm">
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${color}`}>

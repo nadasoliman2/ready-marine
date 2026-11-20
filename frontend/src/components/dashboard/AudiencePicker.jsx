@@ -1,26 +1,74 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import { AUDIENCE_OPTIONS } from '../../lib/marineHubs';
+import { audienceApi } from '../../lib/api';
 
 /**
- * The audience hubs a product shows up in (Product.target_audiences), independent of its
- * category — the same idea as the Onboard Essentials flag, but several at once. Each chip
- * toggles one key in `value`.
+ * The audience hubs a product shows up in (Product.target_audiences).
+ * Dynamically loads target audiences from the database, falling back to AUDIENCE_OPTIONS.
+ * Supports both ObjectId ref matching and legacy key matching.
  */
-export default function AudiencePicker({ value, onChange, isAr }) {
-  const selected = Array.isArray(value) ? value : [];
-  const toggle = (key) => onChange(selected.includes(key) ? selected.filter((k) => k !== key) : [...selected, key]);
+export default function AudiencePicker({ value, onChange, isAr, options = null }) {
+  const [dbAudiences, setDbAudiences] = useState(null);
+
+  useEffect(() => {
+    if (options && options.length > 0) return;
+    audienceApi.getAll()
+      .then((res) => {
+        if (res && res.audiences && Array.isArray(res.audiences)) {
+          setDbAudiences(res.audiences);
+        }
+      })
+      .catch(() => {});
+  }, [options]);
+
+  const rawList = options && options.length > 0
+    ? options
+    : (dbAudiences && dbAudiences.length > 0 ? dbAudiences : AUDIENCE_OPTIONS);
+
+  // Normalize audience items to have _id, key, label
+  const audienceItems = rawList.map((item) => ({
+    _id: item._id ? String(item._id) : null,
+    key: item.key || item.slug || '',
+    ar: item.name_ar || item.ar || item.titleAr || item.key,
+    en: item.name_en || item.en || item.titleEn || item.key,
+  }));
+
+  const selected = Array.isArray(value) ? value.map(v => typeof v === 'object' && v !== null ? String(v._id || v.key) : String(v)) : [];
+
+  const isSelected = (opt) => {
+    return selected.some((s) => {
+      if (opt._id && s === opt._id) return true;
+      if (opt.key && s.toLowerCase() === opt.key.toLowerCase()) return true;
+      return false;
+    });
+  };
+
+  const toggle = (opt) => {
+    const active = isSelected(opt);
+    const identifier = opt._id || opt.key;
+    if (active) {
+      onChange(selected.filter((s) => {
+        if (opt._id && s === opt._id) return false;
+        if (opt.key && s.toLowerCase() === opt.key.toLowerCase()) return false;
+        return true;
+      }));
+    } else {
+      onChange([...selected, identifier]);
+    }
+  };
 
   return (
     <div className="flex flex-wrap gap-2 sm:gap-2.5">
-      {AUDIENCE_OPTIONS.map((opt) => {
-        const on = selected.includes(opt.key);
+      {audienceItems.map((opt, idx) => {
+        const on = isSelected(opt);
         return (
           <button
-            key={opt.key}
+            key={opt._id || opt.key || idx}
             type="button"
-            onClick={() => toggle(opt.key)}
+            onClick={() => toggle(opt)}
             aria-pressed={on}
             className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition-all duration-200 cursor-pointer ${
               on

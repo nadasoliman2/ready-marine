@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowUp, Car, MessageCircle, Mic, RotateCcw, Sparkles, Square, Trash2, X } from 'lucide-react';
+import { ArrowUp, Ship, MessageCircle, Mic, RotateCcw, Sparkles, Square, Trash2, X, Pencil, PhoneCall } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Overlay from '../Overlay';
 import { usePathname } from '../../lib/navigation';
@@ -17,6 +17,9 @@ import {
     chatBasketLines,
     ensureSession,
     forgetSession,
+    storedPhone,
+    savePhone,
+    forgetPhone,
     noRefusals,
     refusalsOf,
     siteCartChanges,
@@ -70,16 +73,14 @@ const carLabel = (car) => {
 
 function Launcher({ open, onToggle, count, copy, teaser, onDismissTeaser }) {
     return (
-        // A phone: the corner just over the bottom bar (64px), a little smaller. From `md` up,
-        // where there is no bottom bar, lower in the corner.
-        <div className="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] end-3 z-[90] flex flex-col items-end gap-2 md:bottom-6 md:end-5">
+        <div className={`fixed bottom-[72px] end-4 z-[160] flex flex-col items-end gap-2 md:bottom-5 md:end-6 ${open ? "hidden" : ""}`}>
             {teaser && !open && (
-                <div className="rc-chat-pop relative max-w-[230px] rounded-2xl rounded-ee-md bg-white px-3.5 py-2.5 text-[12.5px] font-semibold leading-5 text-zinc-800 shadow-[0_12px_32px_rgba(0,0,0,0.16)]">
+                <div className="rc-chat-pop relative max-w-[240px] rounded-2xl rounded-ee-md border border-slate-200/90 bg-white px-4 py-2.5 text-[12.5px] font-bold leading-5 text-zinc-800 shadow-[0_12px_32px_rgba(15,41,66,0.18)]">
                     <button
                         type="button"
                         onClick={onDismissTeaser}
                         aria-label={copy.close}
-                        className="absolute -top-2 -start-2 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-900 text-white"
+                        className="absolute -top-2 -start-2 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-900 text-white shadow"
                     >
                         <X size={11} />
                     </button>
@@ -90,21 +91,20 @@ function Launcher({ open, onToggle, count, copy, teaser, onDismissTeaser }) {
                 type="button"
                 onClick={onToggle}
                 aria-label={open ? copy.close : copy.open}
-                aria-expanded={open}
-                className={`group relative flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full text-white shadow-[0_12px_30px_rgba(0,166,206,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    open ? 'max-sm:hidden bg-zinc-900' : 'bg-gradient-to-br from-[#ef4444] via-marine-cyan to-[#991b1b]'
+                className={`group relative flex h-12 w-12 md:h-13 md:w-13 items-center justify-center rounded-full text-white shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 ${
+                    open ? 'bg-zinc-900' : 'bg-gradient-to-br from-marine-cyan via-[#0095ba] to-marine-primary'
                 }`}
             >
                 {!open && <span className="rc-chat-ring absolute inset-0 rounded-full" aria-hidden="true" />}
                 <span className={`absolute transition-all duration-300 ${open ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-50 opacity-0'}`}>
-                    <X size={24} />
+                    <X size={22} />
                 </span>
                 <span className={`absolute transition-all duration-300 ${open ? 'rotate-90 scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'}`}>
-                    <MessageCircle size={25} strokeWidth={2.2} />
-                    <Sparkles size={11} className="absolute -end-1 -top-1 text-amber-200" />
+                    <MessageCircle size={24} strokeWidth={2.2} />
+                    {/* <Sparkles size={11} className="absolute -end-1 -top-1 text-amber-200" /> */}
                 </span>
                 {count > 0 && !open && (
-                    <span className="absolute -end-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-zinc-900 px-1 text-[10px] font-extrabold" dir="ltr">
+                    <span className="absolute -end-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-marine-primary px-1 text-[10px] font-black text-white" dir="ltr">
                         {count}
                     </span>
                 )}
@@ -113,68 +113,156 @@ function Launcher({ open, onToggle, count, copy, teaser, onDismissTeaser }) {
     );
 }
 
-function PanelHeader({ copy, handoff, canReset, onReset, onClose }) {
+function PanelHeader({ copy, handoff, phone, onEditPhone, canReset, onReset, onClose }) {
     return (
-        <div className="relative overflow-hidden bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] text-white">
-            <span className="pointer-events-none absolute -end-10 -top-16 h-40 w-40 rounded-full bg-marine-cyan/40 blur-3xl" aria-hidden="true" />
-            <span className="pointer-events-none absolute -bottom-20 start-6 h-32 w-32 rounded-full bg-red-500/20 blur-3xl" aria-hidden="true" />
-            <div className="relative flex items-center gap-3">
-                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ef4444] to-[#991b1b] shadow-[0_8px_20px_rgba(0,166,206,0.45)]">
-                    <Car size={21} />
-                    <Sparkles size={11} className="absolute end-1 top-1 text-amber-200" />
-                    <span className="absolute -bottom-0.5 -end-0.5 h-3.5 w-3.5 rounded-full border-[2.5px] border-zinc-900 bg-emerald-400" />
-                </span>
-                <div className="min-w-0 flex-1">
-                    <p className="truncate text-[15px] font-extrabold tracking-tight">{copy.title}</p>
-                    <p className="flex items-center gap-1.5 text-[11.5px] text-zinc-300">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
-                        {handoff ? copy.handoffStatus : copy.status}
-                    </p>
+        <div className="relative overflow-hidden">
+            {/* Dark gradient marine background */}
+            <div className="bg-marine-primary px-4 py-3 text-white">
+                <div className="relative flex items-center justify-between gap-3">
+                    {/* Brand / Title with Boat Icon */}
+                    <div className="flex items-center gap-3 min-w-0">
+                        <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-marine-cyan to-[#008ba8] text-white shadow-md">
+                            <Ship size={22} className="text-white drop-shadow-sm" />
+                            <Sparkles size={11} className="absolute end-1 top-1 text-cyan-100" />
+                            <span className="absolute -bottom-0.5 -end-0.5 h-3.5 w-3.5 rounded-full border-2 border-marine-primary bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
+                        </span>
+                        <div className="min-w-0">
+                            <h3 className="truncate text-base sm:text-lg font-black tracking-tight text-white leading-tight">{copy.title}</h3>
+                            <p className="flex items-center gap-1.5 text-[11px] sm:text-[11.5px] text-white/80 mt-1">
+                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
+                                {handoff ? copy.handoffStatus : copy.status}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Action buttons on the far side (left in RTL) */}
+                    <div className="flex items-center gap-2 shrink-0">
+                        {canReset && (
+                            <button
+                                type="button"
+                                onClick={onReset}
+                                title={copy.reset}
+                                aria-label={copy.reset}
+                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white/85 hover:bg-white/20 hover:text-white transition-colors"
+                            >
+                                <RotateCcw size={15} />
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            aria-label={copy.close}
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white/85 hover:bg-white/20 hover:text-white transition-colors"
+                        >
+                            <X size={17} />
+                        </button>
+                    </div>
                 </div>
-                {canReset && (
+
+                {/* Phone number (guest) */}
+                {phone && (
                     <button
                         type="button"
-                        onClick={onReset}
-                        title={copy.reset}
-                        aria-label={copy.reset}
-                        className="flex h-9 w-9 items-center justify-center rounded-xl text-zinc-300 transition-colors hover:bg-white/10 hover:text-white"
+                        onClick={onEditPhone}
+                        title="تعديل رقم الهاتف"
+                        className="mx-auto mt-1.5 flex items-center gap-1 text-[10px] text-white/50 hover:text-white transition-colors font-mono"
+                        dir="ltr"
                     >
-                        <RotateCcw size={17} />
+                        {/* <span>📱 {phone}</span>
+                        <Pencil size={9} /> */}
                     </button>
                 )}
+            </div>
+            {/* Accent line at bottom */}
+            <span className="block h-[3px] bg-gradient-to-r from-marine-cyan via-marine-cyan to-marine-primary" />
+        </div>
+    );
+}
+
+function PhoneGate({ onSave, language }) {
+    const isAr = language !== 'en';
+    const [val, setVal] = useState('');
+    const [err, setErr] = useState('');
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        const cleaned = val.replace(/[^\d+]/g, '').trim();
+        const isEg = /^(01[0125]\d{8}|\+?201[0125]\d{8})$/.test(cleaned);
+        const isIntl = cleaned.length >= 8;
+        if (!cleaned) {
+            setErr(isAr ? 'من فضلك اكتب رقم تليفونك الأول' : 'Please enter your phone number');
+            return;
+        }
+        if (!isEg && !isIntl) {
+            setErr(isAr ? 'برجاء إدخال رقم هاتف صحيح (مثال: 01012345678)' : 'Please enter a valid phone number');
+            return;
+        }
+        setErr('');
+        const formatted = cleaned.startsWith('20') ? `+${cleaned}` : cleaned.startsWith('0') ? cleaned : `0${cleaned}`;
+        onSave(formatted);
+    };
+
+    return (
+        <form onSubmit={onSubmit} className="px-3 pb-3 pt-2 space-y-2">
+            {/* <p className="text-[11.5px] font-semibold text-zinc-500 text-center leading-snug">
+                {isAr ? '📱 دخل رقم تليفونك عشان تبدأ المحادثة' : '📱 Enter your phone to start chatting'}
+            </p> */}
+            <div className="flex items-center gap-2">
+                <div className="flex min-h-[44px] flex-1 items-center rounded-2xl border border-zinc-200 bg-zinc-50 px-3 transition-colors focus-within:border-marine-cyan focus-within:bg-white focus-within:ring-2 focus-within:ring-marine-cyan/20">
+                    <span className="text-[11px] font-bold text-zinc-400 pe-2 border-e border-zinc-200 select-none" dir="ltr">+20</span>
+                    <input
+                        type="tel"
+                        value={val}
+                        onChange={(e) => {
+                            setVal(e.target.value);
+                            if (err) setErr('');
+                        }}
+                        placeholder="01xxxxxxxxx"
+                        dir="ltr"
+                        className="w-full ps-2 bg-transparent text-sm font-bold text-zinc-800 outline-none placeholder:text-zinc-400"
+                        autoFocus
+                    />
+                </div>
                 <button
-                    type="button"
-                    onClick={onClose}
-                    aria-label={copy.close}
-                    className="flex h-9 w-9 items-center justify-center rounded-xl text-zinc-300 transition-colors hover:bg-white/10 hover:text-white"
+                    type="submit"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-marine-cyan text-white shadow-[0_8px_18px_rgba(0,166,206,0.35)] transition-all hover:bg-marine-cyan-dark active:scale-90"
                 >
-                    <X size={20} />
+                    <ArrowUp size={19} strokeWidth={2.6} />
                 </button>
             </div>
-        </div>
+            {err && (
+                <p className="text-[11px] text-red-500 font-semibold px-1 text-center">{err}</p>
+            )}
+        </form>
     );
 }
 
 function Welcome({ copy, chips, onPick }) {
     return (
-        <div className="rc-chat-pop space-y-3">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white to-red-50/60 p-4 shadow-[0_8px_26px_rgba(0,0,0,0.06)] ring-1 ring-zinc-100">
+        <div className="rc-chat-pop space-y-3.5">
+            <div className="relative overflow-hidden rounded-2xl border border-marine-teal/20 bg-gradient-to-br from-sky-50/70 via-white to-slate-50 p-4 shadow-sm">
                 <span className="pointer-events-none absolute -end-6 -top-6 h-24 w-24 rounded-full bg-marine-cyan/10 blur-2xl" aria-hidden="true" />
-                <p className="relative text-[16px] font-extrabold text-zinc-900">{copy.welcomeTitle}</p>
-                <p className="relative mt-1.5 text-[13px] leading-[21px] text-zinc-600">{copy.welcomeBody}</p>
+                <div className="relative flex items-center gap-2">
+                    <span className="text-lg">👋</span>
+                    <p className="text-[15px] font-black text-marine-primary">{copy.welcomeTitle}</p>
+                </div>
+                <p className="relative mt-2 text-[13px] leading-[22px] text-slate-600 font-medium">{copy.welcomeBody}</p>
             </div>
-            <div className="flex flex-wrap gap-2">
-                {chips.map((chip, i) => (
-                    <button
-                        key={chip}
-                        type="button"
-                        onClick={() => onPick(chip)}
-                        className="rc-chat-card-in rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-zinc-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-marine-cyan hover:text-marine-primary active:scale-95"
-                        style={{ animationDelay: `${120 + i * 60}ms` }}
-                    >
-                        {chip}
-                    </button>
-                ))}
+            <div className="space-y-1.5">
+                <p className="text-[11px] font-bold text-slate-400 px-1">مقترحات للبدء السريع:</p>
+                <div className="flex flex-wrap gap-2">
+                    {chips.map((chip, i) => (
+                        <button
+                            key={chip}
+                            type="button"
+                            onClick={() => onPick(chip)}
+                            className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-[12px] font-semibold text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-marine-cyan hover:bg-marine-cyan/5 hover:text-marine-primary active:scale-95"
+                            style={{ animationDelay: `${120 + i * 60}ms` }}
+                        >
+                            {chip}
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );
@@ -183,8 +271,8 @@ function Welcome({ copy, chips, onPick }) {
 function Typing({ hint }) {
     return (
         <div className="rc-chat-msg-in flex items-end gap-2">
-            <span className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-zinc-800 to-zinc-950 text-white shadow ring-2 ring-white">
-                <Sparkles size={13} className="text-red-400" />
+            <span className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-marine-teal to-marine-navy text-white shadow ring-2 ring-white">
+                <Sparkles size={13} className="text-amber-300" />
             </span>
             <div className="flex items-center gap-2.5 rounded-2xl rounded-es-md border border-zinc-100 bg-white px-3.5 py-2.5 shadow-[0_4px_14px_rgba(0,0,0,0.05)]">
                 <span className="flex gap-1" aria-hidden="true">
@@ -211,7 +299,7 @@ function Composer({ copy, value, onChange, onSubmit, disabled, inputRef, recordi
                 >
                     <Trash2 size={18} />
                 </button>
-                <div className="flex h-11 flex-1 items-center gap-2.5 rounded-2xl bg-red-50 px-3 text-[13px] font-semibold text-marine-primary">
+                <div className="flex h-11 flex-1 items-center gap-2.5 rounded-2xl bg-marine-cyan/10 px-3 text-[13px] font-semibold text-marine-primary">
                     <span className="rc-chat-rec h-2.5 w-2.5 rounded-full bg-marine-cyan" />
                     {copy.recording}
                     <span className="ms-auto font-mono" dir="ltr">{`${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`}</span>
@@ -266,7 +354,7 @@ function Composer({ copy, value, onChange, onSubmit, disabled, inputRef, recordi
                     disabled={disabled}
                     aria-label={copy.record}
                     title={copy.record}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 text-white transition-all hover:bg-zinc-800 active:scale-90 disabled:opacity-50"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-marine-primary text-white transition-all  active:scale-90 disabled:opacity-50"
                 >
                     <Mic size={18} />
                 </button>
@@ -294,7 +382,8 @@ export default function ChatWidget() {
     const copy = chatCopy(language);
     const locale = language === 'en' ? 'en' : 'ar';
     const signedIn = user?.role === 'user';
-    const identity = signedIn ? `u:${user._id || user.id}` : 'anon';
+    const [phone, setPhone] = useState(() => storedPhone());
+    const identity = signedIn ? `u:${user._id || user.id}` : phone ? `phone:${phone}` : 'anon';
 
     const [open, setOpen] = useState(false);
     const [teaser, setTeaser] = useState(false);
@@ -359,7 +448,7 @@ export default function ChatWidget() {
             if (!signedIn && !sessionId) return;
             pushedRef.current = signature;
             try {
-                const res = await assistantApi.syncCart({ sessionId, locale, create, items });
+                const res = await assistantApi.syncCart({ sessionId, locale, create, items, phone: !signedIn ? phone : undefined });
                 refusalsRef.current = refusalsOf(res);
                 pushedRef.current = basketSignature(items, refusalsRef.current);
                 if (res.synced && !res.unchanged && res.cart !== undefined) setChatCart(res.cart);
@@ -369,7 +458,7 @@ export default function ChatWidget() {
         };
         pushQueue.current = pushQueue.current.then(run, run);
         return pushQueue.current;
-    }, [isMounted, locale, sessionFor, setChatCart, signedIn]);
+    }, [isMounted, locale, sessionFor, setChatCart, signedIn, phone]);
 
     /*
      * What the agent's turn changed: applied to the website cart, and every
@@ -398,7 +487,7 @@ export default function ChatWidget() {
         let cancelled = false;
         (async () => {
             try {
-                const data = await assistantApi.history({ sessionId: signedIn ? undefined : storedSession() || undefined });
+                const data = await assistantApi.history({ sessionId: signedIn ? undefined : storedSession() || undefined, phone: !signedIn ? phone : undefined });
                 if (cancelled) return;
                 setEnabled(data.enabled !== false);
                 setLines((data.messages || []).map(toLine));
@@ -544,14 +633,14 @@ export default function ChatWidget() {
         setNotice(null);
         try {
             await pushSiteCart(true); // the agent answers from the cart the customer is looking at
-            const res = await assistantApi.send({ sessionId: ensureSession(), message: text, locale });
+            const res = await assistantApi.send({ sessionId: ensureSession(), message: text, locale, phone: !signedIn ? phone : undefined });
             applyReply(res, key);
         } catch (err) {
             failLine(key, err);
         } finally {
             setPending(false);
         }
-    }, [pending, pushSiteCart, locale, applyReply, failLine]);
+    }, [pending, pushSiteCart, locale, applyReply, failLine, phone]);
 
     const submitVoice = useCallback(async (blob) => {
         if (!blob || pending) return;
@@ -562,14 +651,14 @@ export default function ChatWidget() {
         setNotice(null);
         try {
             await pushSiteCart(true);
-            const res = await assistantApi.sendVoice({ sessionId: ensureSession(), locale, blob });
+            const res = await assistantApi.sendVoice({ sessionId: ensureSession(), locale, blob, phone: !signedIn ? phone : undefined });
             applyReply(res, key, { transcript: res.transcript || null });
         } catch (err) {
             failLine(key, err);
         } finally {
             setPending(false);
         }
-    }, [pending, pushSiteCart, locale, applyReply, failLine, copy.voiceNote]);
+    }, [pending, pushSiteCart, locale, applyReply, failLine, copy.voiceNote, phone]);
 
     const retry = useCallback((line) => {
         setLines((prev) => prev.filter((l) => l.key !== line.key));
@@ -671,7 +760,7 @@ export default function ChatWidget() {
         } catch {
             // start over locally either way
         }
-        if (!signedIn) forgetSession();
+        if (!signedIn) { forgetSession(); forgetPhone(); setPhone(''); }
         setLines([]);
         setChatCart(null);
         setNotice(null);
@@ -702,13 +791,13 @@ export default function ChatWidget() {
                 // Full screen on a phone, so above the bottom bar (MobileBottomNav, z-100) — under it,
                 // the bar covered the message box. "Check out on the site" closes the chat first,
                 // so the cart drawer (z-101) is never under it.
-                className={`fixed z-[105] sm:z-[95] flex flex-col overflow-hidden bg-zinc-50 shadow-[0_24px_70px_rgba(0,0,0,0.28)] transition-[opacity,transform] duration-300 ease-[cubic-bezier(.2,.8,.2,1)]
-                    inset-0 h-[100dvh]
-                    sm:inset-auto sm:bottom-[92px] sm:end-5 sm:h-[min(680px,calc(100dvh-120px))] sm:w-[400px] sm:rounded-[28px] sm:ring-1 sm:ring-black/5
+                className={`fixed z-[150] flex flex-col overflow-hidden bg-white shadow-2xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(.2,.8,.2,1)]
+                    inset-0 h-[100dvh] rounded-none
+                    sm:inset-auto sm:bottom-5 sm:end-5 sm:h-[min(620px,calc(100dvh-80px))] sm:w-[410px] sm:max-h-[calc(100dvh-80px)] sm:rounded-2xl sm:border sm:border-slate-200/90 sm:shadow-[0_25px_60px_-15px_rgba(15,41,66,0.28)]
                     ${open ? 'pointer-events-auto translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-6 scale-[.97] opacity-0'}
                     sm:origin-bottom-right rtl:sm:origin-bottom-left`}
             >
-                <PanelHeader copy={copy} handoff={notice === 'handoff'} canReset={lines.length > 0} onReset={reset} onClose={() => setOpen(false)} />
+                <PanelHeader copy={copy} handoff={notice === 'handoff'} phone={!signedIn ? phone : ''} onEditPhone={() => { forgetPhone(); setPhone(''); }} canReset={lines.length > 0} onReset={reset} onClose={() => setOpen(false)} />
 
                 <div ref={scrollRef} className="rc-chat-scroll flex-1 space-y-3 overflow-y-auto overscroll-contain px-3.5 py-4">
                     {loadedFor !== identity && open ? (
@@ -754,21 +843,27 @@ export default function ChatWidget() {
                             onEmpty={emptyBasket}
                         />
                     </div>
-                    <Composer
-                        copy={copy}
-                        value={input}
-                        onChange={setInput}
-                        onSubmit={() => submit(input)}
-                        disabled={pending || !enabled}
-                        inputRef={inputRef}
-                        recording={recording}
-                        recordMs={recordMs}
-                        onStartRecording={startRecording}
-                        onStopRecording={stopRecording}
-                        onCancelRecording={cancelRecording}
-                        canRecord={canRecord}
-                    />
-                    <p className="pb-2 text-center text-[10px] text-zinc-400">{copy.footer}</p>
+                    {!signedIn && !phone ? (
+                        <PhoneGate onSave={(p) => { savePhone(p); setPhone(p); }} language={locale} />
+                    ) : (
+                        <>
+                            <Composer
+                                copy={copy}
+                                value={input}
+                                onChange={setInput}
+                                onSubmit={() => submit(input)}
+                                disabled={pending || !enabled}
+                                inputRef={inputRef}
+                                recording={recording}
+                                recordMs={recordMs}
+                                onStartRecording={startRecording}
+                                onStopRecording={stopRecording}
+                                onCancelRecording={cancelRecording}
+                                canRecord={canRecord}
+                            />
+                            <p className="pb-2 text-center text-[10px] text-zinc-400">{copy.footer}</p>
+                        </>
+                    )}
                 </div>
             </Overlay>
         </>

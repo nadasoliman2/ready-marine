@@ -32,7 +32,7 @@ export function blankCatalogEntry() {
         part_number: '', gtin: '',
         images: [],
         is_universal: true,
-        compatible_cars: [],
+        compatible_vessels: [],
         variation_types: [],
     };
 }
@@ -45,7 +45,7 @@ export function entryToFormState(entry) {
         category_id: String(entry.category_id?._id || entry.category_id || ''),
         product_brand_id: String(entry.product_brand_id?._id || entry.product_brand_id || ''),
         images: (entry.images || []).map((img) => ({ url: img.url, is_primary: !!img.is_primary })),
-        compatible_cars: JSON.parse(JSON.stringify(entry.compatible_cars || [])),
+        compatible_vessels: JSON.parse(JSON.stringify(entry.compatible_vessels || [])),
         variation_types: (entry.variation_types || []).map((vt) => ({
             name: vt.name,
             options: (vt.options || []).map((o) => ({ value: o.value })),
@@ -68,7 +68,7 @@ export function formStateToPayload(form) {
         gtin: form.gtin,
         images: form.images,
         is_universal: !!form.is_universal,
-        compatible_cars: form.is_universal ? [] : form.compatible_cars,
+        compatible_vessels: form.is_universal ? [] : form.compatible_vessels,
         variation_types: (form.variation_types || [])
             .filter((vt) => vt.name?.trim())
             .map((vt) => ({
@@ -163,8 +163,8 @@ export default function CatalogEntryForm({ form, setForm, metadata, language }) 
                 <ImageUploader images={form.images} onChange={(images) => set({ images })} />
             </Card>
 
-            <Card
-                title={L(language, 'Vehicle compatibility', 'توافق المركبات')}
+            {/* <Card
+                title={L(language, 'Marine Compatibility', 'توافق القوارب والمحركات')}
                 right={
                     <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                         <input type="checkbox" checked={!!form.is_universal} onChange={(e) => set({ is_universal: e.target.checked })} className="rounded text-marine-primary focus:ring-marine-cyan" />
@@ -173,15 +173,15 @@ export default function CatalogEntryForm({ form, setForm, metadata, language }) 
                 }
             >
                 {form.is_universal ? (
-                    <p className="flex items-center gap-2 text-sm text-zinc-500"><Info size={15} /> {L(language, 'Fits all vehicles.', 'تناسب جميع المركبات.')}</p>
+                    <p className="flex items-center gap-2 text-sm text-zinc-500"><Info size={15} /> {L(language, 'Fits all vessels and boats.', 'يناسب جميع القوارب والاستخدامات البحرية.')}</p>
                 ) : (
                     <CompatibilityBuilder
-                        compatibleCars={form.compatible_cars}
-                        setCompatibleCars={(cars) => set({ compatible_cars: cars })}
+                        compatibleCars={form.compatible_vessels}
+                        setCompatibleCars={(cars) => set({ compatible_vessels: cars })}
                         carBrands={metadata?.carBrands || []}
                     />
                 )}
-            </Card>
+            </Card> */}
 
             <Card
                 title={L(language, 'Options', 'الخيارات')}

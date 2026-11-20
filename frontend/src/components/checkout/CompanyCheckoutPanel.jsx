@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Building2, Car, CheckCircle2, AlertCircle, User, Truck, Zap, Star, ChevronDown, HelpCircle, Clock, Users } from 'lucide-react';
+import { Building2, Ship, CheckCircle2, AlertCircle, User, Truck, Zap, Star, ChevronDown, HelpCircle, Clock, Users } from 'lucide-react';
 import { orgTerms } from '../../lib/orgTerms';
 
 /**
@@ -107,10 +107,10 @@ export default function CompanyCheckoutPanel({
                         <button
                             type="button"
                             onClick={() => onChange({ beneficiary: 'car' })}
-                            className={`p-3 rounded-xl border-2 flex items-center gap-3 text-start ${isCar ? 'border-marine-cyan bg-red-50/30' : 'border-marine-teal/15 hover:border-marine-teal/25'}`}
+                            className={`p-3 rounded-xl border-2 flex items-center gap-3 text-start ${isCar ? 'border-marine-cyan bg-cyan-50/30' : 'border-marine-teal/15 hover:border-marine-teal/25'}`}
                         >
-                            <Car size={18} className="text-marine-primary shrink-0" />
-                            <span className="text-sm font-bold text-marine-ink">{isAr ? `عربية من عربيات ${ot.the}` : `A ${ot.one} car`}</span>
+                            <Ship size={18} className="text-marine-primary shrink-0" />
+                            <span className="text-sm font-bold text-marine-ink">{isAr ? `مركب أو قارب من مراكب ${ot.the}` : `A ${ot.one} vessel`}</span>
                         </button>
                     </div>
                     {isCar && (
@@ -120,11 +120,11 @@ export default function CompanyCheckoutPanel({
                                 onChange={(e) => onChange({ car_id: e.target.value })}
                                 className="mt-2 w-full px-4 py-3 rounded-lg border border-marine-teal/15 focus:border-marine-cyan outline-none"
                             >
-                                <option value="">{isAr ? '— اختار العربية —' : '— choose the car —'}</option>
+                                <option value="">{isAr ? '— اختار القارب أو المركب —' : '— choose the vessel —'}</option>
                                 {info.cars.map((c) => <option key={c._id} value={c._id}>{c.label}</option>)}
                             </select>
                         ) : (
-                            <p className="mt-2 text-xs text-amber-700">{isAr ? `مفيش عربيات مسجلة. سجلها من لوحة ${ot.the}.` : `No cars are registered. Add them in the ${ot.one} portal.`}</p>
+                            <p className="mt-2 text-xs text-amber-700">{isAr ? `مفيش قوارب مسجلة. سجلها من لوحة ${ot.the}.` : `No vessels are registered. Add them in the ${ot.one} portal.`}</p>
                         )
                     )}
                 </div>

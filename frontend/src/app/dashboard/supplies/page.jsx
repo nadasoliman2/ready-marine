@@ -220,7 +220,7 @@ export default function VendorSuppliesPage() {
                                 return (
                                     <div key={product._id} className="bg-white border border-zinc-200 rounded-2xl p-4 flex flex-col gap-3">
                                         <div className="flex items-start gap-3">
-                                            <div className="w-11 h-11 rounded-xl bg-red-50 text-marine-primary flex items-center justify-center shrink-0">
+                                            <div className="w-11 h-11 rounded-xl bg-zinc-100 text-marine-primary flex items-center justify-center shrink-0">
                                                 <Icon size={20} />
                                             </div>
                                             <div className="min-w-0 flex-1">

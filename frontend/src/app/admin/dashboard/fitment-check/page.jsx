@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { CarFront, Loader2, Search, ImageOff, Store, ExternalLink, AlertCircle, X, CheckCircle2 } from 'lucide-react';
+import { Ship, Loader2, Search, ImageOff, Store, ExternalLink, AlertCircle, X, CheckCircle2 } from 'lucide-react';
 import Link from '../../../../components/LocaleLink';
 import { adminFitmentApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
@@ -33,8 +33,8 @@ function useDebounced(value, ms = 300) {
 
 /** The fitment as it is now, in one line: "Toyota Corolla, Yaris · Kia Rio". */
 const fitmentLine = (product, lang) => {
-    if (product.is_universal) return L(lang, 'Universal — fits any car', 'عام — يركب على أي عربية');
-    const cars = (product.compatible_cars || []).map((c) => {
+    if (product.is_universal) return L(lang, 'No specific fitment set', 'بدون توافق مسجّل');
+    const cars = (product.compatible_vessels || []).map((c) => {
         const models = (c.models || []).map((m) => m.model_name);
         return models.length ? `${c.brand_name} ${models.join('، ')}` : c.brand_name;
     });
@@ -91,13 +91,13 @@ export default function FitmentCheckPage() {
         <div className="animate-in fade-in duration-300 pb-10">
             <ProductChecksTabs active="fitment" language={language} />
             <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-marine-cyan/10 text-marine-primary flex items-center justify-center"><CarFront size={20} /></div>
+                <div className="w-10 h-10 rounded-xl bg-marine-cyan/10 text-marine-primary flex items-center justify-center"><Ship size={20} /></div>
                 <div>
                     <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">{L(language, 'Fitment check', 'مراجعة التوافق')}</h1>
                     <p className="text-sm text-zinc-500 mt-0.5">
                         {L(language,
-                            'Products whose title or description names cars the fitment does not have — read the way vendors write car names (Lancer Boma, Shark, N16, Elantra HD, ix35…).',
-                            'منتجات العنوان أو الوصف بتاعها بيذكر عربيات مش متسجلة في التوافق — بنقرا أسماء العربيات زي ما التجار بيكتبوها (لانسر بومة، شارك، N16، النترا HD، ix35…).')}
+                            'Products whose title or description names vessels/engines the fitment does not have.',
+                            'منتجات العنوان أو الوصف يذكر قوارب أو محركات غير مسجلة في التوافق.')}
                     </p>
                 </div>
             </div>

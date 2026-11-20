@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Boxes, Car, Edit2, Image as ImageIcon, Loader2, Package, Store, Tag } from 'lucide-react';
+import { ArrowLeft, Boxes, Ship, Edit2, Image as ImageIcon, Loader2, Package, Store, Tag, Users } from 'lucide-react';
 import Link from '../LocaleLink';
 import { adminApi, vendorApi } from '../../lib/api';
 import { useRouter, useSearchParams } from '../../lib/navigation';
@@ -149,7 +149,7 @@ export default function ProductReviewPage({ productId, mode = 'vendor' }) {
               <Detail icon={Package} label={isAr ? 'الفئة' : 'Category'} value={category || '—'} />
               <Detail icon={Tag} label={isAr ? 'العلامة' : 'Brand'} value={product.product_brand_id?.name || '—'} />
               {isAdmin && <Detail icon={Store} label={isAr ? 'البائع' : 'Vendor'} value={product.vendor_id?.store_name || '—'} />}
-              <Detail icon={Car} label={isAr ? 'التوافق' : 'Compatibility'} value={product.is_universal ? (isAr ? 'قطعة عامة' : 'Universal') : `${product.compatible_cars?.length || 0} ${isAr ? 'مركبات' : 'vehicles'}`} />
+              <Detail icon={Users} label={isAr ? 'المجموعات المخصصة' : 'Target Audiences'} value={product.target_audiences?.length ? `${product.target_audiences.length} ${isAr ? 'مجموعات' : 'audiences'}` : (isAr ? 'عام' : 'General')} />
             </div>
           </section>
 

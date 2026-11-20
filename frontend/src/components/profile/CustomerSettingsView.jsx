@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import Link from '../LocaleLink';
 import { resolveAssetUrl } from '../../lib/assets';
+import UserAvatar from '../UserAvatar';
 import ProfileHeaderBar from './ProfileHeaderBar';
 
 function SettingsRow({ href, icon: Icon, iconBg, iconColor, title, subtitle, badge, isAr }) {
@@ -112,15 +113,13 @@ export default function CustomerSettingsView({
         >
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-11 h-11 rounded-full bg-gradient-to-br from-marine-primary to-marine-cyan flex items-center justify-center text-white text-base font-bold shadow-xs overflow-hidden shrink-0">
-              {profile?.profile_image ? (
-                <img
-                  src={resolveAssetUrl(profile.profile_image)}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                profile?.name?.[0]?.toUpperCase() || 'U'
-              )}
+              <UserAvatar
+                src={profile?.profile_image}
+                name={profile?.name || user?.name}
+                fallback="initials"
+                fallbackClassName="text-base font-bold text-white"
+                className="w-full h-full"
+              />
             </div>
             <div className="min-w-0">
               <p className="font-bold text-sm text-zinc-900 group-hover:text-marine-primary transition-colors truncate">

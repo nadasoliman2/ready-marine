@@ -81,7 +81,7 @@ export default function AdminBundlesPage() {
         </div>
         <button onClick={toggleApproval} disabled={savingToggle}
           className={`relative w-12 h-6 rounded-full transition-colors ${approvalRequired ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-600'}`}>
-          <span className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${approvalRequired ? 'translate-x-6' : 'translate-x-0'}`} />
+          <span className={`absolute top-0.5 start-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${approvalRequired ? 'rtl:-translate-x-6 ltr:translate-x-6' : 'translate-x-0'}`} />
         </button>
       </div>
 

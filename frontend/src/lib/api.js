@@ -1,6 +1,6 @@
 import { forgetProductLists } from './productListPreload';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 /**
  * Fired on every 401. The browser can still hold the account after the server's session is
@@ -1131,6 +1131,12 @@ export const servicesApi = {
     getServiceBySlug: (slug) => apiRequest(`/services/slug/${slug}`),
 };
 
+export const audienceApi = {
+    getAll: () => apiRequest('/target-audiences'),
+    getSlider: () => apiRequest('/target-audiences/slider'),
+    getBySlug: (slug) => apiRequest(`/target-audiences/${slug}`),
+};
+
 export const adminApi = {
     // The dashboard's front page: a few numbers per section (services/adminOverviewService.js).
     getOverview: () => apiRequest('/admin/overview'),
@@ -1539,16 +1545,29 @@ export const adminApi = {
         method: 'DELETE',
     }),
 
-    getCarBrandsAdmin: () => apiRequest('/admin/car-brands'),
-    addCarBrandAdmin: (data) => apiRequest('/admin/car-brands', {
+    getVesselBrandsAdmin: () => apiRequest('/admin/vessel-brands'),
+    addVesselBrandAdmin: (data) => apiRequest('/admin/vessel-brands', {
         method: 'POST',
         body: JSON.stringify(data),
     }),
-    updateCarBrandAdmin: (id, data) => apiRequest(`/admin/car-brands/${id}`, {
+    updateVesselBrandAdmin: (id, data) => apiRequest(`/admin/vessel-brands/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
     }),
-    deleteCarBrandAdmin: (id) => apiRequest(`/admin/car-brands/${id}`, {
+    deleteVesselBrandAdmin: (id) => apiRequest(`/admin/vessel-brands/${id}`, {
+        method: 'DELETE',
+    }),
+
+    getCarBrandsAdmin: () => apiRequest('/admin/vessel-brands'),
+    addCarBrandAdmin: (data) => apiRequest('/admin/vessel-brands', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    }),
+    updateCarBrandAdmin: (id, data) => apiRequest(`/admin/vessel-brands/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    }),
+    deleteCarBrandAdmin: (id) => apiRequest(`/admin/vessel-brands/${id}`, {
         method: 'DELETE',
     }),
 
@@ -1562,6 +1581,20 @@ export const adminApi = {
         body: JSON.stringify(data),
     }),
     deleteProductBrandAdmin: (id) => apiRequest(`/admin/product-brands/${id}`, {
+        method: 'DELETE',
+    }),
+
+    // --- Custom Target Audiences (Hubs) ---
+    getTargetAudiencesAdmin: () => apiRequest('/admin/target-audiences/admin/all'),
+    addTargetAudienceAdmin: (data) => apiRequest('/admin/target-audiences/admin', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    }),
+    updateTargetAudienceAdmin: (id, data) => apiRequest(`/admin/target-audiences/admin/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    }),
+    deleteTargetAudienceAdmin: (id) => apiRequest(`/admin/target-audiences/admin/${id}`, {
         method: 'DELETE',
     }),
 
@@ -2564,32 +2597,32 @@ const assistantQuery = (params = {}) => {
 
 export const assistantApi = {
     // { enabled, messages[], cart, cartSync }
-    history: ({ sessionId, after } = {}) =>
-        apiRequest(`/assistant/messages${assistantQuery({ sessionId, after })}`).then((r) => r.data),
+    history: ({ sessionId, phone, after } = {}) =>
+        apiRequest(`/assistant/messages${assistantQuery({ sessionId, phone, after })}`).then((r) => r.data),
     // The agent thinks for a few seconds — allow it a minute.
-    send: ({ sessionId, message, locale }) =>
+    send: ({ sessionId, phone, message, locale }) =>
         apiRequest('/assistant/messages', {
             method: 'POST',
-            body: JSON.stringify({ sessionId, message, locale }),
+            body: JSON.stringify({ sessionId, phone, message, locale }),
             timeoutMs: 70000,
         }).then((r) => r.data),
     // The recording Blob is the request body as it is.
-    sendVoice: ({ sessionId, locale, blob }) =>
-        apiRequest(`/assistant/voice${assistantQuery({ sessionId, locale })}`, {
+    sendVoice: ({ sessionId, phone, locale, blob }) =>
+        apiRequest(`/assistant/voice${assistantQuery({ sessionId, phone, locale })}`, {
             method: 'POST',
             body: blob,
             headers: { 'Content-Type': blob.type || 'audio/webm' },
             timeoutMs: 90000,
         }).then((r) => r.data),
     // The website cart, put into the chat basket.
-    syncCart: ({ sessionId, locale, create, items }) =>
+    syncCart: ({ sessionId, phone, locale, create, items }) =>
         apiRequest('/assistant/cart', {
             method: 'PUT',
-            body: JSON.stringify({ sessionId, locale, create, items }),
+            body: JSON.stringify({ sessionId, phone, locale, create, items }),
             timeoutMs: 15000,
         }).then((r) => r.data),
-    closeCart: ({ sessionId, reason = 'ordered_on_website' } = {}) =>
-        apiRequest(`/assistant/cart${assistantQuery({ sessionId, reason })}`, { method: 'DELETE' }).then((r) => r.data),
-    reset: ({ sessionId } = {}) =>
-        apiRequest(`/assistant/messages${assistantQuery({ sessionId })}`, { method: 'DELETE' }).then((r) => r.data),
+    closeCart: ({ sessionId, phone, reason = 'ordered_on_website' } = {}) =>
+        apiRequest(`/assistant/cart${assistantQuery({ sessionId, phone, reason })}`, { method: 'DELETE' }).then((r) => r.data),
+    reset: ({ sessionId, phone } = {}) =>
+        apiRequest(`/assistant/messages${assistantQuery({ sessionId, phone })}`, { method: 'DELETE' }).then((r) => r.data),
 };

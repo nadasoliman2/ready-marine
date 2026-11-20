@@ -54,34 +54,80 @@ const BULK_FIELD_AR = {
   SKU: 'رمز المنتج',
   Price: 'السعر',
   Category: 'الفئة',
+  Brand: 'الماركة المصنعة',
+  product_brand: 'الماركة المصنعة',
+  product_brand_id: 'الماركة المصنعة',
+  Catalog: 'الكتالوج',
+  PartType: 'نوع القطعة',
+  'Part Type': 'نوع القطعة',
+  part_type: 'نوع القطعة',
   Images: 'الصور',
   Content: 'المحتوى',
   Compatibility: 'التوافق',
   Discount: 'الخصم',
+  'Discount Type': 'نوع الخصم',
+  'Discount Value': 'قيمة الخصم',
   Quantity: 'الكمية',
+  Weight: 'الوزن',
+  Dimensions: 'الأبعاد',
+  Shipping: 'الشحن',
+  'Shipping Class': 'فئة الشحن',
+  'Target Audiences': 'المجموعات المخصصة',
+  Variants: 'التنويعات',
+  Options: 'الخيارات',
 };
 
 const BULK_MESSAGE_PATTERNS = [
   [/sku is required/i, 'رمز المنتج (SKU) مطلوب'],
   [/price must be positive/i, 'يجب أن يكون السعر رقماً موجباً'],
-  [/pick a category/i, 'اختر فئة'],
-  [/final.*category|most specific.*category/i, 'اختر فئة نهائية هي الأكثر تحديداً'],
+  [/brand.*required|الماركة.*مطلوبة/i, 'الماركة المصنعة مطلوبة'],
+  [/part.*type.*required/i, 'نوع القطعة مطلوب (أصلي / OEM / تجاري)'],
+  [/pick a category|category is required/i, 'الفئة مطلوبة، اختر فئة نهائية من القائمة'],
+  [/final.*category|most specific.*category/i, 'اختر فئة نهائية هي الأكثر تحديداً (بدون فئات فرعية)'],
   [/at least one image/i, 'أضف صورة واحدة على الأقل'],
-  [/complete the en or ar set/i, 'أكمل مجموعة إنجليزية أو عربية: العنوان والعنوان الفرعي والوصف'],
-  [/compatible cars|mark universal/i, 'أضف سيارات متوافقة أو فعّل خيار القطعة العامة'],
-  [/remove cars|turn off universal/i, 'احذف السيارات أو أوقف خيار القطعة العامة'],
-  [/discount.*less than.*price/i, 'يجب أن يكون سعر الخصم أقل من السعر'],
+  [/complete the en or ar set|at least one complete language/i, 'أكمل مجموعة إنجليزية أو عربية كاملة: العنوان والعنوان الفرعي والوصف'],
+  [/compatible (cars|vessels)|mark universal/i, 'أضف قوارب/محركات متوافقة أو فعّل خيار منتج عام'],
+  [/remove (cars|vessels)|turn off universal/i, 'احذف القوارب/المحركات أو أوقف خيار منتج عام'],
+  [/discount.*less than.*price/i, 'يجب أن يكون سعر الخصم أقل من السعر الأساسي'],
   [/quantity.*non-negative integer/i, 'يجب أن تكون الكمية عدداً صحيحاً غير سالب'],
   [/duplicate.*sku/i, 'رمز المنتج مستخدم بالفعل'],
+  [/catalog/i, 'تم حفظ المنتج بشكل مستقل'],
   [/required/i, 'هذا الحقل مطلوب'],
 ];
 
 export function localizeBulkError(error, language) {
   if (language !== 'ar') return error;
-  const matched = BULK_MESSAGE_PATTERNS.find(([pattern]) => pattern.test(error?.message || ''));
+  const rawMsg = error?.message || '';
+  // If the message is already in Arabic, keep it
+  const isArabicMsg = /[\u0621-\u064A]/.test(rawMsg);
+  const matched = BULK_MESSAGE_PATTERNS.find(([pattern]) => pattern.test(rawMsg));
+
   return {
     ...error,
     field: BULK_FIELD_AR[error?.field] || error?.field || 'خطأ',
-    message: matched?.[1] || 'تعذر حفظ هذا الصف. راجع بياناته وحاول مرة أخرى.',
+    message: matched?.[1] || (isArabicMsg ? rawMsg : 'تعذر التحقق من هذا الحقل، يرجى مراجعته.'),
   };
+}
+
+export function localizeGeneralError(err, language) {
+  const msg = typeof err === 'string' ? err : (err?.message || '');
+  if (language !== 'ar') return msg || 'An error occurred';
+  if (/[\u0621-\u064A]/.test(msg)) return msg;
+
+  if (/is not defined|referenceerror|syntaxerror|typeerror|500/i.test(msg)) {
+    return 'حدث خطأ تقني أثناء معالجة البيانات، يُرجى المحاولة مرة أخرى.';
+  }
+  if (/network error|failed to fetch/i.test(msg)) {
+    return 'تعذر الاتصال بالخادم، يُرجى التحقق من اتصال الإنترنت.';
+  }
+  if (/file too large/i.test(msg)) {
+    return 'حجم الملف كبير جداً (الحد الأقصى 5 ميجابايت).';
+  }
+  if (/only.*xlsx/i.test(msg)) {
+    return 'يُقبل فقط ملفات Excel بتنسيق (.xlsx).';
+  }
+  if (/vendor not found/i.test(msg)) {
+    return 'لم يتم العثور على التاجر المحدد.';
+  }
+  return msg ? `حدث خطأ: ${msg}` : 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
 }

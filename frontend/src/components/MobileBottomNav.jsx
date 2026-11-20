@@ -14,6 +14,7 @@ import { MobileCategoryItem, useCategoryNavigate, useNavItems } from './Navigati
 import SearchAutocomplete from './search/SearchAutocomplete';
 import { SEARCH_FILTER_EVENT } from '../lib/categoryFilterEvents';
 import { resolveAssetUrl } from '../lib/assets';
+import UserAvatar from './UserAvatar';
 
 /** A row of the "More" page: an icon in its red tile, the label, and the arrow. */
 function MenuRow({ href, onClick, icon: Icon, label, active = false, trailing = null }) {
@@ -88,8 +89,15 @@ function MorePage({ onClose, openCategory }) {
         <Link href={accountHref} onClick={onClose} className="flex items-center gap-3 bg-marine-navy text-white rounded-lg p-4 shadow-lg">
           <span className="w-12 h-12 shrink-0 rounded-xl bg-white/10 flex items-center justify-center overflow-hidden">
             {isStaff ? <LayoutDashboard size={22} />
-              : signedIn && user.profile_image
-                ? <img src={resolveAssetUrl(user.profile_image)} alt="" className="w-full h-full object-cover" />
+              : signedIn && user?.profile_image
+                ? <UserAvatar
+                    src={user.profile_image}
+                    name={user.name}
+                    size={48}
+                    iconSize={22}
+                    className="w-full h-full"
+                    fallbackClassName="text-white"
+                  />
                 : <User size={22} />}
           </span>
           <span className="flex-1 min-w-0">

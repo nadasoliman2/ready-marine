@@ -7,6 +7,7 @@ import { useApp } from '../../context/AppContext';
 import { vendorEducationLabel } from '../vendor/VendorEducationModal';
 import ThemeToggle from '../ThemeToggle';
 import useDismiss from '../../lib/useDismiss';
+import UserAvatar from '../UserAvatar';
 
 function LanguagePicker() {
   const { language, setLanguage } = useApp();
@@ -107,8 +108,15 @@ export default function TopBar({ onMenuClick, onEducationClick }) {
               {user?.role === 'admin' ? (t.admin || 'Admin') : (t.vendor || 'Vendor')}
             </p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-marine-cyan flex items-center justify-center text-white font-black text-sm shadow-md">
-            {(user?.store_name || user?.name || user?.username || 'U').charAt(0).toUpperCase()}
+          <div className="w-9 h-9 rounded-xl bg-marine-cyan flex items-center justify-center text-white font-black text-sm shadow-md overflow-hidden">
+            <UserAvatar
+              src={user?.profile_image}
+              name={user?.store_name || user?.name || user?.username}
+              size={36}
+              fallback="initials"
+              fallbackClassName="text-sm font-black text-white"
+              className="w-full h-full"
+            />
           </div>
         </div>
       </div>

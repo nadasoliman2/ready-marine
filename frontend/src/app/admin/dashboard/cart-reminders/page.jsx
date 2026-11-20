@@ -35,7 +35,7 @@ function useDebounced(value, ms = 300) {
 function Stat({ icon: Icon, label, value }) {
   return (
     <div className={`${CARD} p-4 flex items-center gap-3`}>
-      <span className="w-10 h-10 rounded-xl bg-red-50 dark:bg-marine-cyan/10 text-marine-primary flex items-center justify-center shrink-0">
+      <span className="w-10 h-10 rounded-xl bg-marine-cyan/10 text-marine-primary flex items-center justify-center shrink-0">
         <Icon size={18} />
       </span>
       <div className="min-w-0">

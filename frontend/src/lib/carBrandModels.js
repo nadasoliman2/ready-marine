@@ -36,7 +36,7 @@ export function loadBrandModels(brandId) {
     if (!brandId) return Promise.resolve([]);
     const key = String(brandId);
     if (!cache.has(key)) {
-        cache.set(key, fetch(`${API}/products/car-brands/${key}/models`)
+        cache.set(key, fetch(`${API}/products/vessel-brands/${key}/models`)
             .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Could not load models'))))
             .then((data) => sortModels(data.models || []))
             // A failed fetch must not be cached as "this make has no models": drop it so the

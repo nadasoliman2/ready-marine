@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from '../../../../../lib/navigation';
 import { ArrowLeft, Save, Send, Loader2, Info, X, CheckCircle2 } from 'lucide-react';
 import { adminApi, vendorApi } from '../../../../../lib/api';
@@ -39,6 +39,30 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
   const [form, setForm] = useState(null);
   const [partTypeInvalid, setPartTypeInvalid] = useState(false);
 
+  // Combine hand-entered product brands and boat/vessel brands so both are available in Manufacturer Brand.
+  const combinedBrands = useMemo(() => {
+    const prodBrands = metadata?.productBrands || [];
+    const boatBrands = (metadata?.vesselBrands || metadata?.carBrands || []).map(cb => ({
+      ...cb,
+      source: 'VesselBrand',
+      is_vessel_brand: true,
+      categories: cb.categories || []
+    }));
+    const seenIds = new Set();
+    const seenNames = new Set();
+    const list = [];
+    for (const b of [...prodBrands, ...boatBrands]) {
+      const id = String(b._id || '');
+      const name = String(b.name || '').trim().toLowerCase();
+      if (id && seenIds.has(id)) continue;
+      if (name && seenNames.has(name)) continue;
+      if (id) seenIds.add(id);
+      if (name) seenNames.add(name);
+      list.push(b);
+    }
+    return list.sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
+  }, [metadata?.productBrands, metadata?.carBrands]);
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -74,7 +98,7 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
           stock_status: prod.stock_status || 'instock',
           quantity: prod.quantity || 0,
           images: prod.images || [],
-          compatible_cars: prod.compatible_cars || [],
+          compatible_vessels: prod.compatible_vessels || [],
           variation_types: prod.variation_types || [],
           variants: prod.variants || [],
           weight: prod.weight ?? '',
@@ -102,7 +126,7 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
       return;
     }
     if (!form.category_id) {
-      setError(isAr ? 'الرجاء اختيار فئة.' : 'Please select a category.');
+      setError(isAr ? 'الرجاء اختيار فئة للمنتج (حقل إلزامي).' : 'Please select a product category (required).');
       setLoading(false);
       return;
     }
@@ -113,7 +137,10 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
       return;
     }
     try {
-      const payload = { ...form };
+      const payload = {
+        ...form,
+        quantity: form.stock_status === 'outofstock' ? 0 : Number(form.quantity || 0)
+      };
       delete payload.vendor_id;
       delete payload.is_published;
       const result = await updateProduct(params.id, { ...payload, status: targetStatus });
@@ -257,10 +284,12 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
             <div className="space-y-4">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t.manufacturerBrand || 'Manufacturer Brand'}</label>
-                <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm({ ...form, product_brand_id: v })} options={brandOptions(metadata?.productBrands)} placeholder={t.selectBrandPlaceholder || 'Select Manufacturer Brand'} isAr={isAr} buttonClassName={`${inputCls} pe-9`} />
+                <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm({ ...form, product_brand_id: v })} options={brandOptions(combinedBrands)} placeholder={t.selectBrandPlaceholder || 'Select Manufacturer Brand'} isAr={isAr} buttonClassName={`${inputCls} pe-9`} allowCustom={true} />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t.productCategory || 'Category'}</label>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                  {isAr ? 'الفئة' : (t.productCategory || 'Category')} <span className="text-red-500">*</span>
+                </label>
                 <NestedCategorySelector categories={metadata?.categories || []} initialValue={form.category_id} onChange={(leafId) => setForm({ ...form, category_id: leafId })} />
               </div>
             </div>
@@ -295,16 +324,54 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
                   </span>
                 </div>
               ) : (
-                <input type="number" min="0" value={form.quantity} disabled={!form.stock_management} onChange={e => setForm({ ...form, quantity: e.target.value })} className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white" />
+                <>
+                  <input
+                    type="number" min="0"
+                    value={form.stock_status === 'outofstock' ? 0 : (form.quantity ?? '')}
+                    disabled={form.stock_status === 'outofstock'}
+                    placeholder={form.stock_status === 'outofstock' ? (isAr ? '0 (نفذ المخزون)' : '0 (Out of stock)') : (isAr ? 'حدد الكمية المتوفرة...' : 'Enter quantity...')}
+                    onChange={e => {
+                      const val = e.target.value;
+                      const num = Number(val);
+                      setForm(prev => ({
+                        ...prev,
+                        quantity: val,
+                        stock_management: true,
+                        stock_status: num > 0 ? 'instock' : (val === '0' ? 'outofstock' : prev.stock_status)
+                      }));
+                    }}
+                    className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white"
+                  />
+                  {form.stock_status === 'outofstock' && (
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                      {isAr ? 'المنتج محدد كـ "نفذ المخزون" — الكمية 0 تلقائياً. لتحديد كمية اختر "متوفر".' : 'Product is marked out of stock. Select "In Stock" to enter quantity.'}
+                    </p>
+                  )}
+                </>
               )}
             </div>
             <div className="space-y-1">
               <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{isAr ? 'حالة المخزون' : 'Stock Status'}</label>
               <select
-                value={form.stock_status}
-                disabled={!form.stock_management}
-                onChange={e => setForm({ ...form, stock_status: e.target.value })}
-                className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white transition-colors"
+                value={form.stock_status || 'instock'}
+                onChange={e => {
+                  const val = e.target.value;
+                  setForm(prev => {
+                    let nextQty = prev.quantity;
+                    if (val === 'instock' && (!nextQty || Number(nextQty) <= 0)) {
+                      nextQty = 1;
+                    } else if (val === 'outofstock') {
+                      nextQty = 0;
+                    }
+                    return {
+                      ...prev,
+                      stock_status: val,
+                      quantity: nextQty,
+                      stock_management: true
+                    };
+                  });
+                }}
+                className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white transition-colors"
               >
                 <option value="instock">{isAr ? 'متوفر' : 'In Stock'}</option>
                 <option value="outofstock">{isAr ? 'نفذ المخزون' : 'Out of Stock'}</option>
@@ -337,22 +404,7 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
           </div>
         </section>
 
-        {/* Car Trunk essentials toggle */}
-        <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02] flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'مستلزمات على المركب' : 'Onboard Essentials'}</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">{t.forTrunkDesc || (isAr ? 'حدد المنتج ده كحاجة لازم تكون في كل عربية — هيظهر في صفحة شنطة العربية' : 'Mark this product as something every car should carry — it appears on the Car Trunk page')}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{t.forTrunk || (isAr ? 'من أساسيات الشنطة' : 'Trunk essential')}</span>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" checked={!!form.for_trunk} onChange={e => setForm({ ...form, for_trunk: e.target.checked })} />
-                <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-amber-500"></div>
-              </label>
-            </div>
-          </div>
-        </section>
+
 
         {/* Audience hubs (lib/marineHubs): where the product shows on the home page */}
         <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
@@ -366,15 +418,15 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
         </section>
 
 
-        {/* Section 6: Vehicle Compatibility */}
-        <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
+        {/* Section 6: Vessel Compatibility */}
+        {/* <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
           <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02] flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? '6. توافق المركبات' : '6. Vehicle Compatibility'}</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">{isAr ? 'حدد المركبات التي تناسب هذه القطعة.' : 'Define exactly which vehicles this part fits.'}</p>
+              <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? '6. توافق القوارب والمحركات' : '6. Vessel & Engine Compatibility'}</h3>
+              <p className="text-xs text-zinc-500 mt-0.5">{isAr ? 'حدد القوارب أو المحركات البحرية المتوافقة (أو اختر منتج عام).' : 'Define compatible boats/yachts or marine engines (or keep as universal).'}</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{isAr ? 'قطعة عامة' : 'Set as Universal'}</span>
+              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{isAr ? 'منتج عام (يناسب كل القوارب)' : 'Universal Product'}</span>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" className="sr-only peer" checked={form.is_universal} onChange={e => setForm({ ...form, is_universal: e.target.checked })} />
                 <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-marine-cyan"></div>
@@ -383,7 +435,7 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
           </div>
           <div className="p-6">
             {!form.is_universal ? (
-              <CompatibilityBuilder compatibleCars={form.compatible_cars} setCompatibleCars={(cars) => setForm({ ...form, compatible_cars: cars })} carBrands={metadata?.carBrands || []} allowCustomYears={isAdmin} />
+              <CompatibilityBuilder compatibleCars={form.compatible_vessels} setCompatibleCars={(cars) => setForm({ ...form, compatible_vessels: cars })} carBrands={metadata?.carBrands || []} allowCustomYears={isAdmin} />
             ) : (
               <div className="text-center py-8">
                 <div className="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-3"><Info size={24} /></div>
@@ -392,7 +444,7 @@ export default function EditProductPage({ params, mode = 'vendor', reviewMode = 
               </div>
             )}
           </div>
-        </section>
+        </section> */}
 
         {/* Bottom Save Bar */}
         {reviewMode ? (

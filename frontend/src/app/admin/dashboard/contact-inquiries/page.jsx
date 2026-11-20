@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Archive, CheckCircle2, Clock, Inbox, Loader2, Mail, Search, X } from 'lucide-react';
+import { Archive, CheckCircle2, Clock, Inbox, Loader2, Mail, Phone, Search, X } from 'lucide-react';
 import { adminApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import usePageSize from '../../../../lib/usePageSize';
@@ -164,6 +164,7 @@ export default function ContactInquiriesPage() {
               <thead>
                 <tr className="border-b border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-[#0E1012]/50">
                   <th className="text-start px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">{isAr ? 'الاسم' : 'Name'}</th>
+                  <th className="text-start px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">{isAr ? 'الهاتف' : 'Phone'}</th>
                   <th className="text-start px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">{isAr ? 'البريد' : 'Email'}</th>
                   <th className="text-start px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">{isAr ? 'الموضوع' : 'Subject'}</th>
                   <th className="text-start px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">{isAr ? 'الحالة' : 'Status'}</th>
@@ -177,8 +178,22 @@ export default function ContactInquiriesPage() {
                   return (
                     <tr key={inquiry._id} {...rowLink(() => openInquiry(inquiry))} className="hover:bg-zinc-50 dark:hover:bg-[#0E1012]/50 cursor-pointer">
                       <td className="px-5 py-4 font-semibold text-zinc-900 dark:text-white">{inquiry.name}</td>
+                      <td className="px-5 py-4 font-mono text-zinc-700 dark:text-zinc-200" dir="ltr">
+                        {inquiry.phone ? (
+                          <a
+                            href={`tel:${inquiry.phone}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 hover:text-marine-primary hover:underline"
+                          >
+                            <Phone size={13} className="text-marine-primary" />
+                            <span>{inquiry.phone}</span>
+                          </a>
+                        ) : (
+                          <span className="text-zinc-400">-</span>
+                        )}
+                      </td>
                       <td className="px-5 py-4 text-zinc-600 dark:text-zinc-300">{inquiry.email}</td>
-                      <td className="px-5 py-4 text-zinc-700 dark:text-zinc-200 max-w-[300px] truncate">{inquiry.subject}</td>
+                      <td className="px-5 py-4 text-zinc-700 dark:text-zinc-200 max-w-[260px] truncate">{inquiry.subject}</td>
                       <td className="px-5 py-4">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${statusStyles[inquiry.status] || statusStyles.new}`}>
                           <StatusIcon size={13} />
@@ -228,7 +243,20 @@ export default function ContactInquiriesPage() {
             <div className="flex items-start justify-between gap-4 border-b border-zinc-100 dark:border-zinc-700 p-5">
               <div>
                 <h2 className="text-xl font-black text-zinc-900 dark:text-white">{selected.subject}</h2>
-                <p className="text-sm text-zinc-500 mt-1">{selected.name} · {selected.email}</p>
+                <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500 mt-1">
+                  <span className="font-semibold text-zinc-800 dark:text-zinc-200">{selected.name}</span>
+                  <span>·</span>
+                  <a href={`mailto:${selected.email}`} className="hover:text-marine-primary hover:underline">{selected.email}</a>
+                  {selected.phone && (
+                    <>
+                      <span>·</span>
+                      <a href={`tel:${selected.phone}`} className="inline-flex items-center gap-1 font-mono text-marine-primary font-bold hover:underline" dir="ltr">
+                        <Phone size={13} />
+                        <span>{selected.phone}</span>
+                      </a>
+                    </>
+                  )}
+                </div>
               </div>
               <button onClick={() => setSelected(null)} className="rounded-lg p-2 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white">
                 <X size={20} />

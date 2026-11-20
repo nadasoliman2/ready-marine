@@ -35,7 +35,7 @@ export const reasonText = (reason, lang) => {
         case 'short_code': return L(lang, `Same short code ${v}`, `نفس الكود ${v}`);
         case 'code_variant': return L(lang, `Same base code ${String(v).toUpperCase()} (another variant)`, `نفس الكود الأساسي ${String(v).toUpperCase()} (نسخة تانية منه)`);
         case 'brand': return L(lang, `Same brand: ${v}`, `نفس الماركة: ${v}`);
-        case 'cars': return L(lang, `Same car: ${(v || []).map(carKeyName).join('، ')}`, `نفس العربية: ${(v || []).map(carKeyName).join('، ')}`);
+        case 'cars': return L(lang, `Same vessel: ${(v || []).map(carKeyName).join('، ')}`, `نفس القارب/المحرك: ${(v || []).map(carKeyName).join('، ')}`);
         case 'part': return L(lang, 'Same kind of part', `نفس نوع القطعة${(v || []).length ? ` (${(v || []).map((p) => PART_AR[p] || p).join(' ')})` : ''}`);
         case 'words': return L(lang, `Title ${Math.round(v * 100)}% alike`, `العنوان متشابه ${Math.round(v * 100)}%`);
         case 'category': return L(lang, 'Same category', 'نفس الفئة');
@@ -69,8 +69,8 @@ export const conflictText = (code, lang) => {
     }
     const map = {
         brand: ['Another brand', 'ماركة مختلفة'],
-        cars: ['Another car', 'عربية مختلفة'],
-        generation: ['Another generation of the same car', 'جيل مختلف من نفس العربية'],
+        cars: ['Another vessel', 'قارب/محرك مختلف'],
+        generation: ['Another generation of the same vessel', 'جيل مختلف من نفس القارب/المحرك'],
         code: ['Another part number', 'رقم قطعة مختلف'],
         part: ['Another kind of part', 'نوع قطعة مختلف'],
         grade: ['Another oil grade (API)', 'درجة زيت مختلفة (API)'],

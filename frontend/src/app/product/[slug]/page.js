@@ -13,10 +13,7 @@ import {
   Store,
   ChevronRight,
   ArrowLeft,
-  Car,
-  Hash,
-  Barcode,
-  Settings,
+  Ship,
   Gauge,
   Globe,
   Layers,
@@ -39,8 +36,8 @@ import RelatedProducts from '../../../components/marine/RelatedProducts';
 
 const PART_TYPE_BADGE = {
   original: { en: 'Original part', ar: 'قطعة أصلية' },
-  oem: { en: 'OEM part', ar: 'قطعة OEM' },
-  aftermarket: { en: 'Aftermarket part', ar: 'قطعة تجارية' },
+  oem: { en: 'Certified quality', ar: 'جودة معتمدة' },
+  aftermarket: { en: 'Alternative replacement', ar: 'بديل معتمد' },
 };
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -54,15 +51,11 @@ const PART_TYPE_BADGE = {
 function resolveCompatibility(car, product) {
   if (!product) return { isCompatible: false, reason: '', reasonKey: '' };
 
-  if (product.is_universal) {
-    return { isCompatible: true, reasonKey: 'universal', brand: '', model: '' };
-  }
-
-  if (!product.compatible_cars || product.compatible_cars.length === 0) {
+  if (!product.compatible_vessels || product.compatible_vessels.length === 0) {
     return { isCompatible: false, reasonKey: '', brand: '', model: '' };
   }
 
-  for (const pBrand of product.compatible_cars) {
+  for (const pBrand of product.compatible_vessels) {
     const brandMatches = String(car.car_brand_id) === String(pBrand.brand_id);
     if (!brandMatches) continue;
 
@@ -118,7 +111,7 @@ function GarageFitmentSection({ garageCompatibility, t, isAr, user }) {
   if (!user) {
     return (
       <div className="relative overflow-hidden rounded-lg sm:rounded-xl border border-dashed border-marine-teal/15 bg-marine-canvas p-4 sm:p-8 text-center">
-        <Car size={36} className="mx-auto mb-2 sm:mb-3 text-marine-line w-7 h-7 sm:w-9 sm:h-9" />
+        <Ship size={36} className="mx-auto mb-2 sm:mb-3 text-marine-line w-7 h-7 sm:w-9 sm:h-9" />
         <p className="font-bold text-marine-outline text-sm uppercase tracking-widest">{isAr ? 'قم بتسجيل الدخول لفحص التوافق' : 'Log in to check compatibility'}</p>
         <Link
           href="/login"
@@ -134,7 +127,7 @@ function GarageFitmentSection({ garageCompatibility, t, isAr, user }) {
   if (!garageCompatibility || garageCompatibility.length === 0) {
     return (
       <div className="relative overflow-hidden rounded-lg sm:rounded-xl border border-dashed border-marine-teal/15 bg-marine-canvas p-4 sm:p-8 text-center">
-        <Car size={36} className="mx-auto mb-2 sm:mb-3 text-marine-line w-7 h-7 sm:w-9 sm:h-9" />
+        <Ship size={36} className="mx-auto mb-2 sm:mb-3 text-marine-line w-7 h-7 sm:w-9 sm:h-9" />
         <p className="font-bold text-marine-outline text-sm uppercase tracking-widest">{t.noGarageCars}</p>
         <Link
           href="/profile?tab=garage"
@@ -160,7 +153,7 @@ function GarageFitmentSection({ garageCompatibility, t, isAr, user }) {
       <div className="relative z-10 flex items-center justify-between gap-3 px-4 pt-4 sm:px-8 sm:pt-8 pb-3 sm:pb-4">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-marine-cyan shadow-lg shadow-marine-cyan/20">
-            <Car size={22} className="text-white" />
+            <Ship size={22} className="text-white" />
           </div>
           <div>
             <h4 className="font-bold text-white text-lg leading-tight">{t.garageReport}</h4>
@@ -268,37 +261,7 @@ function CarCompatibilityCard({ car, isCompatible, t, isAr }) {
    GENERAL COMPATIBILITY SECTION
 ───────────────────────────────────────────────────────────────────────────── */
 function GeneralCompatibilitySection({ product, t, isAr }) {
-  if (product.is_universal) {
-    return (
-      <div className="bg-marine-navy rounded-lg sm:rounded-[2.5rem] p-5 sm:p-10 relative overflow-hidden shadow-2xl">
-        <div className="pointer-events-none absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-[150px] opacity-10 -translate-y-1/2 translate-x-1/2" />
-        <div className="relative z-10 flex flex-col items-center text-center gap-4 sm:gap-6">
-          <div className="flex h-14 w-14 sm:h-20 sm:w-20 items-center justify-center rounded-lg sm:rounded-xl bg-emerald-500/20 border border-emerald-500/30 shadow-lg">
-            <Globe size={36} className="text-emerald-400" />
-          </div>
-          <div>
-            <span className="block text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-2">
-              {t.universalFit}
-            </span>
-            <h3 className="text-white font-bold text-xl sm:text-3xl mb-1 sm:mb-2">{t.universalCompatible}</h3>
-            <p className="text-marine-outline font-bold text-sm sm:text-base">{t.universalCompatibleSub}</p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {['Toyota', 'Honda', 'BMW', 'Mercedes', 'Nissan', 'Hyundai'].map(brand => (
-              <div key={brand} className="rounded-lg bg-white/5 border border-white/10 px-5 py-2 text-sm font-bold text-marine-line">
-                {brand}
-              </div>
-            ))}
-            <div className="rounded-lg bg-marine-cyan/20 border border-marine-cyan/30 px-5 py-2 text-sm font-bold text-marine-primary">
-              + {isAr ? 'وأكثر' : 'and more'}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!product.compatible_cars || product.compatible_cars.length === 0) return null;
+  if (!product.compatible_vessels || product.compatible_vessels.length === 0) return null;
 
   return (
     <div className="bg-marine-navy rounded-lg sm:rounded-[2.5rem] p-4 sm:p-10 space-y-8 relative overflow-hidden shadow-2xl">
@@ -308,7 +271,7 @@ function GeneralCompatibilitySection({ product, t, isAr }) {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-8">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="bg-marine-cyan text-white p-3 sm:p-4 rounded-xl sm:rounded-lg shadow-lg shadow-marine-cyan/20 [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-7 sm:[&>svg]:h-7">
-              <Car size={28} />
+              <Ship size={28} />
             </div>
             <div>
               <h3 className="text-white font-bold text-lg sm:text-2xl">{t.vehicleFitment}</h3>
@@ -322,7 +285,7 @@ function GeneralCompatibilitySection({ product, t, isAr }) {
 
         {/* Brand Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5">
-          {product.compatible_cars.map((carEntry, idx) => (
+          {product.compatible_vessels.map((carEntry, idx) => (
             <BrandCompatibilityCard key={idx} carEntry={carEntry} t={t} isAr={isAr} />
           ))}
         </div>
@@ -336,7 +299,7 @@ function BrandCompatibilityCard({ carEntry, t, isAr }) {
     <div className="bg-white/5 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden">
       {/* Brand header */}
       <div className="flex items-center gap-3 p-3 sm:p-5 border-b border-white/5 bg-white/5">
-        <Car size={20} className="text-marine-primary" />
+        <Ship size={20} className="text-marine-primary" />
         <span className="font-bold text-white text-base sm:text-lg">{carEntry.brand_name}</span>
       </div>
 
@@ -566,13 +529,39 @@ export default function ProductDetailsPage({ params }) {
     .map(cat => (isAr ? (cat.name_ar || cat.name) : (cat.name || cat.name_ar)))
     .join(' > ');
 
-  return (
-    <div className="bg-marine-canvas min-h-screen pb-20" dir={isAr ? 'rtl' : 'ltr'}>
+  const currency = siteSettings?.currency || 'EGP';
+  const inStock = !product.stock_management || product.stock_status === 'instock';
+  const onBackorder = product.stock_management && product.stock_status === 'onbackorder';
 
-      {/* ── Back (phone) ─────────────────────────────────────────────────────── */}
-      {/* Back to where the visitor came from — the list, with its search — or to the shop
-          when the product was opened straight from a link. */}
-      <div className="lg:hidden max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+  // Why the buttons are disabled — shown as their tooltip.
+  const disabledReason =
+    isStaffAccount ? (isAr ? 'حسابات الإدارة والبائعين لا يمكنها الشراء' : 'Admin and vendor accounts cannot purchase')
+    : !allOptionsSelected ? (isAr ? 'اختر جميع الخيارات أولاً' : 'Select all options first')
+    : isDraftPreview ? (isAr ? 'هذا المنتج مسودة وغير متاح للشراء' : 'This product is a draft and cannot be purchased')
+    : isVendorSuspended ? (isAr ? 'هذا المتجر موقوف حالياً' : 'This store is currently suspended')
+    : (product.stock_management && stockQty <= 0) ? (isAr ? 'نفذت الكمية' : 'Out of Stock') : '';
+
+  const perks = [
+    { icon: Truck, label: isAr ? 'شحن سريع في نفس اليوم' : 'Same-day dispatch' },
+    { icon: Store, label: isAr ? 'استلام من المخزن' : 'Pickup from the hub' },
+    { icon: RotateCcw, label: t.easyReturns },
+    // What the part actually is, as its seller declared it — nothing when it isn't set.
+    product.part_type
+      ? { icon: ShieldCheck, label: PART_TYPE_BADGE[product.part_type]?.[isAr ? 'ar' : 'en'] }
+      : { icon: CheckCircle2, label: t.qualityTested },
+  ];
+
+  const specs = [
+    { label: isAr ? 'رقم القطعة' : 'Part Number', value: product.part_number },
+    { label: isAr ? 'العلامة التجارية' : 'Brand', value: product.product_brand_id?.name },
+    { label: isAr ? 'الفئة' : 'Category', value: fullCategoryPath },
+  ].filter(s => s.value);
+
+  return (
+    <div className="bg-marine-canvas min-h-screen pb-12" dir={isAr ? 'rtl' : 'ltr'}>
+
+      {/* ── Back (phone) ── back to where the visitor came from, or to the shop. */}
+      <div className="lg:hidden max-w-6xl mx-auto px-4 py-1 flex items-center justify-between">
         <button
           type="button"
           onClick={() => {
@@ -581,65 +570,58 @@ export default function ProductDetailsPage({ params }) {
             else router.push('/products');
           }}
           aria-label={isAr ? 'رجوع' : 'Back'}
-          className="w-10 h-10 -ms-2 flex items-center justify-center rounded-full text-marine-ink hover:bg-marine-mist transition-colors"
+          className="w-9 h-9 -ms-2 flex items-center justify-center rounded-full text-marine-ink hover:bg-marine-mist transition-colors"
         >
-          <ArrowLeft size={22} className={isAr ? 'rotate-180' : ''} />
+          <ArrowLeft size={20} className={isAr ? 'rotate-180' : ''} />
         </button>
         <ShareProductButton product={product} language={language} />
       </div>
 
-      {/* ── Breadcrumbs ───────────────────────────────────────────────────────── */}
-      <nav className="hidden sm:flex max-w-7xl mx-auto px-4 py-4 items-center gap-2 text-[11px] text-marine-outline overflow-x-auto whitespace-nowrap scrollbar-hide">
+      {/* ── Breadcrumbs ── */}
+      <nav className="hidden sm:flex max-w-6xl mx-auto px-4 py-2 items-center gap-1.5 text-[11px] text-marine-outline overflow-x-auto whitespace-nowrap scrollbar-hide">
         <Link href="/" className="hover:text-marine-primary transition-colors">{t.home}</Link>
-        <ChevronRight size={12} className={isAr ? 'rotate-180' : ''} />
-        {categoryHierarchy.map((cat, idx) => (
-          <div key={cat._id} className="flex items-center gap-2">
-            <Link
-              href={`/products?category_id=${cat._id}`}
-              className="hover:text-marine-primary transition-colors"
-            >
+        <ChevronRight size={11} className={isAr ? 'rotate-180' : ''} />
+        {categoryHierarchy.map(cat => (
+          <div key={cat._id} className="flex items-center gap-1.5">
+            <Link href={`/products?category_id=${cat._id}`} className="hover:text-marine-primary transition-colors">
               {isAr ? (cat.name_ar || cat.name) : (cat.name || cat.name_ar)}
             </Link>
-            <ChevronRight size={12} className={isAr ? 'rotate-180' : ''} />
+            <ChevronRight size={11} className={isAr ? 'rotate-180' : ''} />
           </div>
         ))}
         <span className="text-marine-ink truncate">{displayTitle}</span>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4">
-        {/* A phone, as DeFacto's: the picture across the screen, then a small title, the price
-            on a line and the buttons — every section after them tighter than on wide screens. */}
-        <div className="flex flex-col lg:flex-row gap-4 sm:gap-12 sm:mt-4">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
 
-          {/* ── LEFT: Image Gallery ─────────────────────────────────────────── */}
-          <div className="-mx-4 sm:mx-0 sm:w-full lg:w-[520px] flex-shrink-0">
-            <div className="lg:sticky lg:top-24 space-y-2 sm:space-y-4">
-              <div className="relative aspect-square sm:rounded-xl overflow-hidden bg-white sm:bg-marine-canvas sm:border sm:border-marine-teal/15 group cursor-zoom-in">
+          {/* ── Gallery ── */}
+          <div className="-mx-4 sm:mx-0 lg:w-[460px] flex-shrink-0">
+            <div className="lg:sticky lg:top-24 space-y-2">
+              <div className="relative aspect-square sm:rounded-lg overflow-hidden bg-white sm:border sm:border-marine-teal/15">
                 <img
                   src={product.images?.[selectedImage]?.url || primaryImage}
                   alt={displayTitle}
-                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-contain"
                 />
                 {discountPct && (
-                  <div className="absolute top-3 start-3 sm:top-6 sm:start-6 bg-red-600 text-white text-xs sm:text-sm font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-lg shadow-xl">
-                    {t.save} {discountPct}%
-                  </div>
+                  <span className="absolute top-3 start-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                    -{discountPct}%
+                  </span>
                 )}
               </div>
 
-              {product.images && product.images.length > 1 && (
-                <div className="flex gap-2 sm:gap-4 overflow-x-auto scrollbar-hide py-2 px-4 sm:px-0">
+              {product.images?.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto scrollbar-hide px-4 sm:px-0">
                   {product.images.map((img, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
-                      className={`relative w-16 h-16 sm:w-24 sm:h-24 rounded-xl sm:rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all duration-300 ${
-                        selectedImage === idx
-                          ? 'border-marine-cyan shadow-lg -translate-y-1'
-                          : 'border-transparent opacity-60 hover:opacity-100'
+                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-md overflow-hidden border-2 bg-white flex-shrink-0 transition-colors ${
+                        selectedImage === idx ? 'border-marine-cyan' : 'border-transparent opacity-60 hover:opacity-100'
                       }`}
                     >
-                      <img src={img.url} className="w-full h-full object-contain p-2" alt="thumb" />
+                      <img src={img.url} className="w-full h-full object-contain p-1" alt="" />
                     </button>
                   ))}
                 </div>
@@ -647,351 +629,224 @@ export default function ProductDetailsPage({ params }) {
             </div>
           </div>
 
-          {/* ── RIGHT: Details ──────────────────────────────────────────────── */}
-          <div className="flex-1 space-y-4 sm:space-y-8">
+          {/* ── Details ── */}
+          <div className="flex-1 min-w-0 space-y-4">
 
-            {/* Part number and maker over the title, like the stamp on the box. */}
-            {(product.part_number || product.sku) && (
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-display text-[13px] font-medium tracking-[0.04em] text-marine-primary bg-marine-mist border border-marine-cyan/20 px-2 py-0.5 rounded-sm">
-                  OEM: {product.part_number || product.sku}
+            {/* Brand, title, subtitle */}
+            <div className="space-y-1">
+              {product.product_brand_id?.name && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.08em] text-marine-muted">
+                  <ShieldCheck size={13} className="text-marine-cyan" />
+                  {product.product_brand_id.name} {isAr ? 'معتمد' : 'Certified'}
                 </span>
-                {product.product_brand_id?.name && (
-                  <span className="hidden sm:flex items-center gap-1 font-display text-[10px] font-bold uppercase tracking-[0.08em] text-marine-muted">
-                    <ShieldCheck size={13} className="text-marine-cyan" />{product.product_brand_id.name} {isAr ? 'معتمد' : 'Certified'}
-                  </span>
-                )}
+              )}
+              <div className="flex items-start justify-between gap-3">
+                <h1 className="font-display text-xl sm:text-2xl font-semibold leading-snug text-marine-ink">
+                  {displayTitle}
+                </h1>
+                {/* A phone and a tablet share from the bar at the top. */}
+                <div className="hidden lg:block shrink-0">
+                  <ShareProductButton product={product} language={language} />
+                </div>
               </div>
-            )}
-
-            {/* Title */}
-            <h1 className="font-display text-xl sm:text-[32px] sm:leading-10 font-semibold tracking-tight text-marine-ink">
-              {displayTitle}
-            </h1>
-            {/* A phone and a tablet share from the bar at the top. */}
-            <div className="hidden lg:block">
-              <ShareProductButton product={product} language={language} />
+              {displaySubtitle && <p className="text-sm text-marine-outline">{displaySubtitle}</p>}
             </div>
 
-            {displaySubtitle && (
-              <p className="text-sm sm:text-xl text-marine-outline font-medium">{displaySubtitle}</p>
-            )}
-
-            {/* Identity chips (Restored) */}
-            <div className="flex flex-wrap gap-2 sm:gap-3 sm:pt-1">
-              {product.sku && (
-                <div className="flex items-center gap-2 font-display text-[11px] font-medium tracking-[0.04em] text-marine-muted bg-white px-2.5 py-1 rounded-sm border border-marine-teal/15">
-                  <Hash size={14} className="text-marine-primary" />
-                  <span>SKU: {product.sku}</span>
-                </div>
+            {/* Rating + stock — one quiet line. Rating only once real reviews exist. */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+              {product.reviews_count > 0 ? (
+                <span className="flex items-center gap-1">
+                  <Star size={15} className="text-amber-500 fill-amber-500" />
+                  <span className="font-bold text-marine-ink">{Number(product.rating || 0).toFixed(1)}</span>
+                  <span className="text-xs text-marine-outline">({product.reviews_count} {isAr ? 'تقييم' : 'reviews'})</span>
+                </span>
+              ) : (
+                <span className="text-xs text-marine-outline">{isAr ? 'لا توجد تقييمات بعد' : 'No reviews yet'}</span>
               )}
-              {product.part_number && (
-                <div className="flex items-center gap-2 font-display text-[11px] font-medium tracking-[0.04em] text-marine-muted bg-white px-2.5 py-1 rounded-sm border border-marine-teal/15">
-                  <Settings size={14} className="text-marine-primary" />
-                  <span>Part: {product.part_number}</span>
-                </div>
-              )}
-              {product.gtin && (
-                <div className="flex items-center gap-2 font-display text-[11px] font-medium tracking-[0.04em] text-marine-muted bg-white px-2.5 py-1 rounded-sm border border-marine-teal/15">
-                  <Barcode size={14} className="text-marine-primary" />
-                  <span>GTIN: {product.gtin}</span>
-                </div>
+              <span className={`flex items-center gap-1 font-semibold ${inStock || onBackorder ? 'text-emerald-600' : 'text-red-500'}`}>
+                <CheckCircle2 size={15} />
+                {inStock ? t.inStock : onBackorder ? (isAr ? 'طلب مسبق' : 'On Backorder') : t.outOfStock}
+              </span>
+              {hasAnyCompatible && (
+                <span className="flex items-center gap-1 text-xs font-bold text-marine-success">
+                  <ShieldCheck size={13} />{t.guaranteedFit}
+                </span>
               )}
             </div>
+            {onBackorder && (
+              <p className="text-xs text-amber-700">
+                {isAr ? 'هذا المنتج غير متوفر حالياً ولكن عند توفره سيتم شحنه إليك' : 'It is currently unavailable but when it will be available it will be shipped to you'}
+              </p>
+            )}
 
             {purchaseBlocked && (
-              <div className={`flex items-start gap-3 rounded-lg border px-5 py-4 ${
-                isVendorSuspended
-                  ? 'border-red-200 bg-red-50 text-red-700'
-                  : 'border-amber-200 bg-amber-50 text-amber-800'
+              <div className={`flex items-start gap-2 rounded-md border px-3 py-2 ${
+                isVendorSuspended ? 'border-red-200 bg-red-50 text-red-700' : 'border-amber-200 bg-amber-50 text-amber-800'
               }`}>
-                <AlertTriangle size={20} className="mt-0.5 shrink-0" />
-                <p className="text-sm font-bold leading-relaxed">{purchaseBlockedMessage}</p>
+                <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+                <p className="text-xs font-semibold leading-relaxed">{purchaseBlockedMessage}</p>
               </div>
             )}
 
-            {/* Rating + stock */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-6 sm:pt-1">
-              {/* Only shown once real approved reviews exist — a product with
-                  none used to display a hardcoded 5.0 it had not earned. */}
-              {product.reviews_count > 0 ? (
-                <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100">
-                  <Star size={18} className="text-amber-500 fill-amber-500" />
-                  <span className="text-amber-900 font-bold text-sm">
-                    {Number(product.rating || 0).toFixed(1)}
-                  </span>
-                  <span className="text-amber-700/60 text-xs font-bold">
-                    ({product.reviews_count} {isAr ? 'تقييم' : 'reviews'})
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1.5 bg-marine-canvas px-3 py-1.5 rounded-xl border border-marine-teal/15">
-                  <Star size={18} className="text-marine-line" />
-                  <span className="text-marine-outline text-xs font-bold">
-                    {isAr ? 'لا توجد تقييمات بعد' : 'No reviews yet'}
-                  </span>
-                </div>
-              )}
-              <div className="flex flex-col gap-1">
-                <div className={`flex items-center gap-1.5 font-bold text-sm ${
-                  (!product.stock_management || product.stock_status === 'instock' || (product.stock_status === 'onbackorder' && product.stock_management)) 
-                    ? 'text-emerald-600' 
-                    : 'text-red-500'
-                }`}>
-                  <CheckCircle2 size={18} />
-                  {(!product.stock_management || product.stock_status === 'instock')
-                    ? <span>{t.inStock}</span>
-                    : product.stock_status === 'onbackorder'
-                      ? <span>{isAr ? 'طلب مسبق' : 'On Backorder'}</span>
-                      : <span>{t.outOfStock}</span>
-                  }
-                </div>
-                {product.stock_management && product.stock_status === 'onbackorder' && (
-                  <p className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100 max-w-xs">
-                    {isAr 
-                      ? 'هذا المنتج غير متوفر حالياً ولكن عند توفره سيتم شحنه إليك' 
-                      : 'It is currently unavailable but when it will be available it will be shipped to you'}
+            {/* Price */}
+            <div>
+              <div className="flex flex-wrap items-baseline gap-x-2">
+                <span className="font-display text-3xl font-bold text-marine-navy">
+                  {currentPrice.toLocaleString()} <span className="text-sm font-semibold text-marine-muted">{currency}</span>
+                </span>
+                {hasDiscount && (
+                  <span className="text-sm text-marine-outline line-through">{originalPrice.toLocaleString()} {currency}</span>
+                )}
+              </div>
+              <p className="mt-1 flex items-center gap-1.5 text-xs text-marine-muted">
+                <Truck size={13} className="text-marine-primary" />
+                {isAr ? `شحن مجاني للطلبات فوق 500 ${currency}` : `Free shipping on orders over 500 ${currency}`}
+              </p>
+            </div>
+
+            {/* Options */}
+            {product.variation_types?.length > 0 && (
+              <div className="space-y-3">
+                {product.variation_types.map(type => (
+                  <div key={type._id} className="space-y-1.5">
+                    <p className="text-xs font-bold text-marine-outline uppercase tracking-wider">{type.name}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {type.options.map(opt => (
+                        <button
+                          key={opt._id}
+                          onClick={() => handleOptionSelect(type.name, opt.value)}
+                          className={`px-3 py-1.5 rounded-md border text-sm font-semibold transition-colors ${
+                            selectedOptions[type.name] === opt.value
+                              ? 'border-marine-cyan bg-marine-cyan/10 text-marine-primary'
+                              : 'border-marine-teal/20 bg-white text-marine-ink hover:border-marine-teal/40'
+                          }`}
+                        >
+                          {opt.value}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                {!allOptionsSelected && (
+                  <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-700">
+                    <Info size={13} />
+                    {isAr ? 'يرجى اختيار جميع الخيارات أولاً' : 'Please select all options before adding to cart'}
                   </p>
                 )}
               </div>
-            </div>
+            )}
 
-            {/* Pricing */}
-            <div className="sm:bg-white sm:border sm:border-marine-teal/15 sm:rounded-lg sm:p-6 relative">
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="hidden sm:inline font-display text-[10px] font-bold uppercase tracking-[0.08em] text-marine-muted">{t.totalPrice}</span>
-                  {hasAnyCompatible && (
-                    <div className="flex items-center gap-1.5 bg-marine-success/10 text-marine-success px-2 py-1 rounded-sm font-display text-[10px] font-bold uppercase tracking-[0.08em] border border-marine-success/25">
-                      <ShieldCheck size={12} />
-                      {t.guaranteedFit}
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-wrap items-baseline gap-x-3 sm:gap-4 mt-1">
-                  <span className="font-display text-2xl sm:text-[40px] sm:leading-[48px] font-bold text-marine-navy">{currentPrice.toLocaleString()} <span className="text-sm font-semibold text-marine-muted">{siteSettings?.currency || 'EGP'}</span></span>
-                  {hasDiscount && (
-                    <span className="font-display text-sm sm:text-base text-marine-outline line-through">
-                      {originalPrice.toLocaleString()} {siteSettings?.currency || 'EGP'}
-                    </span>
-                  )}
-                </div>
-                <div className="mt-2 sm:mt-4 flex items-center gap-2 text-marine-muted text-xs bg-marine-canvas sm:px-3 sm:py-2 rounded-sm">
-                  <Info size={16} className="text-marine-primary" />
-                  <span>{isAr ? `شحن مجاني للطلبات فوق 500 ${siteSettings?.currency || 'EGP'}` : `Free shipping on orders over 500 ${siteSettings?.currency || 'EGP'}`}</span>
-                </div>
+            {/* Actions */}
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAddToCart}
+                  disabled={actionDisabled}
+                  title={disabledReason}
+                  className="flex-1 bg-marine-cyan hover:bg-marine-cyan-dark disabled:bg-marine-frost disabled:text-marine-outline disabled:cursor-not-allowed text-white font-bold text-sm py-3 rounded-md transition-colors flex items-center justify-center gap-2"
+                >
+                  <ShoppingCart size={18} />
+                  {t.addToCart}
+                </button>
+                <button
+                  onClick={handleBuyNow}
+                  disabled={actionDisabled}
+                  title={disabledReason}
+                  className="flex-1 bg-marine-teal hover:bg-marine-navy disabled:bg-marine-frost disabled:text-marine-outline disabled:cursor-not-allowed text-white font-bold text-sm py-3 rounded-md transition-colors"
+                >
+                  {t.buyNow}
+                </button>
               </div>
+              {isStaffAccount && (
+                <p className="text-xs text-marine-muted bg-marine-mist/70 border border-marine-teal/15 rounded-md px-3 py-2 text-center leading-relaxed">
+                  {isAr
+                    ? '💡 تنبيه: أنت تتصفح بحساب تاجر/مدير. أزرار الشراء معطلة لحسابات الموظفين والتجار، وتعمل بشكل طبيعي للعملاء والزوار.'
+                    : '💡 Note: You are logged in as a vendor/admin. Purchase buttons are disabled for staff accounts, but active for shoppers.'}
+                </p>
+              )}
+              {/* A question about fitment goes straight to the technical desk. */}
+              {siteSettings?.social_links?.whatsapp && (
+                <a
+                  href={`https://wa.me/${siteSettings.social_links.whatsapp.replace(/\+/g, '')}?text=${encodeURIComponent(displayTitle)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 text-xs font-semibold text-marine-teal hover:text-marine-primary py-1"
+                >
+                  <MessageCircle size={14} />
+                  {isAr ? 'استفسار فني عن التوافق عبر واتساب' : 'Ask about fitment on WhatsApp'}
+                </a>
+              )}
             </div>
 
-            {/* Variations */}
-            {product.variation_types?.length > 0 && (
-              <div className="space-y-4 sm:space-y-6 bg-marine-canvas/50 p-4 sm:p-8 rounded-lg sm:rounded-xl border border-marine-teal/15">
-                <h3 className="text-marine-ink font-bold text-base sm:text-xl flex items-center gap-2">
-                  <span className="w-2 h-6 bg-marine-cyan rounded-full" />
-                  {t.options}
-                </h3>
-                <div className="grid gap-6">
-                  {product.variation_types.map(type => (
-                    <div key={type._id} className="space-y-3">
-                      <label className="text-sm font-bold text-marine-outline uppercase tracking-widest">
-                        {type.name}
-                      </label>
-                      <div className="flex flex-wrap gap-3">
-                        {type.options.map(opt => (
-                          <button
-                            key={opt._id}
-                            onClick={() => handleOptionSelect(type.name, opt.value)}
-                            className={`px-4 py-2 sm:px-6 sm:py-3 rounded-xl sm:rounded-lg font-bold text-sm transition-all duration-300 transform ${
-                              selectedOptions[type.name] === opt.value
-                                ? 'bg-white text-marine-primary shadow-lg border-2 border-marine-cyan -translate-y-1'
-                                : 'bg-white border-2 border-marine-teal/15 text-marine-ink hover:border-marine-teal/25'
-                            }`}
-                          >
-                            {opt.value}
-                          </button>
-                        ))}
-                      </div>
+            {/* Perks */}
+            <ul className="grid grid-cols-2 gap-x-3 gap-y-2 py-3 border-y border-marine-teal/15">
+              {perks.map(({ icon: Icon, label }, i) => (
+                <li key={i} className="flex items-center gap-2 text-xs text-marine-ink">
+                  <Icon size={15} className="text-marine-primary shrink-0" />
+                  {label}
+                </li>
+              ))}
+            </ul>
+
+            {/* Seller */}
+            {product.vendor_id && (
+              <div className="flex items-center gap-3 rounded-lg border border-marine-teal/15 bg-white p-3">
+                <div className="w-11 h-11 bg-marine-navy text-marine-primary rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {product.vendor_id.store_image ? (
+                    <img src={resolveAssetUrl(product.vendor_id.store_image)} alt={product.vendor_id.store_name} className="w-full h-full object-cover" />
+                  ) : (
+                    <Store size={22} />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] text-marine-outline uppercase tracking-wider">{t.soldBy}</p>
+                  <p className="flex items-center gap-1 text-sm font-bold text-marine-ink truncate">
+                    {product.vendor_id.store_name}
+                    <CheckCircle2 size={13} className="text-emerald-600 shrink-0" aria-label={isAr ? 'متجر موثوق' : 'Verified Store'} />
+                  </p>
+                  {/* How much this seller has actually shipped — what "sold by" really asks. */}
+                  <VendorTrustStats
+                    completedOrders={product.vendor_id.completed_orders_count}
+                    rating={product.vendor_id.rating}
+                    reviewsCount={product.vendor_id.reviews_count}
+                    isAr={isAr}
+                    size="sm"
+                    className="justify-start"
+                  />
+                </div>
+                <Link href={storePath(storeKey(product.vendor_id))} className="shrink-0 text-xs font-bold text-marine-primary hover:underline">
+                  {t.viewStore}
+                </Link>
+              </div>
+            )}
+
+            {/* Specs */}
+            {specs.length > 0 && (
+              <section className="space-y-2">
+                <h2 className="font-display text-base font-semibold text-marine-ink">{t.technicalSpecs}</h2>
+                <dl className="rounded-lg border border-marine-teal/15 bg-white divide-y divide-marine-teal/10 text-sm">
+                  {specs.map(spec => (
+                    <div key={spec.label} className="flex justify-between gap-3 px-3 py-2">
+                      <dt className="text-marine-muted">{spec.label}</dt>
+                      <dd className="font-medium text-marine-ink text-end">{spec.value}</dd>
                     </div>
                   ))}
-                </div>
-              </div>
+                </dl>
+              </section>
             )}
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-              {/* Prompt to select options if not all chosen */}
-              {product.variation_types?.length > 0 && !allOptionsSelected && (
-                <div className="col-span-2 flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 px-4 py-2.5 rounded-xl text-sm font-semibold">
-                  <Info size={16} />
-                  {isAr ? 'يرجى اختيار جميع الخيارات أولاً' : 'Please select all options before adding to cart'}
-                </div>
-              )}
-              <button
-                onClick={handleAddToCart}
-                disabled={actionDisabled}
-                title={
-                  isStaffAccount ? (isAr ? 'حسابات الإدارة والبائعين لا يمكنها الشراء' : 'Admin and vendor accounts cannot purchase')
-                  : !allOptionsSelected ? (isAr ? 'اختر جميع الخيارات أولاً' : 'Select all options first')
-                  : isDraftPreview ? (isAr ? 'هذا المنتج مسودة وغير متاح للشراء' : 'This product is a draft and cannot be purchased')
-                  : isVendorSuspended ? (isAr ? 'هذا المتجر موقوف حالياً' : 'This store is currently suspended')
-                  : (product.stock_management && stockQty <= 0) ? (isAr ? 'نفذت الكمية' : 'Out of Stock') : ''
-                }
-                className="flex-1 bg-marine-cyan hover:bg-marine-cyan-dark disabled:bg-marine-frost disabled:text-marine-outline disabled:cursor-not-allowed text-white font-display font-bold uppercase tracking-[0.06em] text-sm py-3.5 sm:py-4 rounded transition-colors flex items-center justify-center gap-2"
-              >
-                <ShoppingCart size={20} />
-                <span>{t.addToCart}</span>
-              </button>
-              <button
-                onClick={handleBuyNow}
-                disabled={actionDisabled}
-                title={
-                  isStaffAccount ? (isAr ? 'حسابات الإدارة والبائعين لا يمكنها الشراء' : 'Admin and vendor accounts cannot purchase')
-                  : !allOptionsSelected ? (isAr ? 'اختر جميع الخيارات أولاً' : 'Select all options first')
-                  : isDraftPreview ? (isAr ? 'هذا المنتج مسودة وغير متاح للشراء' : 'This product is a draft and cannot be purchased')
-                  : isVendorSuspended ? (isAr ? 'هذا المتجر موقوف حالياً' : 'This store is currently suspended')
-                  : (product.stock_management && stockQty <= 0) ? (isAr ? 'نفذت الكمية' : 'Out of Stock') : ''
-                }
-                className="flex-1 bg-marine-teal hover:bg-marine-navy disabled:bg-marine-frost disabled:text-marine-outline disabled:cursor-not-allowed text-white font-display font-bold uppercase tracking-[0.06em] text-sm py-3.5 sm:py-4 rounded transition-colors"
-              >
-                {t.buyNow}
-              </button>
-            </div>
-
-            {/* A question about fitment goes straight to the technical desk. */}
-            {siteSettings?.social_links?.whatsapp && (
-              <a
-                href={`https://wa.me/${siteSettings.social_links.whatsapp.replace(/\+/g, '')}?text=${encodeURIComponent(displayTitle)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-marine-mist border border-marine-teal/15 text-marine-teal font-display text-[11px] font-bold uppercase tracking-[0.06em] py-3 rounded hover:border-marine-cyan transition-colors"
-              >
-                <MessageCircle size={15} />{isAr ? 'استفسار فني عن التوافق عبر واتساب' : 'Technical Fit Inquiry via WhatsApp'}
-              </a>
-            )}
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div className="flex items-start gap-3 bg-white border border-marine-teal/15 rounded-lg p-3">
-                <Store size={18} className="text-marine-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-sm font-semibold text-marine-ink">{isAr ? 'الاستلام من المخزن' : 'Pickup from the hub'}</div>
-                  <div className="text-[11px] text-marine-outline">{isAr ? 'جاهز للاستلام الفوري أو الشحن' : 'Ready for immediate pickup or dispatch'}</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 bg-white border border-marine-teal/15 rounded-lg p-3">
-                <Truck size={18} className="text-marine-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-sm font-semibold text-marine-ink">{isAr ? 'شحن سريع في نفس اليوم' : 'Same-Day Express Dispatch'}</div>
-                  <div className="text-[11px] text-marine-outline">{isAr ? 'القاهرة، الإسكندرية، بورسعيد والسويس' : 'Cairo, Alexandria, Port Said & Suez marinas'}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Vendor */}
-            {product.vendor_id && (
-              <div className="bg-marine-canvas rounded-lg sm:rounded-xl p-4 sm:p-6 border border-marine-teal/15">
-                <div className="flex items-center gap-3 sm:gap-5">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-marine-navy text-marine-primary rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden border border-marine-teal/15">
-                    {product.vendor_id.store_image ? (
-                      <img src={resolveAssetUrl(product.vendor_id.store_image)} alt={product.vendor_id.store_name} className="w-full h-full object-cover" />
-                    ) : (
-                      <Store size={32} />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 text-start">
-                    <p className="text-[10px] sm:text-xs font-bold text-marine-outline uppercase tracking-widest mb-0.5 sm:mb-1">{t.soldBy}</p>
-                    <h4 className="text-base sm:text-xl font-bold text-marine-ink mb-1 sm:mb-2 truncate">{product.vendor_id.store_name}</h4>
-                    {/* How much this seller has actually shipped, next to their name — the
-                        question a buyer is really asking when they read "sold by". */}
-                    <VendorTrustStats
-                      completedOrders={product.vendor_id.completed_orders_count}
-                      rating={product.vendor_id.rating}
-                      reviewsCount={product.vendor_id.reviews_count}
-                      isAr={isAr}
-                      size="sm"
-                      className="justify-start mb-1 sm:mb-2"
-                    />
-                    <div className="flex items-center justify-start gap-3 sm:gap-4 text-xs sm:text-sm">
-                      <div className="flex items-center gap-1 text-emerald-600 font-bold text-sm">
-                        <CheckCircle2 size={16} />
-                        {isAr ? 'متجر موثوق' : 'Verified Store'}
-                      </div>
-                      <span className="text-marine-line">|</span>
-                      <Link
-                        href={storePath(storeKey(product.vendor_id))}
-                        className="text-marine-primary font-bold text-sm hover:underline"
-                      >
-                        {t.viewStore}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Trust badges */}
-            <div className={`grid ${product.part_type ? 'grid-cols-4' : 'grid-cols-3'} gap-1 sm:gap-4 py-3 sm:py-8 border-y border-marine-teal/15`}>
-              {[
-                { icon: <Truck size={24} />, label: t.fastDelivery },
-                { icon: <RotateCcw size={24} />, label: t.easyReturns },
-                // What the part actually is, as its seller declared it. This used to say
-                // "Genuine Part" on every product, OEM and aftermarket included; a product
-                // with no part type set yet says nothing rather than guess.
-                product.part_type && { icon: <ShieldCheck size={24} />, label: PART_TYPE_BADGE[product.part_type]?.[isAr ? 'ar' : 'en'] },
-                { icon: <CheckCircle2 size={24} />, label: t.qualityTested },
-              ].filter(Boolean).map((item, i) => (
-                <div key={i} className="flex flex-col items-center gap-1.5 sm:gap-3 p-1.5 sm:p-4 rounded-lg hover:bg-marine-canvas transition-colors group">
-                  <div className="p-2 sm:p-3 bg-marine-mist text-marine-primary rounded group-hover:scale-110 transition-transform [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6">
-                    {item.icon}
-                  </div>
-                  <span className="text-[10px] sm:text-xs font-bold text-marine-ink uppercase tracking-wider text-center leading-tight">
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Technical Specs */}
-            <div className="space-y-3 sm:space-y-6 sm:pt-4">
-              <h3 className="font-display text-marine-ink font-semibold text-lg sm:text-2xl flex items-center gap-2 sm:gap-3">
-                <Settings size={22} className="text-marine-primary" />
-                {t.technicalSpecs}
-              </h3>
-              <div className="bg-white rounded-lg border border-marine-teal/15 overflow-hidden divide-y divide-marine-teal/10">
-                {[
-                  { label: 'SKU',         value: product.sku,                    icon: <Hash size={16} /> },
-                  { label: isAr ? 'رقم القطعة' : 'Part Number', value: product.part_number,             icon: <Settings size={16} /> },
-                  { label: 'GTIN',        value: product.gtin,                   icon: <Barcode size={16} /> },
-                  { label: isAr ? 'العلامة التجارية' : 'Brand',       value: product.product_brand_id?.name, icon: <Store size={16} /> },
-                  { label: isAr ? 'الفئة' : 'Category',    value: fullCategoryPath, icon: <Layers size={16} /> },
-                ].filter(s => s.value).map((spec, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between gap-3 px-4 py-3 odd:bg-white even:bg-marine-canvas"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="text-marine-primary">{spec.icon}</div>
-                      <span className="text-sm text-marine-muted">{spec.label}</span>
-                    </div>
-                    <span className="font-display text-sm font-medium tracking-[0.02em] text-marine-ink ltr:text-right rtl:text-left">{spec.spec_value || spec.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Description */}
-            <div className="space-y-3 sm:space-y-4 sm:pt-4">
-              <h3 className="font-display text-marine-ink font-semibold text-lg sm:text-2xl">{t.description}</h3>
-              <div className="bg-white p-4 sm:p-6 rounded-lg border border-marine-teal/15">
-                <p className="text-marine-muted leading-relaxed whitespace-pre-line text-sm sm:text-base">
-                  {displayDescription}
-                </p>
-              </div>
-            </div>
+            {displayDescription && (
+              <section className="space-y-2">
+                <h2 className="font-display text-base font-semibold text-marine-ink">{t.description}</h2>
+                <p className="text-sm text-marine-muted leading-relaxed whitespace-pre-line">{displayDescription}</p>
+              </section>
+            )}
 
-            {/* ── CUSTOMER REVIEWS ─────────────────────────────────────────── */}
             <ProductReviews productId={product._id} />
-
           </div>
         </div>
+
         <RelatedProducts
           categoryId={product.category_id?._id || product.category_id}
           excludeId={product._id}

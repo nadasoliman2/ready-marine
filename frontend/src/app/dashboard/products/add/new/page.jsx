@@ -48,7 +48,7 @@ export default function AddNewProductPage() {
       return;
     }
     if (!form.category_id) {
-      setError(isAr ? 'الرجاء اختيار فئة من القائمة.' : 'Please select a leaf category from the nested selector.');
+      setError(isAr ? 'الرجاء اختيار فئة للمنتج (حقل إلزامي).' : 'Please select a product category (required).');
       setLoading(false);
       return;
     }
@@ -65,8 +65,20 @@ export default function AddNewProductPage() {
     }
 
     try {
-      await vendorApi.addProduct({ ...form, status: targetStatus });
-      router.push('/dashboard/products');
+      const payload = {
+        ...form,
+        status: targetStatus,
+        quantity: form.stock_status === 'outofstock' ? 0 : Number(form.quantity || 0)
+      };
+      const res = await vendorApi.addProduct(payload);
+      const resultingStatus = res?.product?.status;
+      if (resultingStatus === 'pending') {
+        router.push('/dashboard/products?status_notice=pending');
+      } else if (resultingStatus === 'draft') {
+        router.push('/dashboard/products?status_notice=draft');
+      } else {
+        router.push('/dashboard/products?status_notice=published');
+      }
     } catch (err) {
       if (err.code === 'INCOMPLETE_PRODUCT') {
         setError(isAr ? 'بيانات المنتج غير مكتملة. يرجى مراجعة الحقول المطلوبة.' : err.message);
@@ -114,7 +126,7 @@ export default function AddNewProductPage() {
             className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all disabled:opacity-50"
           >
             {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
-            {isAr ? 'نشر الآن' : 'Publish Now'}
+            {isAr ? 'إرسال للمراجعة والنشر' : 'Submit for Review'}
           </button>
         </div>
       </div>
@@ -145,7 +157,7 @@ export default function AddNewProductPage() {
         </button>
         <button type="button" onClick={() => handleSubmit('published')} disabled={loading} className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white px-6 py-3 rounded-xl text-sm font-bold shadow-md transition-all disabled:opacity-50">
           {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
-          {isAr ? 'نشر الآن' : 'Publish Now'}
+          {isAr ? 'إرسال للمراجعة والنشر' : 'Submit for Review'}
         </button>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Loader2, Bell, CheckCircle2, XCircle, Search, CheckCheck, RefreshCw, LayoutGrid, Store, Calendar,
-  Pencil, MoreHorizontal, Undo2, Rows3, Keyboard, Wrench, AlertTriangle, Zap, X, Car,
+  Pencil, MoreHorizontal, Undo2, Rows3, Keyboard, Wrench, AlertTriangle, Zap, X, Ship,
 } from 'lucide-react';
 import { adminApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
@@ -108,8 +108,8 @@ function ReviewCard({ row, isAr, currency, language, selected, focused, busy, on
         <div className="space-y-1.5 text-xs mb-3">
           <p className="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-300 font-bold truncate"><Store size={12} className="text-marine-primary shrink-0" />{row.vendor?.store_name || '—'}</p>
           <p className="text-zinc-500 truncate">{row.category ? (isAr ? (row.category.name_ar || row.category.name) : row.category.name) : (isAr ? 'من غير فئة' : 'No category')}</p>
-          <p className="flex items-center gap-1.5 text-zinc-500 truncate"><Car size={12} className="shrink-0" />
-            {row.is_universal ? (isAr ? 'عام: أي عربية' : 'Universal') : (row.cars.length ? row.cars.join('، ') : (isAr ? 'من غير توافق' : 'No fitment'))}
+          <p className="flex items-center gap-1.5 text-zinc-500 truncate"><Ship size={12} className="shrink-0" />
+            {row.cars.length ? row.cars.join('، ') : (isAr ? 'بدون توافق محدد' : 'No specific fitment')}
           </p>
           {/* The cars the title names that the fitment lacks — the edit fixes them. */}
           {row.fitment_hint?.length > 0 && (
@@ -458,12 +458,6 @@ export default function PendingProductsPage() {
               <option value="ready">{isAr ? `جاهز للنشر (${counts.ready})` : `Ready (${counts.ready})`}</option>
               <option value="issues">{isAr ? `محتاج تصليح (${rows.length - counts.ready})` : `To fix (${rows.length - counts.ready})`}</option>
               {Object.keys(ISSUE_LABELS).filter((c) => counts.issues[c]).map((c) => <option key={c} value={c}>{issueLabel(c, isAr)} ({counts.issues[c]})</option>)}
-            </FilterSelect>
-            <FilterSelect label={isAr ? 'التوافق' : 'Fitment'} value={filters.fitment} onChange={(v) => setFilter('fitment', v)}>
-              <option value="all">{isAr ? 'الكل' : 'All'}</option>
-              <option value="universal">{isAr ? 'عام (أي عربية)' : 'Universal'}</option>
-              <option value="cars">{isAr ? 'لعربيات محددة' : 'Specific cars'}</option>
-              <option value="none">{isAr ? 'من غير توافق' : 'No fitment'}</option>
             </FilterSelect>
             <FilterSelect label={isAr ? 'نوع المنتج' : 'Product type'} value={filters.type} onChange={(v) => setFilter('type', v)}>
               <option value="">{isAr ? 'كل الأنواع' : 'All types'}</option>

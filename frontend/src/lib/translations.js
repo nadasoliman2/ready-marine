@@ -18,6 +18,8 @@ export const translations = {
     shopByCategory: 'Shop by Category',
     mostSold: 'Most Sold Products',
     specialOffers: 'Special Offers',
+    vesselBrands: 'Shop by Marine Brand',
+    boatBrands: 'Shop by Marine Brand',
     carBrands: 'Shop by Marine Brand',
     addToCart: 'Add to Cart',
     buyNow: 'Buy Now',
@@ -305,7 +307,7 @@ export const translations = {
     trunkProducts: 'Onboard Essentials',
     trunkProductsTitle: 'What every boat should carry onboard',
     trunkProductsSubtitle: 'The things you hope you never need and are glad you have: jack, triangle, jump leads, first-aid kit and more.',
-    forTrunk: 'Trunk essential',
+    forTrunk: 'Onboard essential',
     forTrunkDesc: 'Mark this product as something every boat should carry — it appears on the Onboard Essentials page',
 
     // Articles / Blog
@@ -427,6 +429,8 @@ export const translations = {
     shopByCategory: 'تسوق حسب الفئة',
     mostSold: 'الأكثر مبيعاً',
     specialOffers: 'العروض الخاصة',
+    vesselBrands: 'تسوق حسب الماركة البحرية',
+    boatBrands: 'تسوق حسب ماركة القارب',
     carBrands: 'تسوق حسب الماركة البحرية',
     addToCart: 'أضف للسلة',
     buyNow: 'اشتري الآن',
@@ -704,7 +708,7 @@ export const translations = {
     trunkProducts: 'مستلزمات على المركب',
     trunkProductsTitle: 'اللي لازم يكون على كل مركب',
     trunkProductsSubtitle: 'حاجات بتتمنى ما تحتاجهاش وبتفرح إنها معاك: كوريك، مثلث تحذير، كابلات شحن، شنطة إسعافات وغيرهم.',
-    forTrunk: 'من أساسيات الشنطة',
+    forTrunk: 'من أساسيات المركب',
     forTrunkDesc: 'حدد المنتج ده كحاجة لازم تكون على كل مركب — هيظهر في صفحة مستلزمات على المركب',
 
     // Articles / Blog

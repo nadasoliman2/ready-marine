@@ -124,7 +124,7 @@ export default function VendorSubscriptionPage() {
             } else if (err.code === 'PRODUCT_LIMIT_EXCEEDED') {
                 setError(isAr ? 'عدد المنتجات المنشورة يتجاوز الحد المسموح لهذه الباقة.' : err.message);
             } else {
-                setError(isAr ? 'تعذر شراء الاشتراك. يرجى المحاولة مرة أخرى.' : (err.message || 'Failed to purchase subscription.'));
+                setError(err.message || (isAr ? 'تعذر شراء الاشتراك. يرجى المحاولة مرة أخرى.' : 'Failed to purchase subscription.'));
             }
         } finally {
             setPurchasingId(null);

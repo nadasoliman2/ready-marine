@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-    Plus, Copy, Trash2, Loader2, Upload, ChevronDown, Layers, Car, Truck,
-    Image as ImageIcon, FileText, AlertCircle, CheckCircle2, Wand2,
+    Plus, Copy, Trash2, Loader2, Upload, ChevronDown, Layers, Ship, Truck,
+    Image as ImageIcon, FileText, AlertCircle, CheckCircle2, Wand2, Users,
 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import { brandsForCategory, indexCategoryTree } from '../../../lib/brandCategoryLink';
@@ -15,7 +15,7 @@ import {
 } from './bulkEntryUtils';
 import CatalogPickerModal from '../catalog/CatalogPickerModal';
 import {
-    CategoryModal, ContentModal, ImagesModal, CompatibilityModal, VariationsModal, ShippingModal, Modal,
+    CategoryModal, ContentModal, ImagesModal, AudienceModal, VariationsModal, ShippingModal, Modal,
 } from './FieldModals';
 import ResultsPanel from './ResultRows';
 import SearchableSelect from '../../SearchableSelect';
@@ -75,13 +75,8 @@ function Chip({ label, placeholder, invalid, onClick, disabled }) {
 /* ── chip summaries ───────────────────────────────────────────── */
 function summaries(row, refs, language) {
     const cat = row.category_id ? (refs.pathLabel.get(String(row.category_id)) || L(language, 'Selected', 'محدد')) : '';
-    const cars = row.compatible_cars || [];
-    let compat = '';
-    if (row.is_universal) compat = L(language, 'Universal', 'عام');
-    else if (cars.length) {
-        const names = cars.map((c) => refs.carBrandMap.get(String(c.brand_id))?.name || L(language, 'Car', 'سيارة'));
-        compat = names.slice(0, 2).join(', ') + (names.length > 2 ? ` +${names.length - 2}` : '');
-    }
+    const auds = row.target_audiences || [];
+    const audiences = auds.length ? `${auds.length} ${L(language, 'audiences', 'مجموعات')}` : '';
     const vt = row.variation_types || [];
     const variations = vt.length ? `${vt.length} ${L(language, 'types', 'أنواع')} · ${(row.variants || []).length} ${L(language, 'variants', 'تنويعات')}` : '';
     const shipParts = [];
@@ -95,7 +90,7 @@ function summaries(row, refs, language) {
         enSet ? L(language, 'English ✓', 'الإنجليزية ✓') : '',
         arSet ? L(language, 'Arabic ✓', 'العربية ✓') : '',
     ].filter(Boolean).join(' · ');
-    return { cat, compat, variations, shipping, images, content };
+    return { cat, audiences, variations, shipping, images, content };
 }
 function str(v) { return v === null || v === undefined ? '' : String(v).trim(); }
 
@@ -151,26 +146,15 @@ function Row({ row, idx, refs, language, selected, onSelect, onChange, onDuplica
                 </select>
             </td>
             <td className={td}><input type="number" min="0" step="0.01" disabled={!row.discount_type} className={`${ci} disabled:opacity-40 ${errFields.has('Discount') ? 'ring-1 ring-red-400/70 rounded' : ''}`} value={row.discount_value} onChange={(e) => set({ discount_value: e.target.value })} placeholder={row.discount_type === 'percentage' ? '%' : '—'} /></td>
-            {/* Category */}
-            <td className={td}><Chip label={s.cat} placeholder={L(language, '+ Category', '+ الفئة')} invalid={errFields.has('Category')} onClick={() => openModal('category', row._id)} /></td>
-            {/* Brand */}
+            {/* Category (Required) */}
+            <td className={td}><Chip label={s.cat} placeholder={L(language, 'Category *', 'الفئة *')} invalid={errFields.has('Category')} onClick={() => openModal('category', row._id)} /></td>
+            {/* Brand (Required) */}
             <td className={td}>
-                <SearchableSelect value={row.product_brand_id || ''} onChange={(v) => set({ product_brand_id: v })} options={brandOptions(brandsForCategory(refs.metadata?.productBrands || [], row.category_id, refs.categoryIndex))} placeholder={L(language, 'Brand', 'الماركة')} isAr={language === 'ar'} buttonClassName={`${ci} pe-7`} />
+                <SearchableSelect value={row.product_brand_id || ''} onChange={(v) => set({ product_brand_id: v })} options={brandOptions(brandsForCategory(refs.metadata?.productBrands || [], row.category_id, refs.categoryIndex))} placeholder={L(language, 'Brand *', 'الماركة المصنعة *')} isAr={language === 'ar'} buttonClassName={`${ci} pe-7 ${errFields.has('Brand') ? 'ring-1 ring-red-400/70 rounded' : ''}`} allowCustom={true} />
             </td>
-            {/* Fitment — universal toggle with the compatibility editor beside it */}
+            {/* Target Audiences (Optional) */}
             <td className={td}>
-                <div className="flex items-center gap-2 px-2">
-                    <Toggle checked={row.is_universal} onChange={(v) => {
-                        if (v) set({ is_universal: true, compatible_cars: [] });
-                        else { set({ is_universal: false }); openModal('compatibility', row._id); }
-                    }} />
-                    {row.is_universal
-                        ? <span className="text-xs text-zinc-400 whitespace-nowrap">{L(language, 'Universal', 'عام')}</span>
-                        : <button type="button" onClick={() => openModal('compatibility', row._id)} title={s.compat || ''}
-                            className={`flex-1 min-w-0 truncate text-start text-sm px-2 py-1 rounded ${s.compat ? 'text-zinc-900 dark:text-white' : 'text-zinc-400'} ${errFields.has('Compatibility') ? 'ring-1 ring-red-400/70 bg-red-50 dark:bg-red-500/10' : 'hover:bg-zinc-100 dark:hover:bg-white/5'}`}>
-                            {s.compat || L(language, '+ Add cars', '+ أضف سيارات')}
-                        </button>}
-                </div>
+                <Chip label={s.audiences} placeholder={L(language, '+ Audiences', '+ المجموعات')} onClick={() => openModal('audiences', row._id)} />
             </td>
             {/* Stock mgmt */}
             <td className={`${td} text-center`}><Toggle checked={row.stock_management} onChange={(v) => set({ stock_management: v })} /></td>
@@ -178,11 +162,14 @@ function Row({ row, idx, refs, language, selected, onSelect, onChange, onDuplica
             <td className={td}>
                 {(row.variants || []).length > 0
                     ? <span className="text-[11px] text-zinc-400 px-2">{L(language, 'per variant', 'حسب التنويع')}</span>
-                    : <input type="number" min="0" disabled={!row.stock_management} className={`${ci} disabled:opacity-40 ${errFields.has('Quantity') ? 'ring-1 ring-red-400/70 rounded' : ''}`} value={row.quantity} onChange={(e) => set({ quantity: e.target.value })} />}
+                    : <input type="number" min="0" disabled={!row.stock_management || row.stock_status === 'outofstock'} className={`${ci} disabled:opacity-40 ${errFields.has('Quantity') ? 'ring-1 ring-red-400/70 rounded' : ''}`} value={row.stock_status === 'outofstock' ? 0 : row.quantity} onChange={(e) => set({ quantity: e.target.value })} />}
             </td>
             {/* Stock status */}
             <td className={td}>
-                <select className={ci} value={row.stock_status} disabled={!row.stock_management} onChange={(e) => set({ stock_status: e.target.value })}>
+                <select className={ci} value={row.stock_status} disabled={!row.stock_management} onChange={(e) => {
+                    const val = e.target.value;
+                    set({ stock_status: val, ...(val === 'outofstock' ? { quantity: 0 } : {}) });
+                }}>
                     <option value="instock">{L(language, 'In stock', 'متوفر')}</option>
                     <option value="outofstock">{L(language, 'Out of stock', 'نفد')}</option>
                     <option value="onbackorder">{L(language, 'Backorder', 'طلب مسبق')}</option>
@@ -195,8 +182,6 @@ function Row({ row, idx, refs, language, selected, onSelect, onChange, onDuplica
                     <option value="published">{L(language, 'Publish', 'نشر')}</option>
                 </select>
             </td>
-            {/* Trunk essential */}
-            <td className={`${td} text-center`}><Toggle checked={row.for_trunk} onChange={(v) => set({ for_trunk: v })} amber /></td>
             {/* Images */}
             <td className={td}><Chip label={s.images} placeholder={L(language, '+ Images', '+ الصور')} invalid={errFields.has('Images')} onClick={() => openModal('images', row._id)} /></td>
             {/* Variations */}
@@ -240,10 +225,32 @@ export default function BulkEntryGrid({ submit, disabled, disabledHint, storageK
     }, []);
 
     const refs = useMemo(() => {
+        const prodBrands = metadata?.productBrands || [];
+        const boatBrands = (metadata?.vesselBrands || metadata?.carBrands || []).map(cb => ({
+            ...cb,
+            source: 'VesselBrand',
+            is_vessel_brand: true,
+            categories: cb.categories || []
+        }));
+        const seenIds = new Set();
+        const seenNames = new Set();
+        const combined = [];
+        for (const b of [...prodBrands, ...boatBrands]) {
+            const id = String(b._id || '');
+            const name = String(b.name || '').trim().toLowerCase();
+            if (id && seenIds.has(id)) continue;
+            if (name && seenNames.has(name)) continue;
+            if (id) seenIds.add(id);
+            if (name) seenNames.add(name);
+            combined.push(b);
+        }
+        combined.sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
+
+        const augmentedMetadata = metadata ? { ...metadata, productBrands: combined } : null;
         const idx = buildCategoryIndex(metadata?.categories || [], language);
         const shipMap = new Map((shippingClasses || []).map((c) => [String(c._id), language === 'ar' ? (c.name_ar || c.name) : c.name]));
         const carBrandMap = new Map((metadata?.carBrands || []).map((b) => [String(b._id), b]));
-        return { metadata, language, leafIds: idx.leafIds, pathLabel: idx.pathLabel, shipMap, carBrandMap, categoryIndex: indexCategoryTree(metadata?.categories || []) };
+        return { metadata: augmentedMetadata, language, leafIds: idx.leafIds, pathLabel: idx.pathLabel, shipMap, carBrandMap, categoryIndex: indexCategoryTree(metadata?.categories || []) };
     }, [metadata, shippingClasses, language]);
 
     /* autosave + restore */
@@ -336,7 +343,7 @@ export default function BulkEntryGrid({ submit, disabled, disabledHint, storageK
         const ids = rows.filter((r) => selected.has(r._id)).map((r) => r._id);
         if (ids.length < 2) return;
         const src = rows.find((r) => r._id === ids[0]);
-        const fields = ['category_id', 'product_brand_id', 'is_universal', 'compatible_cars', 'shipping_class_id', 'weight', 'dimensions', 'status', 'stock_management', 'stock_status'];
+        const fields = ['category_id', 'product_brand_id', 'is_universal', 'compatible_vessels', 'shipping_class_id', 'weight', 'dimensions', 'status', 'stock_management', 'stock_status'];
         const patch = {};
         fields.forEach((f) => { patch[f] = JSON.parse(JSON.stringify(src[f])); });
         setRows((prev) => prev.map((r) => (selected.has(r._id) && r._id !== src._id ? { ...r, ...patch, _serverErrors: null } : r)));
@@ -383,7 +390,7 @@ export default function BulkEntryGrid({ submit, disabled, disabledHint, storageK
     }, [rows, refs]);
 
     const allSelected = rows.length > 0 && rows.every((r) => selected.has(r._id));
-    const ModalCmp = { category: CategoryModal, content: ContentModal, images: ImagesModal, compatibility: CompatibilityModal, variations: VariationsModal, shipping: ShippingModal }[modal?.type];
+    const ModalCmp = { category: CategoryModal, content: ContentModal, images: ImagesModal, audiences: AudienceModal, variations: VariationsModal, shipping: ShippingModal }[modal?.type];
 
     return (
         <div className="space-y-4">
@@ -415,11 +422,9 @@ export default function BulkEntryGrid({ submit, disabled, disabledHint, storageK
                     {applyOpen && selected.size > 0 && (
                         <div className="absolute z-30 mt-1 w-60 bg-white dark:bg-[#14171A] border border-zinc-200 dark:border-white/10 rounded-xl shadow-xl p-1.5 text-sm">
                             <button onClick={() => { setModal({ type: 'category', target: '__bulk__' }); setApplyOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200"><Layers size={14} /> {L(language, 'Set category…', 'تعيين الفئة…')}</button>
-                            <button onClick={() => { setModal({ type: 'compatibility', target: '__bulk__' }); setApplyOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200"><Car size={14} /> {L(language, 'Set compatibility…', 'تعيين التوافق…')}</button>
+                            <button onClick={() => { setModal({ type: 'audiences', target: '__bulk__' }); setApplyOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200"><Users size={14} /> {L(language, 'Set audiences…', 'تعيين المجموعات المخصصة…')}</button>
                             <button onClick={() => { setModal({ type: 'shipping', target: '__bulk__' }); setApplyOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200"><Truck size={14} /> {L(language, 'Set shipping…', 'تعيين الشحن…')}</button>
                             <div className="my-1 border-t border-zinc-100 dark:border-white/10" />
-                            <button onClick={() => applyToSelected({ is_universal: true, compatible_cars: [] })} className="w-full text-start px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200">{L(language, 'Mark Universal', 'تعيين كـ عام')}</button>
-                            <button onClick={() => applyToSelected({ is_universal: false })} className="w-full text-start px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200">{L(language, 'Not universal', 'ليس عاماً')}</button>
                             <button onClick={() => applyToSelected({ status: 'published' })} className="w-full text-start px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200">{L(language, 'Set status: Publish', 'الحالة: نشر')}</button>
                             <button onClick={() => applyToSelected({ status: 'draft' })} className="w-full text-start px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-700 dark:text-zinc-200">{L(language, 'Set status: Draft', 'الحالة: مسودة')}</button>
                             <div className="my-1 border-t border-zinc-100 dark:border-white/10" />
@@ -457,8 +462,7 @@ export default function BulkEntryGrid({ submit, disabled, disabledHint, storageK
                             <GroupTh span={5} color="bg-[#D32F2F]">{L(language, 'Identifiers', 'المعرّفات')}</GroupTh>
                             <GroupTh span={3} color="bg-[#1565C0]">{L(language, 'Content', 'المحتوى')}</GroupTh>
                             <GroupTh span={3} color="bg-[#00695C]">{L(language, 'Pricing', 'التسعير')}</GroupTh>
-                            <GroupTh span={2} color="bg-[#558B2F]">{L(language, 'Classification', 'التصنيف')}</GroupTh>
-                            <GroupTh span={1} color="bg-[#E65100]">{L(language, 'Fitment', 'التوافق')}</GroupTh>
+                            <GroupTh span={3} color="bg-[#558B2F]">{L(language, 'Classification', 'التصنيف')}</GroupTh>
                             <GroupTh span={3} color="bg-[#4527A0]">{L(language, 'Inventory', 'المخزون')}</GroupTh>
                             <GroupTh span={3} color="bg-[#37474F]">{L(language, 'Publishing', 'النشر')}</GroupTh>
                             <GroupTh span={1} color="bg-[#00838F]">{L(language, 'Media', 'الوسائط')}</GroupTh>
@@ -479,13 +483,12 @@ export default function BulkEntryGrid({ submit, disabled, disabledHint, storageK
                             <Th w={110}>{L(language, 'Discount type', 'نوع الخصم')}</Th>
                             <Th w={90}>{L(language, 'Discount value', 'قيمة الخصم')}</Th>
                             <Th w={190} req>{L(language, 'Category', 'الفئة')}</Th>
-                            <Th w={130}>{L(language, 'Brand', 'الماركة')}</Th>
-                            <Th w={200}>{L(language, 'Fitment', 'التوافق')}</Th>
+                            <Th w={130} req>{L(language, 'Brand', 'الماركة المصنعة')}</Th>
+                            <Th w={150}>{L(language, 'Target Audiences', 'المجموعات المخصصة')}</Th>
                             <Th w={70}>{L(language, 'Stock', 'مخزون')}</Th>
                             <Th w={70}>{L(language, 'Qty', 'الكمية')}</Th>
                             <Th w={120}>{L(language, 'Stock status', 'حالة المخزون')}</Th>
                             <Th w={110}>{L(language, 'Status', 'الحالة')}</Th>
-                            <Th w={70}>{L(language, 'Trunk', 'شنطة')}</Th>
                             <Th w={110} req>{L(language, 'Images', 'الصور')}</Th>
                             <Th w={150}>{L(language, 'Options', 'الخيارات')}</Th>
                             <Th w={150}>{L(language, 'Shipping', 'الشحن')}</Th>

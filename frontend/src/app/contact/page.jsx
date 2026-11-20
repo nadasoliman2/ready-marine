@@ -14,6 +14,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: '',
   });
@@ -35,10 +36,16 @@ export default function ContactPage() {
     setError('');
     setSuccess('');
 
+    if (!formData.phone || formData.phone.trim().length < 7) {
+      setError(isAr ? 'يرجى إدخال رقم هاتف / موبايل صحيح للتواصل معكم.' : 'Please enter a valid phone number.');
+      setLoading(false);
+      return;
+    }
+
     try {
       await contactApi.submitInquiry(formData);
-      setSuccess(isAr ? 'تم استلام رسالتك بنجاح.' : 'Your message has been received.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setSuccess(isAr ? 'تم استلام رسالتك بنجاح وسيتواصل معك فريقنا قريباً.' : 'Your message has been received.');
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     } catch (err) {
       setError(err.message || (isAr ? 'تعذر إرسال الرسالة.' : 'Could not send your message.'));
     } finally {
@@ -68,7 +75,9 @@ export default function ContactPage() {
           <form onSubmit={handleSubmit} className="bg-white border border-zinc-200 rounded-xl shadow-sm p-5 md:p-7 space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className={labelClass}>{isAr ? 'اسمك' : 'Your name'}</label>
+                <label className={labelClass}>
+                  {isAr ? 'اسمك' : 'Your name'} <span className="text-red-500">*</span>
+                </label>
                 <input
                   required
                   name="name"
@@ -80,7 +89,9 @@ export default function ContactPage() {
                 />
               </div>
               <div>
-                <label className={labelClass}>{isAr ? 'بريدك الإلكتروني' : 'Your Email'}</label>
+                <label className={labelClass}>
+                  {isAr ? 'بريدك الإلكتروني' : 'Your Email'} <span className="text-red-500">*</span>
+                </label>
                 <input
                   required
                   name="email"
@@ -89,21 +100,41 @@ export default function ContactPage() {
                   onChange={handleChange}
                   className={inputClass}
                   placeholder="name@example.com"
+                  dir="ltr"
                 />
               </div>
             </div>
 
-            <div>
-              <label className={labelClass}>{isAr ? 'الموضوع' : 'Subject'}</label>
-              <input
-                required
-                name="subject"
-                type="text"
-                value={formData.subject}
-                onChange={handleChange}
-                className={inputClass}
-                placeholder={isAr ? 'كيف يمكننا مساعدتك؟' : 'How can we help?'}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className={labelClass}>
+                  {isAr ? 'رقم الهاتف / الموبايل' : 'Phone / Mobile Number'} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  required
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className={inputClass}
+                  placeholder={isAr ? '01012345678' : '+20 10 1234 5678'}
+                  dir="ltr"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>
+                  {isAr ? 'الموضوع' : 'Subject'} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  required
+                  name="subject"
+                  type="text"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  className={inputClass}
+                  placeholder={isAr ? 'كيف يمكننا مساعدتك؟' : 'How can we help?'}
+                />
+              </div>
             </div>
 
             <div>

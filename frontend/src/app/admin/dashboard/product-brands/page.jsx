@@ -161,8 +161,8 @@ export default function AdminProductBrandsPage() {
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
             {isAr
-              ? 'إضافة وتعديل وحذف ماركات المنتجات. ماركات العربيات (تويوتا، بي إم دبليو…) بتظهر تلقائيًا في كل قوائم الماركات جنب دول — متضيفهاش هنا تاني، وعدّلها من صفحة ماركات العربيات.'
-              : 'Create, edit, and manage product brands. Car makes (Toyota, BMW…) appear automatically on every brand list beside these — do not add them again here; edit them under Car Brands.'}
+              ? 'إضافة وتعديل وحذف ماركات المنتجات البحرية والمعدات وقطع الغيار.'
+              : 'Create, edit, and manage marine product brands, equipment, and parts.'}
           </p>
         </div>
         <button

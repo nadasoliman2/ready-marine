@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from '../../../../lib/navigation';
 import {
   ArrowLeft, Save, Send, Loader2, Info, Search, X, CheckCircle2, PlusCircle
@@ -50,19 +50,28 @@ export default function AdminAddProductPage() {
     part_type: '',
     price: '', discount_type: '', discount_value: '',
     category_id: '', product_brand_id: '',
-    is_universal: true, for_trunk: false, target_audiences: [], stock_management: true, quantity: 1,
+    is_universal: true, for_trunk: false, target_audiences: [], stock_management: true,
+    stock_status: 'instock',
+    quantity: 1,
     images: [],
-    compatible_cars: [],
+    compatible_vessels: [],
     variation_types: [],
     variants: [],
     weight: '',
     dimensions: { length: '', width: '', height: '' },
     shipping_class_id: '',
   });
+
+  // Product brands from the single Brand table
+  const combinedBrands = useMemo(() => {
+    const prodBrands = metadata?.productBrands || [];
+    return [...prodBrands].sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
+  }, [metadata?.productBrands]);
+
   // Brand and category narrow each other; changing one clears the other if it no longer fits.
   // After `form`: it reads the form, and a const read before its line throws on every render.
   const linked = useLinkedBrandCategory({
-    brands: metadata?.productBrands || [],
+    brands: combinedBrands,
     categories: metadata?.categories || [],
     brandId: form.product_brand_id,
     categoryId: form.category_id,
@@ -74,7 +83,7 @@ export default function AdminAddProductPage() {
     const fetchData = async () => {
       try {
         const [metaData, vendorData] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}`}/products/filters`).then(r => r.json()),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters?detail=full`).then(r => r.json()),
           adminApi.getVendors(),
         ]);
         setMetadata(metaData);
@@ -116,7 +125,7 @@ export default function AdminAddProductPage() {
       return;
     }
     if (!form.category_id) {
-      setError(isAr ? 'الرجاء اختيار فئة.' : 'Please select a category.');
+      setError(isAr ? 'الرجاء اختيار فئة للمنتج (حقل إلزامي).' : 'Please select a product category (required).');
       setSavingStatus(null);
       return;
     }
@@ -132,7 +141,11 @@ export default function AdminAddProductPage() {
     }
 
     try {
-      await adminApi.addProduct({ ...form, status: targetStatus });
+      await adminApi.addProduct({
+        ...form,
+        status: targetStatus,
+        quantity: form.stock_status === 'outofstock' ? 0 : Number(form.quantity || 0)
+      });
       setSuccess(
         targetStatus === 'published'
           ? (isAr ? 'تم إنشاء المنتج ونشره بنجاح!' : 'Product created and published successfully!')
@@ -294,7 +307,7 @@ export default function AdminAddProductPage() {
             <div className="space-y-4">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t.manufacturerBrand || 'Manufacturer Brand'}</label>
-                <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm({ ...form, product_brand_id: v })} options={brandOptions(linked.brands)} placeholder={t.selectBrandPlaceholder || 'Select Manufacturer Brand'} isAr={language === 'ar'} buttonClassName={`${inputCls} pe-9`} />
+                <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm({ ...form, product_brand_id: v })} options={brandOptions(linked.brands)} placeholder={t.selectBrandPlaceholder || 'Select Manufacturer Brand'} isAr={language === 'ar'} buttonClassName={`${inputCls} pe-9`} allowCustom={true} />
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t.productCategory || 'Category'} <span className="text-red-500">*</span></label>
@@ -336,8 +349,59 @@ export default function AdminAddProductPage() {
                   </span>
                 </div>
               ) : (
-                <input type="number" min="0" value={form.quantity} disabled={!form.stock_management} onChange={e => setForm({ ...form, quantity: e.target.value })} className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white" />
+                <>
+                  <input
+                    type="number" min="0"
+                    value={form.stock_status === 'outofstock' ? 0 : (form.quantity ?? '')}
+                    disabled={form.stock_status === 'outofstock'}
+                    placeholder={form.stock_status === 'outofstock' ? (isAr ? '0 (نفذ المخزون)' : '0 (Out of stock)') : (isAr ? 'حدد الكمية المتوفرة...' : 'Enter quantity...')}
+                    onChange={e => {
+                      const val = e.target.value;
+                      const num = Number(val);
+                      setForm(prev => ({
+                        ...prev,
+                        quantity: val,
+                        stock_management: true,
+                        stock_status: num > 0 ? 'instock' : (val === '0' ? 'outofstock' : prev.stock_status)
+                      }));
+                    }}
+                    className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white"
+                  />
+                  {form.stock_status === 'outofstock' && (
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                      {isAr ? 'المنتج محدد كـ "نفذ المخزون" — الكمية 0 تلقائياً. لتحديد كمية اختر "متوفر".' : 'Product is marked out of stock. Select "In Stock" to enter quantity.'}
+                    </p>
+                  )}
+                </>
               )}
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{isAr ? 'حالة المخزون' : 'Stock Status'}</label>
+              <select
+                value={form.stock_status || 'instock'}
+                onChange={e => {
+                  const val = e.target.value;
+                  setForm(prev => {
+                    let nextQty = prev.quantity;
+                    if (val === 'instock' && (!nextQty || Number(nextQty) <= 0)) {
+                      nextQty = 1;
+                    } else if (val === 'outofstock') {
+                      nextQty = 0;
+                    }
+                    return {
+                      ...prev,
+                      stock_status: val,
+                      quantity: nextQty,
+                      stock_management: true
+                    };
+                  });
+                }}
+                className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:border-marine-cyan focus:outline-none dark:text-white transition-colors"
+              >
+                <option value="instock">{isAr ? 'متوفر' : 'In Stock'}</option>
+                <option value="outofstock">{isAr ? 'نفذ المخزون' : 'Out of Stock'}</option>
+                <option value="onbackorder">{isAr ? 'طلب مسبق (Backorder)' : 'On Backorder'}</option>
+              </select>
             </div>
           </div>
         </section>
@@ -365,22 +429,7 @@ export default function AdminAddProductPage() {
           </div>
         </section>
 
-        {/* Car Trunk essentials toggle */}
-        <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02] flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'مستلزمات على المركب' : 'Onboard Essentials'}</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">{t.forTrunkDesc || (isAr ? 'حدد المنتج ده كحاجة لازم تكون في كل عربية — هيظهر في صفحة شنطة العربية' : 'Mark this product as something every car should carry — it appears on the Car Trunk page')}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{t.forTrunk || (isAr ? 'من أساسيات الشنطة' : 'Trunk essential')}</span>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" checked={!!form.for_trunk} onChange={e => setForm({ ...form, for_trunk: e.target.checked })} />
-                <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-amber-500"></div>
-              </label>
-            </div>
-          </div>
-        </section>
+
 
         {/* Audience hubs (lib/marineHubs): where the product shows on the home page */}
         <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
@@ -394,33 +443,7 @@ export default function AdminAddProductPage() {
         </section>
 
 
-        {/* Section 6: Vehicle Compatibility */}
-        <section className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02] flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-zinc-900 dark:text-white">{isAr ? '6. توافق المركبات' : '6. Vehicle Compatibility'}</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">{isAr ? 'حدد المركبات المتوافقة.' : 'Define compatible vehicles.'}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{isAr ? 'قطعة عامة' : 'Universal'}</span>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" checked={form.is_universal} onChange={e => setForm({ ...form, is_universal: e.target.checked })} />
-                <div className="w-11 h-6 bg-zinc-300 peer-focus:outline-none rounded-full peer dark:bg-white/10 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-marine-cyan"></div>
-              </label>
-            </div>
-          </div>
-          <div className="p-6">
-            {!form.is_universal ? (
-              <CompatibilityBuilder compatibleCars={form.compatible_cars} setCompatibleCars={(cars) => setForm({ ...form, compatible_cars: cars })} carBrands={metadata?.carBrands || []} searchable allowCustomYears />
-            ) : (
-              <div className="text-center py-8">
-                <div className="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-3"><Info size={24} /></div>
-                <h4 className="font-bold text-zinc-900 dark:text-white">{isAr ? 'قطعة عامة' : 'Universal Part'}</h4>
-                <p className="text-sm text-zinc-500 mt-1">{isAr ? 'تناسب جميع المركبات.' : 'Fits all vehicles. Toggle off to define specific models.'}</p>
-              </div>
-            )}
-          </div>
-        </section>
+
 
         {/* Bottom Save Bar */}
         <div className="flex items-center justify-end gap-3 pt-2">

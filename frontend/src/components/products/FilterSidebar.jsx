@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useBrandModels } from '../../lib/carBrandModels';
-import { ChevronDown, ChevronRight, Car, Settings, Tag, Filter, Layers } from 'lucide-react';
+import { ChevronDown, ChevronRight, Ship, Settings, Tag, Filter, Layers } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useLinkedBrandCategory } from '../../lib/brandCategoryLink';
 import useGarageCars, { garageCarLabel, rememberCompanyCar } from '../company/useGarageCars';
@@ -221,7 +221,7 @@ export default function FilterSidebar({ filters, setFilters, language, t, metada
       {/* Car Compatibility Filter */}
       <div className="space-y-4">
         {/* <h3 className="text-xs font-bold text-marine-outline uppercase tracking-widest flex items-center gap-2">
-          <Car size={14} />
+          <Ship size={14} />
           {t.carCompatibility || 'Vehicle Fitment'}
         </h3> */}
         
@@ -347,7 +347,7 @@ export default function FilterSidebar({ filters, setFilters, language, t, metada
       <div className="space-y-4">
         <h3 className="text-xs font-bold text-marine-outline uppercase tracking-widest flex items-center gap-2">
           <Tag size={14} />
-          {t.productBrands || 'Product Brands'}
+          {isAr ? 'الماركات' : 'Brands'}
         </h3>
         <div className="bg-marine-canvas/50 rounded-lg border border-marine-teal/15 p-2 overflow-hidden flex flex-col">
           <input 

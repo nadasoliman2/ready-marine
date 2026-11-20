@@ -2,7 +2,7 @@
 
 import { memo, useState } from 'react';
 import Link from './LocaleLink';
-import { BadgeCheck, ShoppingCart, Star } from 'lucide-react';
+import { BadgeCheck, Ship, ShoppingCart, Star } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import VariantPickerModal from './VariantPickerModal';
 import { useRouter } from '../lib/navigation';
@@ -79,12 +79,12 @@ function ProductCard({ product, showBadge }) {
   const currency = siteSettings?.currency || 'EGP';
   const partCode = product.part_number || product.sku || '';
   const brandName = product.product_brand_id?.name_en || product.product_brand_id?.name || '';
-  // The first vessel/engine the part is listed for — the card's fitment chip.
-  const fitment = product.is_universal
-    ? (isAr ? 'مناسب لكل الموديلات' : 'Universal fit')
-    : (product.compatible_cars || []).slice(0, 2)
-        .map((car) => [car.brand_name, car.models?.[0]?.model_name].filter(Boolean).join(' '))
-        .filter(Boolean).join(' & ');
+  // Specific vessel compatibility only if set — never display "Universal fit"
+  const fitment = (product.compatible_vessels || []).length > 0
+    ? (product.compatible_vessels || []).slice(0, 2)
+        .map((v) => [v.brand_name, v.models?.[0]?.model_name].filter(Boolean).join(' '))
+        .filter(Boolean).join(' & ')
+    : null;
   const stockLabel = isOutOfStock
     ? (isAr ? 'نفذت الكمية' : 'Out of stock')
     : product.stock_management && product.quantity > 0
@@ -121,12 +121,7 @@ function ProductCard({ product, showBadge }) {
                 decoding="async"
                 className="w-full h-full object-contain p-2 sm:p-2.5 group-hover:scale-105 transition-transform duration-300"
               />
-              {/* Part code badge */}
-              {partCode && (
-                <div className="absolute top-1.5 start-1.5 max-w-[55%] truncate bg-white/90 border border-marine-teal/15 text-marine-teal font-display text-[9px] font-medium px-1.5 py-0.5 rounded shadow-xs">
-                  OEM #{partCode}
-                </div>
-              )}
+
               {product.sponsored ? (
                 <div className="absolute top-1.5 end-1.5 bg-amber-500 text-white font-display text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-xs">
                   {isAr ? 'مموّل' : 'Sponsored'}
@@ -177,9 +172,19 @@ function ProductCard({ product, showBadge }) {
 
             {fitment && (
               <p className="text-[10px] text-marine-outline truncate flex items-center gap-1 mb-1">
-                <BadgeCheck size={11} className="text-marine-cyan shrink-0" aria-hidden="true" />
+                <Ship size={11} className="text-marine-cyan shrink-0" aria-hidden="true" />
                 <span className="truncate">{fitment}</span>
               </p>
+            )}
+
+            {product.variation_types?.length > 0 && (
+              <div className="flex flex-wrap gap-1 my-1">
+                {product.variation_types.map(vt => (
+                  <span key={vt.name} className="inline-flex items-center text-[10px] bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 font-semibold px-1.5 py-0.5 rounded">
+                    {vt.name}: {(vt.options || []).map(o => o.value).join('، ')}
+                  </span>
+                ))}
+              </div>
             )}
           </Link>
 

@@ -38,7 +38,7 @@ export default function InvoiceDocument({ invoice, isAr }) {
         <div className="invoice-print bg-white text-zinc-900 rounded-2xl border border-zinc-200 p-6 sm:p-10 text-sm" dir={isAr ? 'rtl' : 'ltr'}>
             <div className="flex flex-wrap items-start justify-between gap-6 border-b-2 border-zinc-900 pb-5">
                 <div>
-                    <p className="text-2xl font-black tracking-tight">Ready<span className="text-marine-primary">Car</span></p>
+                    <p className="text-2xl font-black tracking-tight">Ready<span className="text-marine-primary">Marine</span></p>
                     <p className="text-xs text-zinc-500 mt-1">{isAr ? 'كشف حساب / مطالبة — مش فاتورة ضريبية' : 'Statement of account — not a tax invoice'}</p>
                 </div>
                 <div className="text-end space-y-0.5">

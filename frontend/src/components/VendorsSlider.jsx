@@ -48,6 +48,7 @@ export default function VendorsSlider() {
     let active = true;
     vendorApi.getPublicVendors({ placement: 'home', limit: 12 })
       .then(data => {
+        console.log(data.vendors )
         if (active) setVendors(data.vendors || []);
       })
       .catch(() => {
@@ -78,6 +79,12 @@ export default function VendorsSlider() {
       const gap = parseFloat(styles.columnGap || styles.gap) || 0;
       setVisible(Math.max(1, Math.floor((track.clientWidth + gap) / step)));
     };
+    console.log({
+  vendorsCount: vendors.length,
+  visible,
+  trackWidth: trackRef.current?.clientWidth,
+  cardWidth: trackRef.current?.firstElementChild?.getBoundingClientRect().width
+});
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(track);

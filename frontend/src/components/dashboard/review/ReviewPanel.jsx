@@ -37,7 +37,7 @@ const formOf = (p) => ({
   part_number: p.part_number || '',
   sku: p.sku || '',
   is_universal: !!p.is_universal,
-  compatible_cars: p.compatible_cars || [],
+  compatible_vessels: p.compatible_vessels || [],
 });
 
 /** Only what changed, so a quick edit never rewrites fields it did not touch. */
@@ -51,9 +51,9 @@ const changesOf = (initial, form) => {
     out.discount_type = form.discount_type || null;
     out.discount_value = form.discount_type && form.discount_value !== '' ? Number(form.discount_value) : null;
   }
-  if (initial.is_universal !== form.is_universal || JSON.stringify(initial.compatible_cars) !== JSON.stringify(form.compatible_cars)) {
-    out.is_universal = form.is_universal;
-    out.compatible_cars = form.is_universal ? [] : form.compatible_cars;
+  if (JSON.stringify(initial.compatible_vessels || []) !== JSON.stringify(form.compatible_vessels || [])) {
+    out.compatible_vessels = form.compatible_vessels || [];
+    out.is_universal = (form.compatible_vessels || []).length === 0;
   }
   return out;
 };
@@ -118,7 +118,6 @@ export default function ReviewPanel({
   const check = () => {
     if (!form.part_type) { setPartTypeInvalid(true); return partTypeRequiredText(isAr); }
     if (!form.category_id) return isAr ? 'اختار فئة.' : 'Choose a category.';
-    if (!form.is_universal && !(form.compatible_cars || []).length) return isAr ? 'اختار العربيات المناسبة، أو خليه عام.' : 'Choose the fitting cars, or make it universal.';
     return validateDiscount(form.price, form.discount_type || null, form.discount_value, isAr);
   };
 
@@ -236,19 +235,15 @@ export default function ReviewPanel({
                 <SearchableSelect value={form.product_brand_id} onChange={(v) => setForm((f) => ({ ...f, product_brand_id: v }))} options={brandOptions(linked.brands)} placeholder={isAr ? 'من غير ماركة' : 'No brand'} isAr={isAr} buttonClassName={`${INPUT} pe-9`} /></div>
 
               {/* Fitment */}
-              <div className="rounded-xl border border-zinc-200 dark:border-white/10 p-3 space-y-3">
-                <label className="flex items-center justify-between gap-3 cursor-pointer">
-                  <span>
-                    <span className="block text-sm font-bold text-zinc-900 dark:text-white">{isAr ? 'عام: يناسب أي عربية' : 'Universal: fits any car'}</span>
-                    <span className="block text-xs text-zinc-500">{isAr ? 'اقفله علشان تحدد العربيات.' : 'Turn off to choose the cars.'}</span>
-                  </span>
-                  <input type="checkbox" className="w-5 h-5 accent-marine-cyan" checked={form.is_universal}
-                    onChange={(e) => setForm((f) => ({ ...f, is_universal: e.target.checked }))} />
-                </label>
-                {!form.is_universal && (carBrands
-                  ? <CompatibilityBuilder compatibleCars={form.compatible_cars} setCompatibleCars={(cars) => setForm((f) => ({ ...f, compatible_cars: cars }))} carBrands={carBrands} searchable allowCustomYears />
-                  : <div className="flex justify-center py-4"><Loader2 size={20} className="animate-spin text-marine-primary" /></div>)}
-              </div>
+              {/* <div className="rounded-xl border border-zinc-200 dark:border-white/10 p-3 space-y-3">
+                <div>
+                  <span className="block text-sm font-bold text-zinc-900 dark:text-white">{isAr ? 'توافق القوارب والمحركات (اختياري)' : 'Vessel & Engine Compatibility (Optional)'}</span>
+                  <span className="block text-xs text-zinc-500">{isAr ? 'حدد القوارب أو المحركات المناسبة إذا كان المنتج مخصصاً.' : 'Specify vessels or engines if applicable.'}</span>
+                </div>
+                {carBrands
+                  ? <CompatibilityBuilder compatibleCars={form.compatible_vessels} setCompatibleCars={(cars) => setForm((f) => ({ ...f, compatible_vessels: cars, is_universal: !cars.length }))} carBrands={carBrands} searchable allowCustomYears />
+                  : <div className="flex justify-center py-4"><Loader2 size={20} className="animate-spin text-marine-primary" /></div>}
+              </div> */}
 
               <label className="block"><span className={LABEL}>{isAr ? 'الوصف بالعربي' : 'Arabic description'}</span>
                 <textarea dir="rtl" rows={4} value={form.description_ar} onChange={(e) => setForm((f) => ({ ...f, description_ar: e.target.value }))} className={INPUT} /></label>

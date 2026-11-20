@@ -9,7 +9,7 @@ import {
   AlertTriangle, ArrowLeft, ChevronDown, ChevronUp, Loader2,
   ExternalLink, FileX, Table2
 } from 'lucide-react';
-import { localizeBulkError } from '../../../../lib/dashboardLocalization';
+import { localizeBulkError, localizeGeneralError } from '../../../../lib/dashboardLocalization';
 import ReviewLinksPanel from '../../../../components/dashboard/catalog/ReviewLinksPanel';
 
 /* ── tiny client-side XLSX writer for error report ─────────────────── */
@@ -58,6 +58,7 @@ function SuccessRow({ item, t }) {
 
 function FailedRow({ item, router, t, language }) {
   const [open, setOpen] = useState(false);
+  const isAr = language === 'ar';
   return (
     <div className="border border-red-500/30 rounded-lg overflow-hidden">
       <button
@@ -71,6 +72,19 @@ function FailedRow({ item, router, t, language }) {
           {item.title && <span className="text-zinc-400 text-sm mx-2 truncate">— {item.title}</span>}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
+          {item.savedAsDraft && item.draftId && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/dashboard/products/${item.draftId}/edit`);
+              }}
+              className="flex items-center gap-1.5 text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-2.5 py-1 rounded-lg font-bold transition-colors z-10"
+              title={isAr ? 'تعديل واستكمال المسودة في صفحة تعديل المنتج' : 'Edit & complete product draft'}
+            >
+              <ExternalLink size={12} /> {isAr ? 'تعديل واستكمال المنتج' : 'Edit Product'}
+            </button>
+          )}
           {item.savedAsDraft && (
             <span className="flex items-center gap-1 text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
               <AlertTriangle size={11} /> {t.draftSaved}
@@ -159,7 +173,7 @@ export default function BulkUploadPage() {
       setPreview(data);
       setSelectedFile(null);
     } catch (err) {
-      setError(language === 'ar' ? (t.uploadFailed || 'تعذر رفع الملف.') : (err.message || t.uploadFailed));
+      setError(localizeGeneralError(err, language) || t.uploadFailed);
     } finally {
       setUploading(false);
     }
@@ -176,7 +190,7 @@ export default function BulkUploadPage() {
       setResult(data);
       setPreview(null);
     } catch (err) {
-      setError(language === 'ar' ? (t.uploadFailed || 'تعذر حفظ المنتجات.') : (err.message || t.uploadFailed));
+      setError(localizeGeneralError(err, language) || t.uploadFailed);
     } finally {
       setSaving(false);
     }

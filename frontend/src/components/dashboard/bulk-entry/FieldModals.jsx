@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import { L } from './bulkEntryUtils';
 import { categoriesForBrand, indexCategoryTree } from '../../../lib/brandCategoryLink';
+import { audienceApi } from '../../../lib/api';
 import NestedCategorySelector from '../NestedCategorySelector';
 import ImageUploader from '../ImageUploader';
 import CompatibilityBuilder from '../CompatibilityBuilder';
@@ -117,15 +118,80 @@ export function ImagesModal({ row, onSave, onClose }) {
     );
 }
 
-export function CompatibilityModal({ row, refs, onSave, onClose }) {
+export const AUDIENCE_OPTIONS = [
+    { key: 'yacht_luxury', ar: 'مستلزمات اليخوت الفاخرة', en: 'Premium / Yacht Luxury' },
+    { key: 'pro_angler', ar: 'الصياد المحترف', en: 'Pro-Angler' },
+    { key: 'family_safety', ar: 'أمان العائلة والأطفال', en: 'Family & Kids Safety' },
+    { key: 'lifestyle_comfort', ar: 'الرحلات والرفاهية', en: 'Lifestyle & Comfort' },
+    { key: 'next_gen', ar: 'المبتدئين والشباب', en: 'Next-Gen Boaters' },
+    { key: 'diy_maintenance', ar: 'صيانتك بنفسك', en: 'DIY Boat Maintenance' },
+    { key: 'saltwater', ar: 'مستلزمات المياه المالحة', en: 'Saltwater Off-Shore' },
+    { key: 'freshwater', ar: 'مستلزمات المياه العذبة', en: 'Freshwater / Lake Fishing' },
+    { key: 'smart_gear', ar: 'الصيد الذكي', en: 'Smart Fishing Gear' },
+    { key: 'eco_friendly', ar: 'القسم الصديق للبيئة', en: 'Eco-Friendly Marine' },
+];
+
+export function AudienceModal({ row, onSave, onClose }) {
     const { language } = useApp();
-    const [cars, setCars] = useState(row.compatible_cars || []);
-    // Which product's cars these are, so a popup opened from the wrong row is caught.
-    const name = ((language === 'ar' ? row.title_ar || row.title_en : row.title_en || row.title_ar) || '').trim();
+    const isAr = language === 'ar';
+    const [selected, setSelected] = useState(row.target_audiences || []);
+    const [options, setOptions] = useState(AUDIENCE_OPTIONS);
+
+    useEffect(() => {
+        audienceApi.getAll()
+            .then((res) => {
+                if (res && res.audiences && Array.isArray(res.audiences) && res.audiences.length > 0) {
+                    setOptions(res.audiences.map(a => ({
+                        _id: a._id,
+                        key: a.key || a.slug,
+                        ar: a.name_ar,
+                        en: a.name_en,
+                    })));
+                }
+            })
+            .catch(() => {});
+    }, []);
+
+    const isChecked = (opt) => {
+        const idStr = opt._id ? String(opt._id) : '';
+        const keyStr = opt.key ? String(opt.key).toLowerCase() : '';
+        return selected.some((s) => {
+            const str = String(s).toLowerCase();
+            return (idStr && str === idStr.toLowerCase()) || (keyStr && str === keyStr);
+        });
+    };
+
+    const toggle = (opt) => {
+        const checked = isChecked(opt);
+        const idStr = opt._id ? String(opt._id) : '';
+        const keyStr = opt.key ? String(opt.key).toLowerCase() : '';
+        if (checked) {
+            setSelected(prev => prev.filter(s => {
+                const str = String(s).toLowerCase();
+                return !(idStr && str === idStr.toLowerCase()) && !(keyStr && str === keyStr);
+            }));
+        } else {
+            setSelected(prev => [...prev, opt._id || opt.key]);
+        }
+    };
+
     return (
-        <Modal wide title={L(language, 'Vehicle Compatibility', 'توافق المركبات')}
-            subtitle={name && `${L(language, 'Product', 'المنتج')}: ${name}`} onClose={onClose} onSave={() => { onSave({ compatible_cars: cars, is_universal: false }); onClose(); }}>
-            <CompatibilityBuilder compatibleCars={cars} setCompatibleCars={setCars} carBrands={refs?.metadata?.carBrands || []} />
+        <Modal wide title={L(language, 'Custom Audiences (Optional)', 'المجموعات المخصصة (اختياري)')} onClose={onClose} onSave={() => { onSave({ target_audiences: selected }); onClose(); }}>
+            <p className="text-xs text-zinc-500 mb-4">
+                {L(language, 'Choose target audiences or boating lifestyle categories for this product (optional).', 'اختر المجموعات المخصصة أو أسلوب الإبحار المناسب لهذا المنتج (اختياري).')}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                {options.map((opt) => {
+                    const checked = isChecked(opt);
+                    return (
+                        <div key={opt._id || opt.key} onClick={() => toggle(opt)}
+                            className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer select-none transition-colors ${checked ? 'bg-marine-mist border-marine-primary/40 dark:bg-marine-cyan/10' : 'bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 hover:border-zinc-300'}`}>
+                            <input type="checkbox" checked={checked} onChange={() => {}} className="rounded text-marine-primary pointer-events-none" />
+                            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{isAr ? opt.ar : opt.en}</span>
+                        </div>
+                    );
+                })}
+            </div>
         </Modal>
     );
 }

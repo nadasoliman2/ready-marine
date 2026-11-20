@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Car, Plus, Pencil, Trash2 } from 'lucide-react';
+import { Ship, Plus, Pencil, Trash2 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import { companyPortalApi } from '../../../lib/api';
 import { formatMoney, errorText } from '../../../lib/companyLocalization';
@@ -15,7 +15,7 @@ import {
 import { usePortalTerms } from '../../../components/company/OrgTermsContext';
 
 const EMPTY_CAR = { car_brand_id: '', car_model_id: '', year: '', plate: '' };
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 /**
  * Company cars: the fleet a manager orders parts for. Each company-car order is
@@ -68,9 +68,9 @@ export default function CompanyCarsPage() {
     return (
         <div>
             <PageHeader
-                title={isAr ? `عربيات ${ot.the}` : `${ot.One} cars`}
-                subtitle={isAr ? `العربيات اللي بتطلب ليها قطع غيار على حساب ${ot.the}.` : `The cars you order parts for on the ${ot.one} account.`}
-                actions={<Button icon={Plus} onClick={() => setEditing({ ...EMPTY_CAR })}>{isAr ? 'إضافة عربية' : 'Add a car'}</Button>}
+                title={isAr ? `مراكب وقوارب ${ot.the}` : `${ot.One} vessels`}
+                subtitle={isAr ? `المراكب والقوارب اللي بتطلب ليها قطع غيار على حساب ${ot.the}.` : `The vessels you order parts for on the ${ot.one} account.`}
+                actions={<Button icon={Plus} onClick={() => setEditing({ ...EMPTY_CAR })}>{isAr ? 'إضافة قارب / مركب' : 'Add a vessel'}</Button>}
             />
             {error && <Notice onClose={() => setError('')}>{error}</Notice>}
             {message && <Notice tone="success" onClose={() => setMessage('')}>{message}</Notice>}
@@ -78,9 +78,9 @@ export default function CompanyCarsPage() {
             <div className={CARD}>
                 {cars.length === 0 ? (
                     <EmptyState
-                        icon={Car}
-                        title={isAr ? 'لسه مفيش عربيات' : 'No cars yet'}
-                        message={isAr ? `سجل عربيات ${ot.the} عشان تطلب ليها قطع وتعرف صرفت كام على كل عربية.` : `Register the ${ot.one} cars to order parts for them and see what each one costs.`}
+                        icon={Ship}
+                        title={isAr ? 'لسه مفيش قوارب أو مراكب' : 'No vessels yet'}
+                        message={isAr ? `سجل مراكب ${ot.the} عشان تطلب ليها قطع وتعرف صرفت كام على كل مركب.` : `Register the ${ot.one} vessels to order parts for them and see what each one costs.`}
                     />
                 ) : (
                     <TableWrap>

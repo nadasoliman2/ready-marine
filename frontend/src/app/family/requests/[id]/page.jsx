@@ -749,7 +749,7 @@ function Avatar({ user }) {
     return (
         <div className="w-12 h-12 rounded-full bg-marine-cyan flex items-center justify-center text-white font-black overflow-hidden flex-shrink-0">
             {user?.profile_image
-                ? <img src={resolveAssetUrl(user.profile_image)} alt={user?.name || ''} className="w-full h-full object-cover" />
+                ? <img src={resolveAssetUrl(user.profile_image)} alt={user?.name || ''} referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.style.display = 'none'; }} className="w-full h-full object-cover" />
                 : (user?.name?.[0]?.toUpperCase() || '?')}
         </div>
     );

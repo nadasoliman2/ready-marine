@@ -82,7 +82,7 @@ export default function AddProductPage() {
       return;
     }
     if (!form.category_id) {
-      setError(isAr ? 'الرجاء اختيار فئة من القائمة.' : 'Please select a leaf category from the nested selector.');
+      setError(isAr ? 'الرجاء اختيار فئة للمنتج (حقل إلزامي).' : 'Please select a product category (required).');
       setLoading(false);
       return;
     }
@@ -102,8 +102,21 @@ export default function AddProductPage() {
     }
 
     try {
-      await vendorApi.addProduct({ ...form, status: targetStatus, catalog_entry_id: entry._id });
-      router.push('/dashboard/products');
+      const payload = {
+        ...form,
+        status: targetStatus,
+        catalog_entry_id: entry._id,
+        quantity: form.stock_status === 'outofstock' ? 0 : Number(form.quantity || 0)
+      };
+      const res = await vendorApi.addProduct(payload);
+      const resultingStatus = res?.product?.status;
+      if (resultingStatus === 'pending') {
+        router.push('/dashboard/products?status_notice=pending');
+      } else if (resultingStatus === 'draft') {
+        router.push('/dashboard/products?status_notice=draft');
+      } else {
+        router.push('/dashboard/products?status_notice=published');
+      }
     } catch (err) {
       if (err.code === 'DUPLICATE_CATALOG_PRODUCT' && err.productId) {
         router.push(`/dashboard/products/${err.productId}/edit`);
@@ -191,7 +204,7 @@ export default function AddProductPage() {
             {isAr ? 'السعر والمخزون' : 'Price & stock'}
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
-            {isAr ? 'نوع القطعة والسعر والكمية، ثم أرسله للمراجعة.' : 'Part type, price and stock, then send it for review.'}
+            {isAr ? 'نوع القطعة والسعر والمخزون، ثم أرسله للمراجعة.' : 'Part type, price and stock, then send it for review.'}
           </p>
         </div>
       </div>
@@ -222,8 +235,8 @@ export default function AddProductPage() {
 
       {/* The fields that are actually the vendor's. The part type is theirs too: the same
           catalog part can be sold as original by one store and as aftermarket by another. */}
-      <div className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl p-6 mb-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="sm:col-span-2">
+      <div className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/5 rounded-2xl p-6 mb-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="sm:col-span-3">
           <PartTypePicker value={form.part_type} onChange={(v) => setForm({ ...form, part_type: v })} isAr={isAr} invalid={partTypeInvalid} />
         </div>
         <div className="space-y-1">
@@ -239,6 +252,25 @@ export default function AddProductPage() {
           </div>
         </div>
         <div className="space-y-1">
+          <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{isAr ? 'حالة المخزون' : 'Stock Status'}</label>
+          <select
+            value={form.stock_status || 'instock'}
+            onChange={(e) => {
+              const val = e.target.value;
+              setForm(prev => ({
+                ...prev,
+                stock_status: val,
+                ...(val === 'outofstock' ? { quantity: 0 } : {})
+              }));
+            }}
+            className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-3 text-sm focus:border-marine-cyan focus:outline-none dark:text-white transition-colors"
+          >
+            <option value="instock">{isAr ? 'متوفر' : 'In Stock'}</option>
+            <option value="outofstock">{isAr ? 'نفذ المخزون' : 'Out of Stock'}</option>
+            <option value="onbackorder">{isAr ? 'طلب مسبق (Backorder)' : 'On Backorder'}</option>
+          </select>
+        </div>
+        <div className="space-y-1">
           <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{isAr ? 'الكمية' : 'Stock'}</label>
           {form.variation_types.length > 0 ? (
             <div className="flex items-center h-[46px] px-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-lg">
@@ -247,12 +279,21 @@ export default function AddProductPage() {
               </span>
             </div>
           ) : (
-            <input
-              type="number" min="0"
-              value={form.quantity}
-              onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-              className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-3 text-sm focus:border-marine-cyan focus:outline-none dark:text-white"
-            />
+            <>
+              <input
+                type="number" min="0"
+                value={form.stock_status === 'outofstock' ? 0 : form.quantity}
+                disabled={form.stock_status === 'outofstock'}
+                placeholder={form.stock_status === 'outofstock' ? (isAr ? '0 (نفذ المخزون)' : '0 (Out of stock)') : ''}
+                onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+                className="w-full bg-zinc-50 dark:bg-[#0E1012] disabled:opacity-50 border border-zinc-200 dark:border-white/10 rounded-lg px-3 py-3 text-sm focus:border-marine-cyan focus:outline-none dark:text-white"
+              />
+              {form.stock_status === 'outofstock' && (
+                <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                  {isAr ? 'المنتج محدد كـ "نفذ المخزون" — الكمية 0 تلقائياً ولا يُطلب تحديدها.' : 'Product is marked out of stock. Quantity is set to 0 automatically.'}
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from '../../components/LocaleLink';
 import { useApp } from '../../context/AppContext';
 import { resolveAssetUrl } from '../../lib/assets';
-import { Car, Loader2, Search } from 'lucide-react';
+import { Ship, Loader2, Search } from 'lucide-react';
 
 export default function BrandsPage() {
   const { language, t } = useApp();
@@ -17,11 +17,11 @@ export default function BrandsPage() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters`);
         if (res.ok) {
           const data = await res.json();
-          // Sort brands alphabetically
-          const sorted = (data.carBrands || []).sort((a, b) => a.name.localeCompare(b.name));
+          // Sort product brands alphabetically
+          const sorted = (data.productBrands || data.brands || []).sort((a, b) => a.name.localeCompare(b.name));
           setBrands(sorted);
         }
       } catch (err) {
@@ -67,7 +67,7 @@ export default function BrandsPage() {
           </div>
         ) : filteredBrands.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-marine-outline bg-white rounded-xl border border-marine-teal/15 shadow-sm">
-            <Car size={48} className="mb-4 opacity-50" />
+            <Ship size={48} className="mb-4 opacity-50" />
             <p className="text-lg font-bold text-marine-muted">{isAr ? 'لم يتم العثور على ماركات' : 'No brands found'}</p>
             <p className="text-sm mt-1">{isAr ? 'حاول استخدام كلمات بحث مختلفة' : 'Try adjusting your search terms'}</p>
           </div>
@@ -76,7 +76,7 @@ export default function BrandsPage() {
             {filteredBrands.map(brand => (
               <Link
                 key={brand._id}
-                href={`/products?car_brand_id=${brand._id}`}
+                href={`/products?product_brand_id=${brand._id}`}
                 className="group bg-white rounded-xl border border-marine-teal/15 hover:border-marine-cyan/40 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 overflow-hidden p-5 flex flex-col items-center gap-4"
               >
                 <div className="w-full aspect-[4/3] rounded-lg overflow-hidden bg-marine-canvas flex items-center justify-center relative">
@@ -93,11 +93,8 @@ export default function BrandsPage() {
                   )}
                 </div>
                 <div className="text-center w-full">
-                  <span className="text-marine-ink font-bold text-base block truncate group-hover:text-marine-primary transition-colors">
+                  <span className="text-marine-ink font-bold text-base block truncate group-hover:text-marine-primary transition-colors capitalize">
                     {brand.name}
-                  </span>
-                  <span className="text-xs text-marine-outline font-semibold mt-1">
-                    {brand.model_count ?? brand.models?.length ?? 0} {isAr ? 'موديل' : 'models'}
                   </span>
                 </div>
               </Link>

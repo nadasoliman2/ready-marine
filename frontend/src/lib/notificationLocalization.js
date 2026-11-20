@@ -20,12 +20,14 @@ export function localizeNotification(notification, language) {
 
   const content = {
     trial_activated: {
-      title: 'تم تفعيل الفترة التجريبية',
-      message: `تم تفعيل الفترة التجريبية لباقة «${packageName}»${data.expiresAt ? ` حتى ${formatArabicDate(data.expiresAt)}` : ''}.`,
+      title: 'تم تفعيل الفترة التجريبية المجانية',
+      message: `أهلاً بك في Ready Marine! تم تفعيل الفترة التجريبية لباقة «${packageName}»${data.expiresAt ? ` حتى ${formatArabicDate(data.expiresAt)}` : ''}. يمكنك الآن البدء في إضافة ونشر منتجاتك.`,
     },
     subscription_activated: {
-      title: 'تم تفعيل الاشتراك',
-      message: `أصبحت باقة «${packageName}» نشطة الآن${data.expiresAt ? ` حتى ${formatArabicDate(data.expiresAt)}` : ''}.`,
+      title: data.isTrial ? 'تم تفعيل الفترة التجريبية' : 'تم تفعيل الاشتراك',
+      message: data.isTrial
+        ? `أهلاً بك في Ready Marine! تم تفعيل الفترة التجريبية لباقة «${packageName}» بنجاح. يمكنك الآن البدء في إضافة ونشر منتجاتك.`
+        : `أصبحت باقة «${packageName}» نشطة الآن${data.expiresAt ? ` حتى ${formatArabicDate(data.expiresAt)}` : ''}.`,
     },
     subscription_expiring_soon: {
       title: data.daysUntilExpiry === 1 ? 'ينتهي الاشتراك غداً' : 'الاشتراك على وشك الانتهاء',
@@ -121,7 +123,7 @@ export function localizeNotification(notification, language) {
     products_published: {
       title: (data.count || 1) > 1 ? `اتنشر ${data.count} منتج ليك` : 'منتجك اتنشر',
       message: (() => {
-        const names = { title: 'العنوان', description: 'الوصف', category: 'الفئة', brand: 'الماركة', part_type: 'نوع القطعة', part_number: 'رقم القطعة', sku: 'كود المنتج', gtin: 'الباركود', price: 'السعر', discount: 'الخصم', fitment: 'العربيات المناسبة', images: 'الصور', stock: 'المخزون' };
+        const names = { title: 'العنوان', description: 'الوصف', category: 'الفئة', brand: 'الماركة', part_type: 'نوع القطعة', part_number: 'رقم القطعة', sku: 'كود المنتج', gtin: 'الباركود', price: 'السعر', discount: 'الخصم', fitment: 'المراكب المناسبة', images: 'الصور', stock: 'المخزون' };
         const many = (data.count || 1) > 1;
         const fixed = Object.entries(data.fixes || {}).map(([k, n]) => `${names[k] || k}${many ? ` (${n})` : ''}`);
         const head = many ? `${data.count} منتج ليك اتنشروا على ريدي مارين.` : `«${data.titles?.[0] || 'منتجك'}» اتنشر على ريدي مارين.`;
