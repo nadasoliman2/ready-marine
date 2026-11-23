@@ -1,7 +1,8 @@
 'use client';
 
-import { Fragment, useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Calendar, CheckCircle2, Eye, EyeOff, Hash, Image as ImageIcon, Loader2, Mail, MapPin, Package, Pencil, Phone, Plus, Search, ShieldOff, Store, User, X, CreditCard, Trash2 } from 'lucide-react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from '../../../../lib/navigation';
+import { AlertTriangle, Calendar, CheckCircle2, ChevronDown, Eye, EyeOff, Hash, Image as ImageIcon, Loader2, Mail, MapPin, Package, Pencil, Phone, Plus, Search, ShieldOff, Store, User, X, CreditCard, Trash2 } from 'lucide-react';
 import { adminApi, adminSubscriptionApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import PaginationControls from '../../../../components/dashboard/PaginationControls';
@@ -33,13 +34,19 @@ const flattenCategories = (cats, level = 0, result = []) => {
 };
 
 export default function AdminVendorsPage() {
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get('search');
   const { language } = useApp();
   const isAr = language === 'ar';
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [statusId, setStatusId] = useState(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(urlSearch || '');
+
+  useEffect(() => {
+    if (urlSearch !== null && urlSearch !== undefined) setSearch(urlSearch);
+  }, [urlSearch]);
   const [filterStatus, setFilterStatus] = useState('');
   const [filterProducts, setFilterProducts] = useState('');
   const [showAdd, setShowAdd] = useState(false);
@@ -103,7 +110,7 @@ export default function AdminVendorsPage() {
     if (categories.length > 0 || categoriesLoading) return;
     setCategoriesLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/categories`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/categories`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setCategories(flattenCategories(data));
@@ -238,7 +245,7 @@ export default function AdminVendorsPage() {
       public_show_on_home: Boolean(vendor.public_show_on_home),
       public_home_order: Number(vendor.public_home_order || 0),
     });
-    setEditStoreImagePreview(vendor.store_image ? (vendor.store_image.startsWith('http') ? vendor.store_image : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:4000'}${vendor.store_image}`) : '');
+    setEditStoreImagePreview(vendor.store_image ? (vendor.store_image.startsWith('http') ? vendor.store_image : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:2000'}${vendor.store_image}`) : '');
     setEditStoreImageFile(null);
     setShowEdit(true);
   };
@@ -423,7 +430,7 @@ export default function AdminVendorsPage() {
             </div>
             <button
               onClick={() => setShowAdd(true)}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white rounded-xl font-bold shadow-lg shadow-red-500/20 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white rounded-xl font-bold  transition-all"
             >
               <Plus size={18} />
               {isAr ? 'إضافة تاجر' : 'Add Vendor'}
@@ -442,46 +449,47 @@ export default function AdminVendorsPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
             <StatCard icon={Store} label={isAr ? 'كل التجار' : 'Total Vendors'} value={vendors.length} />
             <StatCard icon={CheckCircle2} label={isAr ? 'نشط' : 'Active'} value={activeCount} tone="green" />
-            <StatCard icon={Package} label={isAr ? 'لديهم منتجات' : 'With Products'} value={withProductsCount} tone="blue" />
-            <StatCard icon={ShieldOff} label={isAr ? 'بدون منتجات' : 'Without Products'} value={withoutProductsCount} tone="amber" />
+            <StatCard icon={ShieldOff} label={isAr ? 'معلق' : 'Suspended'} value={suspendedCount} tone="red" />
           </div>
 
-          <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-zinc-100 dark:border-white/5 flex flex-col md:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search size={18} className="absolute start-3 top-1/2 -translate-y-1/2 text-zinc-400" />
-                <input
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  placeholder={isAr ? 'ابحث باسم المتجر، اسم المستخدم، البريد، أو الهاتف' : 'Search store name, username, email, or phone'}
-                  className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl ps-10 pe-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
-                />
-              </div>
-              <select
-                value={filterStatus}
-                onChange={e => setFilterStatus(e.target.value)}
-                className="w-full md:w-48 bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-marine-cyan"
-              >
-                <option value="">{isAr ? 'كل حالات التجار' : 'All Vendor Statuses'}</option>
-                <option value="active">{isAr ? 'نشط' : 'Active'}</option>
-                <option value="suspended">{isAr ? 'معلق' : 'Suspended'}</option>
-              </select>
-              <select
-                value={filterProducts}
-                onChange={e => setFilterProducts(e.target.value)}
-                className="w-full md:w-56 bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-marine-cyan"
-              >
-                <option value="">{isAr ? 'حسب المنتجات (الكل)' : 'Products (All)'}</option>
-                <option value="has_products">{isAr ? 'تجار لديهم منتجات' : 'With Products'}</option>
-                <option value="no_products">{isAr ? 'تجار بدون منتجات' : 'Without Products'}</option>
-              </select>
+          {/* Search and Filters Bar */}
+          <div className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 shadow-sm flex flex-col md:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search size={18} className="absolute start-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder={isAr ? 'ابحث باسم المتجر، اسم المستخدم، البريد، أو الهاتف' : 'Search store name, username, email, or phone'}
+                className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl ps-10 pe-4 py-3 text-sm focus:outline-none focus:border-marine-cyan"
+              />
             </div>
+            <select
+              value={filterStatus}
+              onChange={e => setFilterStatus(e.target.value)}
+              className="w-full md:w-48 bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-marine-cyan"
+            >
+              <option value="">{isAr ? 'كل حالات التجار' : 'All Vendor Statuses'}</option>
+              <option value="active">{isAr ? 'نشط' : 'Active'}</option>
+              <option value="suspended">{isAr ? 'معلق' : 'Suspended'}</option>
+            </select>
+            <select
+              value={filterProducts}
+              onChange={e => setFilterProducts(e.target.value)}
+              className="w-full md:w-56 bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-marine-cyan"
+            >
+              <option value="">{isAr ? 'حسب المنتجات (الكل)' : 'Products (All)'}</option>
+              <option value="has_products">{isAr ? 'تجار لديهم منتجات' : 'With Products'}</option>
+              <option value="no_products">{isAr ? 'تجار بدون منتجات' : 'Without Products'}</option>
+            </select>
+          </div>
 
+          {/* Desktop Table View */}
+          <div className="hidden xl:block bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm whitespace-nowrap">
+              <table className="w-full text-sm whitespace-nowrap min-w-[950px]">
                 <thead className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
                   <tr className={isAr ? 'text-right' : 'text-left'}>
                     <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'المتجر' : 'Store'}</th>
@@ -587,95 +595,14 @@ export default function AdminVendorsPage() {
                         {expanded && (
                           <tr className="bg-zinc-50/80 dark:bg-white/[0.02]">
                             <td colSpan={6} className="px-6 py-5">
-                              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-                                <DetailItem icon={Hash} label="Vendor ID" value={vendor._id} />
-                                <DetailItem icon={User} label={isAr ? 'اسم المسؤول' : 'Owner Name'} value={vendor.name} />
-                                <DetailItem icon={Store} label={isAr ? 'اسم المتجر' : 'Store Name'} value={vendor.store_name} />
-                                <DetailItem icon={Store} label={isAr ? 'اسم المستخدم' : 'Store Username'} value={`@${vendor.store_username}`} />
-                                <DetailItem icon={Mail} label={isAr ? 'البريد الإلكتروني' : 'Email Address'} value={vendor.email} />
-                                <DetailItem icon={Phone} label={isAr ? 'رقم الهاتف' : 'Phone Number'} value={vendor.phone} dir="ltr" />
-                                <div className="xl:col-span-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#14171A] p-3">
-                                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1.5">
-                                    <MapPin size={13} />
-                                    {isAr ? 'الفروع / المواقع' : 'Branches / Locations'}
-                                  </div>
-                                  <div className="space-y-2">
-                                    {vendor.locations?.length > 0 ? (
-                                      vendor.locations.map((loc, idx) => (
-                                        <div key={idx} className="text-sm flex items-center gap-2">
-                                          <div className={`w-2 h-2 rounded-full ${loc.is_default ? 'bg-emerald-500' : 'bg-zinc-300'}`} />
-                                          <span className={loc.is_default ? 'font-black text-zinc-900 dark:text-white' : 'text-zinc-500'}>
-                                            {loc.address} {loc.is_default && (isAr ? '(الافتراضي)' : '(Default)')}
-                                          </span>
-                                        </div>
-                                      ))
-                                    ) : (
-                                      <p className="text-sm text-zinc-400 italic">{isAr ? 'لا توجد فروع مضافة' : 'No locations added'}</p>
-                                    )}
-                                  </div>
-                                </div>
-                                <DetailItem icon={CheckCircle2} label={isAr ? 'الحالة' : 'Status'} value={vendor.status || 'active'} />
-                                {vendor.suspension_reason && (
-                                    <DetailItem icon={AlertTriangle} label={isAr ? 'سبب التعليق' : 'Suspension Reason'} value={vendor.suspension_reason} />
-                                )}
-                                {vendor.suspension_date && (
-                                    <DetailItem icon={Calendar} label={isAr ? 'تاريخ التعليق' : 'Suspended At'} value={formatDate(vendor.suspension_date, true)} />
-                                )}
-                                {(() => {
-                                    const sub = vendorSubscriptionData[vendor._id];
-                                    if (subscriptionLoadingIds[vendor._id]) {
-                                      return (
-                                        <div className="xl:col-span-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#14171A] p-3">
-                                          <div className="flex items-center gap-2 text-sm font-bold text-zinc-500">
-                                            <Loader2 size={14} className="animate-spin text-marine-primary" />
-                                            {isAr ? 'جاري تحميل بيانات الاشتراك...' : 'Loading subscription details...'}
-                                          </div>
-                                        </div>
-                                      );
-                                    }
-                                    if (!sub) return null;
-                                    return (
-                                        <>
-                                            <DetailItem icon={CreditCard} label={isAr ? 'الباقة' : 'Plan'} value={sub.package?.name || '-'} />
-                                            <DetailItem icon={Hash} label={isAr ? 'المنتجات' : 'Products'} value={`${sub.publishedCount || 0} / ${sub.maxProducts || 0}`} />
-                                            {sub.subscription?.expires_at && (
-                                                <DetailItem icon={Calendar} label={isAr ? 'ينتهي' : 'Expires'} value={formatDate(sub.subscription.expires_at)} />
-                                            )}
-                                        </>
-                                    );
-                                })()}
-                                <DetailItem icon={Calendar} label={isAr ? 'تاريخ الإنشاء' : 'Created At'} value={formatDate(vendor.created_at, true)} />
-                              </div>
-
-                              {/* Danger Zone — permanent delete (requires suspension first) */}
-                              <div className="mt-4 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50/60 dark:bg-red-500/5 p-4">
-                                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">
-                                  <AlertTriangle size={13} />
-                                  {isAr ? 'منطقة الخطر' : 'Danger Zone'}
-                                </div>
-                                {suspended ? (
-                                  <>
-                                    <p className="text-sm text-zinc-500 mb-3 leading-relaxed">
-                                      {isAr
-                                        ? 'حذف هذا التاجر نهائياً سيزيل الحساب وجميع منتجاته وإعلاناته وأرباحه واشتراكاته بشكل لا يمكن التراجع عنه.'
-                                        : 'Permanently deleting this vendor removes the account and all its products, ads, earnings and subscriptions. This cannot be undone.'}
-                                    </p>
-                                    <button
-                                      onClick={() => { setDeletingVendor(vendor); setShowDelete(true); }}
-                                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black bg-red-600 hover:bg-red-700 text-white transition-colors"
-                                    >
-                                      <Trash2 size={14} />
-                                      {isAr ? 'حذف التاجر نهائياً' : 'Permanently Delete Vendor'}
-                                    </button>
-                                  </>
-                                ) : (
-                                  <p className="text-sm text-zinc-500 leading-relaxed">
-                                    {isAr
-                                      ? 'يجب تعليق التاجر أولاً قبل أن يتمكن من الحذف النهائي.'
-                                      : 'Suspend this vendor first before it can be permanently deleted.'}
-                                  </p>
-                                )}
-                              </div>
+                              <VendorExpandedBlock
+                                vendor={vendor}
+                                isAr={isAr}
+                                suspended={suspended}
+                                vendorSubscriptionData={vendorSubscriptionData}
+                                subscriptionLoadingIds={subscriptionLoadingIds}
+                                onDeleteClick={() => { setDeletingVendor(vendor); setShowDelete(true); }}
+                              />
                             </td>
                           </tr>
                         )}
@@ -685,11 +612,130 @@ export default function AdminVendorsPage() {
                 </tbody>
               </table>
             </div>
+          </div>
 
+          {/* Mobile / Tablet Responsive Card View (matches readycar.store layout exactly) */}
+          <div className="xl:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+            {paginatedVendors.map(vendor => {
+              const suspended = vendor.status === 'suspended';
+              const toggling = statusId === vendor._id;
+              const expanded = expandedVendorId === vendor._id;
+
+              return (
+                <div key={vendor._id} className={`bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 shadow-sm space-y-3.5 ${expanded ? 'md:col-span-2' : ''}`}>
+                  {/* Top Row: Store Avatar + Details + Status Badge */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 min-w-0">
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black shrink-0 ${suspended ? 'bg-red-50 text-red-500 dark:bg-red-500/10' : 'bg-marine-mist text-marine-primary dark:bg-marine-cyan/10'}`}>
+                        {(vendor.store_name || 'V').charAt(0).toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-black text-zinc-900 dark:text-white text-base leading-snug truncate">
+                          {vendor.store_name}
+                        </h3>
+                        <p className="text-xs text-zinc-500 truncate">@{vendor.store_username}</p>
+                        <p className="text-[11px] text-zinc-400 mt-0.5 truncate">{vendor.name}</p>
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {vendor.public_show_on_vendors_page !== false && (
+                            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-300">
+                              {isAr ? 'صفحة التجار' : 'Directory'}
+                            </span>
+                          )}
+                          {vendor.public_show_on_home && (
+                            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-300">
+                              {isAr ? 'الرئيسية' : 'Home'}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shrink-0 ${suspended ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'}`}>
+                      {suspended ? <AlertTriangle size={12} /> : <CheckCircle2 size={12} />}
+                      {suspended ? (isAr ? 'معلق' : 'Suspended') : (isAr ? 'نشط' : 'Active')}
+                    </span>
+                  </div>
+
+                  {/* Contact Info & Products */}
+                  <div className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 bg-zinc-50/60 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                    <p className="flex items-center gap-2">
+                      <Mail size={14} className="text-zinc-400 shrink-0" />
+                      <span className="truncate">{vendor.email}</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Phone size={14} className="text-zinc-400 shrink-0" />
+                      <span dir="ltr">{vendor.phone}</span>
+                    </p>
+                    <div className="pt-1 flex items-center justify-between">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                        (vendor.products_count || 0) > 0
+                          ? 'bg-marine-cyan/10 text-marine-primary dark:text-marine-cyan border border-marine-cyan/20'
+                          : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
+                      }`}>
+                        <Package size={13} />
+                        <span>{vendor.products_count || 0} {isAr ? 'منتج' : 'products'}</span>
+                      </span>
+                      <span className="text-[11px] text-zinc-400">
+                        {formatDate(vendor.created_at)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Actions 2x2 Grid (Exact Match to Production Screenshot) */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      onClick={() => toggleExpandedVendor(vendor._id)}
+                      className="inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/10 transition-colors"
+                    >
+                      <Eye size={14} />
+                      {expanded ? (isAr ? 'إخفاء' : 'Hide') : (isAr ? 'التفاصيل' : 'Details')}
+                    </button>
+                    <button
+                      onClick={() => openEditVendor(vendor)}
+                      className="inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/10 transition-colors"
+                    >
+                      <Pencil size={14} />
+                      {isAr ? 'تعديل' : 'Edit'}
+                    </button>
+                    <button
+                      onClick={() => openGrantModal(vendor)}
+                      className="inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 transition-colors"
+                    >
+                      <CreditCard size={14} />
+                      {isAr ? 'منح اشتراك' : 'Grant Sub'}
+                    </button>
+                    <button
+                      onClick={() => toggleVendorStatus(vendor)}
+                      disabled={toggling}
+                      className={`inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black transition-colors disabled:opacity-50 ${suspended ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400' : 'bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400'}`}
+                    >
+                      {toggling ? <Loader2 size={14} className="animate-spin" /> : <ShieldOff size={14} />}
+                      {suspended ? (isAr ? 'تفعيل' : 'Reactivate') : (isAr ? 'تعليق' : 'Suspend')}
+                    </button>
+                  </div>
+
+                  {/* Mobile Expanded Vendor Details */}
+                  {expanded && (
+                    <div className="pt-3 border-t border-zinc-100 dark:border-white/5">
+                      <VendorExpandedBlock
+                        vendor={vendor}
+                        isAr={isAr}
+                        suspended={suspended}
+                        vendorSubscriptionData={vendorSubscriptionData}
+                        subscriptionLoadingIds={subscriptionLoadingIds}
+                        onDeleteClick={() => { setDeletingVendor(vendor); setShowDelete(true); }}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
             <PaginationControls
               page={page}
               pageSize={pageSize}
-          onPageSizeChange={(n) => { setPageSize(n); setPage(1); }}
+              onPageSizeChange={(n) => { setPageSize(n); setPage(1); }}
               total={filteredVendors.length}
               onPageChange={setPage}
               labels={{
@@ -1190,6 +1236,102 @@ export default function AdminVendorsPage() {
         )}
       </>
     );
+}
+
+function VendorExpandedBlock({ vendor, isAr, suspended, vendorSubscriptionData, subscriptionLoadingIds, onDeleteClick }) {
+  const sub = vendorSubscriptionData[vendor._id];
+  const isSubLoading = subscriptionLoadingIds[vendor._id];
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+        <DetailItem icon={Hash} label="Vendor ID" value={vendor._id} />
+        <DetailItem icon={User} label={isAr ? 'اسم المسؤول' : 'Owner Name'} value={vendor.name} />
+        <DetailItem icon={Store} label={isAr ? 'اسم المتجر' : 'Store Name'} value={vendor.store_name} />
+        <DetailItem icon={Store} label={isAr ? 'اسم المستخدم' : 'Store Username'} value={`@${vendor.store_username}`} />
+        <DetailItem icon={Mail} label={isAr ? 'البريد الإلكتروني' : 'Email Address'} value={vendor.email} />
+        <DetailItem icon={Phone} label={isAr ? 'رقم الهاتف' : 'Phone Number'} value={vendor.phone} dir="ltr" />
+        
+        <div className="sm:col-span-2 xl:col-span-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#14171A] p-3">
+          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1.5">
+            <MapPin size={13} />
+            {isAr ? 'الفروع / المواقع' : 'Branches / Locations'}
+          </div>
+          <div className="space-y-2">
+            {vendor.locations?.length > 0 ? (
+              vendor.locations.map((loc, idx) => (
+                <div key={idx} className="text-sm flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${loc.is_default ? 'bg-emerald-500' : 'bg-zinc-300'}`} />
+                  <span className={loc.is_default ? 'font-black text-zinc-900 dark:text-white' : 'text-zinc-500'}>
+                    {loc.address} {loc.is_default && (isAr ? '(الافتراضي)' : '(Default)')}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-zinc-400 italic">{isAr ? 'لا توجد فروع مضافة' : 'No locations added'}</p>
+            )}
+          </div>
+        </div>
+
+        <DetailItem icon={CheckCircle2} label={isAr ? 'الحالة' : 'Status'} value={vendor.status || 'active'} />
+        {vendor.suspension_reason && (
+          <DetailItem icon={AlertTriangle} label={isAr ? 'سبب التعليق' : 'Suspension Reason'} value={vendor.suspension_reason} />
+        )}
+        {vendor.suspension_date && (
+          <DetailItem icon={Calendar} label={isAr ? 'تاريخ التعليق' : 'Suspended At'} value={formatDate(vendor.suspension_date, true)} />
+        )}
+
+        {isSubLoading ? (
+          <div className="sm:col-span-2 xl:col-span-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#14171A] p-3">
+            <div className="flex items-center gap-2 text-sm font-bold text-zinc-500">
+              <Loader2 size={14} className="animate-spin text-marine-primary" />
+              {isAr ? 'جاري تحميل بيانات الاشتراك...' : 'Loading subscription details...'}
+            </div>
+          </div>
+        ) : sub ? (
+          <>
+            <DetailItem icon={CreditCard} label={isAr ? 'الباقة' : 'Plan'} value={sub.package?.name || '-'} />
+            <DetailItem icon={Hash} label={isAr ? 'المنتجات' : 'Products'} value={`${sub.publishedCount || 0} / ${sub.maxProducts || 0}`} />
+            {sub.subscription?.expires_at && (
+              <DetailItem icon={Calendar} label={isAr ? 'ينتهي' : 'Expires'} value={formatDate(sub.subscription.expires_at)} />
+            )}
+          </>
+        ) : null}
+
+        <DetailItem icon={Calendar} label={isAr ? 'تاريخ الإنشاء' : 'Created At'} value={formatDate(vendor.created_at, true)} />
+      </div>
+
+      {/* Danger Zone — permanent delete (requires suspension first) */}
+      <div className="rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50/60 dark:bg-red-500/5 p-4">
+        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-500 mb-2">
+          <AlertTriangle size={13} />
+          {isAr ? 'منطقة الخطر' : 'Danger Zone'}
+        </div>
+        {suspended ? (
+          <>
+            <p className="text-sm text-zinc-500 mb-3 leading-relaxed">
+              {isAr
+                ? 'حذف هذا التاجر نهائياً سيزيل الحساب وجميع منتجاته وإعلاناته وأرباحه واشتراكاته بشكل لا يمكن التراجع عنه.'
+                : 'Permanently deleting this vendor removes the account and all its products, ads, earnings and subscriptions. This cannot be undone.'}
+            </p>
+            <button
+              onClick={onDeleteClick}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black bg-red-600 hover:bg-red-700 text-white transition-colors"
+            >
+              <Trash2 size={14} />
+              {isAr ? 'حذف التاجر نهائياً' : 'Permanently Delete Vendor'}
+            </button>
+          </>
+        ) : (
+          <p className="text-sm text-zinc-500 leading-relaxed">
+            {isAr
+              ? 'يجب تعليق التاجر أولاً قبل أن يتمكن من الحذف النهائي.'
+              : 'Suspend this vendor first before it can be permanently deleted.'}
+          </p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function DetailItem({ icon: Icon, label, value, dir, wide = false }) {

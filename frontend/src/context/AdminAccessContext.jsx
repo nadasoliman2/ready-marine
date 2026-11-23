@@ -18,7 +18,7 @@ import { SESSION_ENDED_EVENT } from '../lib/api';
 
 const AdminAccessContext = createContext(null);
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 export function AdminAccessProvider({ children }) {
     const [state, setState] = useState({

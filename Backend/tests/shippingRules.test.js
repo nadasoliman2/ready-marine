@@ -6,7 +6,7 @@ const {
     evaluateConditions,
     applyRuleActions,
     applyPolicyActions,
-} = require('../services/shippingRules');
+} = require('../modules/shipping/shipping_rules.service');
 
 describe('Shipping Rules & Condition Engine', () => {
     describe('evaluateCondition - Numeric Fields', () => {

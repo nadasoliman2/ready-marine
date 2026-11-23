@@ -151,7 +151,7 @@ function ProfilePageContent() {
           const [profileData, productsData, metadataRes] = await Promise.all([
             vendorApi.getProfile(),
             vendorApi.getProducts(),
-            fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`),
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters`),
           ]);
           const metadata = await metadataRes.json();
           setCarMetadata(metadata);
@@ -166,7 +166,7 @@ function ProfilePageContent() {
           const [profileData, ordersData, metadataRes] = await Promise.all([
             userApi.getProfile(),
             userApi.getOrders(),
-            fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`),
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters`),
           ]);
           const metadata = await metadataRes.json();
           setCarMetadata(metadata);

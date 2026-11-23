@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const mongoose = require('mongoose');
 
 const { startMongo } = require('./support/testServers');
-const walletService = require('../services/walletService');
+const walletService = require('../modules/wallet/wallet.service');
 const { WalletAccount } = require('../models/walletAccounts');
 const { WalletTransaction } = require('../models/walletTransactions');
 

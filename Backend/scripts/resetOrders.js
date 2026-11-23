@@ -15,11 +15,11 @@ async function reset() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to DB");
 
-    const { Order } = require("../models/orders");
-    const { OrderPayment } = require("../models/orderPayments");
-    const { BostaPickup } = require("../models/bostaPickups");
-    const { ReturnRequest } = require("../models/returnRequests");
-    const { Refund } = require("../models/refunds");
+    const { Order } = require('../models/orders');
+    const { OrderPayment } = require('../models/orderPayments');
+    const { BostaPickup } = require('../models/bostaPickups');
+    const { ReturnRequest } = require('../models/returnRequests');
+    const { Refund } = require('../models/refunds');
 
     const counts = {
       orders: await Order.countDocuments(),

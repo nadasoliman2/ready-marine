@@ -1,7 +1,7 @@
 const { body, validationResult } = require('express-validator');
 const { findUserByFields } = require('../models/users');
 const { findSellerByFields } = require('../models/sellers');
-const { formatPhone, normalizeEmailForAuth } = require('../services/authService');
+const { formatPhone, normalizeEmailForAuth } = require('../modules/auth/auth.service');
 
 /**
  * Middleware to handle validation results.

@@ -381,7 +381,7 @@ export default function VendorPayoutDetailPage() {
 
             {/* ---- Selection bar. Sticky so it stays reachable while scrolling a long ledger. ---- */}
             {selected.size > 0 && (
-                <div className="sticky top-2 z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-marine-cyan text-white shadow-lg shadow-red-500/20">
+                <div className="sticky top-2 z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-marine-cyan text-white ">
                     <div>
                         <p className="font-black text-lg tabular-nums" dir="ltr">{money(selectedTotal, currency, locale)}</p>
                         <p className="text-xs text-red-100">

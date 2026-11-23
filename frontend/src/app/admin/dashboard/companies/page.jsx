@@ -87,67 +87,118 @@ export default function AdminCompaniesPage() {
                     <EmptyState icon={Building2} title={isAr ? 'مفيش حسابات' : 'No accounts'} message={isAr ? 'اعمل أول حساب من زرار "حساب جديد".' : 'Create the first one with "New account".'} />
                 ) : (
                     <>
-                        <TableWrap>
-                            <table className="w-full min-w-[820px]">
-                                <thead className="border-b border-zinc-100 dark:border-white/5">
-                                    <tr>
-                                        <Th align="start">{isAr ? 'الجهة' : 'Account'}</Th>
-                                        <Th align="start">{isAr ? 'الحالة' : 'Status'}</Th>
-                                        <Th align="start">{isAr ? 'الأعضاء' : 'Members'}</Th>
-                                        <Th align="start">{isAr ? 'دعوات مستنية' : 'Pending invites'}</Th>
-                                        <Th align="start">{isAr ? 'أوردرات الشهر' : 'Orders this month'}</Th>
-                                        <Th align="start">{isAr ? 'صرف الشهر / السقف' : 'Month spend / cap'}</Th>
-                                        <Th align="start">{isAr ? 'متبقي على الجهة' : 'Outstanding'}</Th>
-                                        <Th align="start">{isAr ? 'مدة السداد' : 'Terms'}</Th>
-                                        <Th align="start">{isAr ? 'اتعملت' : 'Created'}</Th>
-                                        <Th align="end">{isAr ? 'إجراءات' : 'Actions'}</Th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-zinc-100 dark:divide-white/5">
-                                    {data.companies.map((c) => (
-                                        <tr key={c._id} {...rowLink(`/admin/dashboard/companies/${c._id}`)} className="hover:bg-zinc-50/60 dark:hover:bg-white/[0.02] cursor-pointer">
-                                            <Td align="start">
-                                                <Link href={`/admin/dashboard/companies/${c._id}`} className="font-bold text-zinc-900 dark:text-white hover:text-marine-primary">{c.name}</Link>
-                                                <p className="text-xs text-zinc-500">{orgTypeLabel(c.org_type, isAr)} · {isAr ? `${c.managers} مدير` : `${c.managers} manager(s)`}</p>
-                                            </Td>
-                                            <Td align="start"><CompanyStatusPill status={c.status} isAr={isAr} /></Td>
-                                            <Td align="start" className="tabular-nums">{c.employees}</Td>
-                                            <Td align="start" className="tabular-nums">{c.pending_invitations}</Td>
-                                            <Td align="start">
-                                                <span className="tabular-nums font-bold">{c.month_orders || 0}</span>
-                                                <span className="block text-[11px] text-zinc-500">{isAr ? `${c.month_active_employees || 0} من ${c.employees} ${orgTerms(c.org_type, true).members.replace(/^ال/, '')} طلبوا` : `${c.month_active_employees || 0} of ${c.employees} ${orgTerms(c.org_type, false).members} ordered`}</span>
-                                            </Td>
-                                            <Td align="start">
-                                                <span dir="ltr" className="tabular-nums">{hasWallet(c.billing_mode) ? `${isAr ? 'رصيد المحفظة' : 'Wallet balance'}: ${formatMoney(c.wallet_balance, isAr)}` : `${formatMoney(c.month_spent, isAr)} / ${formatMoney(c.monthly_cap, isAr)}`}</span>
-                                                {c.billing_mode === 'credit_wallet' && <span className="block text-[11px] text-zinc-500">{isAr ? `الحد الائتماني: ${formatMoney(c.credit_line, true)}` : `Credit limit: ${formatMoney(c.credit_line, false)}`}</span>}
-                                                {!hasWallet(c.billing_mode) && c.monthly_cap > 0 && <CapShare spent={c.month_spent} cap={c.monthly_cap} isAr={isAr} />}
-                                            </Td>
-                                            <Td align="start">
-                                                <span dir="ltr" className="tabular-nums font-bold">{formatMoney(c.collection?.outstanding || 0, isAr)}</span>
-                                                {c.collection?.overdue > 0 && (
-                                                    <span className="block text-[11px] font-bold text-red-600 dark:text-red-400">
-                                                        {isAr ? `متأخر ${formatMoney(c.collection.overdue, true)} (${c.collection.oldest_overdue_days} يوم)` : `${formatMoney(c.collection.overdue, false)} overdue (${c.collection.oldest_overdue_days}d)`}
-                                                    </span>
-                                                )}
-                                                {c.collection?.pending_receipts > 0 && (
-                                                    <span className="block text-[11px] font-bold text-amber-600">
-                                                        {isAr ? `${c.collection.pending_receipts} إيصال مستني تأكيد` : `${c.collection.pending_receipts} receipt(s) to confirm`}
-                                                    </span>
-                                                )}
-                                            </Td>
-                                            <Td align="start">{c.billing_mode === 'credit_wallet' ? (isAr ? 'محفظة بحد ائتماني' : 'Wallet with credit limit') : c.billing_mode === 'wallet' ? (isAr ? 'محفظة مسبقة الدفع' : 'Prepaid wallet') : (isAr ? `${c.payment_terms_days} يوم` : `${c.payment_terms_days} days`)}</Td>
-                                            <Td align="start" className="text-zinc-500">{formatDate(c.created_at, isAr)}</Td>
-                                            <Td align="end">
-                                                <div className="flex justify-end gap-1">
-                                                    <Button variant="ghost" icon={Pencil} onClick={() => setEditing(c)} title={isAr ? 'تعديل' : 'Edit'} aria-label={isAr ? 'تعديل' : 'Edit'} />
-                                                    <Button variant="danger" icon={Trash2} onClick={() => setDeleting(c)} title={isAr ? 'حذف' : 'Delete'} aria-label={isAr ? 'حذف' : 'Delete'} />
-                                                </div>
-                                            </Td>
+                        {/* Desktop Table View */}
+                        <div className="hidden xl:block">
+                            <TableWrap>
+                                <table className="w-full min-w-[820px]">
+                                    <thead className="border-b border-zinc-100 dark:border-white/5">
+                                        <tr>
+                                            <Th align="start">{isAr ? 'الجهة' : 'Account'}</Th>
+                                            <Th align="start">{isAr ? 'الحالة' : 'Status'}</Th>
+                                            <Th align="start">{isAr ? 'الأعضاء' : 'Members'}</Th>
+                                            <Th align="start">{isAr ? 'دعوات مستنية' : 'Pending invites'}</Th>
+                                            <Th align="start">{isAr ? 'أوردرات الشهر' : 'Orders this month'}</Th>
+                                            <Th align="start">{isAr ? 'صرف الشهر / السقف' : 'Month spend / cap'}</Th>
+                                            <Th align="start">{isAr ? 'متبقي على الجهة' : 'Outstanding'}</Th>
+                                            <Th align="start">{isAr ? 'مدة السداد' : 'Terms'}</Th>
+                                            <Th align="start">{isAr ? 'اتعملت' : 'Created'}</Th>
+                                            <Th align="end">{isAr ? 'إجراءات' : 'Actions'}</Th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </TableWrap>
+                                    </thead>
+                                    <tbody className="divide-y divide-zinc-100 dark:divide-white/5">
+                                        {data.companies.map((c) => (
+                                            <tr key={c._id} {...rowLink(`/admin/dashboard/companies/${c._id}`)} className="hover:bg-zinc-50/60 dark:hover:bg-white/[0.02] cursor-pointer">
+                                                <Td align="start">
+                                                    <Link href={`/admin/dashboard/companies/${c._id}`} className="font-bold text-zinc-900 dark:text-white hover:text-marine-primary">{c.name}</Link>
+                                                    <p className="text-xs text-zinc-500">{orgTypeLabel(c.org_type, isAr)} · {isAr ? `${c.managers} مدير` : `${c.managers} manager(s)`}</p>
+                                                </Td>
+                                                <Td align="start"><CompanyStatusPill status={c.status} isAr={isAr} /></Td>
+                                                <Td align="start" className="tabular-nums">{c.employees}</Td>
+                                                <Td align="start" className="tabular-nums">{c.pending_invitations}</Td>
+                                                <Td align="start">
+                                                    <span className="tabular-nums font-bold">{c.month_orders || 0}</span>
+                                                    <span className="block text-[11px] text-zinc-500">{isAr ? `${c.month_active_employees || 0} من ${c.employees} ${orgTerms(c.org_type, true).members.replace(/^ال/, '')} طلبوا` : `${c.month_active_employees || 0} of ${c.employees} ${orgTerms(c.org_type, false).members} ordered`}</span>
+                                                </Td>
+                                                <Td align="start">
+                                                    <span dir="ltr" className="tabular-nums">{hasWallet(c.billing_mode) ? `${isAr ? 'رصيد المحفظة' : 'Wallet balance'}: ${formatMoney(c.wallet_balance, isAr)}` : `${formatMoney(c.month_spent, isAr)} / ${formatMoney(c.monthly_cap, isAr)}`}</span>
+                                                    {c.billing_mode === 'credit_wallet' && <span className="block text-[11px] text-zinc-500">{isAr ? `الحد الائتماني: ${formatMoney(c.credit_line, true)}` : `Credit limit: ${formatMoney(c.credit_line, false)}`}</span>}
+                                                    {!hasWallet(c.billing_mode) && c.monthly_cap > 0 && <CapShare spent={c.month_spent} cap={c.monthly_cap} isAr={isAr} />}
+                                                </Td>
+                                                <Td align="start">
+                                                    <span dir="ltr" className="tabular-nums font-bold">{formatMoney(c.collection?.outstanding || 0, isAr)}</span>
+                                                    {c.collection?.overdue > 0 && (
+                                                        <span className="block text-[11px] font-bold text-red-600 dark:text-red-400">
+                                                            {isAr ? `متأخر ${formatMoney(c.collection.overdue, true)} (${c.collection.oldest_overdue_days} يوم)` : `${formatMoney(c.collection.overdue, false)} overdue (${c.collection.oldest_overdue_days}d)`}
+                                                        </span>
+                                                    )}
+                                                    {c.collection?.pending_receipts > 0 && (
+                                                        <span className="block text-[11px] font-bold text-amber-600">
+                                                            {isAr ? `${c.collection.pending_receipts} إيصال مستني تأكيد` : `${c.collection.pending_receipts} receipt(s) to confirm`}
+                                                        </span>
+                                                    )}
+                                                </Td>
+                                                <Td align="start">{c.billing_mode === 'credit_wallet' ? (isAr ? 'محفظة بحد ائتماني' : 'Wallet with credit limit') : c.billing_mode === 'wallet' ? (isAr ? 'محفظة مسبقة الدفع' : 'Prepaid wallet') : (isAr ? `${c.payment_terms_days} يوم` : `${c.payment_terms_days} days`)}</Td>
+                                                <Td align="start" className="text-zinc-500">{formatDate(c.created_at, isAr)}</Td>
+                                                <Td align="end">
+                                                    <div className="flex justify-end gap-1">
+                                                        <Button variant="ghost" icon={Pencil} onClick={() => setEditing(c)} title={isAr ? 'تعديل' : 'Edit'} aria-label={isAr ? 'تعديل' : 'Edit'} />
+                                                        <Button variant="danger" icon={Trash2} onClick={() => setDeleting(c)} title={isAr ? 'حذف' : 'Delete'} aria-label={isAr ? 'حذف' : 'Delete'} />
+                                                    </div>
+                                                </Td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </TableWrap>
+                        </div>
+
+                        {/* Mobile / Tablet Responsive Cards View */}
+                        <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {data.companies.map((c) => (
+                                    <div key={c._id} className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="min-w-0">
+                                                <Link href={`/admin/dashboard/companies/${c._id}`} className="font-bold text-zinc-900 dark:text-white text-base hover:text-marine-primary block truncate">
+                                                    {c.name}
+                                                </Link>
+                                                <p className="text-xs text-zinc-500 mt-0.5">{orgTypeLabel(c.org_type, isAr)} · {isAr ? `${c.managers} مدير` : `${c.managers} manager(s)`}</p>
+                                            </div>
+                                            <CompanyStatusPill status={c.status} isAr={isAr} />
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-2 text-xs bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                                            <div>
+                                                <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'الأعضاء' : 'Members'}</span>
+                                                <span className="font-bold text-zinc-900 dark:text-white">{c.employees} ({c.pending_invitations} {isAr ? 'معلق' : 'pending'})</span>
+                                                <span className="text-[10px] text-zinc-400 block mt-1">{c.month_orders || 0} {isAr ? 'طلب هذا الشهر' : 'orders this month'}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'الرصيد / الصرف' : 'Balance'}</span>
+                                                <span dir="ltr" className="font-bold text-zinc-900 dark:text-white block truncate">
+                                                    {hasWallet(c.billing_mode) ? formatMoney(c.wallet_balance, isAr) : formatMoney(c.month_spent, isAr)}
+                                                </span>
+                                                {c.collection?.outstanding > 0 && (
+                                                    <span className="text-[10px] text-red-600 dark:text-red-400 font-bold block mt-1">
+                                                        {isAr ? 'متبقي: ' : 'Owed: '}{formatMoney(c.collection.outstanding, isAr)}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center justify-between pt-1 text-xs">
+                                            <Link href={`/admin/dashboard/companies/${c._id}`} className="px-3 py-1.5 rounded-xl font-bold bg-marine-cyan/10 text-marine-primary hover:bg-marine-cyan/20 transition-colors">
+                                                {isAr ? 'فتح الحساب' : 'Open Account'}
+                                            </Link>
+                                            <div className="flex gap-1">
+                                                <Button variant="ghost" icon={Pencil} onClick={() => setEditing(c)} title={isAr ? 'تعديل' : 'Edit'} aria-label={isAr ? 'تعديل' : 'Edit'} />
+                                                <Button variant="danger" icon={Trash2} onClick={() => setDeleting(c)} title={isAr ? 'حذف' : 'Delete'} aria-label={isAr ? 'حذف' : 'Delete'} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                         {data.pagination.pages > 1 && (
                             <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-100 dark:border-white/5 text-xs text-zinc-500">
                                 <span>{isAr ? `صفحة ${page} من ${data.pagination.pages}` : `Page ${page} of ${data.pagination.pages}`}</span>

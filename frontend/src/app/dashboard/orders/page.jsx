@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from '../../../lib/navigation';
+import { useRouter, useSearchParams } from '../../../lib/navigation';
 import { vendorApi } from '../../../lib/api';
 import { useApp } from '../../../context/AppContext';
 import {
   Loader2, Package, ChevronRight, ChevronLeft, AlertTriangle, Clock, MapPin, CalendarDays,
-  CalendarClock, Users, Printer,
+  CalendarClock, Users, Printer, Search, X
 } from 'lucide-react';
 import Link from '../../../components/LocaleLink';
 import {
@@ -25,6 +25,8 @@ import {
  */
 export default function VendorOrdersPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get('search');
   const { language, siteSettings } = useApp();
   const isAr = language === 'ar';
   const currency = siteSettings?.currency || 'QAR';
@@ -36,6 +38,12 @@ export default function VendorOrdersPage() {
   const [subOrders, setSubOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState(urlSearch || '');
+
+  useEffect(() => {
+    if (urlSearch !== null && urlSearch !== undefined) setSearch(urlSearch);
+  }, [urlSearch]);
+
   // Only true on the very first load, so landing on the busiest tab happens once and does
   // not yank the vendor away from a tab they deliberately opened.
   const [tabResolved, setTabResolved] = useState(false);
@@ -76,11 +84,26 @@ export default function VendorOrdersPage() {
 
   const label = (t) => (isAr ? t.label_ar : t.label_en);
 
+  // Filter subOrders when search is active
+  const filteredSubOrders = (subOrders || []).filter((sub) => {
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    const orderRef = String(sub.order_reference || '').toLowerCase();
+    const subRef = String(sub.reference || '').toLowerCase();
+    const tracking = String(sub.tracking_number || '').toLowerCase();
+    const customer = String(sub.customer_name || '').toLowerCase();
+    const itemsMatch = (sub.items || []).some((item) =>
+      String(item.title_en || '').toLowerCase().includes(q) ||
+      String(item.title_ar || '').toLowerCase().includes(q)
+    );
+    return orderRef.includes(q) || subRef.includes(q) || tracking.includes(q) || customer.includes(q) || itemsMatch;
+  });
+
   // A combined company order (feature 14) is ONE parcel holding several customers'
   // orders: shown as one card with the orders inside, where the first of them appeared.
   const entries = [];
   const groupAt = new Map();
-  for (const sub of subOrders) {
+  for (const sub of filteredSubOrders) {
     const key = sub.batch?.batch_id ? String(sub.batch.batch_id) : null;
     if (!key) { entries.push({ kind: 'parcel', sub }); continue; }
     if (!groupAt.has(key)) {
@@ -212,6 +235,27 @@ export default function VendorOrdersPage() {
             ? 'كل شحنة من طلب مختلف — جهّزها على ثلاث خطوات'
             : 'Each parcel belongs to one order — prepare it in three steps'}
         </p>
+      </div>
+
+      {/* Search Bar */}
+      <div className="relative max-w-md">
+        <Search size={16} className="absolute start-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={isAr ? 'بحث برقم الطلب، رقم التتبع أو اسم العميل...' : 'Search by order #, tracking #, or customer...'}
+          className="w-full bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl ps-10 pe-9 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-marine-cyan/50 focus:border-marine-cyan transition-all"
+        />
+        {search && (
+          <button
+            type="button"
+            onClick={() => setSearch('')}
+            className="absolute end-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
 
       {/* Tabs named for the action, with counts so nothing is hidden behind a click */}

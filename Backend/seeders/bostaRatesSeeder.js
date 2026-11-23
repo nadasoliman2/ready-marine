@@ -30,12 +30,12 @@
 
 require("dotenv").config({ path: __dirname + "/../.env" });
 const mongoose = require("mongoose");
-const tariff = require("../services/bostaTariff");
-const { City } = require("../models/cities");
-const { ShippingClass } = require("../models/shipping_classes");
-const { ShippingZone } = require("../models/shipping_zones");
-const { ShippingMethod } = require("../models/shipping_methods");
-const { ShippingPolicy } = require("../models/shipping_policies");
+const tariff = require('../modules/shipping/bosta_tariff');
+const { City } = require('../models/cities');
+const { ShippingClass } = require('../models/shipping_classes');
+const { ShippingZone } = require('../models/shipping_zones');
+const { ShippingMethod } = require('../models/shipping_methods');
+const { ShippingPolicy } = require('../models/shipping_policies');
 
 // Dry run unless told otherwise, because this rewrites live customer-facing prices.
 // `seed({ apply: true })` is the programmatic equivalent of the `--apply` flag.
@@ -310,7 +310,7 @@ async function seed({ apply = APPLY_FROM_ARGV } = {}) {
     if (APPLY) {
         // The engine memoises quotes and settings; without this the old flat rate would keep
         // being served until the TTL expired or the process restarted.
-        require("../services/shippingEngine").invalidateShippingCache();
+        require('../modules/shipping/shipping.engine').invalidateShippingCache();
         console.log("\nShipping cache invalidated.");
     }
 

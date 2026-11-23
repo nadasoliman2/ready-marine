@@ -1,10 +1,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const mongoose = require('mongoose');
-const { fold } = require('../services/matching/text');
-const { createVehicleReader } = require('../services/matching/vehicleMentions');
-const { checkFitment, applyFitmentFix } = require('../services/matching/fitmentCheck');
-const { buildCatalogMatcher } = require('../services/matching/catalogMatcher');
+const { fold } = require('../modules/product/matching/text');
+const { createVehicleReader } = require('../modules/product/matching/vehicleMentions');
+const { checkFitment, applyFitmentFix } = require('../modules/product/matching/fitmentCheck');
+const { buildCatalogMatcher } = require('../modules/product/matching/catalogMatcher');
 
 /* A small car list in the shape of `carbrands`. */
 const id = () => new mongoose.Types.ObjectId();
@@ -63,7 +63,7 @@ const fitmentOf = (...pairs) => pairs.map(([mk, md]) => {
 });
 
 test('a car the title names and the fitment lacks is found, with its years', () => {
-    const product = { title_ar: 'طقم دبرياج بدون بلية تويوتا كورولا 2001 \\ يارس 2006 - VALEO', is_universal: false, compatible_cars: fitmentOf(['Toyota', 'Corolla']) };
+    const product = { title_ar: 'طقم دبرياج بدون بلية تويوتا كورولا 2001 \\ يارس 2006 - VALEO', is_universal: false, compatible_vessels: fitmentOf(['Toyota', 'Corolla']) };
     const { findings } = checkFitment(product, reader);
     const missing = findings.filter((f) => f.type === 'missing_car');
     assert.equal(missing.length, 1);
@@ -73,32 +73,32 @@ test('a car the title names and the fitment lacks is found, with its years', () 
 });
 
 test('a part marked for every car while its title names one is found', () => {
-    const { findings } = checkFitment({ title_ar: 'تيل الفرامل االمامى ماتركس', is_universal: true, compatible_cars: [] }, reader);
+    const { findings } = checkFitment({ title_ar: 'تيل الفرامل االمامى ماتركس', is_universal: true, compatible_vessels: [] }, reader);
     assert.equal(findings[0].type, 'universal_but_named');
     assert.equal(findings[0].cars[0].model, 'Matrix');
 });
 
 test('the same car under another badge is not missing', () => {
-    const product = { title_ar: 'كوبلن داخلي دايو لانوس', is_universal: false, compatible_cars: fitmentOf(['Chevrolet', 'Lanos']) };
+    const product = { title_ar: 'كوبلن داخلي دايو لانوس', is_universal: false, compatible_vessels: fitmentOf(['Chevrolet', 'Lanos']) };
     assert.equal(checkFitment(product, reader).findings.filter((f) => f.type === 'missing_car').length, 0);
 });
 
 test('a toy model of a car is not a part for it', () => {
-    const { findings } = checkFitment({ title_en: '1:32 Scale Toyota Corolla Diecast Model', is_universal: true, compatible_cars: [] }, reader);
+    const { findings } = checkFitment({ title_en: '1:32 Scale Toyota Corolla Diecast Model', is_universal: true, compatible_vessels: [] }, reader);
     assert.equal(findings.length, 0);
 });
 
 test('applying a fix adds the car and keeps what was there', () => {
-    const product = { is_universal: false, compatible_cars: fitmentOf(['Toyota', 'Corolla']) };
+    const product = { is_universal: false, compatible_vessels: fitmentOf(['Toyota', 'Corolla']) };
     const yaris = CARS.find((c) => c.name === 'Toyota').models.find((m) => m.name === 'Yaris');
     const out = applyFitmentFix(product, [{ make_id: CARS.find((c) => c.name === 'Toyota')._id, model_id: yaris._id, years: [2006], all_years: false }], reader.cars);
-    assert.deepEqual(out.compatible_cars[0].models.map((m) => [m.model_name, m.all_years, m.years]), [['Corolla', true, []], ['Yaris', false, [2006]]]);
+    assert.deepEqual(out.compatible_vessels[0].models.map((m) => [m.model_name, m.all_years, m.years]), [['Corolla', true, []], ['Yaris', false, [2006]]]);
 });
 
 /* The matcher, over a handful of entries. */
 const BRANDS = [{ _id: id(), name: 'bosch' }, { _id: id(), name: 'ago parts pro' }, { _id: id(), name: 'dtr' }];
 const [BOSCH, AGO, DTR] = BRANDS.map((b) => b._id);
-const entry = (fields) => ({ _id: id(), status: 'approved', is_universal: true, compatible_cars: [], ...fields });
+const entry = (fields) => ({ _id: id(), status: 'approved', is_universal: true, compatible_vessels: [], ...fields });
 const ENTRIES = [
     entry({ title_ar: 'فلتر بنزين بوش F 5969', part_number: 'F 5969', product_brand_id: BOSCH }),
     entry({ title_ar: 'طرمبة بنزين بوش 0580454140', part_number: '0580454140', product_brand_id: BOSCH }),

@@ -24,7 +24,7 @@ async function test() {
     }
     
     // Now let's try an update similar to what the frontend sends
-    const vendorService = require('./services/vendorService');
+    const vendorService = require('./modules/vendor/vendor.service');
     const updateData = {
         title_en: prod.title_en,
         variants: [

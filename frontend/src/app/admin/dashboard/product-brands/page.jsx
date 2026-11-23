@@ -180,7 +180,7 @@ export default function AdminProductBrandsPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
         <StatCard icon={BadgePercent} label={isAr ? 'كل الماركات' : 'Total Brands'} value={brands.length} />
         <StatCard icon={BadgePercent} label={isAr ? 'نتائج البحث' : 'Search Results'} value={filtered.length} tone="gray" />
       </div>

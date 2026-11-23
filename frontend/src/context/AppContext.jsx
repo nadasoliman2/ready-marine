@@ -122,7 +122,7 @@ export function AppProvider({ children, initialLanguage = 'en', initialTheme = '
       }
     } catch (e) {}
 
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
     // Fetch site settings
     const fetchSettings = async () => {
@@ -235,8 +235,8 @@ export function AppProvider({ children, initialLanguage = 'en', initialTheme = '
 
   const logout = () => {
     const logoutEndpoint = user?.role === 'admin'
-      ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/admin/logout`
-      : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/auth/logout`;
+      ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/admin/logout`
+      : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/auth/logout`;
 
     setUser(null);
     setCartItems([]); // Clear cart on logout

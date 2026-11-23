@@ -968,7 +968,7 @@ orderSchema.post("save", function (doc) {
     s.company_batch?.role === "lead" && s.company_batch.dispatched_at && s.status !== s.company_batch.mirror_status);
   if (!moved) return;
   setImmediate(() => {
-    require("../services/companyBatchService").syncRidersOfLeadOrder(doc._id)
+    require("../modules/company/company_batch.service").syncRidersOfLeadOrder(doc._id)
       .catch((err) => console.error(`[Company batch] Rider sync failed for order ${doc._id}: ${err.message}`));
   });
 });

@@ -126,41 +126,90 @@ export default function AdminWithdrawalsPage() {
             <p className="text-sm font-medium">{isAr ? 'لا توجد طلبات سحب.' : 'No withdrawal requests.'}</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[720px]">
-              <thead>
-                <tr className="text-zinc-400 text-xs uppercase tracking-wider border-b border-zinc-100 dark:border-white/5">
-                  <th className="text-start font-bold px-6 py-3">{isAr ? 'الرقم' : 'Number'}</th>
-                  <th className="text-start font-bold px-6 py-3">{isAr ? 'البائع' : 'Vendor'}</th>
-                  <th className="text-start font-bold px-6 py-3">{isAr ? 'المبلغ' : 'Amount'}</th>
-                  <th className="text-start font-bold px-6 py-3">{isAr ? 'الطريقة' : 'Channel'}</th>
-                  <th className="text-start font-bold px-6 py-3">{isAr ? 'التاريخ' : 'Date'}</th>
-                  <th className="text-start font-bold px-6 py-3">{isAr ? 'الحالة' : 'Status'}</th>
-                  <th className="text-end font-bold px-6 py-3"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100 dark:divide-white/5">
-                {withdrawals.map((w) => (
-                  <tr key={w._id} {...rowLink(() => { setSelected(w); setActionType(null); setActionInput(''); setError(''); })} className="hover:bg-zinc-50 dark:hover:bg-white/[0.01] cursor-pointer">
-                    <td className="px-6 py-4 font-mono text-xs text-zinc-500">{w.withdrawal_number}</td>
-                    <td className="px-6 py-4 text-zinc-900 dark:text-white font-bold">{w.vendor_id?.store_name || w.vendor_id?.name || '—'}</td>
-                    <td className="px-6 py-4 font-black text-zinc-900 dark:text-white">{fmt(w.amount)}</td>
-                    <td className="px-6 py-4 text-zinc-500 text-xs font-bold">{isAr ? CHANNEL_LABEL[w.channel || 'manual'].ar : CHANNEL_LABEL[w.channel || 'manual'].en}</td>
-                    <td className="px-6 py-4 text-zinc-500">{fmtDate(w.created_at)}</td>
-                    <td className="px-6 py-4">
-                      <PayoutStatusBadge status={w.status} isAr={isAr} unknown={w.gateway?.outcome_unknown} />
-                    </td>
-                    <td className="px-6 py-4 text-end">
-                      <button onClick={() => { setSelected(w); setActionType(null); setActionInput(''); setError(''); }}
-                        className="text-xs font-bold text-marine-primary hover:underline">
-                        {isAr ? 'التفاصيل' : 'Details'}
-                      </button>
-                    </td>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden xl:block overflow-x-auto">
+              <table className="w-full text-sm min-w-[720px]">
+                <thead>
+                  <tr className="text-zinc-400 text-xs uppercase tracking-wider border-b border-zinc-100 dark:border-white/5">
+                    <th className="text-start font-bold px-6 py-3">{isAr ? 'الرقم' : 'Number'}</th>
+                    <th className="text-start font-bold px-6 py-3">{isAr ? 'البائع' : 'Vendor'}</th>
+                    <th className="text-start font-bold px-6 py-3">{isAr ? 'المبلغ' : 'Amount'}</th>
+                    <th className="text-start font-bold px-6 py-3">{isAr ? 'الطريقة' : 'Channel'}</th>
+                    <th className="text-start font-bold px-6 py-3">{isAr ? 'التاريخ' : 'Date'}</th>
+                    <th className="text-start font-bold px-6 py-3">{isAr ? 'الحالة' : 'Status'}</th>
+                    <th className="text-end font-bold px-6 py-3"></th>
                   </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100 dark:divide-white/5">
+                  {withdrawals.map((w) => (
+                    <tr key={w._id} {...rowLink(() => { setSelected(w); setActionType(null); setActionInput(''); setError(''); })} className="hover:bg-zinc-50 dark:hover:bg-white/[0.01] cursor-pointer">
+                      <td className="px-6 py-4 font-mono text-xs text-zinc-500">{w.withdrawal_number}</td>
+                      <td className="px-6 py-4 text-zinc-900 dark:text-white font-bold">{w.vendor_id?.store_name || w.vendor_id?.name || '—'}</td>
+                      <td className="px-6 py-4 font-black text-zinc-900 dark:text-white">{fmt(w.amount)}</td>
+                      <td className="px-6 py-4 text-zinc-500 text-xs font-bold">{isAr ? CHANNEL_LABEL[w.channel || 'manual'].ar : CHANNEL_LABEL[w.channel || 'manual'].en}</td>
+                      <td className="px-6 py-4 text-zinc-500">{fmtDate(w.created_at)}</td>
+                      <td className="px-6 py-4">
+                        <PayoutStatusBadge status={w.status} isAr={isAr} unknown={w.gateway?.outcome_unknown} />
+                      </td>
+                      <td className="px-6 py-4 text-end">
+                        <button onClick={() => { setSelected(w); setActionType(null); setActionInput(''); setError(''); }}
+                          className="text-xs font-bold text-marine-primary hover:underline">
+                          {isAr ? 'التفاصيل' : 'Details'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile / Tablet Responsive Cards View */}
+            <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {withdrawals.map((w) => (
+                  <div
+                    key={w._id}
+                    onClick={() => { setSelected(w); setActionType(null); setActionInput(''); setError(''); }}
+                    className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3 cursor-pointer hover:border-marine-cyan/40 transition-all"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="font-mono text-xs text-zinc-400">#{w.withdrawal_number}</p>
+                        <h4 className="font-bold text-zinc-900 dark:text-white text-sm mt-0.5">
+                          {w.vendor_id?.store_name || w.vendor_id?.name || '—'}
+                        </h4>
+                      </div>
+                      <PayoutStatusBadge status={w.status} isAr={isAr} unknown={w.gateway?.outcome_unknown} />
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                      <div>
+                        <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'المبلغ' : 'Amount'}</span>
+                        <span className="font-black text-sm text-zinc-900 dark:text-white">{fmt(w.amount)}</span>
+                      </div>
+                      <div className="text-end">
+                        <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'الطريقة' : 'Channel'}</span>
+                        <span className="font-bold text-zinc-600 dark:text-zinc-300">
+                          {isAr ? CHANNEL_LABEL[w.channel || 'manual'].ar : CHANNEL_LABEL[w.channel || 'manual'].en}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1 text-xs">
+                      <span className="text-zinc-400 text-[11px]">{fmtDate(w.created_at)}</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelected(w); setActionType(null); setActionInput(''); setError(''); }}
+                        className="px-3 py-1.5 rounded-xl text-xs font-bold bg-marine-cyan/10 text-marine-primary hover:bg-marine-cyan/20 transition-colors"
+                      >
+                        {isAr ? 'عرض التفاصيل' : 'View Details'}
+                      </button>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
 

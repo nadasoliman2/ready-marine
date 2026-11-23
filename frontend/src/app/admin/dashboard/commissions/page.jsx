@@ -20,7 +20,7 @@ export default function CommissionsControl() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/categories`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/categories`);
         const data = await res.json();
         if (Array.isArray(data)) {
           const flattenCategories = (cats, level = 0, result = []) => {
@@ -60,7 +60,7 @@ export default function CommissionsControl() {
     setSuccessMsg('');
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/admin/settings`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/admin/settings`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ commission_settings: formData }),
@@ -119,7 +119,7 @@ export default function CommissionsControl() {
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white rounded-xl font-bold shadow-lg shadow-red-500/20 transition-all"
+          className="flex items-center gap-2 px-6 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-50 text-white rounded-xl font-boldtransition-all"
         >
           {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
           <span>{isAr ? 'حفظ التغييرات' : 'Save Changes'}</span>

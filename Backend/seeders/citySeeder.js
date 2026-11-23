@@ -1,8 +1,8 @@
 require("dotenv").config({ path: __dirname + "/../.env" });
 const mongoose = require("mongoose");
-const { City } = require("../models/cities");
-const { ShippingZone } = require("../models/shipping_zones");
-const bostaTariff = require("../services/bostaTariff");
+const { City } = require('../models/cities');
+const { ShippingZone } = require('../models/shipping_zones');
+const bostaTariff = require('../modules/shipping/bosta_tariff');
 const bostaRatesSeeder = require("./bostaRatesSeeder");
 
 const EGYPT_CITIES = [

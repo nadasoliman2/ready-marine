@@ -49,11 +49,16 @@ function ProductsManagementContent() {
   
   const router = useRouter();
   const searchParams = useSearchParams();
+  const urlSearch = searchParams.get('search');
   const statusNotice = searchParams.get('status_notice');
   const [noticeDismissed, setNoticeDismissed] = useState(false);
   
   // Ribbon Filters
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(urlSearch || '');
+
+  useEffect(() => {
+    if (urlSearch !== null && urlSearch !== undefined) setSearch(urlSearch);
+  }, [urlSearch]);
   // Auto-complete on the name/SKU box. A vendor with hundreds of products
   // knows the name but not where it sits in the list, so the box suggests as
   // they type instead of making them scan the table.

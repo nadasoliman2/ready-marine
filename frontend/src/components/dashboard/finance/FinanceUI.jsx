@@ -250,12 +250,18 @@ export const TableWrap = ({ children }) => (
     <div className="overflow-x-auto">{children}</div>
 );
 
+const alignClass = (align) => {
+    if (align === 'right' || align === 'end') return 'text-end';
+    if (align === 'center') return 'text-center';
+    return 'text-start';
+};
+
 export const Th = ({ children, align = 'left', className = '' }) => (
-    <th className={`px-4 py-3 text-[11px] font-bold text-zinc-500 uppercase tracking-wide text-${align} whitespace-nowrap ${className}`}>
+    <th className={`px-4 py-3 text-[11px] font-bold text-zinc-500 uppercase tracking-wide ${alignClass(align)} whitespace-nowrap ${className}`}>
         {children}
     </th>
 );
 
 export const Td = ({ children, align = 'left', className = '' }) => (
-    <td className={`px-4 py-3 text-sm text-${align} ${className}`}>{children}</td>
+    <td className={`px-4 py-3 text-sm ${alignClass(align)} ${className}`}>{children}</td>
 );

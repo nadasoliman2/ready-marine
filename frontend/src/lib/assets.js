@@ -5,8 +5,8 @@ export const apiOrigin = API_BASE_URL.replace(/\/api\/?$/, '').replace(/\/$/, ''
 export const resolveAssetUrl = (url) => {
     if (!url || typeof url !== 'string') return '';
     // Rewrite legacy port 4000 to active backend origin
-    if (url.includes('localhost:4000')) {
-        url = url.replace('http://localhost:4000', apiOrigin);
+    if (url.includes('localhost:2000')) {
+        url = url.replace('http://localhost:2000', apiOrigin);
     }
     if (/^(https?:)?\/\//i.test(url) || url.startsWith('blob:') || url.startsWith('data:')) return url;
     if (url.startsWith('/')) return `${apiOrigin}${url}`;

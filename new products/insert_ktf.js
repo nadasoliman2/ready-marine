@@ -363,14 +363,14 @@ async function main() {
             carsEn.push(carLabelEn(bo.name, m.name));
             carsAr.push(carLabelAr(bo.name, m.name, ref.model));
         }
-        const compatible_cars = [...byBrand.values()];
-        const isUniversal = compatible_cars.length === 0;
+        const compatible_vessels = [...byBrand.values()];
+        const isUniversal = compatible_vessels.length === 0;
         isUniversal ? stats.universal++ : stats.compat++;
 
         const content = genContent(row, cat, [...new Set(carsEn)], [...new Set(carsAr)], partBrand);
         const payload = {
             ...content, sku, price,
-            category_id: cat._id, is_universal: isUniversal, compatible_cars: isUniversal ? [] : compatible_cars,
+            category_id: cat._id, is_universal: isUniversal, compatible_vessels: isUniversal ? [] : compatible_vessels,
             stock_status: 'instock', stock_management: false, images: [], status: 'draft',
         };
         if (samples.length < 8) samples.push({ cat, payload, carsEn: [...new Set(carsEn)] });

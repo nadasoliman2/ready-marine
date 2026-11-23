@@ -1,8 +1,9 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { BookOpen, Search, Menu, ChevronDown } from 'lucide-react';
+import { BookOpen, Menu, ChevronDown } from 'lucide-react';
 import NotificationBell from './NotificationBell';
+import AdminNotificationBell from './AdminNotificationBell';
 import { useApp } from '../../context/AppContext';
 import { vendorEducationLabel } from '../vendor/VendorEducationModal';
 import ThemeToggle from '../ThemeToggle';
@@ -14,9 +15,6 @@ function LanguagePicker() {
   const [isOpen, setIsOpen] = useState(false);
   const boxRef = useRef(null);
   const close = useCallback(() => setIsOpen(false), []);
-  // Opens on a click and stays open until a language is picked or the press lands elsewhere.
-  // It used to open on hover and close on leaving: the gap between the button and the list
-  // closed it on the way to "English", and a click on the hover-opened button closed it too.
   useDismiss(boxRef, isOpen, close);
 
   return (
@@ -58,9 +56,9 @@ export default function TopBar({ onMenuClick, onEducationClick }) {
   const isAr = language === 'ar';
 
   return (
-    <header className="h-16 flex-shrink-0 bg-white dark:bg-[#14171A] border-b border-zinc-200 dark:border-white/5 flex items-center justify-between px-6 z-10">
+    <header className="h-16 flex-shrink-0 bg-white dark:bg-[#14171A] border-b border-zinc-200 dark:border-white/5 flex items-center justify-between px-6 z-20">
       
-      {/* Mobile Menu Trigger & Search */}
+      {/* Mobile Menu Trigger */}
       <div className="flex items-center gap-4 flex-1">
         <button 
           onClick={onMenuClick}
@@ -68,17 +66,6 @@ export default function TopBar({ onMenuClick, onEducationClick }) {
         >
           <Menu size={20} />
         </button>
-        
-        {!isAdmin && (
-          <div className="max-w-md w-full relative hidden sm:block">
-            <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-zinc-400" />
-            <input 
-              type="text" 
-              placeholder={t.searchPrompt || "Search products, orders..."}
-              className="w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-lg ps-9 pe-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-marine-cyan/50 focus:border-marine-cyan transition-all"
-            />
-          </div>
-        )}
       </div>
 
       {/* Right Side Icons */}
@@ -97,7 +84,7 @@ export default function TopBar({ onMenuClick, onEducationClick }) {
           </button>
         )}
         <LanguagePicker />
-        {!isAdmin && <NotificationBell />}
+        {isAdmin ? <AdminNotificationBell /> : <NotificationBell />}
         
         <div className="h-6 w-px bg-zinc-200 dark:bg-white/10" />
         

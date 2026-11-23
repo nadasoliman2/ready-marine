@@ -21,7 +21,7 @@ import ResultsPanel from './ResultRows';
 import SearchableSelect from '../../SearchableSelect';
 import { brandOptions } from '../../../lib/pickerOptions';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 const MAX_ROWS = 200;
 const DEFAULT_ROW_COUNT = 10;
 

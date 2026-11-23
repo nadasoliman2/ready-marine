@@ -4,109 +4,111 @@ import { useEffect, useState } from 'react';
 import { useApp } from '../../../context/AppContext';
 import Link from '../../../components/LocaleLink';
 import {
-  ShoppingCart, Package, Bell, Store, CreditCard, Users, Ship,
-  AlertTriangle, RotateCcw, Wallet, Landmark, Truck, PackageOpen,
-  Mail, Ticket, BadgePercent, Sparkles, Star, FolderTree, Wrench,
-  Newspaper, FileText, Settings, ArrowRight, RefreshCw, Loader2,
-  CheckCircle2, Clock, ShieldAlert, ArrowUpRight, TrendingUp,
-  Building2, UserCheck, MessageSquare
+  ShoppingCart, Store, Landmark, Ticket, Users, FileText,
+  Copy, RefreshCw, Loader2, AlertTriangle, Layers, TrendingUp,
+  Package, Settings, ArrowRight, AlertCircle, PackageOpen,
+  RotateCcw, Wallet, Bell, UserCheck, ShieldAlert, Star
 } from 'lucide-react';
 import { adminApi } from '../../../lib/api';
 
-const CARD = 'bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-5 shadow-sm hover:shadow-md transition-all duration-200 group';
+/** Top-level Action Pill for items needing immediate attention */
+function ActionPill({ href, count, label, icon: Icon }) {
+  if (count === undefined || count === null || count <= 0) return null;
+  return (
+    <Link
+      href={href}
+      className="bg-[#FFF8EE] hover:bg-[#FFF0DB] dark:bg-amber-950/20 dark:hover:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-200/70 dark:border-amber-900/40 rounded-xl px-3.5 py-2 text-xs font-bold inline-flex items-center gap-2 transition-transform hover:-translate-y-0.5 shadow-sm group"
+    >
+      {Icon && <Icon size={14} className="text-amber-600 dark:text-amber-400 shrink-0" />}
+      <span>{count} {label}</span>
+      <ArrowRight size={12} className="rtl:rotate-180 text-amber-500 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform" />
+    </Link>
+  );
+}
 
-/** Top-level Action Pill for things that need immediate attention */
-function ActionPill({ href, count, label, icon: Icon, tone = 'red' }) {
-  if (!count || count <= 0) return null;
-  const isRed = tone === 'red';
+/** Top-level Hero Stat Card (4 Column Cards) */
+function HeroStatCard({ title, value, subtext, icon: Icon, tone = 'default', href = '#' }) {
+  const isEmerald = tone === 'emerald';
+  const isRose = tone === 'rose';
 
   return (
     <Link
       href={href}
-      className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all transform hover:-translate-y-0.5 ${
-        isRed
-          ? 'bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/40 dark:hover:bg-red-900/50 dark:text-red-400 border border-red-200 dark:border-red-900/40'
-          : 'bg-amber-50 hover:bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:hover:bg-amber-900/50 dark:text-amber-400 border border-amber-200 dark:border-amber-900/40'
-      }`}
+      className="w-[260px] sm:w-auto shrink-0 snap-start bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200/80 dark:border-white/5 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex items-center justify-between group"
     >
-      <Icon size={14} className="shrink-0" />
-      <span>{count} {label}</span>
-      <ArrowRight size={12} className="rtl:rotate-180 opacity-60 group-hover:opacity-100" />
-    </Link>
-  );
-}
-
-/** Top-level Section Analytics Card */
-function SectionAnalyticsCard({
-  href,
-  title,
-  icon: Icon,
-  badge,
-  badgeTone = 'red',
-  stats = [],
-  tone = 'default',
-  isAr
-}) {
-  return (
-    <Link href={href} className={CARD}>
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-zinc-200 group-hover:bg-marine-cyan group-hover:text-white flex items-center justify-center shrink-0 transition-colors shadow-sm">
-            <Icon size={18} />
-          </div>
-          <div>
-            <h3 className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-marine-primary transition-colors flex items-center gap-1.5">
-              <span>{title}</span>
-              <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 text-marine-cyan transition-all" />
-            </h3>
-          </div>
-        </div>
-
-        {badge !== undefined && badge !== null && (
-          <span className={`px-2.5 py-1 rounded-full text-[11px] font-black uppercase ${
-            badgeTone === 'red'
-              ? 'bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400'
-              : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400'
-          }`}>
-            {badge}
-          </span>
+      <div className="min-w-0">
+        <p className="text-xs font-bold text-zinc-500 dark:text-zinc-400 truncate">
+          {title}
+        </p>
+        <p className="text-xl md:text-2xl font-black text-zinc-900 dark:text-white mt-1 tabular-nums group-hover:text-marine-cyan transition-colors truncate">
+          {value}
+        </p>
+        {subtext && (
+          <p className="text-[11px] text-zinc-400 mt-1 truncate">
+            {subtext}
+          </p>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-100 dark:border-white/5">
-        {stats.map((st, i) => (
-          <div key={i} className="min-w-0">
-            <p className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 truncate">{st.label}</p>
-            <p className="text-base font-black text-zinc-900 dark:text-white mt-0.5 tabular-nums">
-              {st.value ?? '—'}
-            </p>
-          </div>
-        ))}
+      <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center shrink-0 ${
+        isEmerald
+          ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400'
+          : isRose
+            ? 'bg-rose-50 text-rose-500 dark:bg-rose-950/40 dark:text-rose-400'
+            : 'bg-zinc-100 text-zinc-700 dark:bg-white/5 dark:text-zinc-300'
+      }`}>
+        <Icon size={20} className="sm:w-[22px] sm:h-[22px]" />
       </div>
     </Link>
   );
 }
 
-/** Top-level Hero Stat Card */
-function HeroStat({ icon: Icon, label, value, sublabel, tone = 'default' }) {
-  const isRed = tone === 'red';
-  const isGreen = tone === 'green';
-
+/** Clickable stat number cell inside work section cards */
+function MetricCell({ label, value, href }) {
+  if (!label) return <div className="p-2" />;
   return (
-    <div className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-5 shadow-sm flex flex-col items-start sm:flex-row sm:items-center gap-4">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
-        isRed
-          ? 'bg-marine-mist dark:bg-marine-cyan/10 text-marine-cyan'
-          : isGreen
-            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600'
-            : 'bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-zinc-200'
-      }`}>
-        <Icon size={22} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-xs font-bold text-zinc-500 dark:text-zinc-400 truncate">{label}</p>
-        <p className="text-2xl font-black text-zinc-900 dark:text-white mt-0.5 tabular-nums truncate">{value}</p>
-        {sublabel && <p className="text-[11px] text-zinc-400 mt-0.5 truncate">{sublabel}</p>}
+    <Link
+      href={href || '#'}
+      className="flex flex-col items-center justify-center p-2 rounded-xl hover:bg-zinc-50 dark:hover:bg-white/[0.04] transition-all group cursor-pointer"
+    >
+      <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium mb-1 text-center leading-tight">
+        {label}
+      </span>
+      <span className="text-lg md:text-xl font-bold text-zinc-900 dark:text-white group-hover:text-marine-cyan transition-colors tabular-nums">
+        {value ?? 0}
+      </span>
+    </Link>
+  );
+}
+
+/** 7 Grouped Work Cards */
+function WorkSectionCard({ title, icon: Icon, badge, pill, children, className = '' }) {
+  return (
+    <div className={`bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200/80 dark:border-white/5 p-5 md:p-6 shadow-sm flex flex-col justify-between ${className}`}>
+      <div>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2.5">
+            {Icon && <Icon size={20} className="text-zinc-400 dark:text-zinc-500 shrink-0" />}
+            <h2 className="text-base font-bold text-zinc-800 dark:text-zinc-100">
+              {title}
+            </h2>
+          </div>
+          {badge && (
+            <span className="px-2.5 py-1 rounded-full text-xs font-bold text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-400">
+              {badge}
+            </span>
+          )}
+        </div>
+
+        {pill && (
+          <div className="bg-zinc-50 dark:bg-white/[0.03] text-zinc-500 dark:text-zinc-400 text-xs py-2 px-4 rounded-xl font-medium text-center mb-5 border border-zinc-100 dark:border-white/5">
+            {pill}
+          </div>
+        )}
+
+        <div className="grid grid-cols-3 gap-y-5 gap-x-2">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -155,12 +157,10 @@ export default function AdminDashboardIndex() {
   const returns = sec.returns || {};
   const withdrawals = sec.withdrawals || {};
   const ads = sec.ads || {};
-  const pickups = sec.pickups || {};
   const supplies = sec.supplies || {};
   const inquiries = sec.contact_inquiries || {};
   const tickets = sec.tickets || {};
   const coupons = sec.coupons || {};
-  const wallets = sec.wallets || {};
   const loyalty = sec.loyalty || {};
   const reviews = sec.reviews || {};
   const categories = sec.categories || {};
@@ -168,23 +168,38 @@ export default function AdminDashboardIndex() {
   const productBrands = sec.product_brands || {};
   const services = sec.services || {};
   const articles = sec.articles || {};
+  const pages = sec.pages || {};
 
-  // Total items needing attention
+  // Attention badge calculation
+  const totalAttention = (parcels.attention || 0) + (orders.pending || 0) + (orders.missing || 0);
+
+  // List of urgent items needing admin action
   const attentionItems = [
-    { href: '/admin/dashboard/pending-products', count: products.pending, label: isAr ? 'منتجات بانتظار الموافقة' : 'pending products', icon: Bell, tone: 'red' },
-    { href: '/admin/dashboard/orders', count: orders.pending, label: isAr ? 'طلبات جديدة معلقة' : 'pending orders', icon: ShoppingCart, tone: 'amber' },
-    { href: '/admin/dashboard/parcels', count: parcels.attention, label: isAr ? 'شحنات محتاجة تدخلك' : 'parcels need attention', icon: AlertTriangle, tone: 'red' },
-    { href: '/admin/dashboard/verifications', count: verifications.pending, label: isAr ? 'توثيق حسابات بالانتظار' : 'pending verifications', icon: UserCheck, tone: 'amber' },
-    { href: '/admin/dashboard/returns', count: returns.open, label: isAr ? 'طلبات إرجاع مفتوحة' : 'open returns', icon: RotateCcw, tone: 'red' },
-    { href: '/admin/dashboard/tickets', count: tickets.open, label: isAr ? 'تذاكر دعم مفتوحة' : 'open tickets', icon: Ticket, tone: 'amber' },
-    { href: '/admin/dashboard/withdrawals', count: withdrawals.pending, label: isAr ? 'طلبات سحب معلقة' : 'pending withdrawals', icon: Wallet, tone: 'amber' },
-    { href: '/admin/dashboard/contact-inquiries', count: inquiries.new, label: isAr ? 'رسائل تواصل جديدة' : 'new inquiries', icon: Mail, tone: 'amber' },
-    { href: '/admin/dashboard/reviews', count: reviews.pending, label: isAr ? 'تقييمات للمراجعة' : 'pending reviews', icon: Star, tone: 'amber' },
+    { href: '/admin/dashboard/orders?status=pending', count: orders.pending, label: isAr ? 'طلبات جديدة معلقة' : 'pending orders', icon: ShoppingCart },
+    { href: '/admin/dashboard/parcels?reason=declined_items', count: orders.missing, label: isAr ? 'طلبات ناقصة مفتوحة' : 'open incomplete orders', icon: PackageOpen },
+    { href: '/admin/dashboard/parcels', count: parcels.attention, label: isAr ? 'شحنات مرفوضة راجعة للتاجر' : 'rejected parcels', icon: Package },
+    { href: '/admin/dashboard/pending-products', count: products.pending, label: isAr ? 'منتجات بانتظار الموافقة' : 'pending products', icon: Bell },
+    { href: '/admin/dashboard/verifications', count: verifications.pending, label: isAr ? 'توثيق حسابات بالانتظار' : 'pending verifications', icon: UserCheck },
+    { href: '/admin/dashboard/returns', count: returns.open, label: isAr ? 'طلبات إرجاع مفتوحة' : 'open returns', icon: RotateCcw },
+    { href: '/admin/dashboard/withdrawals', count: withdrawals.pending, label: isAr ? 'طلبات سحب معلقة' : 'pending withdrawals', icon: Wallet },
+    { href: '/admin/dashboard/tickets?status=open', count: tickets.open, label: isAr ? 'تذاكر دعم مفتوحة' : 'open tickets', icon: Ticket },
+    { href: '/admin/dashboard/reviews?status=pending', count: reviews.pending, label: isAr ? 'تقييمات بانتظار المراجعة' : 'pending reviews', icon: Star },
   ].filter(it => it.count > 0);
+
+  if (loading) {
+    return (
+      <div className="py-24 flex flex-col items-center justify-center gap-3">
+        <Loader2 size={32} className="animate-spin text-marine-cyan" />
+        <p className="text-xs font-bold text-zinc-400">
+          {isAr ? 'جاري تحميل لوحة التحكم...' : 'Loading dashboard...'}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      {/* Top Header */}
+      {/* 1. Main Header Strip */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-wide">
@@ -198,34 +213,40 @@ export default function AdminDashboardIndex() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            onClick={() => loadData(true)}
-            disabled={refreshing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-200 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
-          >
-            <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
-            <span>{isAr ? 'تحديث الإحصائيات' : 'Refresh'}</span>
-          </button>
-
           <Link
             href="/admin/dashboard/landing"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 rounded-xl text-xs font-bold transition-all shadow-sm"
           >
             <Settings size={14} />
             <span>{isAr ? 'التحكم بالصفحة الرئيسية' : 'Landing Control'}</span>
           </Link>
+
+          <button
+            type="button"
+            onClick={() => loadData(true)}
+            disabled={refreshing}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-200 rounded-xl text-xs font-bold transition-all disabled:opacity-50 border border-zinc-200/60 dark:border-white/5"
+          >
+            <RefreshCw size={14} className={refreshing ? 'animate-spin text-marine-cyan' : ''} />
+            <span>{isAr ? 'تحديث الإحصائيات' : 'Refresh'}</span>
+          </button>
         </div>
       </div>
 
-      {/* Immediate Attention Strip (If any items pending) */}
+      {error && (
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-bold">
+          {error}
+        </div>
+      )}
+
+      {/* 2. Immediate Action Required Banner */}
       {attentionItems.length > 0 && (
-        <div className="bg-red-50/50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 rounded-2xl p-4">
-          <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold text-xs uppercase tracking-wider mb-2.5">
-            <ShieldAlert size={16} />
-            <span>{isAr ? 'إجراءات تتطلب تدخلك فوراً' : 'Action Required'}</span>
+        <div className="bg-[#FFF9F9] dark:bg-red-950/10 border border-red-200/80 dark:border-red-900/30 rounded-2xl p-4">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-red-600 dark:text-red-400 mb-3">
+            <AlertCircle size={15} />
+            <span>{isAr ? 'إجراءات تتطلب تدخلك فوراً' : 'Actions Requiring Immediate Attention'}</span>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide pb-1">
             {attentionItems.map((item, idx) => (
               <ActionPill
                 key={idx}
@@ -233,375 +254,361 @@ export default function AdminDashboardIndex() {
                 count={item.count}
                 label={item.label}
                 icon={item.icon}
-                tone={item.tone}
               />
             ))}
           </div>
         </div>
       )}
 
-      {/* Top 4 Hero Numbers */}
-      <div data-stat-grid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <HeroStat
+      {/* 3. Top 4 Hero Summary Stat Cards - Scrollable on mobile, grid on desktop */}
+      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto scrollbar-hide snap-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-1">
+        {/* Card 1: مبيعات آخر 30 يوم */}
+        <HeroStatCard
+          title={isAr ? 'مبيعات آخر 30 يوم' : 'Sales (Last 30 Days)'}
+          value={orders.revenue_30d !== undefined ? `${Number(orders.revenue_30d).toLocaleString()} ج.م` : '0 ج.م'}
+          subtext={isAr ? `${orders.last_30d || 0} طلب مكتمل` : `${orders.last_30d || 0} completed orders`}
           icon={TrendingUp}
-          label={isAr ? 'مبيعات آخر 30 يوم' : 'Sales (Last 30 Days)'}
-          value={orders.revenue_30d !== undefined ? `${Number(orders.revenue_30d).toLocaleString()} ج.م` : '—'}
-          sublabel={isAr ? `${orders.last_30d || 0} طلب مكتمل` : `${orders.last_30d || 0} orders`}
-          tone="green"
+          tone="emerald"
+          href="/admin/dashboard/finance"
         />
-        <HeroStat
+
+        {/* Card 2: طلبات اليوم */}
+        <HeroStatCard
+          title={isAr ? 'طلبات اليوم' : "Today's Orders"}
+          value={orders.today ?? 0}
+          subtext={isAr ? `${orders.pending || 0} قيد المتابعة` : `${orders.pending || 0} pending review`}
           icon={ShoppingCart}
-          label={isAr ? 'طلبات اليوم' : "Today's Orders"}
-          value={orders.today !== undefined ? orders.today : '—'}
-          sublabel={isAr ? `${orders.pending || 0} قيد المتابعة` : `${orders.pending || 0} pending`}
-          tone="red"
+          tone="rose"
+          href="/admin/dashboard/orders"
         />
-        <HeroStat
+
+        {/* Card 3: المنتجات المنشورة */}
+        <HeroStatCard
+          title={isAr ? 'المنتجات المنشورة' : 'Published Products'}
+          value={products.published ?? 0}
+          subtext={isAr ? `${products.pending || 0} بانتظار الموافقة` : `${products.pending || 0} pending approval`}
           icon={Package}
-          label={isAr ? 'المنتجات المنشورة' : 'Published Products'}
-          value={products.published !== undefined ? products.published : '—'}
-          sublabel={isAr ? `${products.pending || 0} بانتظار الموافقة` : `${products.pending || 0} pending review`}
+          tone="default"
+          href="/admin/dashboard/products?status=published"
         />
-        <HeroStat
+
+        {/* Card 4: التجار والاشتراكات */}
+        <HeroStatCard
+          title={isAr ? 'التجار والاشتراكات' : 'Vendors & Subscriptions'}
+          value={vendors.total ?? 0}
+          subtext={isAr ? `${subscriptions.active || 0} اشتراك سارٍ` : `${subscriptions.active || 0} active subscriptions`}
           icon={Store}
-          label={isAr ? 'التجار والاشتراكات' : 'Active Vendors'}
-          value={vendors.total !== undefined ? vendors.total : '—'}
-          sublabel={isAr ? `${subscriptions.active || 0} اشتراك سارٍ` : `${subscriptions.active || 0} active subs`}
+          tone="default"
+          href="/admin/dashboard/vendors"
         />
       </div>
 
-      {/* Section Analytics Grid - All Sidebar Modules */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-black text-zinc-900 dark:text-white">
-            {isAr ? 'تحليلات أقسام لوحة التحكم' : 'Module Analytics & Jump Links'}
-          </h2>
-          <span className="text-xs text-zinc-400">
-            {isAr ? 'اضغط على أي قسم للانتقال إليه مباشرة' : 'Click any card to open its section'}
-          </span>
-        </div>
+      {/* 4. Work Section Header */}
+      <div className="flex items-center justify-between pt-4 pb-1">
+        <h2 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-white">
+          {isAr ? 'الأقسام بترتيب الشغل' : 'Sections by Workflow Priority'}
+        </h2>
+        <p className="text-xs text-zinc-400 dark:text-zinc-500 hidden sm:block">
+          {isAr ? 'اضغط على أي رقم للانتقال لصفحته' : 'Click any number to view its page'}
+        </p>
+      </div>
 
-        {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-zinc-400">
-            <Loader2 size={32} className="animate-spin text-marine-cyan" />
-            <p className="text-xs font-bold">{isAr ? 'جارِ جمع بيانات الأقسام...' : 'Gathering module statistics...'}</p>
-          </div>
-        ) : error ? (
-          <div className="p-8 text-center text-red-500 font-bold text-sm bg-red-50 dark:bg-red-950/20 rounded-2xl">
-            {error}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            
-            {/* 1. Orders */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/orders"
-              title={isAr ? 'الطلبات' : 'Orders'}
-              icon={ShoppingCart}
-              badge={orders.pending > 0 ? (isAr ? `${orders.pending} معلق` : `${orders.pending} pending`) : null}
-              stats={[
-                { label: isAr ? 'طلبات اليوم' : 'Today', value: orders.today },
-                { label: isAr ? 'آخر 30 يوم' : '30 Days', value: orders.last_30d },
-              ]}
-              isAr={isAr}
-            />
+      {/* 5. Main 2-column Grid of 7 Work Sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Card 1: الكتالوج ومراجعة المنتجات */}
+        <WorkSectionCard
+          title={isAr ? 'الكتالوج ومراجعة المنتجات' : 'Catalog & Product Review'}
+          icon={Copy}
+          pill={
+            isAr
+              ? `بانتظار الموافقة ${products.pending || 0} ← منشور ${Number(products.published || 0).toLocaleString()}`
+              : `Pending Approval ${products.pending || 0} ← Published ${Number(products.published || 0).toLocaleString()}`
+          }
+        >
+          <MetricCell
+            label={isAr ? 'الفئات' : 'Categories'}
+            value={categories.total}
+            href="/admin/dashboard/categories"
+          />
+          <MetricCell
+            label={isAr ? 'فئات نشطة' : 'Active Categories'}
+            value={categories.active}
+            href="/admin/dashboard/categories"
+          />
+          <MetricCell
+            label={isAr ? 'ماركات المنتجات' : 'Brands'}
+            value={productBrands.total ?? carBrands.total}
+            href="/admin/dashboard/product-brands"
+          />
+          <MetricCell
+            label={isAr ? 'بانتظار الموافقة' : 'Pending Approval'}
+            value={products.pending}
+            href="/admin/dashboard/pending-products"
+          />
+          <MetricCell
+            label={isAr ? 'منتجات منشورة' : 'Published Products'}
+            value={products.published}
+            href="/admin/dashboard/products?status=published"
+          />
+          <MetricCell
+            label={isAr ? 'مسودات' : 'Drafts'}
+            value={products.draft}
+            href="/admin/dashboard/products?status=draft"
+          />
+        </WorkSectionCard>
 
-            {/* 2. Parcels Needing You */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/parcels"
-              title={isAr ? 'شحنات محتاجة تدخلك' : 'Parcels Needing You'}
-              icon={AlertTriangle}
-              badge={parcels.attention > 0 ? `${parcels.attention}` : null}
-              badgeTone="red"
-              stats={[
-                { label: isAr ? 'شحنات معلقة' : 'Attention', value: parcels.attention || 0 },
-                { label: isAr ? 'الحالة' : 'Status', value: parcels.attention > 0 ? (isAr ? 'تتطلب قرار' : 'Action needed') : (isAr ? 'مستقرة' : 'All good') },
-              ]}
-              isAr={isAr}
-            />
+        {/* Card 2: التجار والاشتراكات */}
+        <WorkSectionCard
+          title={isAr ? 'التجار والاشتراكات' : 'Vendors & Subscriptions'}
+          icon={Store}
+          pill={
+            isAr
+              ? `تجار ${vendors.total || 0} ← اشتراك سارٍ ${subscriptions.active || 0}`
+              : `Vendors ${vendors.total || 0} ← Active Subscriptions ${subscriptions.active || 0}`
+          }
+        >
+          <MetricCell
+            label={isAr ? 'إجمالي التجار' : 'Total Vendors'}
+            value={vendors.total}
+            href="/admin/dashboard/vendors"
+          />
+          <MetricCell
+            label={isAr ? 'جديد هذا الأسبوع' : 'New This Week'}
+            value={vendors.new_7d}
+            href="/admin/dashboard/vendors"
+          />
+          <MetricCell
+            label={isAr ? 'توثيق بالانتظار' : 'Pending Verification'}
+            value={verifications.pending}
+            href="/admin/dashboard/verifications"
+          />
+          <MetricCell
+            label={isAr ? 'شركات نشطة' : 'Active Companies'}
+            value={companies.active}
+            href="/admin/dashboard/companies"
+          />
+          <MetricCell
+            label={isAr ? 'شركات معلقة' : 'Suspended Companies'}
+            value={companies.suspended}
+            href="/admin/dashboard/companies"
+          />
+          <MetricCell
+            label={isAr ? 'اشتراكات نشطة' : 'Active Subscriptions'}
+            value={subscriptions.active}
+            href="/admin/dashboard/subscriptions"
+          />
+          <MetricCell
+            label={isAr ? 'اشتراكات منتهية' : 'Expired Subscriptions'}
+            value={subscriptions.expired}
+            href="/admin/dashboard/subscriptions"
+          />
+          <div />
+          <div />
+        </WorkSectionCard>
 
-            {/* 3. Products */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/products"
-              title={isAr ? 'المنتجات' : 'Products'}
-              icon={Package}
-              stats={[
-                { label: isAr ? 'منشورة' : 'Published', value: products.published },
-                { label: isAr ? 'مسودات' : 'Drafts', value: products.draft },
-              ]}
-              isAr={isAr}
-            />
+        {/* Card 3: المالية */}
+        <WorkSectionCard
+          title={isAr ? 'المالية' : 'Finance'}
+          icon={Landmark}
+          pill={
+            isAr
+              ? `طلبات سحب معلقة ${withdrawals.pending || 0} ← ادفع في 30 يوم ${Number(withdrawals.paid_30d || 0).toLocaleString()} ج.م`
+              : `Pending Withdrawals ${withdrawals.pending || 0} ← 30d Payouts ${Number(withdrawals.paid_30d || 0).toLocaleString()} EGP`
+          }
+        >
+          <MetricCell
+            label={isAr ? 'مبيعات 30 يوم' : '30-Day Sales'}
+            value={orders.revenue_30d !== undefined ? `${Number(orders.revenue_30d).toLocaleString()} ج.م` : '0 ج.م'}
+            href="/admin/dashboard/finance"
+          />
+          <MetricCell
+            label={isAr ? 'طلبات سحب معلقة' : 'Pending Withdrawals'}
+            value={withdrawals.pending}
+            href="/admin/dashboard/withdrawals"
+          />
+          <MetricCell
+            label={isAr ? 'مدفوعات السحب (30 يوم)' : 'Withdrawals (30d)'}
+            value={withdrawals.paid_30d !== undefined ? `${Number(withdrawals.paid_30d).toLocaleString()} ج.م` : '0 ج.م'}
+            href="/admin/dashboard/withdrawals"
+          />
+        </WorkSectionCard>
 
-            {/* 4. Pending Approval */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/pending-products"
-              title={isAr ? 'بانتظار الموافقة' : 'Pending Approval'}
-              icon={Bell}
-              badge={products.pending > 0 ? `${products.pending}` : null}
-              badgeTone={products.pending > 0 ? 'red' : 'green'}
-              stats={[
-                { label: isAr ? 'منتجات معلقة' : 'Pending', value: products.pending || 0 },
-                { label: isAr ? 'الأولوية' : 'Priority', value: products.pending > 0 ? (isAr ? 'مطلوب مراجعة' : 'Review needed') : (isAr ? 'لا يوجد' : 'None') },
-              ]}
-              isAr={isAr}
-            />
+        {/* Card 4: الطلبات والشحن */}
+        <WorkSectionCard
+          title={isAr ? 'الطلبات والشحن' : 'Orders & Shipping'}
+          icon={ShoppingCart}
+          badge={totalAttention > 0 ? (isAr ? `${totalAttention} محتاج تدخل` : `${totalAttention} Needs Attention`) : null}
+          pill={
+            isAr
+              ? `طلبات معلقة ${orders.pending || 0} ← شحنات محتاجة تدخلك ${parcels.attention || 0}`
+              : `Pending Orders ${orders.pending || 0} ← Attention Parcels ${parcels.attention || 0}`
+          }
+        >
+          <MetricCell
+            label={isAr ? 'طلبات اليوم' : "Today's Orders"}
+            value={orders.today}
+            href="/admin/dashboard/orders"
+          />
+          <MetricCell
+            label={isAr ? 'آخر 30 يوم' : 'Last 30 Days'}
+            value={orders.last_30d}
+            href="/admin/dashboard/orders"
+          />
+          <MetricCell
+            label={isAr ? 'طلبات معلقة' : 'Pending Orders'}
+            value={orders.pending}
+            href="/admin/dashboard/orders?status=pending"
+          />
+          <MetricCell
+            label={isAr ? 'شحنات محتاجة تدخلك' : 'Parcels Needing You'}
+            value={parcels.attention}
+            href="/admin/dashboard/parcels"
+          />
+          <MetricCell
+            label={isAr ? 'طلبات ناقصة مفتوحة' : 'Open Incomplete Orders'}
+            value={orders.missing}
+            href="/admin/dashboard/parcels?reason=declined_items"
+          />
+          <MetricCell
+            label={isAr ? 'طلبات مستلزمات معلقة' : 'Pending Supplies'}
+            value={supplies.pending}
+            href="/admin/dashboard/supplies"
+          />
+          <div />
+          <MetricCell
+            label={isAr ? 'مرتجعات مفتوحة' : 'Open Returns'}
+            value={returns.open}
+            href="/admin/dashboard/returns"
+          />
+          <MetricCell
+            label={isAr ? 'استرداد معلق' : 'Pending Refunds'}
+            value={returns.refunds_pending}
+            href="/admin/dashboard/refunds"
+          />
+        </WorkSectionCard>
 
-            {/* 5. Vendors */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/vendors"
-              title={isAr ? 'التجار' : 'Vendors'}
-              icon={Store}
-              stats={[
-                { label: isAr ? 'إجمالي التجار' : 'Total', value: vendors.total },
-                { label: isAr ? 'جدد هذا الأسبوع' : 'New (7d)', value: vendors.new_7d || 0 },
-              ]}
-              isAr={isAr}
-            />
+        {/* Card 5: الدعم */}
+        <WorkSectionCard
+          title={isAr ? 'الدعم' : 'Support'}
+          icon={Ticket}
+        >
+          <MetricCell
+            label={isAr ? 'تذاكر مفتوحة' : 'Open Tickets'}
+            value={tickets.open}
+            href="/admin/dashboard/tickets?status=open"
+          />
+          <MetricCell
+            label={isAr ? 'تذاكر قيد الانتظار' : 'Pending Tickets'}
+            value={tickets.pending}
+            href="/admin/dashboard/tickets?status=pending"
+          />
+          <MetricCell
+            label={isAr ? 'رسائل جديدة' : 'New Inquiries'}
+            value={inquiries.new}
+            href="/admin/dashboard/contact-inquiries"
+          />
+          <MetricCell
+            label={isAr ? 'إجمالي الرسائل' : 'Total Inquiries'}
+            value={inquiries.total}
+            href="/admin/dashboard/contact-inquiries"
+          />
+          <MetricCell
+            label={isAr ? 'تقييمات بانتظار النشر' : 'Pending Reviews'}
+            value={reviews.pending}
+            href="/admin/dashboard/reviews?status=pending"
+          />
+          <MetricCell
+            label={isAr ? 'تقييمات معتمدة' : 'Approved Reviews'}
+            value={reviews.approved}
+            href="/admin/dashboard/reviews?status=approved"
+          />
+        </WorkSectionCard>
 
-            {/* 6. Vendor Subscriptions */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/subscriptions"
-              title={isAr ? 'اشتراكات التجار' : 'Subscriptions'}
-              icon={CreditCard}
-              badge={subscriptions.expired > 0 ? (isAr ? `${subscriptions.expired} منتهي` : `${subscriptions.expired} Exp`) : null}
-              badgeTone="red"
-              stats={[
-                { label: isAr ? 'اشتراكات نشطة' : 'Active', value: subscriptions.active || 0 },
-                { label: isAr ? 'منتهية' : 'Expired', value: subscriptions.expired || 0 },
-              ]}
-              isAr={isAr}
-            />
+        {/* Card 6: العملاء والتسويق */}
+        <WorkSectionCard
+          title={isAr ? 'العملاء والتسويق' : 'Customers & Marketing'}
+          icon={Users}
+        >
+          <MetricCell
+            label={isAr ? 'عملاء نشطون' : 'Active Users'}
+            value={users.total}
+            href="/admin/dashboard/users"
+          />
+          <MetricCell
+            label={isAr ? 'مسجلين حديثاً (7 أيام)' : 'New Users (7d)'}
+            value={users.new_7d}
+            href="/admin/dashboard/users"
+          />
+          <MetricCell
+            label={isAr ? 'إيميلات تذكير السلة (7 أيام)' : 'Cart Reminders (7d)'}
+            value={users.reminders_7d}
+            href="/admin/dashboard/cart-reminders"
+          />
+          <MetricCell
+            label={isAr ? 'حملات بريدية' : 'Email Campaigns'}
+            value={carCampaigns.total}
+            href="/admin/dashboard/car-campaigns"
+          />
+          <MetricCell
+            label={isAr ? 'حملات اتبعتت' : 'Sent Campaigns'}
+            value={carCampaigns.sent}
+            href="/admin/dashboard/car-campaigns"
+          />
+          <MetricCell
+            label={isAr ? 'كوبونات فعالة' : 'Active Coupons'}
+            value={coupons.active}
+            href="/admin/dashboard/coupons"
+          />
+          <MetricCell
+            label={isAr ? 'أعضاء الولاء' : 'Loyalty Members'}
+            value={loyalty.members}
+            href="/admin/dashboard/loyalty"
+          />
+          <MetricCell
+            label={isAr ? 'طلبات إعلانات معلقة' : 'Pending Ad Requests'}
+            value={ads.pending}
+            href="/admin/dashboard/ad-requests"
+          />
+          <MetricCell
+            label={isAr ? 'إعلانات جارية' : 'Running Ads'}
+            value={ads.approved}
+            href="/admin/dashboard/ad-requests"
+          />
+        </WorkSectionCard>
 
-            {/* 7. Customers */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/users"
-              title={isAr ? 'العملاء' : 'Customers'}
-              icon={Users}
-              stats={[
-                { label: isAr ? 'عملاء نشطون' : 'Active Users', value: users.total || 0 },
-                { label: isAr ? 'مسجلين حديثاً (7d)' : 'New (7d)', value: users.new_7d || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 8. Customer Reports */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/reports"
-              title={isAr ? 'تقارير العملاء' : 'Customer Reports'}
-              icon={Ship}
-              stats={[
-                { label: isAr ? 'سلال متروكة' : 'Carts', value: isAr ? 'متاحة' : 'Available' },
-                { label: isAr ? 'مراكب العملاء' : 'Boats', value: isAr ? 'متاحة' : 'Available' },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 9. Car Email Campaigns */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/car-campaigns"
-              title={isAr ? 'الحملات البريدية' : 'Email Campaigns'}
-              icon={Mail}
-              stats={[
-                { label: isAr ? 'إجمالي الحملات' : 'Campaigns', value: carCampaigns.total || 0 },
-                { label: isAr ? 'تم إرسالها' : 'Sent', value: carCampaigns.sent || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 10. Corporate Accounts */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/companies"
-              title={isAr ? 'حسابات الشركات' : 'Corporate Accounts'}
-              icon={Building2}
-              stats={[
-                { label: isAr ? 'شركات نشطة' : 'Active', value: companies.active || 0 },
-                { label: isAr ? 'معلقة' : 'Suspended', value: companies.suspended || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 11. Returns & Refunds */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/returns"
-              title={isAr ? 'المرتجعات والاستردادات' : 'Returns & Refunds'}
-              icon={RotateCcw}
-              badge={returns.open > 0 ? `${returns.open}` : null}
-              badgeTone="red"
-              stats={[
-                { label: isAr ? 'مرتجعات مفتوحة' : 'Open Returns', value: returns.open || 0 },
-                { label: isAr ? 'استرداد معلق' : 'Refunds Pending', value: returns.refunds_pending || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 12. Finance */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/finance"
-              title={isAr ? 'المالية والأرباح' : 'Finance'}
-              icon={Landmark}
-              stats={[
-                { label: isAr ? 'مبيعات 30 يوم' : 'Sales 30d', value: orders.revenue_30d !== undefined ? `${Number(orders.revenue_30d).toLocaleString()} ج.م` : '—' },
-                { label: isAr ? 'مدفوعات السحب' : 'Payouts 30d', value: withdrawals.paid_30d !== undefined ? `${Number(withdrawals.paid_30d).toLocaleString()} ج.م` : '—' },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 13. Withdrawals */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/withdrawals"
-              title={isAr ? 'طلبات السحب' : 'Withdrawals'}
-              icon={Wallet}
-              badge={withdrawals.pending > 0 ? `${withdrawals.pending}` : null}
-              badgeTone="amber"
-              stats={[
-                { label: isAr ? 'طلبات معلقة' : 'Pending', value: withdrawals.pending || 0 },
-                { label: isAr ? 'تم سحبه (30d)' : 'Paid (30d)', value: withdrawals.paid_30d !== undefined ? `${Number(withdrawals.paid_30d).toLocaleString()} ج.م` : '—' },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 14. Support Tickets */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/tickets"
-              title={isAr ? 'تذاكر الدعم' : 'Support Tickets'}
-              icon={Ticket}
-              badge={tickets.open > 0 ? `${tickets.open}` : null}
-              badgeTone="red"
-              stats={[
-                { label: isAr ? 'تذاكر مفتوحة' : 'Open', value: tickets.open || 0 },
-                { label: isAr ? 'قيد الانتظار' : 'Pending', value: tickets.pending || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 15. Contact Inquiries */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/contact-inquiries"
-              title={isAr ? 'رسائل التواصل' : 'Contact Inquiries'}
-              icon={Mail}
-              badge={inquiries.new > 0 ? `${inquiries.new}` : null}
-              badgeTone="amber"
-              stats={[
-                { label: isAr ? 'رسائل جديدة' : 'New', value: inquiries.new || 0 },
-                { label: isAr ? 'الإجمالي' : 'Total', value: inquiries.total || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 16. Reviews */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/reviews"
-              title={isAr ? 'التقييمات والمراجعات' : 'Reviews'}
-              icon={Star}
-              badge={reviews.pending > 0 ? `${reviews.pending}` : null}
-              badgeTone="amber"
-              stats={[
-                { label: isAr ? 'بانتظار النشر' : 'Pending', value: reviews.pending || 0 },
-                { label: isAr ? 'معتمدة' : 'Approved', value: reviews.approved || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 17. Coupons */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/coupons"
-              title={isAr ? 'الكوبونات' : 'Coupons'}
-              icon={BadgePercent}
-              stats={[
-                { label: isAr ? 'كوبونات فعالة' : 'Active', value: coupons.active || 0 },
-                { label: isAr ? 'الحالة' : 'Status', value: isAr ? 'سارية' : 'Running' },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 18. Loyalty Program */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/loyalty"
-              title={isAr ? 'برنامج الولاء' : 'Loyalty Program'}
-              icon={Sparkles}
-              stats={[
-                { label: isAr ? 'الأعضاء' : 'Members', value: loyalty.members || 0 },
-                { label: isAr ? 'النقاط' : 'Points', value: isAr ? 'نشط' : 'Active' },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 19. Car Brands */}
-            {/* <SectionAnalyticsCard
-              href="/admin/dashboard/car-brands"
-              title={isAr ? 'الماركات البحرية' : 'Marine Brands'}
-              icon={Ship}
-              stats={[
-                { label: isAr ? 'إجمالي الماركات' : 'Total Brands', value: carBrands.total || 0 },
-                { label: isAr ? 'الموديلات' : 'Models', value: isAr ? 'متزامنة' : 'Synced' },
-              ]}
-              isAr={isAr}
-            /> */}
-
-            {/* 20. Categories */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/categories"
-              title={isAr ? 'الأقسام والتصنيفات' : 'Categories'}
-              icon={FolderTree}
-              stats={[
-                { label: isAr ? 'إجمالي الأقسام' : 'Total', value: categories.total || 0 },
-                { label: isAr ? 'أقسام نشطة' : 'Active', value: categories.active || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 21. Packaging Supplies */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/supplies"
-              title={isAr ? 'مستلزمات الشحن والتغليف' : 'Packaging Supplies'}
-              icon={PackageOpen}
-              badge={supplies.pending > 0 ? `${supplies.pending}` : null}
-              stats={[
-                { label: isAr ? 'طلبات معلقة' : 'Pending', value: supplies.pending || 0 },
-                { label: isAr ? 'المخزون' : 'Catalog', value: isAr ? 'جاهز' : 'Ready' },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 22. Ad Requests */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/ad-requests"
-              title={isAr ? 'طلبات الإعلانات' : 'Ad Requests'}
-              icon={TrendingUp}
-              badge={ads.pending > 0 ? `${ads.pending}` : null}
-              stats={[
-                { label: isAr ? 'طلبات معلقة' : 'Pending', value: ads.pending || 0 },
-                { label: isAr ? 'إعلانات جارية' : 'Approved', value: ads.approved || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 23. Services */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/services"
-              title={isAr ? 'الخدمات والصيانة' : 'Services'}
-              icon={Wrench}
-              stats={[
-                { label: isAr ? 'خدمات نشطة' : 'Active', value: services.active || 0 },
-                { label: isAr ? 'الإجمالي' : 'Total', value: services.total || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-            {/* 24. Articles & Blog */}
-            <SectionAnalyticsCard
-              href="/admin/dashboard/articles"
-              title={isAr ? 'المقالات والأخبار' : 'Articles'}
-              icon={Newspaper}
-              stats={[
-                { label: isAr ? 'مقالات منشورة' : 'Published', value: articles.published || 0 },
-                { label: isAr ? 'مسودات' : 'Drafts', value: articles.draft || 0 },
-              ]}
-              isAr={isAr}
-            />
-
-          </div>
-        )}
+        {/* Card 7: المحتوى والموقع */}
+        <WorkSectionCard
+          title={isAr ? 'المحتوى والموقع' : 'Content & Website'}
+          icon={FileText}
+          className="lg:col-span-2"
+        >
+          <MetricCell
+            label={isAr ? 'خدمات نشطة' : 'Active Services'}
+            value={services.active}
+            href="/admin/dashboard/services"
+          />
+          <MetricCell
+            label={isAr ? 'إجمالي الخدمات' : 'Total Services'}
+            value={services.total}
+            href="/admin/dashboard/services"
+          />
+          <MetricCell
+            label={isAr ? 'مقالات منشورة' : 'Published Articles'}
+            value={articles.published}
+            href="/admin/dashboard/articles"
+          />
+          <MetricCell
+            label={isAr ? 'مسودات' : 'Drafts'}
+            value={articles.draft}
+            href="/admin/dashboard/articles"
+          />
+          <MetricCell
+            label={isAr ? 'الصفحات' : 'Pages'}
+            value={pages.total}
+            href="/admin/dashboard/pages"
+          />
+          <div />
+        </WorkSectionCard>
       </div>
     </div>
   );

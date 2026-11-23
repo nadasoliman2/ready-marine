@@ -15,17 +15,19 @@ const brandSchema = new Schema(
         image: {
             type: String, // Logo URL
         },
-        // The categories this brand makes things for. A parent category stands for every
-        // category under it. EMPTY MEANS UNKNOWN, not "none": a brand nobody has tagged yet
-        // keeps appearing everywhere, so tagging can happen brand by brand without the
-        // untagged ones vanishing from every filter in the meantime.
         categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     },
     {
-        timestamps: true, // createdAt / updatedAt (مفيد هنا)
+        timestamps: true,
     }
 );
 
-const Brand = mongoose.model("Brand", brandSchema);
+const Brand = mongoose.models.Brand || mongoose.model("Brand", brandSchema);
 
-module.exports = { Brand };
+// Register aliases so legacy Mongoose queries resolve directly to Brand
+if (!mongoose.models.ProductBrand) mongoose.models.ProductBrand = Brand;
+
+module.exports = {
+    Brand,
+    ProductBrand: Brand,
+};

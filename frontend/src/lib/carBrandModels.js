@@ -17,7 +17,7 @@ import { useEffect, useMemo, useState } from 'react';
 const cache = new Map(); // brandId -> Promise<models[]>
 const NO_MODELS = [];
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 /**
  * Named models first, numbered ones after: Renault lists Alaskan, Arkana, Austral … and

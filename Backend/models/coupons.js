@@ -90,6 +90,10 @@ const couponSchema = new Schema(
             type: Date,
             default: null,
         },
+        end_date: {
+            type: Date,
+            default: null,
+        },
     },
     {
         timestamps: true,
@@ -99,6 +103,17 @@ const couponSchema = new Schema(
 couponSchema.pre('validate', function(next) {
     if (this.code) {
         this.code = this.code.trim().toUpperCase();
+    }
+
+    if (this.end_date && !this.expires_at) {
+        this.expires_at = this.end_date;
+    }
+    if (this.expires_at && !this.end_date) {
+        this.end_date = this.expires_at;
+    }
+
+    if (this.discount_type === 'percentage') {
+        this.discount_type = 'percent';
     }
 
     if (this.discount_type === 'percent' && this.discount_value > 100) {

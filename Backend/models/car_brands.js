@@ -1,2 +1,2 @@
-// Re-export VesselBrand under legacy CarBrand name for backwards compatibility
-module.exports = require("./vessel_brands");
+// Re-export product_brands as the single brand model across the system
+module.exports = require("./product_brands");

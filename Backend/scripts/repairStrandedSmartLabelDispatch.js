@@ -34,8 +34,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { Order } = require('../models/orders');
 const { SmartLabel } = require('../models/smartLabels');
-const bostaService = require('../services/bostaService');
-const subOrderService = require('../services/subOrderService');
+const bostaService = require('../modules/shipping/bosta.service');
+const subOrderService = require('../modules/order/sub_order.service');
 
 const APPLY = process.argv.includes('--apply');
 

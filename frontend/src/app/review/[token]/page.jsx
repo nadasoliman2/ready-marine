@@ -1,54 +1,50 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from '../../../components/LocaleLink';
-import { Loader2, CheckCircle2, AlertCircle, Star, ImagePlus, X, Store } from 'lucide-react';
+import {
+    Loader2, CheckCircle2, AlertCircle, Star, ImagePlus, X,
+    Store, Gift, PhoneCall, Lock, ShieldAlert, User, ArrowLeft, ArrowRight, LogIn
+} from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import { reviewsApi } from '../../../lib/api';
 import { reviewCopy, reviewErrorCopy } from '../../../lib/reviewLocalization';
 import { resolveAssetUrl } from '../../../lib/assets';
 import StarRating from '../../../components/reviews/StarRating';
 
-/**
- * The page a customer lands on from the WhatsApp review link.
- *
- * Deliberately requires no login: the single-use token in the URL is the credential, and
- * asking someone to sign in three days after delivery is where most review flows lose their
- * responses.
- *
- * The form is grouped by SELLER — that seller's products, then one block to rate the seller
- * themselves. A store review is worth having and nobody makes a second journey to leave
- * one, so it has to be the next thing under your thumb rather than another link.
- *
- * Every answer is optional. A customer who rates one product and skips everything else is a
- * normal outcome, not an incomplete form.
- */
 export default function ReviewPage() {
     const params = useParams();
-    const { language, isMounted } = useApp();
+    const router = useRouter();
+    const { language, isMounted, user, logout } = useApp();
     const isAr = language === 'ar';
     const copy = useMemo(() => reviewCopy(isAr), [isAr]);
     const token = String(params?.token || '');
 
     const [context, setContext] = useState(null);
-    // Keyed by `product:<id>` / `vendor:<id>`, so products and stores share one set of
-    // state without their ids ever colliding.
     const [answers, setAnswers] = useState({});
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const [done, setDone] = useState(false);
+    const [submissionResult, setSubmissionResult] = useState(null);
 
     const maxImages = context?.max_images || 3;
 
     useEffect(() => {
         if (!isMounted || !token) return;
+
+        // 1. Must be logged in: customer or admin
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
         reviewsApi.getInvite(token)
             .then((data) => {
                 setContext(data);
-                // Pre-fill anything already submitted, so a returning customer sees their
-                // own answers rather than a blank form.
                 const seeded = {};
                 for (const item of data.items || []) {
                     seeded[`product:${item.product_id}`] = {
@@ -66,9 +62,11 @@ export default function ReviewPage() {
                 }
                 setAnswers(seeded);
             })
-            .catch((err) => setError({ code: err.code, message: err.message }))
+            .catch((err) => {
+                setError({ code: err.code || 'REVIEW_ERROR', message: err.message });
+            })
             .finally(() => setLoading(false));
-    }, [isMounted, token]);
+    }, [isMounted, token, user]);
 
     const answerFor = (key) => answers[key] || { rating: 0, comment: '', images: [] };
     const patch = (key, changes) => setAnswers((a) => ({ ...a, [key]: { ...answerFor(key), ...changes } }));
@@ -95,85 +93,270 @@ export default function ReviewPage() {
         setSubmitting(true);
         setError(null);
         try {
-            await reviewsApi.submit(token, entries);
+            const result = await reviewsApi.submit(token, entries);
+            setSubmissionResult(result);
             setDone(true);
         } catch (err) {
-            setError({ code: err.code, message: err.message });
+            setError({ code: err.code || 'REVIEW_ERROR', message: err.message });
         } finally {
             setSubmitting(false);
         }
     };
 
-    if (!isMounted || loading) {
+    // Loading State
+    if (!isMounted || (loading && user)) {
         return (
-            <Shell isAr={isAr}>
-                <div className="flex items-center justify-center py-16">
-                    <Loader2 size={34} className="animate-spin text-marine-primary" />
+            <Shell isAr={isAr} user={user} onLogout={logout}>
+                <div className="flex flex-col items-center justify-center py-20 gap-3">
+                    <Loader2 size={36} className="animate-spin text-marine-cyan" />
+                    <p className="text-zinc-400 text-xs font-bold">
+                        {isAr ? 'جاري التحقق من صلاحية الطلب...' : 'Verifying order access...'}
+                    </p>
                 </div>
             </Shell>
         );
     }
 
-    if (done) {
+    // 1. NOT LOGGED IN GATE
+    if (!user) {
         return (
-            <Shell isAr={isAr}>
-                <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-emerald-500/15 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-5">
+            <Shell isAr={isAr} user={null}>
+                <div className="text-center py-6">
+                    <div className="w-16 h-16 bg-amber-500/15 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-amber-500/20 shadow-sm">
+                        <Lock size={32} />
+                    </div>
+                    <h1 className="text-2xl font-black text-white mb-2">
+                        {isAr ? 'تسجيل الدخول مطلوب لكتابة التقييم' : 'Sign in Required to Review'}
+                    </h1>
+                    <p className="text-zinc-400 text-sm leading-relaxed max-w-md mx-auto mb-6">
+                        {isAr
+                            ? 'لضمان أمان وموثوقية تقييمات المنتجات، يرجى تسجيل الدخول بالحساب الذي تم الطلب من خلاله أو كمسؤول للمتابعة.'
+                            : 'To ensure verified and trusted reviews, please sign in with the account used for this order or as an admin.'}
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xs mx-auto">
+                        <Link
+                            href={`/login?redirect=/review/${token}`}
+                            className="w-full inline-flex items-center justify-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md text-sm"
+                        >
+                            <LogIn size={16} />
+                            <span>{isAr ? 'تسجيل الدخول الآن' : 'Sign in Now'}</span>
+                        </Link>
+                        <Link
+                            href="/"
+                            className="w-full inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-zinc-300 font-bold px-6 py-3 rounded-xl transition-all text-sm border border-white/10"
+                        >
+                            {isAr ? 'العودة للمتجر' : 'Back to Store'}
+                        </Link>
+                    </div>
+                </div>
+            </Shell>
+        );
+    }
+
+    // 2. SUBMITTED SUCCESS SCREEN
+    if (done) {
+        const isNegative = submissionResult?.has_low_rating;
+
+        return (
+            <Shell isAr={isAr} user={user} onLogout={logout}>
+                <div className="text-center py-6">
+                    {isNegative ? (
+                        <>
+                            <div className="w-16 h-16 bg-amber-500/15 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-amber-500/20">
+                                <AlertCircle size={32} />
+                            </div>
+                            <h1 className="text-2xl font-black text-white mb-2">
+                                {isAr ? 'نعتذر عن عدم رضاك، ورأيك يهمنا جداً' : 'We apologize for your experience'}
+                            </h1>
+                            <p className="text-zinc-300 text-sm leading-relaxed max-w-md mx-auto mb-4">
+                                {isAr
+                                    ? 'تم فتح تذكرة دعم فني عاجلة لمتابعة ملاحظاتك والتدخل فوراً لحل المشكلة أو استبدال القطعة.'
+                                    : 'An urgent support ticket has been opened to resolve this issue or arrange a replacement.'}
+                            </p>
+                            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 max-w-md mx-auto flex items-center gap-3 text-start mb-6">
+                                <PhoneCall size={20} className="text-amber-400 shrink-0" />
+                                <p className="text-xs text-amber-200">
+                                    {isAr
+                                        ? 'سيتواصل معك فريق خدمة العملاء على رقم هاتفك المسجل بأسرع وقت.'
+                                        : 'Our customer support team will contact you shortly on your registered phone number.'}
+                                </p>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="w-16 h-16 bg-emerald-500/15 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-emerald-500/20">
+                                <CheckCircle2 size={32} />
+                            </div>
+                            <h1 className="text-2xl font-black text-white mb-2">{copy.thanksTitle}</h1>
+                            <p className="text-zinc-400 text-sm leading-relaxed max-w-md mx-auto">{copy.thanksBody}</p>
+
+                            {/* Reward Banner */}
+                            <div className="mt-5 mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 max-w-md mx-auto flex items-center gap-3.5 text-start">
+                                <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                                    <Gift size={24} />
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold text-amber-400">
+                                        {isAr ? '🎁 مكافأة التقييم الموثق' : '🎁 Verified Review Reward'}
+                                    </p>
+                                    <p className="text-xs text-zinc-300 mt-0.5">
+                                        {isAr
+                                            ? 'ستتم إضافة 50 نقطة ولاء إلى رصيدك فور اعتماد التقييم، كما يمكنك استخدام كود الخصم THANKS5 عند طلبك القادم!'
+                                            : '50 loyalty points will be added once approved. You can also use code THANKS5 on your next order!'}
+                                    </p>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xs mx-auto">
+                        <Link
+                            href="/profile?view=orders-history"
+                            className="w-full inline-flex items-center justify-center bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-md"
+                        >
+                            {isAr ? 'الذهاب لسجل طلباتي' : 'View My Orders'}
+                        </Link>
+                        <Link
+                            href="/"
+                            className="w-full inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-zinc-300 font-bold px-6 py-3 rounded-xl transition-all text-sm border border-white/10"
+                        >
+                            {copy.backHome}
+                        </Link>
+                    </div>
+                </div>
+            </Shell>
+        );
+    }
+
+    // 3. FORBIDDEN OWNERSHIP ERROR
+    if (error?.code === 'FORBIDDEN_NOT_ORDER_OWNER') {
+        return (
+            <Shell isAr={isAr} user={user} onLogout={logout}>
+                <div className="text-center py-6">
+                    <div className="w-16 h-16 bg-red-500/15 text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-red-500/20">
+                        <ShieldAlert size={32} />
+                    </div>
+                    <h1 className="text-2xl font-black text-white mb-2">
+                        {isAr ? 'هذا الطلب غير مرتبط بحسابك' : 'Order Not Linked to This Account'}
+                    </h1>
+                    <p className="text-zinc-300 text-sm leading-relaxed max-w-md mx-auto mb-3">
+                        {isAr
+                            ? 'التقييم متاح فقط للعميل صاحب هذا الطلب أو لإدارة ريدي مارين.'
+                            : 'This review is only accessible to the customer who placed the order or an admin.'}
+                    </p>
+                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl max-w-xs mx-auto mb-6 text-xs text-zinc-400">
+                        {isAr ? 'الحساب المسجل حالياً: ' : 'Signed in as: '}
+                        <span className="text-white font-bold">{user?.name || user?.phone || user?.username}</span>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xs mx-auto">
+                        <Link
+                            href={`/login?redirect=/review/${token}`}
+                            className="w-full inline-flex items-center justify-center bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-md"
+                        >
+                            {isAr ? 'تسجيل الدخول بحساب آخر' : 'Switch Account'}
+                        </Link>
+                        <Link
+                            href="/profile?view=orders-history"
+                            className="w-full inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-zinc-300 font-bold px-6 py-3 rounded-xl transition-all text-sm border border-white/10"
+                        >
+                            {isAr ? 'عرض طلباتي' : 'My Orders'}
+                        </Link>
+                    </div>
+                </div>
+            </Shell>
+        );
+    }
+
+    // 4. ALREADY USED / SUBMITTED
+    if (error?.code === 'INVITE_ALREADY_USED') {
+        return (
+            <Shell isAr={isAr} user={user} onLogout={logout}>
+                <div className="text-center py-6">
+                    <div className="w-16 h-16 bg-emerald-500/15 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-emerald-500/20">
                         <CheckCircle2 size={32} />
                     </div>
-                    <h1 className="text-2xl font-black text-white mb-2">{copy.thanksTitle}</h1>
-                    <p className="text-zinc-400 text-sm leading-relaxed">{copy.thanksBody}</p>
-                    <Link href="/" className="inline-block mt-6 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-6 py-3 rounded-xl transition-all">
-                        {copy.backHome}
-                    </Link>
+                    <h1 className="text-2xl font-black text-white mb-2">
+                        {isAr ? 'تم تقييم هذا الطلب مسبقاً' : 'Order Already Reviewed'}
+                    </h1>
+                    <p className="text-zinc-300 text-sm leading-relaxed max-w-md mx-auto mb-6">
+                        {isAr
+                            ? 'شكراً لمشاركتك رأيك وتقييمك لطلبك! تقييمك مسجل في لوحة الإدارة ومتاح للمراجعة.'
+                            : 'Thank you for your feedback! Your review has been recorded and is available to administrators.'}
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xs mx-auto">
+                        <Link
+                            href="/profile?view=orders-history"
+                            className="w-full inline-flex items-center justify-center bg-marine-cyan hover:bg-marine-cyan-dark text-white font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-md"
+                        >
+                            {isAr ? 'عرض طلباتي' : 'My Orders'}
+                        </Link>
+                        <Link
+                            href="/"
+                            className="w-full inline-flex items-center justify-center bg-white/5 hover:bg-white/10 text-zinc-300 font-bold px-6 py-3 rounded-xl transition-all text-sm border border-white/10"
+                        >
+                            {copy.backHome}
+                        </Link>
+                    </div>
                 </div>
             </Shell>
         );
     }
 
-    // A dead link is a terminal state, not an error banner over a usable form.
+    // 5. OTHER ERRORS (EXPIRED, INVALID)
     if (!context) {
         return (
-            <Shell isAr={isAr}>
-                <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-amber-500/15 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-5">
+            <Shell isAr={isAr} user={user} onLogout={logout}>
+                <div className="text-center py-6">
+                    <div className="w-16 h-16 bg-amber-500/15 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-amber-500/20">
                         <AlertCircle size={32} />
                     </div>
                     <h1 className="text-xl font-black text-white mb-2">
-                        {reviewErrorCopy(error?.code, isAr) || error?.message}
+                        {reviewErrorCopy(error?.code, isAr) || error?.message || (isAr ? 'حدث خطأ في تحميل التقييم' : 'Error loading review')}
                     </h1>
-                    <Link href="/" className="inline-block mt-6 bg-white/5 hover:bg-white/10 text-zinc-300 font-bold px-6 py-3 rounded-xl transition-all">
-                        {copy.backHome}
+                    <p className="text-zinc-400 text-xs max-w-sm mx-auto mb-6">
+                        {isAr
+                            ? 'يرجى مراجعة الرابط أو العودة لصفحة طلباتك في حسابك.'
+                            : 'Please check the link or return to your orders list.'}
+                    </p>
+                    <Link
+                        href="/profile?view=orders-history"
+                        className="inline-block bg-white/5 hover:bg-white/10 text-zinc-300 font-bold px-6 py-3 rounded-xl transition-all text-sm border border-white/10"
+                    >
+                        {isAr ? 'الذهاب لطلباتي' : 'Go to My Orders'}
                     </Link>
                 </div>
             </Shell>
         );
     }
 
-    // Group the products under the seller who shipped them. An order from one seller — the
-    // common case — renders as a single group and reads exactly as it did before.
+    // 6. ACTIVE REVIEW FORM
     const vendors = context.vendors || [];
     const groups = vendors.map((vendor) => ({
         vendor,
         items: (context.items || []).filter((i) => String(i.vendor_id) === String(vendor.vendor_id)),
     }));
-    // Anything whose seller could not be resolved still has to be rateable.
-    const orphans = (context.items || []).filter(
-        (i) => !vendors.some((v) => String(v.vendor_id) === String(i.vendor_id))
-    );
     const multipleStores = groups.length > 1;
 
     return (
-        <Shell isAr={isAr}>
+        <Shell isAr={isAr} user={user} onLogout={logout}>
             <div className="text-center mb-8">
-                <div className="w-14 h-14 bg-marine-cyan/15 text-marine-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 bg-marine-cyan/15 text-marine-primary rounded-2xl flex items-center justify-center mx-auto mb-4 border border-marine-cyan/20">
                     <Star size={26} />
                 </div>
                 <h1 className="text-2xl font-black text-white">{copy.pageTitle}</h1>
                 <p className="text-zinc-400 text-sm mt-2 leading-relaxed">{copy.intro}</p>
-                <p className="text-zinc-600 text-xs mt-3">
-                    {copy.orderRef} <span className="font-mono text-zinc-400">#{context.reference}</span>
-                </p>
+                <div className="flex items-center justify-center gap-3 mt-3 flex-wrap">
+                    <span className="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-zinc-300">
+                        {copy.orderRef}: <strong className="font-mono text-marine-cyan">#{context.reference}</strong>
+                    </span>
+                    {context.customer_name && (
+                        <span className="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-zinc-300">
+                            {isAr ? 'العميل: ' : 'Customer: '}<strong>{context.customer_name}</strong>
+                        </span>
+                    )}
+                </div>
             </div>
 
             {error && (
@@ -186,12 +369,9 @@ export default function ReviewPage() {
             <div className="space-y-8">
                 {groups.map(({ vendor, items }) => (
                     <div key={String(vendor.vendor_id)} className="space-y-4">
-                        {/* Only worth naming the seller above their products when the order
-                            came from more than one — otherwise it is a header over the
-                            whole page saying what the page already says. */}
                         {multipleStores && (
-                            <div className="flex items-center gap-2 text-zinc-500 text-xs font-black uppercase tracking-widest">
-                                <Store size={13} className="text-marine-primary" />
+                            <div className="flex items-center gap-2 text-zinc-400 text-xs font-black uppercase tracking-widest pt-2 border-t border-white/5">
+                                <Store size={14} className="text-marine-cyan" />
                                 <span>{copy.soldByVendor} {vendor.store_name}</span>
                             </div>
                         )}
@@ -213,6 +393,7 @@ export default function ReviewPage() {
                         ))}
 
                         <ReviewBlock
+                            key={`vendor-${vendor.vendor_id}`}
                             token={token}
                             copy={copy}
                             isAr={isAr}
@@ -220,115 +401,128 @@ export default function ReviewPage() {
                             answer={answerFor(`vendor:${vendor.vendor_id}`)}
                             onChange={(changes) => patch(`vendor:${vendor.vendor_id}`, changes)}
                             onError={setError}
-                            title={copy.rateVendorTitle}
-                            subtitle={vendor.store_name}
-                            hint={copy.rateVendorHint}
-                            image={vendor.store_image}
-                            fallbackIcon={<Store size={22} className="text-marine-primary" />}
-                            accent
+                            title={`${copy.rateVendorTitle}: ${vendor.store_name}`}
+                            subtitle={copy.rateVendorHint}
+                            isVendor
                         />
                     </div>
                 ))}
-
-                {orphans.map((item) => (
-                    <ReviewBlock
-                        key={item.product_id}
-                        token={token}
-                        copy={copy}
-                        isAr={isAr}
-                        maxImages={maxImages}
-                        answer={answerFor(`product:${item.product_id}`)}
-                        onChange={(changes) => patch(`product:${item.product_id}`, changes)}
-                        onError={setError}
-                        title={item.title}
-                        subtitle={item.variant_label}
-                        image={item.image}
-                    />
-                ))}
             </div>
 
-            <button
-                onClick={submit}
-                disabled={submitting}
-                className="w-full mt-6 bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-60 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2"
-            >
-                {submitting && <Loader2 size={18} className="animate-spin" />}
-                {submitting ? copy.submitting : copy.submit}
-            </button>
+            <div className="mt-8 pt-6 border-t border-white/10 flex flex-col items-center gap-3">
+                <button
+                    type="button"
+                    onClick={submit}
+                    disabled={submitting}
+                    className="w-full sm:w-auto min-w-[220px] bg-marine-cyan hover:bg-marine-cyan-dark text-white font-black text-sm px-8 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+                >
+                    {submitting ? (
+                        <>
+                            <Loader2 size={16} className="animate-spin" />
+                            <span>{copy.submitting}</span>
+                        </>
+                    ) : (
+                        <span>{copy.submit}</span>
+                    )}
+                </button>
+                <p className="text-[11px] text-zinc-500 text-center max-w-sm">
+                    {isAr
+                        ? 'يتم فحص ومراجعة جميع التقييمات قبل نشرها. التقييمات الإيجابية تكافئك بنقاط ولاء.'
+                        : 'All reviews are checked before publishing. Verified positive reviews earn loyalty points.'}
+                </p>
+            </div>
         </Shell>
     );
 }
 
-/**
- * One rateable thing: stars, an optional comment, optional photos. Identical for a product
- * and for a store, because the customer is answering the same question about both.
- */
 function ReviewBlock({
-    token, copy, isAr, maxImages, answer, onChange, onError,
-    title, subtitle, hint, image, fallbackIcon = null, accent = false,
+    token,
+    title,
+    subtitle,
+    image,
+    isVendor = false,
+    answer,
+    onChange,
+    onError,
+    copy,
+    isAr,
+    maxImages,
 }) {
-    const [uploading, setUploading] = useState(false);
     const fileInput = useRef(null);
-    const images = answer.images || [];
-    const remaining = Math.max(0, maxImages - images.length);
+    const [uploading, setUploading] = useState(false);
 
-    const pickFiles = async (event) => {
-        const files = Array.from(event.target.files || []).slice(0, remaining);
-        // Clear immediately so re-picking the same file still fires a change event.
-        event.target.value = '';
+    const pickFiles = async (e) => {
+        const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
-
         setUploading(true);
         try {
-            const uploaded = await reviewsApi.uploadImages(token, files);
-            onChange({ images: [...images, ...uploaded.map((i) => i.url)].slice(0, maxImages) });
+            const res = await reviewsApi.uploadImages(token, files);
+            const urls = (res.images || []).map((i) => i.url);
+            const current = answer.images || [];
+            onChange({ images: [...current, ...urls].slice(0, maxImages) });
         } catch (err) {
-            onError({ code: err.code, message: err.message });
+            onError({ code: err.code || 'UPLOAD_FAILED', message: err.message });
         } finally {
             setUploading(false);
+            if (fileInput.current) fileInput.current.value = '';
         }
     };
 
+    const removeImage = (index) => {
+        const current = [...(answer.images || [])];
+        current.splice(index, 1);
+        onChange({ images: current });
+    };
+
+    const remaining = maxImages - (answer.images || []).length;
+
     return (
-        <div className={`rounded-2xl p-5 border ${accent ? 'bg-marine-cyan/5 border-marine-cyan/20' : 'bg-white/5 border-white/10'}`}>
-            <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-white/10 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 flex items-center justify-center">
-                    {image
-                        ? <img src={resolveAssetUrl(image)} alt="" className="w-full h-full object-cover" />
-                        : fallbackIcon}
-                </div>
-                <div className="min-w-0">
-                    <p className="text-white font-bold text-sm">{title}</p>
-                    {subtitle && <p className="text-zinc-500 text-xs mt-0.5">{subtitle}</p>}
-                    {hint && <p className="text-zinc-600 text-xs mt-1 leading-relaxed">{hint}</p>}
+        <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4 sm:p-5 transition-all">
+            <div className="flex items-start gap-3 sm:gap-4 mb-4">
+                {isVendor ? (
+                    <div className="w-12 h-12 rounded-xl bg-marine-cyan/15 text-marine-primary flex items-center justify-center shrink-0 border border-marine-cyan/20">
+                        <Store size={22} />
+                    </div>
+                ) : image ? (
+                    <img
+                        src={resolveAssetUrl(image)}
+                        alt={title}
+                        className="w-12 h-12 rounded-xl object-cover border border-white/10 shrink-0"
+                    />
+                ) : null}
+
+                <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-bold text-white truncate">{title}</h3>
+                    {subtitle && <p className="text-xs text-zinc-400 mt-0.5 truncate">{subtitle}</p>}
                 </div>
             </div>
 
-            <StarRating
-                value={answer.rating || 0}
-                onChange={(v) => onChange({ rating: v })}
-                size={30}
-                label={title}
-                className="mb-4"
-            />
+            <div className="mb-4">
+                <StarRating
+                    value={answer.rating}
+                    onChange={(r) => onChange({ rating: r })}
+                    size={28}
+                    interactive
+                />
+            </div>
 
-            <textarea
-                rows={3}
-                maxLength={1000}
-                value={answer.comment || ''}
-                onChange={(e) => onChange({ comment: e.target.value })}
-                placeholder={copy.optionalComment}
-                className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-marine-cyan resize-none"
-            />
+            <div className="space-y-3">
+                <textarea
+                    value={answer.comment}
+                    onChange={(e) => onChange({ comment: e.target.value })}
+                    placeholder={copy.optionalComment}
+                    rows={2}
+                    maxLength={1000}
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-marine-cyan transition-colors resize-none"
+                />
 
-            <div className="mt-3">
                 <div className="flex flex-wrap items-center gap-2">
-                    {images.map((url) => (
-                        <div key={url} className="relative w-16 h-16 rounded-xl overflow-hidden border border-white/10">
+                    {(answer.images || []).map((url, i) => (
+                        <div key={i} className="relative w-16 h-16 rounded-xl overflow-hidden border border-white/10 group">
                             <img src={resolveAssetUrl(url)} alt="" className="w-full h-full object-cover" />
                             <button
                                 type="button"
-                                onClick={() => onChange({ images: images.filter((u) => u !== url) })}
+                                onClick={() => removeImage(i)}
                                 aria-label={copy.removePhoto}
                                 className="absolute top-0.5 end-0.5 bg-black/70 hover:bg-black text-white rounded-full p-0.5"
                             >
@@ -357,7 +551,7 @@ function ReviewBlock({
                         className="hidden"
                     />
                 </div>
-                <p className="text-zinc-600 text-[11px] mt-2">
+                <p className="text-zinc-500 text-[11px]">
                     {uploading ? copy.uploading : `${copy.addPhotos} · ${copy.photosHint(maxImages)}`}
                 </p>
             </div>
@@ -365,12 +559,71 @@ function ReviewBlock({
     );
 }
 
-function Shell({ children, isAr }) {
+function Shell({ children, isAr, user = null, onLogout }) {
+    const BackArrow = isAr ? ArrowRight : ArrowLeft;
+    const roleLabel = user?.role === 'admin' ? (isAr ? 'مسؤول' : 'Admin') : (isAr ? 'عميل' : 'Customer');
+
     return (
-        <div className="min-h-screen bg-[#111315] flex items-center justify-center px-4 py-12" dir={isAr ? 'rtl' : 'ltr'}>
-            <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
-                {children}
-            </div>
+        <div className="min-h-screen bg-[#0C0E10] text-zinc-100 flex flex-col" dir={isAr ? 'rtl' : 'ltr'}>
+            {/* Dedicated Clean Branded Top Header */}
+            <header className="border-b border-white/10 bg-[#14171A]/80 backdrop-blur-md sticky top-0 z-50">
+                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+                    <Link href="/" className="flex items-center gap-2 group">
+                        <img
+                            src="/uploads/branding/logo_light-1793267522813.png?v=5"
+                            alt="Ready Marine"
+                            className="h-7 w-auto object-contain brightness-105"
+                        />
+                    </Link>
+
+                    <div className="flex items-center gap-3">
+                        {user ? (
+                            <div className="flex items-center gap-2">
+                                <div className="hidden sm:flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs">
+                                    <User size={13} className="text-marine-cyan" />
+                                    <span className="font-bold text-white truncate max-w-[120px]">{user.name || user.username}</span>
+                                    <span className="text-[10px] bg-marine-cyan/20 text-marine-cyan font-black px-1.5 py-0.5 rounded">
+                                        {roleLabel}
+                                    </span>
+                                </div>
+                                <Link
+                                    href="/profile?view=orders-history"
+                                    className="text-xs font-bold text-zinc-400 hover:text-white transition-colors px-2 py-1"
+                                >
+                                    {isAr ? 'طلباتي' : 'My Orders'}
+                                </Link>
+                            </div>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="text-xs font-bold bg-white/10 hover:bg-white/15 text-white px-3.5 py-1.5 rounded-xl transition-all"
+                            >
+                                {isAr ? 'تسجيل الدخول' : 'Sign in'}
+                            </Link>
+                        )}
+
+                        <Link
+                            href="/"
+                            className="text-xs font-bold text-zinc-400 hover:text-white flex items-center gap-1 transition-colors border-s border-white/10 ps-3"
+                        >
+                            <BackArrow size={13} />
+                            <span>{isAr ? 'الرئيسية' : 'Home'}</span>
+                        </Link>
+                    </div>
+                </div>
+            </header>
+
+            {/* Main Content Area */}
+            <main className="flex-1 flex items-center justify-center px-4 py-8 sm:py-12">
+                <div className="w-full max-w-xl bg-[#14171A] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
+                    {children}
+                </div>
+            </main>
+
+            {/* Footer */}
+            <footer className="py-4 text-center text-xs text-zinc-600 border-t border-white/5">
+                Ready Marine © {new Date().getFullYear()} — {isAr ? 'جميع الحقوق محفوظة' : 'All rights reserved'}
+            </footer>
         </div>
     );
 }

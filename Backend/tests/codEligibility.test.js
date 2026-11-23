@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const mongoose = require('mongoose');
 
 const { startMongo } = require('./support/testServers');
-const codEligibility = require('../services/codEligibilityService');
+const codEligibility = require('../modules/order/cod_eligibility.service');
 const { SiteSettings } = require('../models/site_settings');
 const { Order } = require('../models/orders');
 const { User } = require('../models/users');

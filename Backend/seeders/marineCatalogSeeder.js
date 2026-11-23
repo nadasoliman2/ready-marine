@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { Seller } = require('../models/sellers');
 const { Category } = require('../models/categories');
 const { Brand: ProductBrand } = require('../models/product_brands');
-const { CarBrand } = require('../models/car_brands');
+const { Brand: CarBrand } = require('../models/product_brands');
 const { Product } = require('../models/products');
 const { SiteSettings } = require('../models/site_settings');
 const { connectToDatabase } = require('./db');
@@ -158,7 +158,7 @@ const run = async () => {
             discount_value: def.discount ? Math.round(def.discount * 100) : null,
 
             is_universal: compatible.length === 0,
-            compatible_cars: compatible,
+            compatible_vessels: compatible,
 
             is_featured: index < 8,
             is_special_offer: !!def.discount,

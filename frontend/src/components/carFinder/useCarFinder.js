@@ -26,7 +26,7 @@ export default function useCarFinder({ onSearch, withType = true } = {}) {
 
   useEffect(() => {
     let active = true;
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => { if (active && data) setMetadata(data); })
       .catch((err) => console.error('Failed to fetch the car finder filters:', err));

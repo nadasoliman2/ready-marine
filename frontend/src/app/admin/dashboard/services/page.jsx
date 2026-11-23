@@ -99,7 +99,8 @@ export default function AdminServicesPage() {
         </div>
         <button
           onClick={() => router.push('/admin/dashboard/services/add')}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white rounded-xl font-bold shadow-lg shadow-red-500/20"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white rounded-xl font-bold 
+          "
         >
           <Plus size={18} />
           {isAr ? 'إضافة خدمة' : 'Add Service'}
@@ -112,7 +113,7 @@ export default function AdminServicesPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <StatCard icon={Wrench} label={isAr ? 'كل الخدمات' : 'Total Services'} value={services.length} />
         <StatCard icon={Star} label={isAr ? 'مميزة' : 'Featured'} value={services.filter(s => s.featured).length} tone="yellow" />
         <StatCard icon={Wrench} label={isAr ? 'نشطة' : 'Active'} value={services.filter(s => s.status === 'active').length} tone="green" />

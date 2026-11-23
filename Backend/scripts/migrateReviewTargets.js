@@ -40,7 +40,7 @@ async function run() {
     console.log(APPLY ? 'APPLYING review/vendor-stats migration\n' : 'DRY RUN — nothing is written. Re-run with --apply.\n');
 
     const { Review } = require('../models/reviews');
-    const vendorStatsService = require('../services/vendorStatsService');
+    const vendorStatsService = require('../modules/vendor/vendor_stats.service');
     const collection = Review.collection;
 
     /* ---- 1. indexes ---- */

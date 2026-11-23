@@ -58,6 +58,18 @@ const vendorSubscriptionSchema = new Schema(
             type: String,
             default: null,
         },
+        events: [
+            {
+                type: { type: String }, // 'grant', 'extend', 'renew', 'cancel', 'trial', 'purchase'
+                title: { type: String }, // 'تمديد من الإدارة', 'اشتراك من الإدارة', etc.
+                date: { type: Date, default: Date.now },
+                actor: { type: String, default: 'الإدارة' },
+                months: { type: Number },
+                from_date: { type: Date },
+                to_date: { type: Date },
+                note: { type: String },
+            }
+        ],
     },
     {
         timestamps: { createdAt: true, updatedAt: true },

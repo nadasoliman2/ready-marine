@@ -12,12 +12,14 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useAdminAccess } from '../../context/AdminAccessContext';
+import { useAdminCounts } from '../../context/AdminCountsContext';
 import BrandMark from '../marine/BrandMark';
 
 export default function AdminSidebar({ isOpen, setIsOpen }) {
   const pathname = usePathname();
   const { t, language, logout, siteSettings } = useApp();
   const { can, isSuper, loading: accessLoading } = useAdminAccess();
+  const { counts } = useAdminCounts();
   const isAr = language === 'ar';
 
   const menuSections = [
@@ -60,6 +62,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }) {
       title: isAr ? 'الطلبات والشحن' : 'Orders & Shipping',
       items: [
         { name: isAr ? 'الطلبات' : 'Orders', icon: ShoppingCart, href: '/admin/dashboard/orders', module: 'orders' },
+        { name: isAr ? 'الطلبات الناقصة' : 'Incomplete Orders', icon: PackageOpen, href: '/admin/dashboard/parcels?reason=declined_items', module: 'parcels' },
         { name: isAr ? 'شحنات محتاجة تدخلك' : 'Parcels Needing You', icon: AlertTriangle, href: '/admin/dashboard/parcels', module: 'parcels' },
         { name: isAr ? 'المرتجعات والمستردات' : 'Returns & Refunds', icon: RotateCcw, href: '/admin/dashboard/returns', module: 'returns' },
         { name: isAr ? 'الشحنات / الاستلام' : 'Pickups', icon: Truck, href: '/admin/dashboard/pickups', module: 'pickups' },
@@ -169,6 +172,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }) {
             {sec.items.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href || (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
+              const badgeCount = counts?.[item.href] || 0;
 
               return (
                 <Link
@@ -183,12 +187,17 @@ export default function AdminSidebar({ isOpen, setIsOpen }) {
                   `}
                 >
                   <div className={`
-                    p-1.5 rounded-lg transition-colors
+                    p-1.5 rounded-lg transition-colors shrink-0
                     ${isActive ? 'bg-marine-cyan text-white shadow-xs' : 'group-hover:bg-zinc-200 dark:group-hover:bg-white/10 text-zinc-500'}
                   `}>
                     <Icon size={16} />
                   </div>
-                  <span className="text-sm">{item.name}</span>
+                  <span className="text-sm truncate">{item.name}</span>
+                  {badgeCount > 0 && (
+                    <span className="ms-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-black rounded-full bg-red-500 text-white shadow-xs shrink-0 animate-in zoom-in-75">
+                      {badgeCount > 99 ? '99+' : badgeCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}

@@ -1547,7 +1547,7 @@ Abridged example:
       "reviews_count": 12,
       "stock_status": "instock",
       "images": [{ "url": "https://readycar.store/uploads/products/product-1726000000000-1.jpg", "is_primary": true }],
-      "compatible_cars": [{ "brand_id": "64b7e2f1a1b2c3d4e5f60711", "brand_name": "Hyundai", "all_models": false, "models": [{ "model_id": "64b7e2f1a1b2c3d4e5f60822", "model_name": "Elantra", "years": [2017, 2018, 2019], "all_years": false }] }],
+      "compatible_vessels": [{ "brand_id": "64b7e2f1a1b2c3d4e5f60711", "brand_name": "Hyundai", "all_models": false, "models": [{ "model_id": "64b7e2f1a1b2c3d4e5f60822", "model_name": "Elantra", "years": [2017, 2018, 2019], "all_years": false }] }],
       "category_id": { "_id": "64a0c1d2e3f4a5b6c7d8e9f0", "name": "Brakes", "name_ar": "فرامل" },
       "product_brand_id": { "_id": "64a0c1d2e3f4a5b6c7d8e9aa", "name": "Brembo" },
       "vendor_id": { "_id": "66d1f0a1b2c3d4e5f6a7b8c9", "store_name": "Auto Parts Cairo", "store_username": "autopartscairo", "status": "active", "subscription_status": "active" }
@@ -1702,7 +1702,7 @@ The shop / search results / category listing. It returns published products from
 | `for_girls` | `"true"` | No | Only the "Girls" collection (`for_girls: true`). Any other value is ignored. |
 | `for_trunk` | `"true"` | No | Only "car trunk essentials" (`for_trunk: true`). Any other value is ignored. |
 
-Car compatibility. A product matches when `is_universal` is true, or when one of its `compatible_cars` entries matches the filter:
+Car compatibility. A product matches when `is_universal` is true, or when one of its `compatible_vessels` entries matches the filter:
 - **brand only:** any entry for that brand.
 - **brand + model:** the brand with `all_models: true`, or an entry for that model.
 - **brand + model + year:** the brand with `all_models: true`, or that model with `all_years: true`, or that model with the year listed in `years`.
@@ -1764,7 +1764,7 @@ Car compatibility. A product matches when `is_universal` is true, or when one of
       "images": [
         { "_id": "6ac60e5a79bcca7bf9037072", "url": "https://readycar.store/uploads/products/product-1791364697313-727922615.jpg", "is_primary": true }
       ],
-      "compatible_cars": [
+      "compatible_vessels": [
         {
           "brand_id": "6a05bf0c876db3938e6f8f9e",
           "brand_name": "Skoda",
@@ -1941,7 +1941,7 @@ Product detail page opened by its URL slug (English or Arabic). Only returns a p
   "product_brand_id": { "_id": "6ac60ab279bcca7bf9036b83", "name": "kor-tec" },
   "vendor_id": { "_id": "6a4cc23b09b828853234f32a", "store_name": "El Bhrawy motors", "store_slug": "el-bhrawy", "status": "active", "subscription_status": "active", "rating": 0, "reviews_count": 0, "completed_orders_count": 0 },
   "images": [{ "_id": "6ac60e5a79bcca7bf9037072", "url": "https://readycar.store/uploads/products/product-1791364697313-727922615.jpg", "is_primary": true }],
-  "compatible_cars": [],
+  "compatible_vessels": [],
   "variants": [],
   "__v": 0
 }

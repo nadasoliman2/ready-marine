@@ -138,7 +138,7 @@ function MorePage({ onClose, openCategory }) {
                 : <p className="p-5 text-center text-sm text-marine-outline">{isAr ? 'مفيش أقسام' : 'No categories yet'}</p>}
             </div>
           )}
-          {row('/#marine-hubs', Anchor, isAr ? 'مجموعات ريدي مارين' : 'Marine Hubs')}
+          {row('/hubs', Anchor, isAr ? 'مجموعات ريدي مارين' : 'Marine Hubs')}
           {row('/vendors', Store, labelOf['/vendors'])}
           {row('/services', Wrench, labelOf['/services'])}
           {row('/articles', Newspaper, labelOf['/articles'])}
@@ -213,12 +213,12 @@ export default function MobileBottomNav() {
             <span>{t.home}</span>
           </Link>
           <Link href="/products" className={itemClass(onPage('/products') || onPage('/product'))}>
-            <LayoutGrid size={19} />
+            <PackageSearch size={19} />
             <span>{isAr ? 'المنتجات' : 'Products'}</span>
           </Link>
-          <Link href="/services" className={itemClass(onPage('/services'))}>
-            <Wrench size={19} />
-            <span>{t.services || (isAr ? 'الخدمات' : 'Services')}</span>
+          <Link href="/categories" className={itemClass(onPage('/categories'))}>
+            <LayoutGrid size={19} />
+            <span>{t.categories || (isAr ? 'الفئات' : 'Categories')}</span>
           </Link>
           <button type="button" onClick={() => setPanel(panel === 'more' ? null : 'more')} className={itemClass(panel === 'more')}>
             <Menu size={19} />

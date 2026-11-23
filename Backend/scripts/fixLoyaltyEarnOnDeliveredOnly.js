@@ -41,7 +41,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { Order } = require('../models/orders');
 const { LoyaltyTransaction } = require('../models/loyaltyTransactions');
-const loyaltyService = require('../services/loyaltyService');
+const loyaltyService = require('../modules/loyalty/loyalty.service');
 
 const APPLY = process.argv.includes('--apply');
 

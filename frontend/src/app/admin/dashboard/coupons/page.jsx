@@ -109,7 +109,7 @@ export default function AdminCouponsPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <StatCard icon={Ticket} label={isAr ? 'كل الكوبونات' : 'Total Coupons'} value={coupons.length} />
         <StatCard icon={Tag} label={isAr ? 'النشطة' : 'Active'} value={coupons.filter(c => c.is_active).length} tone="green" />
         <StatCard icon={Tag} label={isAr ? 'غير النشطة' : 'Inactive'} value={coupons.filter(c => !c.is_active).length} tone="gray" />
@@ -213,14 +213,14 @@ function StatCard({ icon: Icon, label, value, tone = 'default' }) {
   };
 
   return (
-    <div className="rounded-2xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#14171A] p-5 shadow-sm">
-      <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${toneMap[tone] || toneMap.default}`}>
-          <Icon size={18} />
+    <div className="rounded-2xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#14171A] p-3 sm:p-5 shadow-sm">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 ${toneMap[tone] || toneMap.default}`}>
+          <Icon size={16} />
         </div>
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-zinc-400">{label}</p>
-          <p className="text-2xl font-black text-zinc-900 dark:text-white">{value}</p>
+        <div className="min-w-0">
+          <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">{label}</p>
+          <p className="text-base sm:text-2xl font-black text-zinc-900 dark:text-white">{value}</p>
         </div>
       </div>
     </div>

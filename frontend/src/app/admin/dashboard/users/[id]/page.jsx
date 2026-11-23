@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from '../../../../../lib/navigation';
-import { AlertTriangle, ArrowLeft, ArrowRight, Calendar, Ship, ExternalLink, Loader2, Mail, MapPin, Package, Phone, ShoppingCart, Trash2, User } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, ArrowRight, Calendar, ExternalLink, Loader2, Mail, MapPin, Package, Phone, ShoppingCart, Trash2, User } from 'lucide-react';
 import { adminApi } from '../../../../../lib/api';
 import { useApp } from '../../../../../context/AppContext';
 import HardDeleteModal from '../../../../../components/dashboard/HardDeleteModal';
+import UserAvatar from '../../../../../components/UserAvatar';
 
 export default function AdminUserProfilePage({ params }) {
   const router = useRouter();
@@ -85,9 +86,13 @@ export default function AdminUserProfilePage({ params }) {
           {/* Main Info */}
           <div className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 shadow-sm p-6">
             <div className="flex flex-col items-center text-center pb-6 border-b border-zinc-100 dark:border-white/5">
-              <div className="w-24 h-24 bg-gradient-to-br from-marine-primary to-marine-cyan  dark:bg-marine-cyan/10 text-white rounded-full flex items-center justify-center text-4xl font-black mb-4 shadow-inner">
-                {(user.name || 'U').charAt(0).toUpperCase()}
-              </div>
+              <UserAvatar
+                src={user.profile_image || user.image || user.avatar}
+                name={user.name}
+                fallback="initials"
+                className="w-24 h-24 rounded-full bg-gradient-to-br from-marine-primary to-marine-cyan text-white mb-4 shadow-md border-2 border-zinc-200/50 dark:border-white/10"
+                fallbackClassName="text-4xl font-black text-white"
+              />
               <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{user.name}</h2>
               <p className="text-sm text-zinc-500 mt-1">ID: <span className="font-mono text-xs">{user._id}</span></p>
             </div>
@@ -127,35 +132,6 @@ export default function AdminUserProfilePage({ params }) {
                 </div>
               ) : (
                 <p className="text-sm text-zinc-500 text-center py-4">{isAr ? 'لا توجد عناوين محفوظة' : 'No saved addresses'}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Saved Cars */}
-          <div className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02]">
-              <h3 className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Ship size={18} className="text-marine-primary" />
-                {isAr ? 'القوارب والمراكب المحفوظة' : 'Saved Vessels'}
-              </h3>
-            </div>
-            <div className="p-6">
-              {user.cars?.length > 0 ? (
-                <div className="space-y-3">
-                  {user.cars.map((car, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 rounded-xl border border-zinc-100 dark:border-white/5 bg-zinc-50/50 dark:bg-white/[0.01]">
-                      <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-white/5 flex items-center justify-center">
-                        <Ship size={18} className="text-zinc-500" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-zinc-900 dark:text-white">{car.car_brand_name} {car.car_model_name}</p>
-                        <p className="text-xs text-zinc-500">{car.year}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-zinc-500 text-center py-4">{isAr ? 'لا توجد مركبات محفوظة' : 'No saved vehicles'}</p>
               )}
             </div>
           </div>
@@ -215,7 +191,7 @@ export default function AdminUserProfilePage({ params }) {
                               {isAr ? statusConfig.labelAr : statusConfig.labelEn}
                             </span>
                             <p className="font-black text-zinc-900 dark:text-white">
-                              {order.total_price.toFixed(2)} {isAr ? 'ر.س' : 'SAR'}
+                              {order.total_price.toFixed(2)} {isAr ? 'ج.م' : 'EGP'}
                             </p>
                           </div>
                         </div>

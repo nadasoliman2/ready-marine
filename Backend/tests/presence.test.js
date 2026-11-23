@@ -15,8 +15,8 @@ before(async () => {
     process.env.REDIS_URL = redisServer.url;
     process.env.JWT_SECRET_USER = 'test-user-secret';
     process.env.JWT_SECRET_VENDOR = 'test-vendor-secret';
-    redisClient = require('../services/redisClient');
-    presenceService = require('../services/presenceService');
+    redisClient = require('../common/services/redisClient');
+    presenceService = require('../common/services/presenceService');
     ({ User } = require('../models/users'));
     await redisReady(redisClient.getRedis());
     await mongoose.connect(mongo.uri);
@@ -145,7 +145,7 @@ const loadClient = () => {
 const ioClient = loadClient();
 
 test('real sockets: authenticated by the token cookie, tracked per connection', { skip: !ioClient && 'socket.io-client not installed (frontend/node_modules)' }, async () => {
-    const { initSocket } = require('../services/socket');
+    const { initSocket } = require('../common/services/socket');
     const server = http.createServer();
     const io = initSocket(server);
     await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));

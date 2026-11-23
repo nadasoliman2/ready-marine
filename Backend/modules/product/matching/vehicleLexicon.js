@@ -1,0 +1,561 @@
+/**
+ * How Egyptian vendors write car makes and models.
+ *
+ * The car list (`carbrands`) holds one English name per model — "Lancer", "Sunny",
+ * "Elantra". Vendors write the same cars as the market says them: "لانسر بومة", "شارك",
+ * "N16", "النترا HD", "فيرنا", "ix35", often misspelt ("النوس", "سراتو", "التترا"). This file
+ * is the bridge: every way a car is written, pointing at the make and model it means.
+ *
+ * Several Egyptian names are a generation, not a model — and a generation is a range of years
+ * the list does not hold. "لانسر بومة" and "لانسر شارك" are both Lancer; a part made for one
+ * does not fit the other. Those are marked `gen`, so the fitment check can say "the title
+ * names one generation, the fitment covers every year". No year range is invented for them:
+ * vendors disagree on where the generations start and end ("شارك 97" and "شارك 2008-2015" are
+ * both in the data), so the years come only from what the vendor wrote.
+ *
+ * Entry: [make, model, aliases, options]
+ *   make     the car make's name in the car list
+ *   model    the model's name in the car list, or null for a make on its own
+ *   aliases  how it is written, in any spelling; folded (text.fold) when loaded
+ *   options
+ *     ctx    the alias is only a car when one of these makes is also named in the text, the
+ *            caller vouches for the make (the product's own fitment names it), or a model
+ *            year follows it ("RB 2012") — for aliases that are ordinary words, bare numbers
+ *            or two-letter codes ("HD" is also a camera, "كروز" also cruise control)
+ *     near   stricter than ctx: the make (or one of `near`) must be next to it
+ *     gen    a generation or market nickname, shown to the admin as written
+ *     typo   a misspelling the data shows; said so when it is the only evidence
+ *     not    words that, right after the alias, mean it is not a car ("كروز كنترول")
+ *     unlessText  words that, anywhere in the same field, mean it is not a car
+ *     weak   the alias names more than one car across markets; never counted as firm
+ */
+
+const M = (make, model, aliases, options = {}) => ({ make, model, aliases, ...options });
+
+/* ── Makes ─────────────────────────────────────────────────────────────────────────── */
+
+const MAKES = [
+    M('Hyundai', null, ['هيونداي', 'هيونداى', 'هونداي', 'هينداي', 'هيوندا', 'هيوانداي', 'هيونداية', 'hyundai', 'hundai', 'hyundia']),
+    M('Kia', null, ['كيا', 'kia']),
+    M('Toyota', null, ['تويوتا', 'تيوتا', 'تويوطا', 'toyota']),
+    M('Nissan', null, ['نيسان', 'نيسن', 'nissan']),
+    M('Mitsubishi', null, ['ميتسوبيشي', 'ميتسوبيشى', 'متسوبيشي', 'ميتسوبيتشي', 'mitsubishi']),
+    M('Chevrolet', null, ['شيفروليه', 'شيفرولية', 'شيفورليه', 'شيفورلية', 'شفروليه', 'شيفرولي', 'شيفروليت', 'شفرليت', 'chevrolet', 'chevy']),
+    M('Daewoo', null, ['دايو', 'دايوو', 'دايوا', 'daewoo']),
+    M('Honda', null, ['هوندا', 'honda']),
+    M('Mazda', null, ['مازدا', 'mazda']),
+    M('Suzuki', null, ['سوزوكي', 'سوزوكى', 'سزوكي', 'suzuki']),
+    M('Subaru', null, ['سوبارو', 'subaru']),
+    M('Fiat', null, ['فيات', 'fiat']),
+    M('Nasr', null, ['نصر', 'nasr']),
+    M('Renault', null, ['رينو', 'رينوه', 'renault']),
+    M('Peugeot', null, ['بيجو', 'بيچو', 'peugeot']),
+    M('Citroën', null, ['ستروين', 'سيتروين', 'ستروان', 'citroen', 'citroën']),
+    M('Opel', null, ['اوبل', 'opel']),
+    M('Skoda', null, ['سكودا', 'اسكودا', 'skoda']),
+    M('Volkswagen', null, ['فولكس', 'فولكس فاجن', 'فولكسفاجن', 'فولكس واجن', 'volkswagen', 'vw']),
+    M('SEAT', null, ['سيات']),
+    M('Audi', null, ['اودي', 'اودى', 'audi']),
+    M('BMW', null, ['بي ام دبليو', 'بي ام', 'بى ام', 'bmw']),
+    M('Mercedes-Benz', null, ['مرسيدس', 'مرسيدس بنز', 'مارسيدس', 'mercedes', 'mercedes benz', 'benz']),
+    M('Ford', null, ['فورد', 'ford']),
+    M('Jeep', null, ['jeep']),
+    M('Dodge', null, ['دودج', 'dodge']),
+    M('Chrysler', null, ['كرايسلر', 'chrysler']),
+    M('Land Rover', null, ['لاند روفر', 'رنج روفر', 'رينج روفر', 'land rover', 'range rover']),
+    M('Lexus', null, ['لكزس', 'ليكزس', 'lexus']),
+    M('Infiniti', null, ['انفينيتي', 'infiniti']),
+    M('Volvo', null, ['فولفو', 'volvo']),
+    M('Porsche', null, ['بورش', 'porsche']),
+    M('Mini', null, ['ميني كوبر', 'mini cooper']),
+    M('Lada', null, ['لادا', 'lada']),
+    M('Proton', null, ['بروتون', 'proton']),
+    M('Chery', null, ['شيري', 'شيرى', 'chery']),
+    M('Speranza', null, ['اسبرانزا', 'سبرانزا', 'speranza']),
+    M('Geely', null, ['جيلي', 'جيلى', 'geely', 'انجلون', 'englon']),
+    M('BYD', null, ['بي واي دي', 'بى واى دى', 'بي واى دى', 'byd']),
+    M('MG', null, ['ام جي', 'ام جى', 'mg']),
+    M('Changan', null, ['شانجان', 'شانا', 'changan', 'chana']),
+    M('Haval', null, ['هافال', 'haval']),
+    M('Jetour', null, ['جيتور', 'jetour']),
+    M('Bestune', null, ['بستيون', 'بيستون', 'bestune']),
+    M('Brilliance', null, ['بريليانس', 'برليانس', 'brilliance']),
+    M('BAIC', null, ['baic']),
+    M('DFSK', null, ['dfsk']),
+    M('JAC', null, ['jac']),
+    M('Dongfeng', null, ['دونج فينج', 'دونغ فنغ', 'dongfeng']),
+    M('Isuzu', null, ['ايسوزو', 'ايسوزى', 'isuzu']),
+    M('Daihatsu', null, ['دايهاتسو', 'daihatsu']),
+    M('SsangYong', null, ['سانج يونج', 'ssangyong']),
+    M('Dacia', null, ['داسيا', 'dacia']),
+    // "شاشة تسلا" is a Tesla-style screen sold for any car.
+    M('Tesla', null, ['تسلا', 'tesla'], { unlessText: ['شاشه', 'screen', 'ستايل', 'style'] }),
+    M('Maybach', null, ['مايباخ', 'maybach']),
+    M('Exeed', null, ['exeed']),
+    M('GAC', null, ['gac', 'trumpchi', 'ترامبتشي']),
+    M('Cupra', null, ['cupra']),
+];
+
+/* ── Models ─────────────────────────────────────────────────────────────────────────── */
+
+const HYUNDAI_KIA = ['Hyundai', 'Kia'];
+const GM = ['Chevrolet', 'Daewoo'];
+
+const MODELS = [
+    /* Hyundai */
+    M('Hyundai', 'Verna', ['فيرنا', 'فرنا', 'فيرنة', 'verna']),
+    M('Hyundai', 'Accent', ['اكسنت', 'اكسينت', 'اكسانت', 'سولاريس', 'solaris']),
+    M('Hyundai', 'Accent', ['accent'], { ctx: HYUNDAI_KIA }),
+    M('Hyundai', 'Accent', ['rb'], { ctx: HYUNDAI_KIA, gen: 'RB' }),
+    M('Hyundai', 'Accent', ['hci', 'hc'], { ctx: HYUNDAI_KIA, gen: 'HCI' }),
+    M('Hyundai', 'Elantra', ['النترا', 'الينترا', 'التترا', 'النتره', 'الانترا', 'elantra', 'افانتي', 'افانتى', 'avante']),
+    M('Hyundai', 'Elantra', ['hd'], { ctx: HYUNDAI_KIA, gen: 'HD', not: ['كاميرا', 'شاشه', 'camera', 'screen', 'عدسه', 'تصوير'] }),
+    M('Hyundai', 'Elantra', ['md'], { ctx: HYUNDAI_KIA, gen: 'MD' }),
+    M('Hyundai', 'Elantra', ['xd'], { ctx: HYUNDAI_KIA, gen: 'XD' }),
+    M('Hyundai', 'Elantra', ['ad'], { ctx: HYUNDAI_KIA, gen: 'AD' }),
+    M('Hyundai', 'Elantra', ['cn7'], { gen: 'CN7' }),
+    M('Hyundai', 'Matrix', ['ماتريكس', 'ماتركس']),
+    M('Hyundai', 'Matrix', ['matrix'], { ctx: HYUNDAI_KIA }),
+    M('Hyundai', 'Excel', ['اكسيل', 'اكسل']),
+    M('Hyundai', 'Excel', ['excel'], { ctx: HYUNDAI_KIA }),
+    M('Hyundai', 'Tucson', ['توسان', 'توسون', 'تكسون', 'tucson']),
+    M('Hyundai', 'Tucson', ['ix35', 'اي اكس 35'], { gen: 'ix35' }),
+    M('Hyundai', 'Tucson', ['nx4'], { gen: 'NX4' }),
+    M('Hyundai', 'Tucson', ['tl'], { near: ['Hyundai', 'model:Tucson'], gen: 'TL' }),
+    M('Hyundai', 'Santa Fe', ['سنتافي', 'سانتافي', 'سانتا في', 'سنتا في', 'santa fe', 'santafe']),
+    M('Hyundai', 'Sonata', ['سوناتا', 'سوناته', 'sonata']),
+    M('Hyundai', 'Creta', ['كريتا', 'creta', 'ix25']),
+    M('Hyundai', 'Getz', ['جيتز', 'جتز', 'getz']),
+    M('Hyundai', 'Atos / Santro', ['اتوس', 'atos', 'santro']),
+    M('Hyundai', 'i10', ['i10', 'اي 10', 'جراند i10']),
+    M('Hyundai', 'i20', ['i20', 'اي 20']),
+    M('Hyundai', 'i30', ['i30', 'اي 30']),
+    M('Hyundai', 'H-1 / Starex', ['ستاركس', 'starex']),
+    // H1 is also a headlight bulb.
+    M('Hyundai', 'H-1 / Starex', ['h1', 'h-1'], { ctx: ['Hyundai'], not: ['led', 'ليد', 'لمبه', 'bulb', 'bulbs'] }),
+    M('Hyundai', 'H-100 / Porter', ['h100', 'بورتر']),
+    M('Hyundai', 'H-100 / Porter', ['porter'], { ctx: ['Hyundai'] }),
+    M('Hyundai', 'Azera / Grandeur', ['ازيرا', 'جراندير', 'azera']),
+    M('Hyundai', 'Coupe / Tiburon', ['تيبورون', 'tiburon']),
+    M('Hyundai', 'Kona', ['كونا', 'kona']),
+    M('Hyundai', 'Veloster', ['فيلوستر', 'veloster']),
+    M('Hyundai', 'Staria', ['ستاريا', 'staria']),
+    M('Hyundai', 'Bayon', ['بايون', 'bayon'], { ctx: ['Hyundai'] }),
+
+    /* Kia */
+    M('Kia', 'Cerato', ['سيراتو', 'سراتو', 'سيراتوا', 'cerato', 'فورتي', 'forte']),
+    // Spectra was the Sephia's successor in some markets and the Cerato in others.
+    M('Kia', 'Cerato', ['سبكترا', 'اسبكترا'], { gen: 'Spectra', weak: true }),
+    M('Kia', 'Cerato', ['spectra'], { ctx: ['Kia'], gen: 'Spectra', weak: true }),
+    M('Kia', 'K3', ['k3'], { ctx: ['Kia'] }),
+    M('Kia', 'K4', ['k4'], { ctx: ['Kia'] }),
+    M('Kia', 'Rio', ['ريو', 'rio', 'rio4']),
+    M('Kia', 'Picanto', ['بيكانتو', 'بكانتو', 'picanto']),
+    M('Kia', 'Sportage', ['سبورتاج', 'سبور تاج', 'سبورتاچ', 'sportage']),
+    M('Kia', 'Sorento', ['سورينتو', 'سورنتو', 'sorento']),
+    M('Kia', 'Soul', ['سول', 'صول', 'soul'], { ctx: ['Kia'] }),
+    M('Kia', 'Carens', ['كارينز', 'كارنز', 'كارينس', 'carens']),
+    M('Kia', 'Sephia', ['سيفيا', 'سفيا', 'سيفيه', 'sephia']),
+    M('Kia', 'Shuma', ['شوما', 'shuma']),
+    M('Kia', 'Pride', ['برايد', 'pride']),
+    M('Kia', 'Seltos', ['سيلتوس', 'seltos']),
+    M('Kia', 'Pegas', ['بيجاس', 'pegas']),
+    M('Kia', 'Optima / K5', ['اوبتيما', 'optima', 'k5'], { ctx: ['Kia'] }),
+    M('Kia', 'Carnival / Sedona', ['كرنفال', 'كارنفال', 'carnival']),
+    M('Kia', 'Cadenza / K7', ['كادينزا', 'cadenza']),
+    M('Kia', 'Mohave / Borrego', ['موهافي', 'mohave']),
+    M('Kia', 'Stonic', ['ستونيك', 'stonic']),
+    M('Kia', 'Sonet', ['سونيت', 'sonet']),
+    M('Kia', 'Niro', ['نيرو', 'niro']),
+
+    /* Chevrolet / Daewoo — one car under two badges in Egypt, see EQUIVALENT_MODELS */
+    M('Chevrolet', 'Lanos', ['لانوس', 'لانوص', 'lanos']),
+    M('Chevrolet', 'Lanos', ['النوس'], { typo: 'لانوس' }),
+    M('Chevrolet', 'Optra', ['اوبترا', 'اوبتره', 'اوبنرا', 'optra', 'لاشيتي', 'lacetti']),
+    M('Chevrolet', 'Aveo', ['افيو', 'افيوو', 'aveo', 'جنترا', 'gentra', 'كالوس', 'kalos']),
+    M('Chevrolet', 'Cruze', ['كروز', 'cruze'], { not: ['كنترول', 'control'] }),
+    M('Chevrolet', 'Spark', ['سبارك'], { not: ['بلج', 'plug'] }),
+    M('Chevrolet', 'Spark', ['spark'], { ctx: GM, not: ['plug', 'plugs'] }),
+    M('Chevrolet', 'Captiva', ['كابتيفا', 'captiva']),
+    M('Chevrolet', 'N300', ['n300']),
+    M('Chevrolet', 'Malibu', ['ماليبو', 'malibu']),
+    M('Chevrolet', 'Sonic', ['سونيك', 'sonic']),
+    M('Chevrolet', 'Trax', ['تراكس', 'trax']),
+    M('Chevrolet', 'Trailblazer', ['تريل بليزر', 'trailblazer']),
+    M('Chevrolet', 'Epica / Evanda', ['ايبيكا', 'epica']),
+    M('Chevrolet', 'Onix', ['اونيكس', 'onix']),
+    M('Daewoo', 'Nubira', ['نوبيرا', 'نوبيره', 'نوبرا', 'nubira']),
+    M('Daewoo', 'Leganza', ['ليجانزا', 'ليجانزه', 'leganza']),
+    M('Daewoo', 'Espero', ['اسبيرو', 'ايسبيرو', 'ايسبيروا', 'espero']),
+    M('Daewoo', 'Matiz', ['ماتيز', 'matiz']),
+    M('Daewoo', 'Tico', ['تيكو', 'tico']),
+    M('Daewoo', 'Racer / Cielo / Nexia', ['ريسير', 'ريسر', 'سيليو', 'racer', 'cielo', 'nexia'], { ctx: GM }),
+
+    /* Nissan */
+    M('Nissan', 'Sunny', ['صني', 'صنى', 'صاني', 'sunny', 'المييرا', 'almera']),
+    M('Nissan', 'Sunny', ['n16'], { gen: 'N16' }),
+    M('Nissan', 'Sunny', ['n17'], { gen: 'N17' }),
+    M('Nissan', 'Sunny', ['b13'], { gen: 'B13' }),
+    M('Nissan', 'Sunny', ['b14'], { gen: 'B14' }),
+    M('Nissan', 'Sentra', ['سنترا', 'سينترا', 'sentra']),
+    M('Nissan', 'Tiida', ['تيدا', 'تيده', 'tiida']),
+    M('Nissan', 'Qashqai', ['قشقاي', 'قشقاى', 'قاشقاي', 'كاشكاي', 'qashqai']),
+    M('Nissan', 'Qashqai', ['j10', 'j11'], { ctx: ['Nissan'] }),
+    M('Nissan', 'Juke', ['جوك', 'juke']),
+    M('Nissan', 'X-Trail', ['اكستريل', 'اكس تريل', 'x-trail', 'xtrail', 'x trail']),
+    M('Nissan', 'Maxima', ['مكسيما', 'ماكسيما', 'maxima']),
+    M('Nissan', 'Patrol', ['باترول']),
+    M('Nissan', 'Patrol', ['patrol'], { ctx: ['Nissan'] }),
+    M('Nissan', 'Micra', ['ميكرا', 'micra']),
+    M('Nissan', 'Bluebird', ['بلوبيرد', 'bluebird']),
+    M('Nissan', 'Primera', ['بريميرا', 'primera']),
+    M('Nissan', 'Kicks', ['كيكس']),
+    M('Nissan', 'Kicks', ['kicks'], { ctx: ['Nissan'] }),
+    M('Nissan', 'Altima', ['التيما', 'altima']),
+    M('Nissan', 'Frontier / Navara', ['نافارا', 'navara']),
+    M('Nissan', 'Urvan / Caravan', ['اورفان', 'urvan']),
+
+    /* Toyota */
+    M('Toyota', 'Corolla', ['كورولا', 'كرولا', 'كورلا', 'corolla']),
+    M('Toyota', 'Yaris', ['ياريس', 'يارس', 'yaris']),
+    M('Toyota', 'Camry', ['كامري', 'كامرى', 'camry']),
+    M('Toyota', 'Hilux', ['هايلكس', 'هيلوكس', 'هايلوكس', 'hilux', 'ريفو', 'revo']),
+    M('Toyota', 'Fortuner', ['فورتشنر', 'فورتنر', 'fortuner']),
+    M('Toyota', 'RAV4', ['راف فور', 'راف 4', 'rav4', 'rav 4']),
+    M('Toyota', 'Land Cruiser', ['لاند كروزر', 'لاندكروزر', 'land cruiser']),
+    M('Toyota', 'Land Cruiser Prado', ['برادو', 'prado']),
+    M('Toyota', 'Avanza', ['افانزا', 'avanza']),
+    M('Toyota', 'Rush', ['راش', 'rush'], { ctx: ['Toyota'] }),
+    M('Toyota', 'HiAce', ['هايس', 'hiace']),
+    M('Toyota', 'C-HR', ['c-hr', 'chr', 'سي اتش ار']),
+    M('Toyota', 'Corolla Cross', ['كورولا كروس', 'corolla cross']),
+    M('Toyota', 'Belta', ['بيلتا', 'belta']),
+
+    /* Mitsubishi — the Lancer's Egyptian generations */
+    M('Mitsubishi', 'Lancer', ['لانسر', 'لنسر', 'lancer']),
+    M('Mitsubishi', 'Lancer', ['النسر'], { near: ['Mitsubishi', 'gen:lancer'], typo: 'لانسر' }),
+    M('Mitsubishi', 'Lancer', ['بومه', 'بوما', 'بومة'], { gen: 'بومة', lancerGen: true, not: ['سير', 'شداد', 'بكره'] }),
+    M('Mitsubishi', 'Lancer', ['شارك'], { gen: 'شارك', lancerGen: true }),
+    M('Mitsubishi', 'Lancer', ['shark'], { ctx: ['Mitsubishi'], gen: 'شارك', lancerGen: true }),
+    M('Mitsubishi', 'Lancer', ['قرش'], { gen: 'قرش', lancerGen: true }),
+    M('Mitsubishi', 'Lancer', ['كرستاله', 'كريستاله', 'كرستالة', 'crystal'], { gen: 'كرستالة', lancerGen: true, near: ['Mitsubishi', 'model:Lancer'] }),
+    M('Mitsubishi', 'Lancer', ['مكواه', 'مكوه'], { gen: 'مكواة', lancerGen: true, near: ['Mitsubishi', 'model:Lancer'] }),
+    M('Mitsubishi', 'Lancer', ['ex'], { near: ['Mitsubishi', 'model:Lancer'], gen: 'EX' }),
+    M('Mitsubishi', 'Pajero', ['باجيرو', 'باجيرو سبورت', 'pajero']),
+    M('Mitsubishi', 'Mirage', ['ميراج', 'mirage'], { ctx: ['Mitsubishi'] }),
+    M('Mitsubishi', 'Attrage', ['اتراج', 'attrage']),
+    M('Mitsubishi', 'Eclipse Cross', ['اكليبس كروس', 'اكليبس', 'eclipse cross']),
+    M('Mitsubishi', 'Outlander', ['اوتلاندر', 'outlander']),
+    M('Mitsubishi', 'Galant', ['جالانت', 'galant']),
+    M('Mitsubishi', 'Xpander', ['اكسباندر', 'xpander']),
+    M('Mitsubishi', 'L200 / Triton', ['l200', 'تريتون', 'triton']),
+    M('Mitsubishi', 'ASX / Outlander Sport / RVR', ['asx']),
+
+    /* Renault */
+    M('Renault', 'Logan', ['لوجان', 'لوغان', 'logan']),
+    M('Renault', 'Sandero', ['سانديرو', 'سانديرو ستيب واي', 'sandero']),
+    M('Renault', 'Stepway', ['ستيب واي', 'stepway']),
+    M('Renault', 'Duster', ['داستر', 'دستر']),
+    M('Renault', 'Duster', ['duster'], { ctx: ['Renault', 'Dacia'] }),
+    M('Renault', 'Megane', ['ميجان', 'ميجين', 'megane']),
+    M('Renault', 'Fluence', ['فلونس', 'فلوانس', 'fluence']),
+    M('Renault', 'Clio', ['كليو', 'clio']),
+    M('Renault', 'Symbol', ['سيمبول']),
+    M('Renault', 'Symbol', ['symbol'], { ctx: ['Renault'] }),
+    M('Renault', 'Captur', ['كابتشر', 'كابتور', 'captur']),
+    M('Renault', 'Kadjar', ['كادجار', 'kadjar']),
+    M('Renault', 'Scenic', ['سينيك', 'scenic'], { ctx: ['Renault'] }),
+    M('Renault', 'Koleos', ['كوليوس', 'koleos']),
+    M('Renault', 'Austral', ['اوسترال', 'austral']),
+    M('Renault', 'Taliant', ['تاليانت', 'taliant']),
+    M('Renault', '9', ['9'], { near: ['Renault'] }),
+    M('Renault', '12', ['12'], { near: ['Renault'] }),
+
+    /* Peugeot — numbered models only count next to the make */
+    ...['206', '207', '208', '301', '307', '308', '405', '406', '407', '408', '504', '505', '508', '2008', '3008', '5008']
+        .map((n) => M('Peugeot', n, [n], { near: ['Peugeot'] })),
+    M('Peugeot', 'Partner / Rifter', ['بارتنر', 'partner'], { ctx: ['Peugeot'] }),
+
+    /* Opel */
+    M('Opel', 'Astra', ['استرا', 'astra']),
+    M('Opel', 'Vectra', ['فيكترا', 'vectra']),
+    M('Opel', 'Corsa', ['كورسا', 'corsa']),
+    M('Opel', 'Insignia', ['انسيجنيا', 'انسجنيا']),
+    M('Opel', 'Insignia', ['insignia'], { ctx: ['Opel', 'Chevrolet'] }),
+    M('Opel', 'Grandland', ['جراندلاند', 'grandland']),
+    M('Opel', 'Meriva', ['ميريفا', 'ماريفا', 'meriva']),
+    M('Opel', 'Omega', ['اوميجا', 'omega'], { ctx: ['Opel'] }),
+    M('Opel', 'Kadett', ['كاديت', 'kadett']),
+    M('Opel', 'Mokka', ['موكا', 'mokka'], { ctx: ['Opel'] }),
+    M('Opel', 'Crossland', ['كروسلاند', 'crossland']),
+    M('Opel', 'Zafira', ['زافيرا', 'zafira']),
+
+    /* Skoda / VW / SEAT */
+    M('Skoda', 'Octavia', ['اوكتافيا', 'اوكتافيه', 'octavia']),
+    M('Skoda', 'Octavia', ['a4', 'a5', 'a7', 'a8'], { near: ['Skoda'], gen: 'A' }),
+    M('Skoda', 'Fabia', ['فابيا', 'fabia']),
+    M('Skoda', 'Superb', ['سوبيرب', 'سوبرب']),
+    M('Skoda', 'Superb', ['superb'], { ctx: ['Skoda'] }),
+    M('Skoda', 'Rapid', ['رابيد', 'rapid'], { ctx: ['Skoda'] }),
+    M('Skoda', 'Kodiaq', ['كودياك', 'kodiaq']),
+    M('Skoda', 'Karoq', ['كاروك', 'karoq']),
+    M('Skoda', 'Kamiq', ['كاميك', 'kamiq']),
+    M('Skoda', 'Roomster', ['رومستر', 'roomster']),
+    M('Volkswagen', 'Golf', ['جولف']),
+    M('Volkswagen', 'Golf', ['golf'], { ctx: ['Volkswagen'] }),
+    M('Volkswagen', 'Passat', ['باسات', 'passat']),
+    M('Volkswagen', 'Jetta', ['جيتا', 'jetta']),
+    M('Volkswagen', 'Polo', ['بولو', 'polo'], { ctx: ['Volkswagen'] }),
+    M('Volkswagen', 'Tiguan', ['تيجوان', 'tiguan']),
+    M('Volkswagen', 'Bora', ['بورا', 'bora'], { ctx: ['Volkswagen'] }),
+    M('Volkswagen', 'ID.7', ['id7', 'id 7', 'id.7']),
+    M('Volkswagen', 'ID.4', ['id4', 'id 4', 'id.4']),
+    M('Volkswagen', 'CC', ['cc'], { near: ['Volkswagen'] }),
+    M('Volkswagen', 'Touareg', ['طوارق', 'توارج', 'touareg']),
+    M('Volkswagen', 'Caddy', ['كادي', 'caddy'], { ctx: ['Volkswagen'] }),
+    M('Volkswagen', 'Transporter / Caravelle / Multivan', ['ترانسبورتر', 'transporter'], { ctx: ['Volkswagen'] }),
+    M('SEAT', 'Ibiza', ['ابيزا', 'ibiza']),
+    M('SEAT', 'León', ['ليون', 'leon'], { ctx: ['SEAT'] }),
+    M('SEAT', 'Toledo', ['توليدو', 'toledo']),
+    M('SEAT', 'Córdoba', ['كوردوبا', 'cordoba']),
+
+    /* Fiat / Nasr */
+    M('Fiat', 'Tipo', ['تيبو', 'tipo']),
+    M('Fiat', 'Idea', ['ايديا']),
+    M('Fiat', 'Idea', ['idea'], { ctx: ['Fiat'] }),
+    M('Fiat', 'Punto', ['بونتو', 'punto']),
+    M('Fiat', 'Siena', ['سيينا', 'سيانا', 'siena']),
+    M('Fiat', 'Doblò', ['دوبلو', 'doblo']),
+    M('Fiat', 'Linea', ['لينيا', 'linea'], { ctx: ['Fiat'] }),
+    M('Fiat', 'Uno', ['اونو', 'uno'], { ctx: ['Fiat'] }),
+    M('Fiat', '500', ['500'], { near: ['Fiat'] }),
+    M('Fiat', '500X', ['500x']),
+    M('Fiat', '127', ['127'], { near: ['Fiat', 'Nasr'] }),
+    M('Fiat', '128', ['128'], { near: ['Fiat', 'Nasr'] }),
+    M('Fiat', '131', ['131'], { near: ['Fiat', 'Nasr'] }),
+    M('Fiat', 'Regata', ['ريجاتا', 'regata']),
+    M('Fiat', 'Şahin', ['شاهين', 'sahin']),
+    M('Nasr', 'Dogan', ['دوجان', 'dogan']),
+    M('Nasr', 'Florida', ['فلوريدا', 'florida'], { ctx: ['Nasr'] }),
+    M('Nasr', 'Polonez', ['بولونيز', 'polonez']),
+
+    /* Suzuki */
+    M('Suzuki', 'Swift', ['سويفت']),
+    M('Suzuki', 'Swift', ['swift'], { ctx: ['Suzuki'] }),
+    M('Suzuki', 'Alto', ['التو', 'الطو']),
+    M('Suzuki', 'Alto', ['alto'], { ctx: ['Suzuki'] }),
+    M('Suzuki', 'Maruti 800', ['ماروتي', 'ماروتى', 'maruti']),
+    M('Suzuki', 'Celerio', ['سيليريو', 'celerio']),
+    M('Suzuki', 'Dzire', ['ديزاير', 'dzire']),
+    M('Suzuki', 'Ertiga', ['ارتيجا', 'ertiga']),
+    M('Suzuki', 'Vitara', ['فيتارا', 'vitara']),
+    M('Suzuki', 'Grand Vitara', ['جراند فيتارا', 'grand vitara']),
+    M('Suzuki', 'Jimny', ['جيمني', 'jimny']),
+    M('Suzuki', 'Baleno', ['بالينو', 'baleno']),
+    M('Suzuki', 'Ciaz', ['سياز', 'ciaz']),
+    M('Suzuki', 'S-Presso', ['اس بريسو', 's-presso', 'spresso']),
+    M('Suzuki', 'APV', ['apv']),
+    M('Suzuki', 'Carry / Super Carry', ['سوبر كاري']),
+    M('Suzuki', 'Carry / Super Carry', ['carry'], { ctx: ['Suzuki'] }),
+
+    /* Honda / Mazda */
+    M('Honda', 'Civic', ['سيفيك', 'civic']),
+    M('Honda', 'Accord', ['اكورد', 'accord']),
+    M('Honda', 'City', ['سيتي', 'city'], { ctx: ['Honda'] }),
+    M('Honda', 'CR-V', ['crv', 'cr-v']),
+    M('Honda', 'Jazz / Fit', ['جاز', 'jazz'], { ctx: ['Honda'] }),
+    M('Mazda', 'Mazda3', ['3', 'مازدا 3'], { near: ['Mazda'] }),
+    M('Mazda', 'Mazda6', ['6'], { near: ['Mazda'] }),
+    M('Mazda', '323 / Familia', ['323']),
+    M('Mazda', '626 / Capella', ['626'], { near: ['Mazda'] }),
+    M('Mazda', 'CX-5', ['cx5', 'cx-5']),
+    M('Mazda', 'CX-3', ['cx3', 'cx-3']),
+
+    /* Chinese makes */
+    M('Chery', 'Tiggo 3', ['تيجو', 'tiggo']),
+    M('Chery', 'Tiggo 4', ['تيجو 4', 'tiggo 4']),
+    M('Chery', 'Tiggo 7', ['تيجو 7', 'tiggo 7']),
+    M('Chery', 'Tiggo 8', ['تيجو 8', 'tiggo 8']),
+    M('Chery', 'Arrizo 5', ['اريزو', 'اريزو 5', 'arrizo', 'arrizo 5']),
+    M('Chery', 'Envy', ['انفي', 'envy'], { ctx: ['Chery', 'Speranza'] }),
+    M('Chery', 'QQ (Sweet)', ['qq'], { ctx: ['Chery'] }),
+    M('Chery', 'Fulwin (Amulet)', ['فلوين', 'fulwin']),
+    M('Chery', 'Cowin 3', ['كوين', 'cowin'], { ctx: ['Chery'] }),
+    M('Speranza', 'A113', ['a113', 'اسبرانزا 113']),
+    M('Speranza', 'A516', ['a516', 'اسبرانزا 516']),
+    M('Speranza', 'A620', ['a620', 'اسبرانزا 620']),
+    M('Speranza', 'M11', ['m11']),
+    M('Speranza', 'M12', ['m12']),
+    M('Geely', 'Emgrand', ['امجراند', 'ايمجراند', 'امغراند', 'emgrand']),
+    M('Geely', 'Coolray', ['كولراي', 'كول راي', 'coolray']),
+    M('Geely', 'Panda / GC2 (LC)', ['باندا', 'panda'], { ctx: ['Geely'] }),
+    M('Geely', 'GX3 Pro', ['gx3']),
+    M('Geely', 'Emgrand X7', ['x7', 'امجراند x7'], { ctx: ['Geely'] }),
+    M('Geely', 'Atlas / Azkarra / Boyue / Starray', ['boyue', 'azkarra', 'starray'], { ctx: ['Geely'] }),
+    M('Geely', 'Okavango', ['اوكافانجو', 'okavango']),
+    M('BYD', 'F3', ['f3', 'اف 3'], { ctx: ['BYD'] }),
+    M('BYD', 'F0', ['f0'], { ctx: ['BYD'] }),
+    M('BYD', 'L3', ['l3'], { ctx: ['BYD'] }),
+    M('BYD', 'S6', ['s6'], { ctx: ['BYD'] }),
+    M('MG', 'MG 5', ['mg5', 'mg 5']),
+    M('MG', 'MG 6', ['mg6', 'mg 6']),
+    M('MG', 'MG 3', ['mg3', 'mg 3']),
+    M('MG', 'MG 7', ['mg7', 'mg 7']),
+    M('MG', 'ZS', ['zs'], { ctx: ['MG'] }),
+    M('MG', 'ZS', ['mgzs', 'mg zs']),
+    M('MG', 'HS', ['hs'], { ctx: ['MG'] }),
+    M('MG', 'HS', ['mghs', 'mg hs']),
+    M('MG', 'RX5', ['rx5'], { ctx: ['MG'] }),
+    M('MG', 'RX5', ['mgrx5', 'mg rx5']),
+    M('MG', 'RX8', ['rx8'], { ctx: ['MG'] }),
+    M('Haval', 'H6', ['h6'], { ctx: ['Haval'] }),
+    M('Haval', 'H9', ['h9'], { ctx: ['Haval'] }),
+    M('Haval', 'H2', ['h2'], { ctx: ['Haval'] }),
+    M('Haval', 'H7', ['h7'], { ctx: ['Haval'], not: ['led', 'ليد', 'لمبه', 'bulb', 'bulbs'] }),
+    M('Haval', 'Jolion', ['جوليان', 'جوليون', 'jolion']),
+    M('Haval', 'Dargo', ['دارجو', 'dargo']),
+    M('Jetour', 'X70', ['x70'], { ctx: ['Jetour'] }),
+    M('Jetour', 'X90', ['x90'], { ctx: ['Jetour'] }),
+    M('Jetour', 'T2', ['t2'], { ctx: ['Jetour'] }),
+    M('Jetour', 'T1', ['t1'], { ctx: ['Jetour'] }),
+    M('Jetour', 'T7', ['t7'], { ctx: ['Jetour'] }),
+    M('Jetour', 'Dashing', ['داشينج', 'dashing'], { ctx: ['Jetour'] }),
+    M('Changan', 'CS35', ['cs35']),
+    M('Changan', 'CS55 Plus', ['cs55']),
+    M('Changan', 'CS85', ['cs85']),
+    M('Changan', 'CS95', ['cs95']),
+    M('Changan', 'Uni-T', ['uni-t', 'uni t', 'يوني تي']),
+    M('Changan', 'Uni-K', ['uni-k', 'uni k', 'يوني كي']),
+    M('Changan', 'Deepal S05', ['ديبال', 'deepal']),
+    M('Changan', 'CS75', ['cs75']),
+    M('Changan', 'Eado', ['ايدو', 'eado'], { ctx: ['Changan'] }),
+    M('Changan', 'Alsvin', ['السفين', 'alsvin']),
+    M('Bestune', 'T55', ['t55']),
+    M('Bestune', 'T77', ['t77']),
+    M('Bestune', 'B70', ['b70'], { ctx: ['Bestune'] }),
+    M('Brilliance', 'V5', ['v5'], { ctx: ['Brilliance'] }),
+    M('GAC', 'Trumpchi GS3', ['gs3'], { ctx: ['GAC'] }),
+    M('GAC', 'Trumpchi EMKOO', ['emkoo']),
+    M('GAC', 'GS4', ['gs4'], { ctx: ['GAC'] }),
+    M('GAC', 'GS8', ['gs8'], { ctx: ['GAC'] }),
+    M('Brilliance', 'FRV', ['frv']),
+    M('Brilliance', 'FSV', ['fsv']),
+    M('Brilliance', 'Galena', ['جالينا', 'galena']),
+    M('Brilliance', 'Splendor (BS6 / M1)', ['سبلندور', 'splendor'], { ctx: ['Brilliance'] }),
+    M('Proton', 'Gen-2', ['جين 2', 'جين2', 'gen 2', 'gen2', 'gen-2']),
+    M('Proton', 'Persona', ['برسونا', 'بيرسونا']),
+    M('Proton', 'Persona', ['persona'], { ctx: ['Proton'] }),
+    M('Proton', 'Saga', ['ساجا', 'saga'], { ctx: ['Proton'] }),
+    M('Proton', 'Wira', ['ويرا', 'wira']),
+    M('Proton', 'Waja', ['واجا', 'waja']),
+    M('Proton', 'Preve', ['بريفي', 'preve']),
+    M('DFSK', 'Glory 580', ['جلوري 580', 'glory 580']),
+    M('Lada', '2107 (Zhiguli)', ['2107'], { near: ['Lada'] }),
+    M('Lada', '2105', ['2105'], { near: ['Lada'] }),
+    M('Lada', '2106 (Zhiguli)', ['2106'], { near: ['Lada'] }),
+    M('Lada', 'Granta', ['جرانتا', 'granta']),
+    M('Lada', 'Vesta', ['فيستا', 'vesta'], { ctx: ['Lada'] }),
+    M('Lada', 'Niva (4x4 / Legend)', ['نيفا', 'niva']),
+    M('Lada', 'Samara', ['سمارا', 'samara'], { ctx: ['Lada'] }),
+
+    /* Mercedes-Benz — chassis codes and class names */
+    ...[['C-Class', ['w202', 'w203', 'w204', 'w205', 'w206', 'c180', 'c200', 'c250', 'c300', 'c class', 'c-class', 'سي كلاس', 'فئه c', 'الفئه c']],
+        ['E-Class', ['w210', 'w211', 'w212', 'w213', 'w214', 'e180', 'e200', 'e250', 'e300', 'e350', 'e class', 'e-class', 'ام عيون', 'فئه e', 'الفئه e']],
+        ['S-Class', ['w140', 'w220', 'w221', 'w222', 'w223', 's500', 's350', 's class', 's-class', 'شبح', 'فئه s', 'الفئه s']],
+        ['A-Class', ['w168', 'w169', 'w176', 'w177', 'a180', 'a200', 'a class', 'a-class', 'فئه a', 'الفئه a']],
+        ['B-Class', ['w245', 'w246', 'b180', 'b200', 'b class', 'b-class']],
+        ['CLA', ['cla', 'c117', 'c118']],
+        ['GLA', ['gla', 'x156', 'h247']],
+        ['GLC', ['glc', 'x253']],
+        ['GLE', ['gle']],
+        ['GLK', ['glk', 'glk300', 'glk350', 'x204']],
+        ['M-Class', ['ml350', 'ml500', 'w163', 'w164', 'w166']],
+        ['G-Class', ['g class', 'g-class', 'w463', 'جي كلاس']],
+        ['W124 (200–300 E/D)', ['w124']],
+        ['W123 (200–300 E/D)', ['w123']],
+        ['190 (W201)', ['w201']],
+        ['Vito', ['فيتو', 'vito']],
+        ['Sprinter', ['سبرنتر', 'sprinter']],
+        ['CLK', ['clk']],
+        ['SLK / SLC', ['slk']],
+        ['CLS', ['cls']]]
+        .map(([model, aliases]) => M('Mercedes-Benz', model, aliases, { ctx: ['Mercedes-Benz'] })),
+
+    /* BMW — chassis codes and model numbers */
+    ...[['3 Series', ['e30', 'e36', 'e46', 'e90', 'e91', 'e92', 'f30', 'f31', 'g20', '316i', '318i', '320i', '325i', '328i', '330i', 'الفئه الثالثه']],
+        ['5 Series', ['e34', 'e39', 'e60', 'f10', 'g30', '520i', '523i', '525i', '528i', '530i', '535i', 'الفئه الخامسه']],
+        ['7 Series', ['e32', 'e38', 'e65', 'f01', 'g11', '730li', '740li', '750li', 'الفئه السابعه']],
+        ['1 Series', ['e87', 'f20', '116i', '118i', '120i']],
+        ['X1', ['x1', 'e84', 'f48']],
+        ['X2', ['x2', 'f39']],
+        ['X3', ['x3', 'e83', 'f25', 'g01']],
+        ['X5', ['x5', 'e53', 'e70', 'f15', 'g05']],
+        ['X6', ['x6', 'e71', 'f16']]]
+        .map(([model, aliases]) => M('BMW', model, aliases, { ctx: ['BMW'] })),
+
+    /* Audi — A4/A5 also name Octavia generations, so only next to Audi */
+    ...['A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'Q2', 'Q3', 'Q5', 'Q7', 'Q8', 'TT']
+        .map((model) => M('Audi', model, [model.toLowerCase()], { near: ['Audi'] })),
+
+    /* Jeep / Ford / others the data names */
+    M('Jeep', 'Cherokee', ['شيروكي', 'cherokee']),
+    M('Jeep', 'Grand Cherokee', ['جراند شيروكي', 'grand cherokee']),
+    M('Jeep', 'Wrangler', ['رانجلر', 'wrangler']),
+    M('Jeep', 'Compass', ['كومباس', 'compass'], { ctx: ['Jeep'] }),
+    M('Jeep', 'Renegade', ['رينيجيد', 'renegade']),
+    M('Ford', 'Focus', ['فوكس', 'focus'], { ctx: ['Ford'] }),
+    M('Ford', 'Fiesta', ['فييستا', 'fiesta']),
+    M('Ford', 'Fusion', ['فيوجن', 'fusion'], { ctx: ['Ford'] }),
+    M('Ford', 'EcoSport', ['ايكوسبورت', 'ecosport']),
+    M('Ford', 'Kuga', ['كوجا', 'kuga']),
+    M('Ford', 'Ranger', ['رينجر', 'ranger'], { ctx: ['Ford'] }),
+    M('Citroën', 'C-Elysée', ['c-elysee', 'اليزيه'], { ctx: ['Citroën'] }),
+    M('Citroën', 'C4', ['c4'], { ctx: ['Citroën'] }),
+    M('Citroën', 'C3', ['c3'], { ctx: ['Citroën'] }),
+    M('Citroën', 'C5 Aircross', ['c5 aircross', 'ايركروس c5', 'c5 ايركروس']),
+    M('Citroën', 'C3 Aircross', ['c3 aircross', 'ايركروس c3', 'c3 ايركروس']),
+    M('Citroën', 'Berlingo', ['بيرلينجو', 'berlingo']),
+];
+
+/*
+ * The same car sold under two badges, or under two names in two markets. A fitment naming
+ * one already names the other, so neither is "missing" when the text says the other.
+ */
+const EQUIVALENT_MODELS = [
+    [['Chevrolet', 'Lanos'], ['Daewoo', 'Lanos']],
+    [['Chevrolet', 'Aveo'], ['Daewoo', 'Kalos / Aveo']],
+    [['Chevrolet', 'Cruze'], ['Daewoo', 'Lacetti Premiere / Cruze']],
+    [['Chevrolet', 'Captiva'], ['Daewoo', 'Winstorm / Captiva']],
+    [['Chevrolet', 'N300'], ['Daewoo', 'N300']],
+    [['Kia', 'Cerato'], ['Kia', 'K3']],
+    [['Fiat', '127'], ['Nasr', '127']],
+    [['Fiat', '128'], ['Nasr', '128']],
+    [['Fiat', '131'], ['Nasr', '131']],
+    [['Fiat', 'Şahin'], ['Nasr', 'Shahin']],
+    [['Fiat', 'Regata'], ['Nasr', 'Regata']],
+    [['Chery', 'Tiggo 3'], ['Speranza', 'Tiggo']],
+    [['Chery', 'Envy'], ['Speranza', 'Envy']],
+    [['Renault', 'Logan'], ['Dacia', 'Logan']],
+    [['Renault', 'Sandero'], ['Dacia', 'Sandero']],
+    [['Renault', 'Duster'], ['Dacia', 'Duster']],
+];
+
+/*
+ * Makes that read as one car family when the text names the make alone: a vendor writing
+ * "شيفروليه" next to "نوبيرا" means the Nubira Egypt sold under either badge.
+ */
+const MAKE_FAMILIES = [['Chevrolet', 'Daewoo'], ['Fiat', 'Nasr'], ['Chery', 'Speranza'], ['Renault', 'Dacia']];
+
+/*
+ * Words that say the product is made for every car. A title carrying one names cars as
+ * examples ("مناسب لكل السيارات مثل كورولا"), not as its fitment.
+ */
+/* A toy or a scale model of a car is not a part for it. */
+const NOT_FITMENT_WORDS = ['diecast', 'die cast', 'مجسم', 'collectible', 'لعبه', 'toy car'];
+
+const UNIVERSAL_WORDS = [
+    'يونيفرسال', 'يونفرسال', 'يونيفرسل', 'universal', 'عمومي', 'لجميع السيارات', 'جميع السيارات', 'كل السيارات',
+    'لكل السيارات', 'جميع الموديلات', 'all models', 'all cars', 'معظم السيارات', 'most cars', 'اغلب السيارات',
+];
+
+module.exports = { MAKES, MODELS, EQUIVALENT_MODELS, MAKE_FAMILIES, UNIVERSAL_WORDS, NOT_FITMENT_WORDS };

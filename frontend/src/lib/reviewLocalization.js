@@ -1,6 +1,12 @@
 /** Copy for the review link, the product-page reviews, and admin moderation. */
 
 export const reviewErrorCopy = (code, isAr) => ({
+    AUTH_REQUIRED: isAr
+        ? 'يجب تسجيل الدخول بحسابك لمتابعة تقييم هذا الطلب.'
+        : 'Please sign in to rate this order.',
+    FORBIDDEN_NOT_ORDER_OWNER: isAr
+        ? 'هذا الطلب غير مرتبط بحسابك. التقييم متاح فقط للعميل صاحب الطلب أو لإدارة الموقع.'
+        : 'This order does not belong to your account. Rating is only available to the buyer or admins.',
     INVITE_NOT_FOUND: isAr
         ? 'رابط التقييم غير صالح.'
         : 'This review link is not valid.',

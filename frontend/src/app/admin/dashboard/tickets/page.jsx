@@ -268,108 +268,171 @@ export default function AdminTicketsPage() {
                         </p>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm min-w-[900px]">
-                            <thead>
-                                <tr className="border-b border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-[#0E1012]/50">
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'العنوان' : 'Title'}
-                                    </th>
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'المؤلف' : 'Author'}
-                                    </th>
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'الدور' : 'Role'}
-                                    </th>
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'الأولوية' : 'Priority'}
-                                    </th>
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'الحالة' : 'Status'}
-                                    </th>
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'الرسائل' : 'Messages'}
-                                    </th>
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'تاريخ الإنشاء' : 'Created'}
-                                    </th>
-                                    <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
-                                        {isAr ? 'إجراء' : 'Action'}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    <>
+                        {/* Desktop Table View */}
+                        <div className="hidden xl:block overflow-x-auto">
+                            <table className="w-full text-sm min-w-[900px]">
+                                <thead>
+                                    <tr className="border-b border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-[#0E1012]/50">
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'العنوان' : 'Title'}
+                                        </th>
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'المؤلف' : 'Author'}
+                                        </th>
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'الدور' : 'Role'}
+                                        </th>
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'الأولوية' : 'Priority'}
+                                        </th>
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'الحالة' : 'Status'}
+                                        </th>
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'الرسائل' : 'Messages'}
+                                        </th>
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'تاريخ الإنشاء' : 'Created'}
+                                        </th>
+                                        <th className="text-left px-5 py-3 font-semibold text-zinc-600 dark:text-zinc-400">
+                                            {isAr ? 'إجراء' : 'Action'}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {tickets.map((ticket) => {
+                                        const StatusIconForTicket = STATUS_ICONS[ticket.status] || MessageSquare;
+                                        return (
+                                            <tr
+                                                key={ticket._id}
+                                                className="border-b border-zinc-50 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#0E1012]/50 transition-colors cursor-pointer"
+                                                onClick={() => router.push(`/admin/dashboard/tickets/${ticket._id}`)}
+                                            >
+                                                <td className="px-5 py-4">
+                                                    <p className="font-medium text-zinc-900 dark:text-zinc-100 line-clamp-1">
+                                                        {ticket.title}
+                                                    </p>
+                                                    <p className="text-xs text-zinc-400 mt-0.5 capitalize">
+                                                        {ticket.category}
+                                                        {ticket.order_reference && <span className="ms-2 font-mono text-marine-primary">#{ticket.order_reference}</span>}
+                                                    </p>
+                                                </td>
+                                                <td className="px-5 py-4">
+                                                    <p className="font-medium text-zinc-900 dark:text-zinc-100 text-sm">
+                                                        {ticket.authorName}
+                                                    </p>
+                                                </td>
+                                                <td className="px-5 py-4">
+                                                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                                                        ticket.authorRole === 'vendor'
+                                                            ? 'bg-violet-500/20 text-violet-500'
+                                                            : 'bg-cyan-500/20 text-cyan-500'
+                                                    }`}>
+                                                        {ticket.authorRole === 'vendor'
+                                                            ? (isAr ? 'بائع' : 'Vendor')
+                                                            : (isAr ? 'مستخدم' : 'User')
+                                                        }
+                                                    </span>
+                                                </td>
+                                                <td className="px-5 py-4">
+                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${PRIORITY_COLORS[ticket.priority] || ''}`}>
+                                                        {isAr
+                                                            ? { low: 'منخفض', medium: 'متوسط', high: 'عالي', urgent: 'عاجل' }[ticket.priority]
+                                                            : (ticket.priority || 'medium').charAt(0).toUpperCase() + (ticket.priority || 'medium').slice(1)
+                                                        }
+                                                    </span>
+                                                </td>
+                                                <td className="px-5 py-4">
+                                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[ticket.status] || ''}`}>
+                                                        <StatusIconForTicket size={12} />
+                                                        {isAr
+                                                            ? { open: 'مفتوح', pending: 'قيد الانتظار', resolved: 'تم الحل', closed: 'مغلق' }[ticket.status]
+                                                            : (ticket.status || 'open').charAt(0).toUpperCase() + (ticket.status || 'open').slice(1)
+                                                        }
+                                                    </span>
+                                                </td>
+                                                <td className="px-5 py-4 text-center text-zinc-500 dark:text-zinc-400">
+                                                    {getMessageCount(ticket)}
+                                                </td>
+                                                <td className="px-5 py-4 text-zinc-400 dark:text-zinc-500 text-xs">
+                                                    {formatDate(ticket.createdAt)}
+                                                </td>
+                                                <td className="px-5 py-4">
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); router.push(`/admin/dashboard/tickets/${ticket._id}`); }}
+                                                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-marine-primary hover:bg-marine-cyan/10 transition-colors"
+                                                    >
+                                                        {isAr ? 'عرض' : 'View'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Mobile Cards View */}
+                        <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {tickets.map((ticket) => {
                                     const StatusIconForTicket = STATUS_ICONS[ticket.status] || MessageSquare;
                                     return (
-                                        <tr
+                                        <div
                                             key={ticket._id}
-                                            className="border-b border-zinc-50 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-[#0E1012]/50 transition-colors cursor-pointer"
                                             onClick={() => router.push(`/admin/dashboard/tickets/${ticket._id}`)}
+                                            className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3 cursor-pointer hover:border-marine-cyan/40 transition-all"
                                         >
-                                            <td className="px-5 py-4">
-                                                <p className="font-medium text-zinc-900 dark:text-zinc-100 line-clamp-1">
-                                                    {ticket.title}
-                                                </p>
-                                                <p className="text-xs text-zinc-400 mt-0.5 capitalize">
-                                                    {ticket.category}
-                                                    {ticket.order_reference && <span className="ms-2 font-mono text-marine-primary">#{ticket.order_reference}</span>}
-                                                </p>
-                                            </td>
-                                            <td className="px-5 py-4">
-                                                <p className="font-medium text-zinc-900 dark:text-zinc-100 text-sm">
-                                                    {ticket.authorName}
-                                                </p>
-                                            </td>
-                                            <td className="px-5 py-4">
-                                                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                                                    ticket.authorRole === 'vendor'
-                                                        ? 'bg-violet-500/20 text-violet-500'
-                                                        : 'bg-cyan-500/20 text-cyan-500'
-                                                }`}>
-                                                    {ticket.authorRole === 'vendor'
-                                                        ? (isAr ? 'بائع' : 'Vendor')
-                                                        : (isAr ? 'مستخدم' : 'User')
-                                                    }
-                                                </span>
-                                            </td>
-                                            <td className="px-5 py-4">
-                                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${PRIORITY_COLORS[ticket.priority] || ''}`}>
-                                                    {isAr
-                                                        ? { low: 'منخفض', medium: 'متوسط', high: 'عالي', urgent: 'عاجل' }[ticket.priority]
-                                                        : (ticket.priority || 'medium').charAt(0).toUpperCase() + (ticket.priority || 'medium').slice(1)
-                                                    }
-                                                </span>
-                                            </td>
-                                            <td className="px-5 py-4">
-                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[ticket.status] || ''}`}>
-                                                    <StatusIconForTicket size={12} />
+                                            <div className="flex items-start justify-between gap-2">
+                                                <div className="min-w-0">
+                                                    <h4 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm line-clamp-1">
+                                                        {ticket.title}
+                                                    </h4>
+                                                    <p className="text-xs text-zinc-400 mt-0.5 capitalize">
+                                                        {ticket.category}
+                                                        {ticket.order_reference && <span className="ms-2 font-mono text-marine-primary">#{ticket.order_reference}</span>}
+                                                    </p>
+                                                </div>
+                                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold shrink-0 ${STATUS_COLORS[ticket.status] || ''}`}>
+                                                    <StatusIconForTicket size={11} />
                                                     {isAr
                                                         ? { open: 'مفتوح', pending: 'قيد الانتظار', resolved: 'تم الحل', closed: 'مغلق' }[ticket.status]
                                                         : (ticket.status || 'open').charAt(0).toUpperCase() + (ticket.status || 'open').slice(1)
                                                     }
                                                 </span>
-                                            </td>
-                                            <td className="px-5 py-4 text-center text-zinc-500 dark:text-zinc-400">
-                                                {getMessageCount(ticket)}
-                                            </td>
-                                            <td className="px-5 py-4 text-zinc-400 dark:text-zinc-500 text-xs">
-                                                {formatDate(ticket.createdAt)}
-                                            </td>
-                                            <td className="px-5 py-4">
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); router.push(`/admin/dashboard/tickets/${ticket._id}`); }}
-                                                    className="px-3 py-1.5 bg-marine-cyan/10 text-marine-primary hover:bg-marine-cyan/20 rounded-lg text-xs font-medium transition-colors"
-                                                >
-                                                    {isAr ? 'عرض' : 'View'}
-                                                </button>
-                                            </td>
-                                        </tr>
+                                            </div>
+
+                                            <div className="flex items-center justify-between text-xs bg-zinc-50/70 dark:bg-[#0E1012]/50 p-3 rounded-xl border border-zinc-100 dark:border-zinc-800">
+                                                <div>
+                                                    <span className="font-medium text-zinc-900 dark:text-zinc-200">{ticket.authorName}</span>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                                            ticket.authorRole === 'vendor' ? 'bg-violet-500/20 text-violet-500' : 'bg-cyan-500/20 text-cyan-500'
+                                                        }`}>
+                                                            {ticket.authorRole === 'vendor' ? (isAr ? 'بائع' : 'Vendor') : (isAr ? 'مستخدم' : 'User')}
+                                                        </span>
+                                                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${PRIORITY_COLORS[ticket.priority] || ''}`}>
+                                                            {isAr
+                                                                ? { low: 'منخفض', medium: 'متوسط', high: 'عالي', urgent: 'عاجل' }[ticket.priority]
+                                                                : ticket.priority
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="text-end">
+                                                    <span className="text-[11px] text-zinc-400 block">{formatDate(ticket.createdAt)}</span>
+                                                    <span className="text-[10px] text-zinc-500 block mt-1">
+                                                        {getMessageCount(ticket)} {isAr ? 'رسائل' : 'msgs'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     );
                                 })}
-                            </tbody>
-                        </table>
-                    </div>
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
 

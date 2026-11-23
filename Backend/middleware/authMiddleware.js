@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/users');
 const { Seller } = require('../models/sellers');
-const adminAccess = require('../services/adminAccessService');
+const adminAccess = require('../modules/admin/admin_access.service');
 
 /**
  * A token from before refresh sessions (no `sid`, services/sessionService.js) that is still
@@ -10,7 +10,7 @@ const adminAccess = require('../services/adminAccessService');
 const moveLegacyToken = async (req, res, decoded) => {
     if (decoded?.sid) return;
     try {
-        await require('../services/sessionService').upgradeLegacyToken(req, res, decoded);
+        await require('../common/services/sessionService').upgradeLegacyToken(req, res, decoded);
     } catch (error) {
         console.warn('[auth] could not move a legacy token onto a session:', error.message);
     }
@@ -128,7 +128,7 @@ const continueWithRefresh = async (req, res, roles) => {
     if (!req.cookies?.refresh_token) return 'none';
     let session;
     try {
-        session = await require('../services/sessionService').refreshSession(req, res);
+        session = await require('../common/services/sessionService').refreshSession(req, res);
     } catch (_) {
         return 'ended';
     }

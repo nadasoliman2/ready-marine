@@ -17,9 +17,9 @@ before(async () => {
     process.env.REDIS_URL = redisServer.url;
     process.env.FRONTEND_URL = 'https://readymarine.store';
     process.env.BACKEND_PUBLIC_URL = 'https://readymarine.store';
-    redisClient = require('../services/redisClient');
-    presenceService = require('../services/presenceService');
-    svc = require('../services/abandonedCartService');
+    redisClient = require('../common/services/redisClient');
+    presenceService = require('../common/services/presenceService');
+    svc = require('../modules/order/abandoned_cart.service');
     ({ User } = require('../models/users'));
     ({ Product } = require('../models/products'));
     ({ Seller } = require('../models/sellers'));
@@ -402,10 +402,10 @@ test('several instances sweeping at once send each reminder exactly once', async
     const results = await Promise.all([0, 1, 2].map(() => {
         // Each instance is its own module state in production; here, bypass the in-process guard.
         delete require.cache[require.resolve('../services/abandonedCartService')];
-        const instance = require('../services/abandonedCartService');
+        const instance = require('../modules/order/abandoned_cart.service');
         return instance.runAbandonedCartReminders({ now: NOW, config: config(), acquireLock: null, sendGapMs: 0, retryDelayMs: 0, presence: fakePresence(), sendEmail: mailer.send });
     }));
-    svc = require('../services/abandonedCartService');
+    svc = require('../modules/order/abandoned_cart.service');
 
     assert.equal(mailer.sent.length, 3);
     assert.deepEqual(new Set(mailer.sent.map((e) => e.to)).size, 3);
@@ -420,7 +420,7 @@ test('the Redis run lock lets one instance sweep and turns the duplicate executi
     mailer.delayMs = 50;
     const freshInstance = () => {
         delete require.cache[require.resolve('../services/abandonedCartService')];
-        return require('../services/abandonedCartService');
+        return require('../modules/order/abandoned_cart.service');
     };
     const [first, second] = [freshInstance(), freshInstance()];
     svc = second;
@@ -453,7 +453,7 @@ test('a cart updated or checked out while the run is processing is not emailed',
 
 test('a cart synced after the read loses the claim (compare-and-set on cart.updated_at and version)', async () => {
     const id = await makeCustomer();
-    const { claimCustomer } = require('../services/abandonedCartService')._test;
+    const { claimCustomer } = require('../modules/order/abandoned_cart.service')._test;
     assert.equal(typeof claimCustomer, 'function');
     const read = await User.findById(id).lean();
     // The site syncs the cart (same contents, new timestamp) just after the sweep read it.

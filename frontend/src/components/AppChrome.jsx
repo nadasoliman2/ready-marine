@@ -9,7 +9,7 @@ import VerifyContactPrompt from './verification/VerifyContactPrompt';
 import ChatWidget from './chat/ChatWidget';
 import MobileBottomNav from './MobileBottomNav';
 import { useApp } from '../context/AppContext';
-import { isAuthPath, isDashboardPath } from '../lib/dashboardRoute';
+import { isAuthPath, isDashboardPath, isStandalonePath } from '../lib/dashboardRoute';
 
 export default function AppChrome({ children }) {
   const pathname = usePathname();
@@ -46,8 +46,8 @@ export default function AppChrome({ children }) {
     );
   }
 
-  // Sign-in and sign-up bring their own layout (app/(auth)/layout.js) — none of the store's.
-  if (isAuthPath(pathname)) return children;
+  // Sign-in, sign-up and standalone flows (e.g. review) bring their own focused layout
+  if (isAuthPath(pathname) || isStandalonePath(pathname)) return children;
 
   return (
     // On a phone the page ends above the bottom bar, so the footer is not hidden under it.

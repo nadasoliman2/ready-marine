@@ -1172,7 +1172,7 @@ No parameters. No pagination.
     "stock_status": "instock",
     "quantity": 12,
     "images": [{ "_id": "6ac60e5a79bcca7bf9037072", "url": "https://readycar.store/uploads/products/product-1791364697313-727922615.jpg", "is_primary": true }],
-    "compatible_cars": [
+    "compatible_vessels": [
       { "brand_id": "6a05bf0c876db3938e6feeca", "brand_name": "Volkswagen", "all_models": false,
         "models": [{ "model_id": "6a05bf0c876db3938e6fef4d", "model_name": "Passat", "years": [2004, 2005], "all_years": false }] }
     ],
@@ -1250,8 +1250,8 @@ Saves the "Add product" form, either from scratch or after picking a catalogue e
 | `discount_price` | number | — | Derived; do not send. Recomputed on save. |
 | `category_id` | ObjectId | Yes, even for a draft | From `GET /api/products/categories`. Should be a leaf category; this path does not check that, nor that the category exists or is active. `""` gives a cast error. |
 | `product_brand_id` | ObjectId | No | A hand-entered brand or a car make, from `filters.productBrands`. `""` → `null`. Existence is not checked. `product_brand_source` (`Brand` / `CarBrand`) is set by the server. |
-| `is_universal` | boolean | No | `true` = fits every car. Forced to `true` when `compatible_cars` is empty. |
-| `compatible_cars` | array | when not universal | `[{ brand_id, brand_name, all_models, models: [{ model_id, model_name, years: [Number], all_years }] }]`. `brand_id`, `brand_name`, `model_id` and `model_name` are required by the schema. Names are stored as sent (not looked up). Ids come from `filters?detail=full` or `/car-brands/:id/models`. |
+| `is_universal` | boolean | No | `true` = fits every car. Forced to `true` when `compatible_vessels` is empty. |
+| `compatible_vessels` | array | when not universal | `[{ brand_id, brand_name, all_models, models: [{ model_id, model_name, years: [Number], all_years }] }]`. `brand_id`, `brand_name`, `model_id` and `model_name` are required by the schema. Names are stored as sent (not looked up). Ids come from `filters?detail=full` or `/car-brands/:id/models`. |
 | `variation_types` | array | No | `[{ name, options: [{ value }] }]`, e.g. Size → S/M/L. The server mints `_id`s for types and options. |
 | `variants` | array | No | `[{ price, discount_type, discount_value, stock, selected_options: [{ type_name, option_value }] }]`. `price: null` = use the product price. A variant's discount applies to `variant.price ?? price`, with the same rules as the product discount. When both `variation_types` and `variants` are sent, the server fills each `selected_options[].type_id` / `option_id` by exact (case-sensitive) name match. |
 | `stock_management` | boolean | No | Default `true`. |
@@ -1285,7 +1285,7 @@ Set by the server, whatever is sent: `vendor_id` (from the session), `status`, `
   "price": 950, "discount_type": "percentage", "discount_value": 10,
   "category_id": "6a05bf082edec79ade4e7a1b", "product_brand_id": "",
   "is_universal": false,
-  "compatible_cars": [{ "brand_id": "6a05bf0c876db3938e6feeca", "brand_name": "Volkswagen", "all_models": false,
+  "compatible_vessels": [{ "brand_id": "6a05bf0c876db3938e6feeca", "brand_name": "Volkswagen", "all_models": false,
     "models": [{ "model_id": "6a05bf0c876db3938e6fef4d", "model_name": "Passat", "years": [2018, 2019], "all_years": false }] }],
   "stock_management": true, "quantity": 20, "stock_status": "instock",
   "weight": 1.5, "dimensions": { "length": 25, "width": 15, "height": 8 }, "shipping_class_id": "",
@@ -1435,7 +1435,7 @@ Sort: `approved` entries first, then `suggested`; newest first within each.
       "gtin": "",
       "images": [{ "_id": "6ab1000000000000000000c2", "url": "https://readycar.store/uploads/products/product-1760180000000-512340987.jpg", "is_primary": true }],
       "is_universal": true,
-      "compatible_cars": [],
+      "compatible_vessels": [],
       "variation_types": [],
       "status": "approved",
       "merged_into": null,
@@ -1505,7 +1505,7 @@ Opens the condensed "Add product" form after the vendor picks an entry: the entr
     "part_number": "04465-02220", "gtin": "",
     "images": [{ "url": "https://readycar.store/uploads/products/product-1760180000000-512340987.jpg", "is_primary": true }],
     "is_universal": true,
-    "compatible_cars": [],
+    "compatible_vessels": [],
     "variation_types": [{ "name": "Size", "options": [{ "value": "S" }, { "value": "M" }] }]
   },
   "vendor_product_id": null
@@ -1655,7 +1655,7 @@ Nothing is linked automatically.
         "price": 950, "discount_type": null, "discount_value": null, "status": "published",
         "category_id": "6a05bf082edec79ade4e7a1b", "category_raw": "Brakes > Brake Pads",
         "product_brand_id": null, "product_brand_raw": "",
-        "is_universal": true, "compatible_cars": [],
+        "is_universal": true, "compatible_vessels": [],
         "stock_management": true, "quantity": 20, "stock_status": "instock",
         "weight": 1.5, "dimensions": { "length": 25, "width": 15, "height": 8 },
         "shipping_class_id": null, "shipping_class_raw": "",
@@ -1752,7 +1752,7 @@ Example body:
 | `category_id` | ObjectId | Yes | Must be a leaf. A malformed id is reported as "required". |
 | `product_brand_id` | ObjectId | No | Must exist. |
 | `is_universal` | boolean | Yes | A non-boolean is an error. |
-| `compatible_cars` | array | when not universal | Same shape as the form. `brand_name` / `model_name` are filled from the database. |
+| `compatible_vessels` | array | when not universal | Same shape as the form. `brand_name` / `model_name` are filled from the database. |
 | `stock_management` | boolean | No | Non-boolean → `true`. |
 | `quantity` | integer | when tracked and no variants | |
 | `stock_status` | string | No | Default `instock`. |
@@ -1886,7 +1886,7 @@ Everything the product form needs in one call: the category tree, car makes (for
 ```
 - `categories` is the same tree as `/categories`. Each category also carries `type_ids`: the product types it is offered under.
 - `productTypes` are the broad, shopper-facing groupings the home page's search offers (Spare parts, Routine maintenance, Accessories, Car care, Tools, Tyres & wheels): `[{ _id, name, name_ar, image, sort_order, category_ids, product_count }]`, sorted by `sort_order`. `category_ids` are the categories assigned to the type (any level; a category can be in several types), shown as the type's cards. Only active types with live products are listed. Filter the shop by one with `GET /api/products?type_id=`.
-- `carBrands[]._id` and `models[]._id` are the `brand_id` / `model_id` for `compatible_cars`; `name` fills `brand_name` / `model_name`.
+- `carBrands[]._id` and `models[]._id` are the `brand_id` / `model_id` for `compatible_vessels`; `name` fills `brand_name` / `model_name`.
 - `productBrands` merges hand-entered brands (`source: "Brand"`) and every car make (`source: "CarBrand"`) into one list sorted by name. Either kind of `_id` goes in `product_brand_id`. A make whose name also exists as a hand-entered brand appears once, as the hand-entered one.
 - A brand's `categories` lists the category ids it is tagged for. An empty or missing list means "untagged, show everywhere". Use it to narrow the brand picker to the chosen category.
 - Without `detail=full`, car brands have no `models` and carry `model_count` instead.

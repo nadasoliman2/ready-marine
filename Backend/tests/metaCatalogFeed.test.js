@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 process.env.FRONTEND_URL = 'https://readymarine.store';
 process.env.BACKEND_PUBLIC_URL = 'https://readymarine.store';
 
-const { COLUMNS, _test: { toRow, toCsv, plainText, isInStock, validGtin, categoryPaths, absoluteUrl } } = require('../services/metaCatalogFeedService');
+const { COLUMNS, _test: { toRow, toCsv, plainText, isInStock, validGtin, categoryPaths, absoluteUrl } } = require('../modules/product/meta_catalog_feed.service');
 
 const ctx = (lang = 'ar') => ({
     lang,

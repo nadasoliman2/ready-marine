@@ -11,8 +11,8 @@
  */
 require('dotenv').config();
 const mongoose = require('mongoose');
-const { effectiveConfig, runAbandonedCartReminders } = require('../services/abandonedCartService');
-const { closeRedis, getRedis } = require('../services/redisClient');
+const { effectiveConfig, runAbandonedCartReminders } = require('../modules/order/abandoned_cart.service');
+const { closeRedis, getRedis } = require('../common/services/redisClient');
 
 const main = async () => {
     const dryRun = process.argv.includes('--dry-run');

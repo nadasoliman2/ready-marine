@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Loader2, Check, X, Star, AlertCircle, MessageSquare, Store, Package } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { Loader2, Check, X, Star, AlertCircle, MessageSquare, Store, Package, Gift, Ticket } from 'lucide-react';
 import { useApp } from '../../../../context/AppContext';
 import { adminReviewsApi } from '../../../../lib/api';
 import { reviewCopy } from '../../../../lib/reviewLocalization';
@@ -21,7 +22,8 @@ export default function AdminReviewsPage() {
     const isAr = language === 'ar';
     const copy = useMemo(() => reviewCopy(isAr), [isAr]);
 
-    const [status, setStatus] = useState('pending');
+    const searchParams = useSearchParams();
+    const [status, setStatus] = useState(() => searchParams?.get('status') || 'pending');
     // Product reviews and store reviews are read with different questions in mind, so the
     // queue can be narrowed to one kind without losing the combined view.
     const [target, setTarget] = useState('all');
@@ -76,7 +78,7 @@ export default function AdminReviewsPage() {
     ];
 
     return (
-        <div className="p-6 max-w-5xl" dir={isAr ? 'rtl' : 'ltr'}>
+        <div className="p-3 max-w-5xl" dir={isAr ? 'rtl' : 'ltr'}>
             <h1 className="text-2xl font-black text-zinc-900 flex items-center gap-3 mb-6">
                 <MessageSquare className="text-marine-primary" /> {copy.adminTitle}
             </h1>
@@ -168,6 +170,18 @@ export default function AdminReviewsPage() {
                                         }`}>
                                             {review.target_type === 'vendor' ? copy.targetVendor : copy.targetProduct}
                                         </span>
+                                        {review.rating <= 2 && (
+                                            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-100 text-red-700 flex items-center gap-1">
+                                                <AlertCircle size={11} />
+                                                {isAr ? 'تقييم سلبي — تذكرة متابعة' : 'Negative Rating — Ticket'}
+                                            </span>
+                                        )}
+                                        {review.status === 'approved' && (
+                                            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1">
+                                                <Gift size={11} />
+                                                {isAr ? '+50 نقطة ولاء' : '+50 Loyalty Points'}
+                                            </span>
+                                        )}
                                     </div>
 
                                     {/* What was rated. A store review has no product, so it

@@ -11,7 +11,7 @@ export default function RelatedProducts({ categoryId, excludeId, isAr }) {
   useEffect(() => {
     if (!categoryId) return undefined;
     let active = true;
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products?category_id=${categoryId}&limit=8`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products?category_id=${categoryId}&limit=8`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (!active || !data) return;

@@ -190,9 +190,10 @@ export default function AdminReturnsPage() {
                 <div className="bg-red-500/10 border border-red-500/20 text-red-600 p-4 rounded-xl text-sm">{error}</div>
             )}
 
-            {/* Table */}
+            {/* Table & Cards Container */}
             <div className="bg-white dark:bg-[#14171A] border border-zinc-200 dark:border-white/5 rounded-2xl overflow-hidden">
-                <div className="overflow-x-auto">
+                {/* Desktop Table View */}
+                <div className="hidden xl:block overflow-x-auto">
                     <table className="w-full text-sm min-w-[820px]">
                         <thead>
                             <tr className="border-b border-zinc-100 dark:border-white/5">
@@ -250,6 +251,64 @@ export default function AdminReturnsPage() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile / Tablet Responsive Cards View */}
+                <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+                    {loading ? (
+                        <div className="py-16 text-center">
+                            <Loader2 size={28} className="animate-spin text-marine-primary mx-auto" />
+                        </div>
+                    ) : returns.length === 0 ? (
+                        <div className="py-16 text-center bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5">
+                            <RotateCcw size={36} className="mx-auto text-zinc-200 dark:text-zinc-700 mb-3" />
+                            <p className="text-zinc-500 font-semibold">{isAr ? 'لا توجد طلبات إرجاع' : 'No return requests found'}</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {returns.map((ret) => (
+                                <div
+                                    key={ret._id}
+                                    {...rowLink(`/admin/dashboard/returns/${ret._id}`)}
+                                    className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3 cursor-pointer hover:border-marine-cyan/40 transition-all"
+                                >
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div>
+                                            <span className="text-marine-primary font-black text-sm">
+                                                #{ret.return_number}
+                                            </span>
+                                            <p className="text-[11px] text-zinc-400 mt-0.5">
+                                                {new Date(ret.created_at).toLocaleDateString(isAr ? 'ar-u-ca-gregory' : 'en-US', { month: 'short', day: 'numeric' })}
+                                            </p>
+                                        </div>
+                                        <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[ret.status] || 'bg-zinc-500/20 text-zinc-500'}`}>
+                                            {STATUS_LABELS[ret.status]?.[isAr ? 'ar' : 'en'] || ret.status}
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2 text-xs bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                                        <div>
+                                            <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'العميل' : 'Customer'}</span>
+                                            <p className="font-bold text-zinc-900 dark:text-white truncate">{ret.user_id?.name || ret.user_id?.email || '—'}</p>
+                                            <span className="text-[10px] text-zinc-500 block mt-0.5">{ret.items?.length || 0} {isAr ? 'منتج' : 'items'}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'البائع' : 'Vendor'}</span>
+                                            <p className="font-bold text-zinc-900 dark:text-white truncate">{ret.vendor_id?.store_name || '—'}</p>
+                                            <span className="text-[10px] text-zinc-500 block mt-0.5">{REASON_LABELS[ret.reason]?.[isAr ? 'ar' : 'en'] || ret.reason}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-end pt-1">
+                                        <Link href={`/admin/dashboard/returns/${ret._id}`} className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-marine-cyan/10 text-marine-primary hover:bg-marine-cyan/20 transition-colors inline-flex items-center gap-1.5">
+                                            <Eye size={13} />
+                                            {isAr ? 'عرض التفاصيل' : 'View Details'}
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Pagination */}

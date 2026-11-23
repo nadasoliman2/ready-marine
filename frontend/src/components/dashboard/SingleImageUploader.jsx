@@ -5,7 +5,7 @@ import { ImageIcon, Link2, Loader2, Upload, X } from 'lucide-react';
 import { resolveAssetUrl } from '../../lib/assets';
 import { useApp } from '../../context/AppContext';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}`;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}`;
 
 /**
  * SingleImageUploader – compact single-image upload widget for admin pages

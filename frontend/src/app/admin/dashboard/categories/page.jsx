@@ -329,7 +329,7 @@ export default function AdminCategoriesPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <StatCard icon={FolderTree} label={isAr ? 'كل التصنيفات' : 'Total Categories'} value={categories.length} />
         <StatCard icon={FolderTree} label={isAr ? 'تصنيفات رئيسية' : 'Root Categories'} value={categories.filter(c => !c.parent_id).length} tone="green" />
         <StatCard icon={FolderTree} label={isAr ? 'تصنيفات فرعية' : 'Subcategories'} value={categories.filter(c => !!c.parent_id).length} tone="gray" />

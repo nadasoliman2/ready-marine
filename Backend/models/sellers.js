@@ -35,7 +35,7 @@ const sellerSchema = new Schema(
             lowercase: true,
             trim: true,
             // Canonical spelling on every write and query — services/shared/emailIdentity.js.
-            set: (v) => require('../services/shared/emailIdentity').canonicalEmail(v),
+            set: (v) => require('../common/shared/emailIdentity').canonicalEmail(v),
         },
 
         phone: { type: String, required: true, unique: true, index: true, trim: true },
@@ -71,7 +71,7 @@ const sellerSchema = new Schema(
         // A replacement contact awaiting its code. Held here rather than
         // overwriting the live field so a typo'd address cannot lock the owner
         // out of the store they are signed in to.
-        pending_email: { type: String, default: null, lowercase: true, trim: true, set: (v) => require('../services/shared/emailIdentity').canonicalEmail(v) },
+        pending_email: { type: String, default: null, lowercase: true, trim: true, set: (v) => require('../common/shared/emailIdentity').canonicalEmail(v) },
         pending_phone: { type: String, default: null, trim: true },
 
         // Google account (`sub`) linked to this store, stamped the first time
@@ -210,7 +210,7 @@ const sellerSchema = new Schema(
 // Keep the slug in step with the username, on every write path that can change it.
 sellerSchema.pre("save", async function () {
     if (this.store_slug && !this.isModified("store_username")) return;
-    const { buildStoreSlug } = require("../services/shared/storeSlug");
+    const { buildStoreSlug } = require('../common/shared/storeSlug');
     this.store_slug = await buildStoreSlug(this.constructor, this);
 });
 sellerSchema.pre("findOneAndUpdate", async function () {
@@ -219,7 +219,7 @@ sellerSchema.pre("findOneAndUpdate", async function () {
     if (!Object.prototype.hasOwnProperty.call(set, "store_username")) return;
     const current = await this.model.findOne(this.getQuery()).select("_id store_name").lean();
     if (!current) return;
-    const { buildStoreSlug } = require("../services/shared/storeSlug");
+    const { buildStoreSlug } = require('../common/shared/storeSlug');
     set.store_slug = await buildStoreSlug(this.model, {
         _id: current._id,
         store_username: set.store_username,

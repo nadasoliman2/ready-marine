@@ -33,7 +33,7 @@ function ArticlesContent() {
       try {
         const apiParams = new URLSearchParams({ page, limit: 12 });
         if (search) apiParams.set('search', search);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/articles?${apiParams.toString()}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/articles?${apiParams.toString()}`);
         if (!res.ok) throw new Error('Failed to fetch articles');
         const data = await res.json();
         setArticles(data.articles || []);

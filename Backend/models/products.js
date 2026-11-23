@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const { DISCOUNT_TYPES, computeDiscountPrice, validateDiscount } = require("../services/shared/productPricing");
+const { DISCOUNT_TYPES, computeDiscountPrice, validateDiscount } = require('../common/shared/productPricing');
+require('./target_audiences');
 
 /* ------------------ Image ------------------ */
 const imageSchema = new Schema(
@@ -110,19 +111,15 @@ const productSchema = new Schema(
             index: true,
         },
 
-        // Either a hand-entered brand (`Brand`) or a car make (`CarBrand`): a Toyota part is
-        // branded Toyota without anyone typing Toyota a second time. Which collection the id
-        // lives in is `product_brand_source`, stamped automatically on every write — see
-        // services/shared/brandRef.js.
+        // Product Brand reference directly to the single Brand model (product_brands.js)
         product_brand_id: {
             type: Schema.Types.ObjectId,
-            refPath: "product_brand_source",
+            ref: "Brand",
             default: null,
             index: true,
         },
         product_brand_source: {
             type: String,
-            enum: ["Brand", "CarBrand"],
             default: "Brand",
         },
 
@@ -153,7 +150,7 @@ const productSchema = new Schema(
         gtin: { type: String, trim: true },
         // Original / OEM / Aftermarket (services/shared/partType). Required by every form
         // and bulk upload; null only on products saved before it existed.
-        part_type: { type: String, enum: [...require('../services/shared/partType').PART_TYPES, null], default: null, index: true },
+        part_type: { type: String, enum: [...require('../common/shared/partType').PART_TYPES, null], default: null, index: true },
 
         // Slugs — at least one language set required (enforced below)
         slug_en: { type: String, trim: true, sparse: true, unique: true },
@@ -217,19 +214,18 @@ const productSchema = new Schema(
         // Triggers re-review workflow (status → 'pending') even if it was previously approved.
         modified_after_subscription_restore: { type: Boolean, default: false },
 
-        // Compatibility — is_universal OR compatible_cars must be set (enforced below)
+        // Compatibility — is_universal OR compatible_vessels must be set (enforced below)
         is_universal: { type: Boolean, default: false },
 
         // Flag to include product in the "Car Trunk" page — the things every car should
         // carry (jack, warning triangle, first-aid kit, jump leads, ...).
         for_trunk: { type: Boolean, default: false },
 
-        // The marine audience hubs the product shows in — the ten keys of
-        // services/shared/audiences.js; anything else is dropped on save.
+        // The marine audience hubs the product shows in — refs to TargetAudience
         target_audiences: {
-            type: [{ type: String, trim: true }],
+            type: [{ type: Schema.Types.ObjectId, ref: 'TargetAudience' }],
             index: true,
-            set: (v) => require('../services/shared/audiences').cleanAudiences(v),
+            set: (v) => require('../common/shared/audiences').cleanAudiencesToIds(v),
         },
 
         sold_count: { type: Number, default: 0 },
@@ -242,7 +238,7 @@ const productSchema = new Schema(
 
         images: [imageSchema],
 
-        compatible_cars: [compatibleCarSchema],
+        compatible_vessels: [compatibleCarSchema],
 
         variation_types: [variationTypeSchema],
 
@@ -315,11 +311,19 @@ productSchema.pre('validate', function (next) {
         }
     }
 
-    // Rule 2: Must be universal OR have specific compatible cars
-    if (!this.is_universal && (!this.compatible_cars || this.compatible_cars.length === 0)) {
+    // Rule 2: Must be universal OR have specific compatible vessels
+    if (!this.is_universal && (!this.compatible_vessels || this.compatible_vessels.length === 0)) {
         this.invalidate(
-            'compatible_cars',
-            'A product must be universally compatible or have at least one compatible car entry.'
+            'compatible_vessels',
+            'A product must be universally compatible or have at least one compatible vessel entry.'
+        );
+    }
+
+    // Rule 3: Category is strictly mandatory for all products
+    if (!this.category_id) {
+        this.invalidate(
+            'category_id',
+            'Category is required for all products.'
         );
     }
 
@@ -346,7 +350,7 @@ productSchema.index({ vendor_id: 1, status: 1, created_at: -1 });
 productSchema.index({ status: 1, price: 1 });
 productSchema.index({ status: 1, sold_count: -1, created_at: -1 });
 
-require("../services/shared/brandRef").attachBrandSourceHooks(productSchema);
+require('../common/shared/brandRef').attachBrandSourceHooks(productSchema);
 
 const Product = mongoose.model("Product", productSchema);
 

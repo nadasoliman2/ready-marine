@@ -9,7 +9,7 @@
  * to a public https host — never localhost or an IP.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const { registerWebhook, listWebhooks, WEBHOOK_EVENTS } = require('../services/everysecond');
+const { registerWebhook, listWebhooks, WEBHOOK_EVENTS } = require('../modules/admin/everysecond');
 
 (async () => {
     if (!process.env.EVERYSECOND_API_KEY) throw new Error('EVERYSECOND_API_KEY is not set.');

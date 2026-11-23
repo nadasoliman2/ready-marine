@@ -9,7 +9,7 @@ import ServicesSection from '../components/services/ServicesSection';
 import PartnersSection from '../components/PartnersSection';
 import CorporateClientsSection from '../components/CorporateClientsSection';
 import {
-  AnnouncementBar, MarineHero, CoreCategories, ServiceSpotlight, WorkshopPartners, AuthorizedBrands, PaymentPartners,
+  AnnouncementBar, MarineHero, CoreCategories, AuthorizedBrands, PaymentPartners,
 } from '../components/marine/HomeSections';
 import FeaturedHubs from '../components/marine/MarineHubsSection';
 
@@ -23,7 +23,6 @@ export default function Home() {
       {/* The 3 dynamic lifestyle slider cards — all 8 marketing segments unified here */}
       <FeaturedHubs />
       <CoreCategories />
-      <ServiceSpotlight />
       <ServiceBannerAdSlider />
       <MostSoldProducts />
       <PromotedProducts />
@@ -31,7 +30,6 @@ export default function Home() {
       <SpecialOffers />
       <NewlyArrivedProducts />
       <ServicesSection />
-      <WorkshopPartners />
       <PartnersSection />
       <CorporateClientsSection />
 

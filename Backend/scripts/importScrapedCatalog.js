@@ -27,7 +27,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const { CatalogEntry } = require('../models/catalogEntries');
 const { Category } = require('../models/categories');
 const { Brand } = require('../models/product_brands');
-const { CarBrand } = require('../models/car_brands');
+const CarBrand = Brand;
 const MAP = require('./catalogImportMap');
 const AGO_TITLES = require('./agoTitlesEn');
 const BOSCH_DESC = require('./boschDescriptionsAr');
@@ -79,7 +79,7 @@ function expandYears(range) {
     return Array.from({ length: to - from + 1 }, (_, i) => from + i);
 }
 
-/* Bosch fitment rows -> compatible_cars, keeping only cars this catalog knows.
+/* Bosch fitment rows -> compatible_vessels, keeping only cars this catalog knows.
    A make with no matching model still becomes a brand-level entry: "fits this
    make, model unlisted" is true, while inventing the model would not be. */
 function buildCompatibility(rows, carIndex, stats) {
@@ -161,7 +161,7 @@ function buildBoschEntry(p, cls, brandId, carIndex, stats) {
     const base = (p.name || '').replace(/\s*\([^()]*\)\s*$/, '').trim() || cls.line;
     const specs = specsToText(p.specifications);
 
-    const compatible_cars = buildCompatibility(p.compatibility, carIndex, stats);
+    const compatible_vessels = buildCompatibility(p.compatibility, carIndex, stats);
 
     // Bosch has no photograph for 52% of its catalogue; for those its API returns
     // a default endpoint serving a grey "no image" icon, which the scrape stored
@@ -209,8 +209,8 @@ function buildBoschEntry(p, cls, brandId, carIndex, stats) {
         part_number: pn,
         gtin: '',
         images,
-        is_universal: compatible_cars.length === 0,
-        compatible_cars,
+        is_universal: compatible_vessels.length === 0,
+        compatible_vessels,
         variation_types: [],
         status: 'approved',
         created_by_role: 'admin',
@@ -253,13 +253,13 @@ function buildAgoEntry(r, brandId, carIndex, stats) {
     const code = (r.product_code || '').trim();
     const page = (r.model || '').trim();
 
-    const compatible_cars = [];
+    const compatible_vessels = [];
     for (const [brandName, modelName] of MAP.AGO_MODEL_MAP[page] || []) {
         const brand = carIndex.get(norm(brandName));
         if (!brand) { stats.makeMiss.set(brandName, (stats.makeMiss.get(brandName) || 0) + 1); continue; }
         const model = modelName ? brand.models.get(norm(modelName)) : null;
         if (modelName && !model) { stats.modelMiss++; stats.agoModelMiss.add(`${page} → ${brandName}/${modelName}`); }
-        compatible_cars.push({
+        compatible_vessels.push({
             brand_id: brand._id,
             brand_name: brand.name,
             all_models: false,
@@ -269,7 +269,7 @@ function buildAgoEntry(r, brandId, carIndex, stats) {
     }
     // A brand with no models resolved carries no fitment information the UI can
     // filter on, so the entry stays universal rather than pretending otherwise.
-    const specific = compatible_cars.some((c) => c.models.length > 0);
+    const specific = compatible_vessels.some((c) => c.models.length > 0);
 
     const ext = path.extname(r.local_image || '') || '.jpg';
     const images = r.local_image
@@ -309,7 +309,7 @@ function buildAgoEntry(r, brandId, carIndex, stats) {
         gtin: '',
         images,
         is_universal: !specific,
-        compatible_cars: specific ? compatible_cars.filter((c) => c.models.length > 0) : [],
+        compatible_vessels: specific ? compatible_vessels.filter((c) => c.models.length > 0) : [],
         variation_types: [],
         status: 'approved',
         created_by_role: 'admin',
@@ -432,7 +432,7 @@ async function insertAll(docs, label) {
         }
         console.log(`\nBosch       : ${prods.length} parts, ${dup} already present, ${skipped} unclassifiable, ${docs.length} to insert`);
         console.log(`  classified by line=${stats.byLine} pattern=${stats.byPattern} category=${stats.byCategory}`);
-        if (SAMPLE) docs.filter((d) => d.compatible_cars.length).slice(0, SAMPLE).forEach((d) => console.log(JSON.stringify(d, null, 1)));
+        if (SAMPLE) docs.filter((d) => d.compatible_vessels.length).slice(0, SAMPLE).forEach((d) => console.log(JSON.stringify(d, null, 1)));
         totals.bosch = docs.length;
         if (APPLY && docs.length) Object.assign(totals, { boschResult: await insertAll(docs, 'bosch') });
     }

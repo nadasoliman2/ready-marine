@@ -48,8 +48,8 @@ const AUTHORITATIVE_PART_NUMBERS = ['bosch'];
    then has an image. _id last so the choice is stable across runs. */
 function pickSurvivor(group) {
     return [...group].sort((a, b) => {
-        const carsA = (a.compatible_cars || []).reduce((n, c) => n + (c.models?.length || 0), 0);
-        const carsB = (b.compatible_cars || []).reduce((n, c) => n + (c.models?.length || 0), 0);
+        const carsA = (a.compatible_vessels || []).reduce((n, c) => n + (c.models?.length || 0), 0);
+        const carsB = (b.compatible_vessels || []).reduce((n, c) => n + (c.models?.length || 0), 0);
         if (carsA !== carsB) return carsB - carsA;
         const lenA = (a.description_en || '').length, lenB = (b.description_en || '').length;
         if (lenA !== lenB) return lenB - lenA;
@@ -59,7 +59,7 @@ function pickSurvivor(group) {
     })[0];
 }
 
-/* Union of two compatible_cars arrays, deduplicated by brand then model.
+/* Union of two compatible_vessels arrays, deduplicated by brand then model.
    all_years wins over an explicit list, since it is the broader claim. */
 function unionCars(groups) {
     const brands = new Map();
@@ -132,8 +132,8 @@ function unionCars(groups) {
         const survivor = pickSurvivor(group);
         const losers = group.filter((e) => e._id.toString() !== survivor._id.toString());
 
-        const merged = unionCars(group.map((e) => e.compatible_cars));
-        const before = (survivor.compatible_cars || []).reduce((n, c) => n + (c.models?.length || 0), 0);
+        const merged = unionCars(group.map((e) => e.compatible_vessels));
+        const before = (survivor.compatible_vessels || []).reduce((n, c) => n + (c.models?.length || 0), 0);
         const after = merged.reduce((n, c) => n + (c.models?.length || 0), 0);
         if (after > before) carsGained += after - before;
 
@@ -147,7 +147,7 @@ function unionCars(groups) {
         ops.push({
             updateOne: {
                 filter: { _id: survivor._id },
-                update: { $set: { compatible_cars: merged, is_universal: merged.length === 0, updated_at: new Date() } },
+                update: { $set: { compatible_vessels: merged, is_universal: merged.length === 0, updated_at: new Date() } },
             },
         });
         for (const l of losers) {

@@ -161,7 +161,7 @@ export default function SubscriptionPackagesPage() {
                 </div>
                 <button
                     onClick={openCreate}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white rounded-xl font-bold shadow-lg shadow-red-500/20 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white rounded-xl font-bold  transition-all"
                 >
                     <Plus size={18} />
                     {isAr ? 'إضافة باقة' : 'Add Package'}
@@ -179,9 +179,10 @@ export default function SubscriptionPackagesPage() {
                 </div>
             )}
 
-            <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
+            {/* Desktop Table View */}
+            <div className="hidden xl:block bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm whitespace-nowrap">
+                    <table className="w-full text-sm whitespace-nowrap min-w-[700px]">
                         <thead className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
                             <tr className={isAr ? 'text-right' : 'text-left'}>
                                 <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'الباقة' : 'Package'}</th>
@@ -275,7 +276,7 @@ export default function SubscriptionPackagesPage() {
                                                     disabled={deletingId === pkg._id}
                                                     className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-black bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 disabled:opacity-50"
                                                 >
-                                                    <Trash2 size={14} />
+                                                    {deletingId === pkg._id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                                                 </button>
                                             </div>
                                         </td>
@@ -292,6 +293,119 @@ export default function SubscriptionPackagesPage() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* Mobile / Tablet Responsive Cards View */}
+            <div className="xl:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+                {packages.map(pkg => {
+                    const isActive = pkg.status === 'active';
+                    return (
+                        <div key={pkg._id} className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3.5">
+                            {/* Top Header: Icon + Name + Status */}
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-start gap-3 min-w-0">
+                                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black shrink-0 ${isActive ? 'bg-marine-cyan/10 text-marine-primary' : 'bg-zinc-100 text-zinc-400 dark:bg-white/5'}`}>
+                                        {pkg.is_free_trial ? <Gift size={20} /> : <CreditCard size={20} />}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <h3 className="font-black text-zinc-900 dark:text-white text-base leading-snug">{pkg.name}</h3>
+                                            {pkg.is_free_trial && (
+                                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">
+                                                    <Gift size={9} />
+                                                    {isAr ? 'تجريبي' : 'Trial'}
+                                                </span>
+                                            )}
+                                        </div>
+                                        {pkg.description && (
+                                            <p className="text-xs text-zinc-500 mt-0.5 line-clamp-2">{pkg.description}</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase shrink-0 ${isActive ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' : 'bg-zinc-100 text-zinc-500 dark:bg-white/5 dark:text-zinc-400'}`}>
+                                    {isActive ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
+                                    {isActive ? (isAr ? 'نشط' : 'Active') : (isAr ? 'غير نشط' : 'Inactive')}
+                                </span>
+                            </div>
+
+                            {/* Badges */}
+                            {(pkg.grants_vendors_page !== false || pkg.grants_home_slider === true) && (
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                    {pkg.grants_vendors_page !== false && (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400">
+                                            <Store size={10} />
+                                            {isAr ? 'الظهور في صفحة البائعين' : 'Vendors Page'}
+                                        </span>
+                                    )}
+                                    {pkg.grants_home_slider === true && (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400">
+                                            <Home size={10} />
+                                            {isAr ? 'سلايدر الرئيسية' : 'Home Slider'}
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Pricing & Products Limits Grid */}
+                            <div className="grid grid-cols-2 gap-2 text-xs bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                                <div>
+                                    <span className="block text-[10px] font-bold text-zinc-400 uppercase">{isAr ? 'السعر' : 'Price'}</span>
+                                    <span className="font-black text-sm text-zinc-900 dark:text-white">
+                                        {Number(pkg.price).toFixed(2)} {isAr ? 'ج.م' : 'EGP'}
+                                    </span>
+                                    <span className="text-[11px] text-zinc-500 block mt-0.5">
+                                        {pkg.billing_period === 'trial'
+                                            ? (isAr ? 'تجريبي' : 'Trial')
+                                            : pkg.billing_period === 'yearly'
+                                                ? (isAr ? 'سنوي' : 'Yearly')
+                                                : (isAr ? 'شهري' : 'Monthly')}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span className="block text-[10px] font-bold text-zinc-400 uppercase">{isAr ? 'حد المنتجات' : 'Products Limit'}</span>
+                                    <span className="font-black text-sm text-zinc-900 dark:text-white">
+                                        {pkg.max_products} {isAr ? 'منتج' : 'products'}
+                                    </span>
+                                    {pkg.is_free_trial && pkg.trial_days > 0 && (
+                                        <span className="text-[11px] text-emerald-600 font-bold block mt-0.5">
+                                            {pkg.trial_days} {isAr ? 'يوم تجربة' : 'trial days'}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Actions Row */}
+                            <div className="grid grid-cols-3 gap-2 pt-1 border-t border-zinc-100 dark:border-white/5">
+                                <button
+                                    onClick={() => openEdit(pkg)}
+                                    className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-black bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:bg-white/5 dark:text-zinc-300 transition-colors"
+                                >
+                                    <Pencil size={13} />
+                                    {isAr ? 'تعديل' : 'Edit'}
+                                </button>
+                                <button
+                                    onClick={() => toggleStatus(pkg)}
+                                    className={`inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-black transition-colors ${isActive ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-400' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400'}`}
+                                >
+                                    {isActive ? (isAr ? 'إلغاء' : 'Pause') : (isAr ? 'تفعيل' : 'Activate')}
+                                </button>
+                                <button
+                                    onClick={() => deletePackage(pkg)}
+                                    disabled={deletingId === pkg._id}
+                                    className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-black bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 transition-colors disabled:opacity-50"
+                                >
+                                    {deletingId === pkg._id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                                    {isAr ? 'حذف' : 'Delete'}
+                                </button>
+                            </div>
+                        </div>
+                    );
+                })}
+                {packages.length === 0 && (
+                    <div className="col-span-full bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 py-12 text-center">
+                        <p className="font-bold text-zinc-900 dark:text-white">{isAr ? 'لا توجد باقات بعد' : 'No packages yet'}</p>
+                    </div>
+                )}
             </div>
 
             {showModal && (

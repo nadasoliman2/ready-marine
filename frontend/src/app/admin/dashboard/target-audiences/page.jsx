@@ -222,7 +222,7 @@ export default function AdminTargetAudiencesPage() {
   }, [audiences]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-1 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -250,32 +250,142 @@ export default function AdminTargetAudiencesPage() {
         </button>
       </div>
 
-      {/* Stats Summary */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
+      {/* Stats Summary - Scrollable on mobile, grid on desktop */}
+      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto scrollbar-hide snap-x -mx-1 px-1 sm:mx-0 sm:px-0 pb-1">
+        <div className="w-[220px] sm:w-auto shrink-0 snap-start bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
           <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
             {isAr ? 'إجمالي المجموعات' : 'Total Audiences'}
           </p>
           <p className="text-2xl font-black text-gray-900 dark:text-white mt-1">{stats.total}</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
+        <div className="w-[220px] sm:w-auto shrink-0 snap-start bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
           <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
             {isAr ? 'مفعلة بسلايدر الهيرو' : 'Active in Hero Slider'}
           </p>
           <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">{stats.activeInSlider}</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
+        <div className="w-[220px] sm:w-auto shrink-0 snap-start bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
           <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
             {isAr ? 'بطاقات كبرى دوارة' : 'Large Rotating Cards'}
           </p>
           <p className="text-2xl font-black text-marine-cyan mt-1">{stats.largeCount}</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
+        <div className="w-[220px] sm:w-auto shrink-0 snap-start bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
           <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
             {isAr ? 'إجمالي ارتباطات المنتجات' : 'Linked Products'}
           </p>
           <p className="text-2xl font-black text-indigo-600 dark:text-indigo-400 mt-1">{stats.totalProducts}</p>
         </div>
+      </div>
+
+      {/* Hero Slider Cards Live Showcase (Horizontal Scroll) */}
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 sm:p-5 border border-gray-200/80 dark:border-zinc-800 shadow-sm space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <LayoutGrid className="w-5 h-5 text-marine-cyan" />
+            <div>
+              <h2 className="text-base font-bold text-gray-900 dark:text-white">
+                {isAr ? 'معاينة بطاقات سلايدر الهيرو الحالية' : 'Live Hero Slider Cards Showcase'}
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {isAr ? 'البطاقات النشطة التي تدور تلقائياً في واجهة الموقع (اسحب أفقياً للمعاينة)' : 'Active cards rotating automatically in the homepage hero (swipe horizontally)'}
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 shrink-0">
+            {stats.activeInSlider} {isAr ? 'بطاقة نشطة' : 'Active'}
+          </span>
+        </div>
+
+        {audiences.filter((a) => a.is_active && a.slider_active && a.card_position !== 'hidden').length === 0 ? (
+          <div className="py-8 text-center text-gray-400 bg-gray-50 dark:bg-gray-800/40 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+            <Sparkles className="w-8 h-8 mx-auto text-gray-300 dark:text-gray-600 mb-1" />
+            <p className="text-sm font-bold text-gray-600 dark:text-gray-400">
+              {isAr ? 'لا توجد بطاقات نشطة في سلايدر الهيرو حالياً' : 'No active cards in hero slider yet'}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {isAr ? 'فعّل خيار "في السلايدر" لأي مجموعة لتظهر هنا وفي واجهة المتجر' : 'Enable "In Slider" on any audience to preview it here and show it on home'}
+            </p>
+          </div>
+        ) : (
+          <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x py-2 pb-3 -mx-1 px-1">
+            {audiences
+              .filter((a) => a.is_active && a.slider_active && a.card_position !== 'hidden')
+              .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+              .map((item) => {
+                const posCfg = POSITION_CONFIG[item.card_position] || POSITION_CONFIG.large;
+                return (
+                  <div
+                    key={`slider-preview-${item._id}`}
+                    className="w-[280px] sm:w-[320px] h-[190px] shrink-0 snap-start rounded-2xl overflow-hidden relative shadow-md group border border-zinc-200 dark:border-zinc-700/80 bg-zinc-900 transition-all hover:shadow-lg flex flex-col justify-between p-4"
+                  >
+                    {/* Background Image & Overlay */}
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name_ar}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 via-zinc-900 to-black" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/30 pointer-events-none" />
+
+                    {/* Top Row: Position Tag & Badge & Quick Actions */}
+                    <div className="relative z-10 flex items-start justify-between gap-2">
+                      <div className="flex flex-wrap gap-1.5">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-white/90 text-zinc-900 shadow-sm backdrop-blur-xs">
+                          {isAr ? posCfg.labelAr : posCfg.labelEn}
+                        </span>
+                        {(item.badge_ar || item.badge_en) && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-marine-cyan text-white shadow-sm">
+                            {isAr ? item.badge_ar || item.badge_en : item.badge_en || item.badge_ar}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Quick Actions Hover/Touch */}
+                      <div className="flex items-center gap-1 bg-black/60 backdrop-blur-md rounded-lg p-1 border border-white/10">
+                        <button
+                          onClick={() => openEditModal(item)}
+                          className="p-1 text-white/80 hover:text-white hover:bg-white/20 rounded transition-colors"
+                          title={isAr ? 'تعديل' : 'Edit'}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => toggleStatus(item, 'slider_active')}
+                          className="p-1 text-emerald-400 hover:text-white hover:bg-white/20 rounded transition-colors"
+                          title={isAr ? 'إخفاء من السلايدر' : 'Hide from slider'}
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Bottom Info */}
+                    <div className="relative z-10 space-y-1">
+                      <h3 className="text-white font-black text-base sm:text-lg leading-tight line-clamp-1 drop-shadow-sm">
+                        {isAr ? item.name_ar : item.name_en}
+                      </h3>
+                      <p className="text-zinc-300 text-xs line-clamp-1">
+                        {isAr ? item.name_en : item.name_ar}
+                      </p>
+                      <div className="flex items-center justify-between pt-1 text-[11px] text-zinc-300">
+                        <span className="inline-flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                          <Package className="w-3 h-3 text-marine-cyan" />
+                          <span>{item.products_count ?? 0} {isAr ? 'منتج مرتبط' : 'products'}</span>
+                        </span>
+                        <span className="font-mono text-zinc-400 text-[10px]">
+                          #{item.sort_order ?? 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        )}
       </div>
 
       {/* Alerts */}
@@ -305,13 +415,13 @@ export default function AdminTargetAudiencesPage() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <span className="text-xs text-gray-500 font-bold">{isAr ? 'الموقع في الهيرو:' : 'Position:'}</span>
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1 w-full md:w-auto">
+          <span className="text-xs text-gray-500 font-bold shrink-0">{isAr ? 'الموقع في الهيرو:' : 'Position:'}</span>
           {['all', 'large', 'small_top', 'small_bottom', 'hidden'].map((pos) => (
             <button
               key={pos}
               onClick={() => { setPositionFilter(pos); setPage(1); }}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
                 positionFilter === pos
                   ? 'bg-marine-cyan text-white shadow-sm'
                   : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
@@ -341,140 +451,257 @@ export default function AdminTargetAudiencesPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-start text-sm">
-              <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 font-medium text-xs border-b border-gray-200 dark:border-gray-700">
-                <tr>
-                  <th className="py-3 px-4 text-start">{isAr ? 'المجموعة' : 'Audience'}</th>
-                  <th className="py-3 px-4 text-start">{isAr ? 'المعرّف والرابط' : 'Key / Slug'}</th>
-                  <th className="py-3 px-4 text-start">{isAr ? 'موقع البطاقة' : 'Card Position'}</th>
-                  <th className="py-3 px-4 text-center">{isAr ? 'المنتجات' : 'Products'}</th>
-                  <th className="py-3 px-4 text-center">{isAr ? 'الترتيب' : 'Order'}</th>
-                  <th className="py-3 px-4 text-center">{isAr ? 'في السلايدر' : 'Slider'}</th>
-                  <th className="py-3 px-4 text-center">{isAr ? 'الحالة' : 'Active'}</th>
-                  <th className="py-3 px-4 text-end">{isAr ? 'الإجراءات' : 'Actions'}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60">
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden xl:block overflow-x-auto">
+              <table className="w-full text-start text-sm">
+                <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 font-medium text-xs border-b border-gray-200 dark:border-gray-700">
+                  <tr>
+                    <th className="py-3 px-4 text-start">{isAr ? 'المجموعة' : 'Audience'}</th>
+                    <th className="py-3 px-4 text-start">{isAr ? 'المعرّف والرابط' : 'Key / Slug'}</th>
+                    <th className="py-3 px-4 text-start">{isAr ? 'موقع البطاقة' : 'Card Position'}</th>
+                    <th className="py-3 px-4 text-center">{isAr ? 'المنتجات' : 'Products'}</th>
+                    <th className="py-3 px-4 text-center">{isAr ? 'الترتيب' : 'Order'}</th>
+                    <th className="py-3 px-4 text-center">{isAr ? 'في السلايدر' : 'Slider'}</th>
+                    <th className="py-3 px-4 text-center">{isAr ? 'الحالة' : 'Active'}</th>
+                    <th className="py-3 px-4 text-end">{isAr ? 'الإجراءات' : 'Actions'}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60">
+                  {paginated.map((item) => {
+                    const posCfg = POSITION_CONFIG[item.card_position] || POSITION_CONFIG.large;
+                    return (
+                      <tr key={item._id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/30 transition-colors">
+                        {/* Name & Image & Badge */}
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 overflow-hidden shrink-0 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
+                              {item.image ? (
+                                <img src={item.image} alt={item.name_ar} className="w-full h-full object-cover" />
+                              ) : (
+                                <Sparkles className="w-5 h-5 text-gray-400" />
+                              )}
+                            </div>
+                            <div>
+                              <div className="font-semibold text-gray-900 dark:text-white">
+                                {isAr ? item.name_ar : item.name_en}
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">
+                                {isAr ? item.name_en : item.name_ar}
+                              </div>
+                              {(item.badge_ar || item.badge_en) && (
+                                <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] rounded bg-marine-50 text-marine-700 dark:bg-marine-950/60 dark:text-marine-300 font-medium">
+                                  {isAr ? item.badge_ar || item.badge_en : item.badge_en || item.badge_ar}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Key & Slug */}
+                        <td className="py-3 px-4">
+                          <div className="font-mono text-xs text-gray-700 dark:text-gray-300">{item.key}</div>
+                          <div className="text-[11px] text-gray-400">/hub/{item.slug}</div>
+                        </td>
+
+                        {/* Card Position */}
+                        <td className="py-3 px-4">
+                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${posCfg.badgeClass}`}>
+                            <span>{isAr ? posCfg.labelAr : posCfg.labelEn}</span>
+                          </span>
+                        </td>
+
+                        {/* Products Count */}
+                        <td className="py-3 px-4 text-center">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+                            <Package className="w-3 h-3 text-gray-400" />
+                            <span>{item.products_count ?? 0}</span>
+                          </span>
+                        </td>
+
+                        {/* Sort Order */}
+                        <td className="py-3 px-4 text-center font-mono text-xs text-gray-600 dark:text-gray-400">
+                          {item.sort_order ?? 0}
+                        </td>
+
+                        {/* Slider Active Toggle */}
+                        <td className="py-3 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => toggleStatus(item, 'slider_active')}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                              item.slider_active
+                                ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300'
+                                : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400'
+                            }`}
+                            title={isAr ? 'تبديل الظهور في السلايدر' : 'Toggle in Hero Slider'}
+                          >
+                            {item.slider_active ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                            <span>{item.slider_active ? (isAr ? 'ظاهر' : 'Shown') : (isAr ? 'معطل' : 'Off')}</span>
+                          </button>
+                        </td>
+
+                        {/* General Active Toggle */}
+                        <td className="py-3 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => toggleStatus(item, 'is_active')}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                              item.is_active
+                                ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-300'
+                                : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400'
+                            }`}
+                            title={isAr ? 'تبديل التفعيل العام' : 'Toggle active state'}
+                          >
+                            <span>{item.is_active ? (isAr ? 'نشط' : 'Active') : (isAr ? 'معطل' : 'Inactive')}</span>
+                          </button>
+                        </td>
+
+                        {/* Actions */}
+                        <td className="py-3 px-4 text-end">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => openEditModal(item)}
+                              className="p-1.5 text-gray-600 hover:text-marine-600 hover:bg-marine-50 dark:text-gray-400 dark:hover:text-marine-300 dark:hover:bg-gray-700 rounded-md transition-colors"
+                              title={isAr ? 'تعديل' : 'Edit'}
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(item)}
+                              disabled={deletingId === item._id}
+                              className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-gray-700 rounded-md transition-colors disabled:opacity-50"
+                              title={isAr ? 'حذف' : 'Delete'}
+                            >
+                              {deletingId === item._id ? (
+                                <Loader2 className="w-4 h-4 animate-spin text-red-600" />
+                              ) : (
+                                <Trash2 className="w-4 h-4" />
+                              )}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile / Tablet Responsive Cards View */}
+            <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {paginated.map((item) => {
                   const posCfg = POSITION_CONFIG[item.card_position] || POSITION_CONFIG.large;
                   return (
-                    <tr key={item._id} className="hover:bg-gray-50/80 dark:hover:bg-gray-700/30 transition-colors">
-                      {/* Name & Image & Badge */}
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 overflow-hidden shrink-0 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
+                    <div
+                      key={`audience-card-${item._id}`}
+                      className="bg-white dark:bg-zinc-800/80 rounded-2xl border border-gray-200/80 dark:border-zinc-700/60 p-4 shadow-sm space-y-3.5"
+                    >
+                      {/* Top Row: Image + Names + Position Badge */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3 min-w-0">
+                          <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 overflow-hidden shrink-0 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
                             {item.image ? (
                               <img src={item.image} alt={item.name_ar} className="w-full h-full object-cover" />
                             ) : (
                               <Sparkles className="w-5 h-5 text-gray-400" />
                             )}
                           </div>
-                          <div>
-                            <div className="font-semibold text-gray-900 dark:text-white">
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-gray-900 dark:text-white text-base leading-tight truncate">
                               {isAr ? item.name_ar : item.name_en}
-                            </div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                            </h3>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
                               {isAr ? item.name_en : item.name_ar}
-                            </div>
+                            </p>
                             {(item.badge_ar || item.badge_en) && (
-                              <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] rounded bg-marine-50 text-marine-700 dark:bg-marine-950/60 dark:text-marine-300 font-medium">
+                              <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] rounded-md bg-marine-50 text-marine-700 dark:bg-marine-950/60 dark:text-marine-300 font-bold border border-marine-200/60 dark:border-marine-800/40">
                                 {isAr ? item.badge_ar || item.badge_en : item.badge_en || item.badge_ar}
                               </span>
                             )}
                           </div>
                         </div>
-                      </td>
 
-                      {/* Key & Slug */}
-                      <td className="py-3 px-4">
-                        <div className="font-mono text-xs text-gray-700 dark:text-gray-300">{item.key}</div>
-                        <div className="text-[11px] text-gray-400">/hub/{item.slug}</div>
-                      </td>
-
-                      {/* Card Position */}
-                      <td className="py-3 px-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${posCfg.badgeClass}`}>
-                          <span>{isAr ? posCfg.labelAr : posCfg.labelEn}</span>
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border shrink-0 ${posCfg.badgeClass}`}>
+                          {isAr ? posCfg.labelAr : posCfg.labelEn}
                         </span>
-                      </td>
+                      </div>
 
-                      {/* Products Count */}
-                      <td className="py-3 px-4 text-center">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
-                          <Package className="w-3 h-3 text-gray-400" />
-                          <span>{item.products_count ?? 0}</span>
-                        </span>
-                      </td>
+                      {/* Info Details Box */}
+                      <div className="bg-gray-50/80 dark:bg-zinc-900/50 rounded-xl p-3 border border-gray-100 dark:border-zinc-800 text-xs space-y-2">
+                        <div className="flex items-center justify-between text-gray-600 dark:text-gray-400">
+                          <span className="font-mono text-[11px] truncate max-w-[150px]">/hub/{item.slug}</span>
+                          <span className="font-mono text-[11px] text-gray-400">#{item.key}</span>
+                        </div>
+                        <div className="flex items-center justify-between pt-1 border-t border-gray-200/50 dark:border-zinc-800 text-gray-700 dark:text-gray-300">
+                          <span className="inline-flex items-center gap-1.5 font-bold">
+                            <Package className="w-3.5 h-3.5 text-marine-cyan" />
+                            <span>{item.products_count ?? 0} {isAr ? 'منتج مرتبط' : 'products'}</span>
+                          </span>
+                          <span className="text-gray-500 text-[11px]">
+                            {isAr ? 'الترتيب:' : 'Order:'} <strong className="font-mono text-gray-800 dark:text-white">{item.sort_order ?? 0}</strong>
+                          </span>
+                        </div>
+                      </div>
 
-                      {/* Sort Order */}
-                      <td className="py-3 px-4 text-center font-mono text-xs text-gray-600 dark:text-gray-400">
-                        {item.sort_order ?? 0}
-                      </td>
-
-                      {/* Slider Active Toggle */}
-                      <td className="py-3 px-4 text-center">
+                      {/* Status Toggle Buttons */}
+                      <div className="grid grid-cols-2 gap-2 pt-1">
                         <button
                           type="button"
                           onClick={() => toggleStatus(item, 'slider_active')}
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                          className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold transition-colors ${
                             item.slider_active
-                              ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300'
-                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400'
+                              ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 dark:border-gray-700'
                           }`}
-                          title={isAr ? 'تبديل الظهور في السلايدر' : 'Toggle in Hero Slider'}
                         >
                           {item.slider_active ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                          <span>{item.slider_active ? (isAr ? 'ظاهر' : 'Shown') : (isAr ? 'معطل' : 'Off')}</span>
+                          <span>{item.slider_active ? (isAr ? 'بالسلايدر: ظاهر' : 'In Slider') : (isAr ? 'بالسلايدر: معطل' : 'Off Slider')}</span>
                         </button>
-                      </td>
 
-                      {/* General Active Toggle */}
-                      <td className="py-3 px-4 text-center">
                         <button
                           type="button"
                           onClick={() => toggleStatus(item, 'is_active')}
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                          className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold transition-colors ${
                             item.is_active
-                              ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-300'
-                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400'
+                              ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 dark:border-gray-700'
                           }`}
-                          title={isAr ? 'تبديل التفعيل العام' : 'Toggle active state'}
                         >
-                          <span>{item.is_active ? (isAr ? 'نشط' : 'Active') : (isAr ? 'معطل' : 'Inactive')}</span>
+                          <span className={`w-2 h-2 rounded-full ${item.is_active ? 'bg-blue-600 dark:bg-blue-400' : 'bg-gray-400'}`} />
+                          <span>{item.is_active ? (isAr ? 'الحالة: نشط' : 'Active') : (isAr ? 'الحالة: معطل' : 'Inactive')}</span>
                         </button>
-                      </td>
+                      </div>
 
-                      {/* Actions */}
-                      <td className="py-3 px-4 text-end">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => openEditModal(item)}
-                            className="p-1.5 text-gray-600 hover:text-marine-600 hover:bg-marine-50 dark:text-gray-400 dark:hover:text-marine-300 dark:hover:bg-gray-700 rounded-md transition-colors"
-                            title={isAr ? 'تعديل' : 'Edit'}
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(item)}
-                            disabled={deletingId === item._id}
-                            className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-gray-700 rounded-md transition-colors disabled:opacity-50"
-                            title={isAr ? 'حذف' : 'Delete'}
-                          >
-                            {deletingId === item._id ? (
-                              <Loader2 className="w-4 h-4 animate-spin text-red-600" />
-                            ) : (
-                              <Trash2 className="w-4 h-4" />
-                            )}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                      {/* Actions Grid */}
+                      <div className="grid grid-cols-2 gap-2 pt-1 border-t border-gray-100 dark:border-zinc-800">
+                        <button
+                          onClick={() => openEditModal(item)}
+                          className="inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-gray-800 dark:text-gray-200 rounded-xl text-xs font-bold transition-colors"
+                        >
+                          <Pencil className="w-3.5 h-3.5 text-marine-cyan" />
+                          <span>{isAr ? 'تعديل' : 'Edit'}</span>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item)}
+                          disabled={deletingId === item._id}
+                          className="inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-xl text-xs font-bold transition-colors disabled:opacity-50"
+                        >
+                          {deletingId === item._id ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-3.5 h-3.5" />
+                          )}
+                          <span>{isAr ? 'حذف' : 'Delete'}</span>
+                        </button>
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </div>
+          </>
         )}
 
         {/* Pagination */}

@@ -147,8 +147,8 @@ export default function AdminAdRequestsPage() {
         ) : (
           <div className="divide-y divide-zinc-100 dark:divide-white/5">
             {ads.map((ad) => (
-              <div key={ad._id} className="flex items-center gap-4 px-5 py-4 hover:bg-zinc-50 dark:hover:bg-white/[0.01]">
-                <div className="w-28 h-16 rounded-lg overflow-hidden bg-zinc-100 dark:bg-white/5 flex-shrink-0 flex items-center justify-center text-zinc-300">
+              <div key={ad._id} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 sm:px-5 sm:py-4 hover:bg-zinc-50 dark:hover:bg-white/[0.01] transition-colors">
+                <div className="w-full sm:w-28 h-28 sm:h-16 rounded-xl overflow-hidden bg-zinc-100 dark:bg-white/5 flex-shrink-0 flex items-center justify-center text-zinc-300">
                   {ad.banner_image ? <img src={resolveAssetUrl(ad.banner_image)} alt="" className="w-full h-full object-cover" /> : <Megaphone size={20} />}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -169,7 +169,7 @@ export default function AdminAdRequestsPage() {
                     </p>
                   )}
                 </div>
-                <button onClick={() => openDetail(ad)} className="text-xs font-bold text-marine-primary hover:underline flex-shrink-0">
+                <button onClick={() => openDetail(ad)} className="w-full sm:w-auto text-center px-4 py-2 sm:p-0 rounded-xl sm:rounded-none bg-zinc-100 sm:bg-transparent dark:bg-white/5 sm:dark:bg-transparent text-xs font-bold text-marine-primary hover:underline flex-shrink-0 transition-colors">
                   {isAr ? 'التفاصيل' : 'Details'}
                 </button>
               </div>
@@ -190,118 +190,129 @@ export default function AdminAdRequestsPage() {
 
       {/* Detail / action modal */}
       {selected && (
-        <Overlay className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto" onClick={() => setSelected(null)}>
-          <div className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-xl my-8" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-lg text-zinc-900 dark:text-white">{selected.ad_number}</h3>
-              <button onClick={() => setSelected(null)} className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white"><X size={20} /></button>
+        <Overlay className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-2 sm:p-6 overflow-hidden" onClick={() => setSelected(null)}>
+          <div className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/10 rounded-2xl w-full max-w-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden my-auto" onClick={(e) => e.stopPropagation()}>
+            {/* Pinned Modal Header */}
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-zinc-100 dark:border-white/5 shrink-0 bg-white dark:bg-[#09090b]">
+              <div className="flex items-center gap-2.5">
+                <h3 className="font-bold text-base sm:text-lg text-zinc-900 dark:text-white">{selected.ad_number}</h3>
+                <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-bold ${STATUS_COLORS[selected.status] || ''}`}>
+                  {isAr ? STATUS_LABELS[selected.status]?.ar : STATUS_LABELS[selected.status]?.en}
+                </span>
+              </div>
+              <button onClick={() => setSelected(null)} className="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors">
+                <X size={20} />
+              </button>
             </div>
 
-            {selected.banner_image && (
-              <div className="w-full h-40 rounded-xl overflow-hidden bg-zinc-100 dark:bg-white/5 mb-4">
-                <img src={resolveAssetUrl(selected.banner_image)} alt="" className="w-full h-full object-contain" />
-              </div>
-            )}
-
-            <div className="space-y-2 text-sm mb-5">
-              <Row label={isAr ? 'النوع' : 'Type'} value={typeText(selected, isAr)} />
-              <Row label={isAr ? 'البائع' : 'Vendor'} value={selected.vendor_id?.store_name || selected.vendor_id?.name} />
-              <Row label={isAr ? 'الحالة' : 'Status'} value={isAr ? STATUS_LABELS[selected.status]?.ar : STATUS_LABELS[selected.status]?.en} />
-
-              {selected.type === 'banner' && (
-                <>
-                  <Row label={isAr ? 'يُعلن عن' : 'Advertises'} value={selected.subject_type} />
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-zinc-400 text-xs font-bold uppercase tracking-wider">{isAr ? 'الرابط' : 'Link'}</span>
-                    <a href={selected.link_url} target="_blank" rel="noreferrer" className="text-marine-primary font-medium text-end inline-flex items-center gap-1 truncate max-w-[60%]">
-                      <span className="truncate">{selected.link_url}</span><ExternalLink size={13} />
-                    </a>
-                  </div>
-                </>
-              )}
-              {selected.type === 'product_visibility' && (
-                <>
-                  <Row label={isAr ? 'المنتج' : 'Product'} value={selected.product_id?.title || selected.product_id?.title_en || selected.product_id?._id} />
-                  <Row label={isAr ? 'الأماكن' : 'Placements'} value={placementText(selected.placements, isAr)} />
-                </>
-              )}
-              {selected.type === 'featured_vendor' && (
-                <Row label={isAr ? 'الأماكن' : 'Placements'} value={placementText(selected.vendor_placements, isAr)} />
+            {/* Scrollable Modal Content */}
+            <div className="p-4 sm:p-6 overflow-y-auto flex-1 overscroll-contain space-y-5" style={{ WebkitOverflowScrolling: 'touch' }}>
+              {selected.banner_image && (
+                <div className="w-full h-36 sm:h-44 rounded-xl overflow-hidden bg-zinc-100 dark:bg-white/5 border border-zinc-200/60 dark:border-white/5">
+                  <img src={resolveAssetUrl(selected.banner_image)} alt="" className="w-full h-full object-contain" />
+                </div>
               )}
 
-              {selected.vendor_note && <Row label={isAr ? 'ملاحظة' : 'Note'} value={selected.vendor_note} />}
-              {selected.status === 'approved' && <Row label={isAr ? 'الفترة' : 'Window'} value={`${fmtDate(selected.start_date)} → ${fmtDate(selected.end_date)}`} />}
-              {selected.rejection_reason && <Row label={isAr ? 'سبب الرفض' : 'Rejection Reason'} value={selected.rejection_reason} />}
-            </div>
+              <div className="space-y-2.5 text-sm bg-zinc-50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5 rounded-xl p-4">
+                <Row label={isAr ? 'النوع' : 'Type'} value={typeText(selected, isAr)} />
+                <Row label={isAr ? 'البائع' : 'Vendor'} value={selected.vendor_id?.store_name || selected.vendor_id?.name} />
+                <Row label={isAr ? 'الحالة' : 'Status'} value={isAr ? STATUS_LABELS[selected.status]?.ar : STATUS_LABELS[selected.status]?.en} />
 
-            {(selected.status === 'approved' || selected.status === 'expired' || selected.stats?.impressions > 0) && (
-              <div className="mb-5">
-                <h4 className="flex items-center gap-2 text-sm font-black text-zinc-900 dark:text-white uppercase tracking-wide mb-3">
-                  <BarChart3 size={15} className="text-marine-primary" /> {isAr ? 'أداء الإعلان' : 'Ad performance'}
-                </h4>
-                <AdAnalyticsPanel load={loadAnalytics} isAr={isAr} compact />
-              </div>
-            )}
-
-            {error && <p className="text-sm text-red-500 mb-3">{error}</p>}
-
-            {mode === 'approve' ? (
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 mb-1.5">{isAr ? 'تاريخ البدء' : 'Start date'}</label>
-                    <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-transparent text-zinc-900 dark:text-white text-sm" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 mb-1.5">{isAr ? 'تاريخ الانتهاء' : 'End date'}</label>
-                    <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-transparent text-zinc-900 dark:text-white text-sm" />
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button disabled={busy} onClick={() => approve(selected)}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 disabled:opacity-50">
-                    {busy ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />} {isAr ? 'تأكيد النشر' : 'Confirm & Publish'}
-                  </button>
-                  <button onClick={() => setMode(null)} className="px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 text-sm font-bold text-zinc-600 dark:text-zinc-300">{isAr ? 'إلغاء' : 'Cancel'}</button>
-                </div>
-              </div>
-            ) : mode === 'reject' ? (
-              <div className="space-y-3">
-                <input type="text" value={reason} onChange={(e) => setReason(e.target.value)}
-                  placeholder={isAr ? 'سبب الرفض' : 'Rejection reason'}
-                  className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-transparent text-zinc-900 dark:text-white text-sm" />
-                <div className="flex gap-2">
-                  <button disabled={busy} onClick={() => reject(selected)}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-marine-cyan text-white text-sm font-bold hover:bg-marine-cyan-dark disabled:opacity-50">
-                    {busy ? <Loader2 size={16} className="animate-spin" /> : null} {isAr ? 'تأكيد الرفض' : 'Confirm Reject'}
-                  </button>
-                  <button onClick={() => setMode(null)} className="px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 text-sm font-bold text-zinc-600 dark:text-zinc-300">{isAr ? 'إلغاء' : 'Cancel'}</button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {selected.status === 'pending' && (
+                {selected.type === 'banner' && (
                   <>
-                    <button onClick={() => setMode('approve')}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700">
-                      <Check size={16} /> {isAr ? 'موافقة ونشر' : 'Approve'}
-                    </button>
-                    <button onClick={() => setMode('reject')}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm font-bold hover:bg-red-50 dark:hover:bg-red-500/10">
-                      <Ban size={16} /> {isAr ? 'رفض' : 'Reject'}
-                    </button>
+                    <Row label={isAr ? 'يُعلن عن' : 'Advertises'} value={selected.subject_type} />
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-zinc-400 text-xs font-bold uppercase tracking-wider">{isAr ? 'الرابط' : 'Link'}</span>
+                      <a href={selected.link_url} target="_blank" rel="noreferrer" className="text-marine-primary font-medium text-end inline-flex items-center gap-1 truncate max-w-[60%] hover:underline">
+                        <span className="truncate">{selected.link_url}</span><ExternalLink size={13} />
+                      </a>
+                    </div>
                   </>
                 )}
-                {selected.status === 'approved' && (
-                  <button disabled={busy} onClick={() => takedown(selected)}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-700 text-white text-sm font-bold hover:bg-zinc-800 disabled:opacity-50">
-                    <PowerOff size={16} /> {isAr ? 'إيقاف الإعلان' : 'Take down'}
-                  </button>
+                {selected.type === 'product_visibility' && (
+                  <>
+                    <Row label={isAr ? 'المنتج' : 'Product'} value={selected.product_id?.title || selected.product_id?.title_en || selected.product_id?._id} />
+                    <Row label={isAr ? 'الأماكن' : 'Placements'} value={placementText(selected.placements, isAr)} />
+                  </>
                 )}
+                {selected.type === 'featured_vendor' && (
+                  <Row label={isAr ? 'الأماكن' : 'Placements'} value={placementText(selected.vendor_placements, isAr)} />
+                )}
+
+                {selected.vendor_note && <Row label={isAr ? 'ملاحظة' : 'Note'} value={selected.vendor_note} />}
+                {selected.status === 'approved' && <Row label={isAr ? 'الفترة' : 'Window'} value={`${fmtDate(selected.start_date)} → ${fmtDate(selected.end_date)}`} />}
+                {selected.rejection_reason && <Row label={isAr ? 'سبب الرفض' : 'Rejection Reason'} value={selected.rejection_reason} />}
               </div>
-            )}
+
+              {(selected.status === 'approved' || selected.status === 'expired' || selected.stats?.impressions > 0) && (
+                <div className="pt-2 border-t border-zinc-100 dark:border-white/5">
+                  <h4 className="flex items-center gap-2 text-sm font-black text-zinc-900 dark:text-white uppercase tracking-wide mb-3">
+                    <BarChart3 size={15} className="text-marine-primary" /> {isAr ? 'أداء الإعلان' : 'Ad performance'}
+                  </h4>
+                  <AdAnalyticsPanel load={loadAnalytics} isAr={isAr} compact />
+                </div>
+              )}
+
+              {error && <p className="text-sm text-red-500">{error}</p>}
+
+              {mode === 'approve' ? (
+                <div className="space-y-3 pt-3 border-t border-zinc-100 dark:border-white/5">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold text-zinc-500 mb-1.5">{isAr ? 'تاريخ البدء' : 'Start date'}</label>
+                      <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-transparent text-zinc-900 dark:text-white text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-zinc-500 mb-1.5">{isAr ? 'تاريخ الانتهاء' : 'End date'}</label>
+                      <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-transparent text-zinc-900 dark:text-white text-sm" />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button disabled={busy} onClick={() => approve(selected)}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 disabled:opacity-50">
+                      {busy ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />} {isAr ? 'تأكيد النشر' : 'Confirm & Publish'}
+                    </button>
+                    <button onClick={() => setMode(null)} className="px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 text-sm font-bold text-zinc-600 dark:text-zinc-300">{isAr ? 'إلغاء' : 'Cancel'}</button>
+                  </div>
+                </div>
+              ) : mode === 'reject' ? (
+                <div className="space-y-3 pt-3 border-t border-zinc-100 dark:border-white/5">
+                  <input type="text" value={reason} onChange={(e) => setReason(e.target.value)}
+                    placeholder={isAr ? 'سبب الرفض' : 'Rejection reason'}
+                    className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-transparent text-zinc-900 dark:text-white text-sm" />
+                  <div className="flex gap-2">
+                    <button disabled={busy} onClick={() => reject(selected)}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-marine-cyan text-white text-sm font-bold hover:bg-marine-cyan-dark disabled:opacity-50">
+                      {busy ? <Loader2 size={16} className="animate-spin" /> : null} {isAr ? 'تأكيد الرفض' : 'Confirm Reject'}
+                    </button>
+                    <button onClick={() => setMode(null)} className="px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 text-sm font-bold text-zinc-600 dark:text-zinc-300">{isAr ? 'إلغاء' : 'Cancel'}</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2 pt-3 border-t border-zinc-100 dark:border-white/5">
+                  {selected.status === 'pending' && (
+                    <>
+                      <button onClick={() => setMode('approve')}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700">
+                        <Check size={16} /> {isAr ? 'موافقة ونشر' : 'Approve'}
+                      </button>
+                      <button onClick={() => setMode('reject')}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm font-bold hover:bg-red-50 dark:hover:bg-red-500/10">
+                        <Ban size={16} /> {isAr ? 'رفض' : 'Reject'}
+                      </button>
+                    </>
+                  )}
+                  {selected.status === 'approved' && (
+                    <button disabled={busy} onClick={() => takedown(selected)}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-700 text-white text-sm font-bold hover:bg-zinc-800 disabled:opacity-50">
+                      <PowerOff size={16} /> {isAr ? 'إيقاف الإعلان' : 'Take down'}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </Overlay>
       )}

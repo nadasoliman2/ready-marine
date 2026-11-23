@@ -84,19 +84,15 @@ const catalogEntrySchema = new Schema(
             index: true,
         },
 
-        // Either a hand-entered brand (`Brand`) or a car make (`CarBrand`): a Toyota part is
-        // branded Toyota without anyone typing Toyota a second time. Which collection the id
-        // lives in is `product_brand_source`, stamped automatically on every write — see
-        // services/shared/brandRef.js.
+        // Product Brand reference directly to the single Brand model (product_brands.js)
         product_brand_id: {
             type: Schema.Types.ObjectId,
-            refPath: "product_brand_source",
+            ref: "Brand",
             default: null,
             index: true,
         },
         product_brand_source: {
             type: String,
-            enum: ["Brand", "CarBrand"],
             default: "Brand",
         },
 
@@ -107,7 +103,7 @@ const catalogEntrySchema = new Schema(
         images: [imageSchema],
 
         is_universal: { type: Boolean, default: true },
-        compatible_cars: [compatibleCarSchema],
+        compatible_vessels: [compatibleCarSchema],
 
         // The shape of the variations (Size → S/M/L), never their price or stock:
         // those belong to the vendor's copy.
@@ -149,7 +145,7 @@ catalogEntrySchema.pre('validate', function (next) {
         this.invalidate('title_en', 'A catalog entry must have a title in English or Arabic.');
     }
     // Universal and specific compatibility are mutually exclusive, same as products.
-    if (this.is_universal) this.compatible_cars = [];
+    if (this.is_universal) this.compatible_vessels = [];
     this.updated_at = new Date();
     if (typeof next === 'function') next();
 });
@@ -166,7 +162,7 @@ catalogEntrySchema.index({
 // The default list ordering: newest first within a status tab.
 catalogEntrySchema.index({ status: 1, created_at: -1 });
 
-require("../services/shared/brandRef").attachBrandSourceHooks(catalogEntrySchema);
+require('../common/shared/brandRef').attachBrandSourceHooks(catalogEntrySchema);
 
 const CatalogEntry = mongoose.model("CatalogEntry", catalogEntrySchema);
 

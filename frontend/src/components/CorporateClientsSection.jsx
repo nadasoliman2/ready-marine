@@ -16,7 +16,7 @@ export default function CorporateClientsSection() {
 
   useEffect(() => {
     let alive = true;
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/corporate-clients`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/corporate-clients`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => { if (alive) setClients(data?.clients || []); })
       .catch(() => {});

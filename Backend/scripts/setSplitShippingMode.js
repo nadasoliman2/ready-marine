@@ -105,7 +105,7 @@ const money = (n) => Number(n || 0).toFixed(2);
     // The engine memoises settings for 5 seconds and caches quotes for longer, so a running
     // server would otherwise keep quoting the old mode until both expire.
     try {
-        require('../services/shippingEngine').invalidateShippingCache();
+        require('../modules/shipping/shipping.engine').invalidateShippingCache();
     } catch (_) { /* not loaded in this process — a running server clears its own on next save */ }
 
     console.log(`\nDone — shipping is now priced "${TARGET}".`);

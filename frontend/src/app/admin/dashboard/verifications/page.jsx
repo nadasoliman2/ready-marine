@@ -119,7 +119,7 @@ export default function AdminVerificationsPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard icon={UserCheck} label={isAr ? 'المعلق' : 'Pending'} value={stats.total} />
         <StatCard icon={User} label={isAr ? 'مستخدمون' : 'Users'} value={stats.users} />
         <StatCard icon={Store} label={isAr ? 'تجار' : 'Vendors'} value={stats.vendors} />
@@ -152,8 +152,9 @@ export default function AdminVerificationsPage() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm whitespace-nowrap">
+        {/* Desktop Table View */}
+        <div className="hidden xl:block overflow-x-auto">
+          <table className="w-full text-sm whitespace-nowrap min-w-[700px]">
             <thead className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
               <tr className={isAr ? 'text-right' : 'text-left'}>
                 <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'الحساب' : 'Account'}</th>
@@ -208,6 +209,55 @@ export default function AdminVerificationsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile / Tablet Responsive Cards View */}
+        <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filtered.map((item) => (
+              <div key={item._id} className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${item.role === 'vendor' ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400' : 'bg-red-50 text-marine-primary dark:bg-marine-cyan/10'}`}>
+                      {item.role === 'vendor' ? <Store size={20} /> : <User size={20} />}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-black text-zinc-900 dark:text-white truncate">{accountLabel(item)}</p>
+                      <p className="text-xs font-bold text-zinc-500">{roleLabel(item.role, isAr)}</p>
+                    </div>
+                  </div>
+                  <StatusBadge expired={item.expired} isAr={isAr} />
+                </div>
+
+                <div className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                  <p className="flex items-center gap-2 truncate">
+                    <Mail size={13} className="text-zinc-400 shrink-0" />
+                    <span className="truncate">{item.email}</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <Phone size={13} className="text-zinc-400 shrink-0" />
+                    <span dir="ltr">{item.phone}</span>
+                  </p>
+                  {item.store_username && (
+                    <p className="text-[11px] text-zinc-400">@{item.store_username}</p>
+                  )}
+                  <p className="text-[10px] text-zinc-400 pt-1">
+                    {isAr ? 'ينتهي:' : 'Expires:'} {formatDate(item.expires_at, true)}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => verifyAccount(item)}
+                  disabled={verifyingId === item._id}
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-black bg-marine-cyan text-white hover:bg-marine-cyan-dark transition-colors disabled:opacity-60"
+                >
+                  {verifyingId === item._id ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+                  {isAr ? 'تأكيد الحساب' : 'Verify Account'}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {!loading && filtered.length === 0 && (

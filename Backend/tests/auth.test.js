@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
 const { startMongo } = require('./support/testServers');
-const authService = require('../services/authService');
+const authService = require('../modules/auth/auth.service');
 const { User } = require('../models/users');
 
 describe('Authentication & Account Security', () => {

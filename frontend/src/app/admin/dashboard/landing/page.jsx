@@ -90,7 +90,7 @@ function BrandingUploader({ type, currentUrl, onUploaded, isAr, label: customLab
     fd.append('file', file);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/admin/upload/branding?type=${type}`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/admin/upload/branding?type=${type}`,
         { method: 'POST', body: fd, credentials: 'include' }
       );
       const data = await res.json();
@@ -236,7 +236,7 @@ export default function LandingControl() {
     };
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/admin/settings`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/admin/settings`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

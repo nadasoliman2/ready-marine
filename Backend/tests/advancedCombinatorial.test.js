@@ -16,15 +16,15 @@ const { WalletTransaction } = require('../models/walletTransactions');
 const { OrderPayment } = require('../models/orderPayments');
 
 // Services
-const orderService = require('../services/orderService');
-const walletService = require('../services/walletService');
-const couponService = require('../services/couponService');
-const codService = require('../services/codEligibilityService');
-const sessionService = require('../services/sessionService');
-const authService = require('../services/authService');
-const adminAccessService = require('../services/adminAccessService');
-const orderPaymentService = require('../services/orderPaymentService');
-const shippingRules = require('../services/shippingRules');
+const orderService = require('../modules/order/order.service');
+const walletService = require('../modules/wallet/wallet.service');
+const couponService = require('../modules/coupon/coupon.service');
+const codService = require('../modules/order/cod_eligibility.service');
+const sessionService = require('../common/services/sessionService');
+const authService = require('../modules/auth/auth.service');
+const adminAccessService = require('../modules/admin/admin_access.service');
+const orderPaymentService = require('../modules/order/order_payment.service');
+const shippingRules = require('../modules/shipping/shipping_rules.service');
 
 describe('Advanced Multiple Edge Cases & Combinatorial Backend Testing', () => {
     let mongo;
@@ -204,11 +204,12 @@ describe('Advanced Multiple Edge Cases & Combinatorial Backend Testing', () => {
             activeCoupon = await Coupon.create({
                 code: 'PAIR_PERCENT_15',
                 name: '15% Off Marine',
-                discount_type: 'percent',
+                discount_type: 'percentage',
                 discount_value: 15,
                 scope_type: 'all_products',
                 min_order_amount: 100,
                 is_active: true,
+                end_date: new Date(Date.now() + 864000000),
             });
 
             expiredCoupon = await Coupon.create({
@@ -219,7 +220,7 @@ describe('Advanced Multiple Edge Cases & Combinatorial Backend Testing', () => {
                 scope_type: 'all_products',
                 min_order_amount: 50,
                 is_active: true,
-                expires_at: new Date(Date.now() - 86400000),
+                end_date: new Date(Date.now() - 86400000),
             });
 
             minSpendCoupon = await Coupon.create({
@@ -230,6 +231,7 @@ describe('Advanced Multiple Edge Cases & Combinatorial Backend Testing', () => {
                 scope_type: 'all_products',
                 min_order_amount: 2500,
                 is_active: true,
+                end_date: new Date(Date.now() + 864000000),
             });
         });
 
@@ -600,6 +602,7 @@ describe('Advanced Multiple Edge Cases & Combinatorial Backend Testing', () => {
                 scope_type: 'all_products',
                 min_order_amount: 100,
                 is_active: true,
+                end_date: new Date(Date.now() + 864000000),
             });
 
             const consumptions = Array.from({ length: 5 }).map(() =>

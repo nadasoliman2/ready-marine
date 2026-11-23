@@ -9,7 +9,7 @@
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const mongoose = require('mongoose');
-const { syncCatalog } = require('../services/everysecond');
+const { syncCatalog } = require('../modules/admin/everysecond');
 
 (async () => {
     if (!process.env.EVERYSECOND_API_KEY) {

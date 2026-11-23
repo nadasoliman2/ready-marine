@@ -52,7 +52,7 @@ const confirmed = flag === '--confirm';
     console.log(`\nBackup written: ${backupFile}`);
 
     await CompanyInvoice.deleteOne({ _id: inv._id });
-    const invoices = require('../services/companyInvoiceService');
+    const invoices = require('../modules/company/company_invoice.service');
     const res = await invoices.issueInvoice(inv.company_id, inv.month, { now: new Date() });
 
     const after = await CompanyLedgerEntry.find({ company_id: inv.company_id }).select('month deferred_from order_reference amount').lean();
@@ -67,7 +67,7 @@ const confirmed = flag === '--confirm';
         target_snapshot: { number: inv.number, month: inv.month, amount_due: inv.amount_due, reason: 'Issued for orders not delivered yet' },
     }).catch((err) => console.log(`Audit log failed: ${err.message}`));
 
-    const { notifyManagers } = require('../services/companyService');
+    const { notifyManagers } = require('../modules/company/company.service');
     await notifyManagers(inv.company_id, 'company_invoice_withdrawn', {
         title_en: `Invoice ${inv.number} was withdrawn`,
         title_ar: `فاتورة ${inv.number} اتسحبت`,

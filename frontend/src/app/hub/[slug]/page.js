@@ -64,7 +64,7 @@ function HubDetailContent({ slug }) {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/filters`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/filters`);
         if (res.ok) setMetadata(await res.json());
       } catch (err) {
         console.error('Failed to fetch filters:', err);

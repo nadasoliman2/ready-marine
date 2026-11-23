@@ -45,7 +45,7 @@ before(async () => {
     await mongoose.connect(mongo.uri);
     ({ User } = require('../models/users'));
     ({ Session } = require('../models/sessions'));
-    sessions = require('../services/sessionService');
+    sessions = require('../common/services/sessionService');
     ({ protect } = require('../middleware/authMiddleware'));
 });
 

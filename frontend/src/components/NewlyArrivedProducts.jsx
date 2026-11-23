@@ -16,7 +16,7 @@ export default function NewlyArrivedProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/products/landing/new-arrivals?limit=8`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/products/landing/new-arrivals?limit=8`);
         const data = await res.json();
         setProducts(data.products || []);
       } catch (error) {

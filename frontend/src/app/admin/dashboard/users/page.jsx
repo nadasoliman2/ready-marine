@@ -1,25 +1,35 @@
 'use client';
 
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { useRouter } from '../../../../lib/navigation';
+import { useRouter, useSearchParams } from '../../../../lib/navigation';
 import { Calendar, Eye, Hash, Loader2, Mail, MapPin, Phone, Search, User, Users } from 'lucide-react';
 import { adminApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import PaginationControls from '../../../../components/dashboard/PaginationControls';
 import usePageSize from '../../../../lib/usePageSize';
 import useRowLink from '../../../../lib/useRowLink';
+import UserAvatar from '../../../../components/UserAvatar';
 
 
 export default function AdminUsersPage() {
   const rowLink = useRowLink();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get('search') || searchParams.get('q');
   const { language } = useApp();
   const isAr = language === 'ar';
   
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState(urlSearch || '');
+  const [searchInput, setSearchInput] = useState(urlSearch || '');
+
+  useEffect(() => {
+    if (urlSearch !== null && urlSearch !== undefined) {
+      setSearch(urlSearch);
+      setSearchInput(urlSearch);
+    }
+  }, [urlSearch]);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = usePageSize('admin.users', 10);
@@ -121,8 +131,9 @@ export default function AdminUsersPage() {
           </form>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm whitespace-nowrap">
+        {/* Desktop Table */}
+        <div className="hidden xl:block overflow-x-auto">
+          <table className="w-full text-sm whitespace-nowrap min-w-[650px]">
             <thead className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
               <tr className={isAr ? 'text-right' : 'text-left'}>
                 <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'المستخدم' : 'User'}</th>
@@ -136,9 +147,13 @@ export default function AdminUsersPage() {
                 <tr key={user._id} {...rowLink(`/admin/dashboard/users/${user._id}`)} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black bg-marine-cyan/10 text-marine-primary dark:bg-marine-cyan/10">
-                        {(user.name || 'U').charAt(0).toUpperCase()}
-                      </div>
+                      <UserAvatar
+                        src={user.profile_image || user.image || user.avatar}
+                        name={user.name}
+                        fallback="initials"
+                        className="w-11 h-11 rounded-xl bg-marine-cyan/10 text-marine-primary font-black border border-zinc-200/60 dark:border-white/10"
+                        fallbackClassName="text-base font-black text-marine-primary"
+                      />
                       <div>
                         <p className="font-black text-zinc-900 dark:text-white">{user.name}</p>
                       </div>
@@ -166,6 +181,48 @@ export default function AdminUsersPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile / Tablet Responsive Cards */}
+        <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {users.map(user => (
+              <div key={user._id} className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <UserAvatar
+                      src={user.profile_image || user.image || user.avatar}
+                      name={user.name}
+                      fallback="initials"
+                      className="w-11 h-11 rounded-xl bg-marine-cyan/10 text-marine-primary font-black border border-zinc-200/60 dark:border-white/10 shrink-0"
+                      fallbackClassName="text-base font-black text-marine-primary"
+                    />
+                    <div className="min-w-0">
+                      <p className="font-black text-zinc-900 dark:text-white truncate">{user.name}</p>
+                      <p className="text-xs text-zinc-400">{formatDate(user.created_at)}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => router.push(`/admin/dashboard/users/${user._id}`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black bg-marine-cyan/10 text-marine-primary hover:bg-marine-cyan/20 shrink-0"
+                  >
+                    <Eye size={13} />
+                    {isAr ? 'عرض' : 'View'}
+                  </button>
+                </div>
+                <div className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 bg-zinc-50/60 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                  <p className="flex items-center gap-2 truncate">
+                    <Mail size={13} className="text-zinc-400 shrink-0" />
+                    <span className="truncate">{user.email}</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <Phone size={13} className="text-zinc-400 shrink-0" />
+                    <span dir="ltr">{user.phone}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {users.length > 0 && (

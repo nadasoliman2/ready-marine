@@ -20,7 +20,7 @@ export default function ImageUploader({ images = [], onChange }) {
       files.forEach(file => formData.append('images', file));
 
       const token = localStorage.getItem('token');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/upload`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -36,8 +36,8 @@ const { Seller } = require('../models/sellers');
 const { VendorEarning } = require('../models/vendorEarnings');
 const { ReturnRequest } = require('../models/returnRequests');
 const { Refund } = require('../models/refunds');
-const subOrderService = require('../services/subOrderService');
-const { mapBostaStateToOrderStatus } = require('../services/bostaStatusMap');
+const subOrderService = require('../modules/order/sub_order.service');
+const { mapBostaStateToOrderStatus } = require('../modules/shipping/bosta_status_map');
 
 const APPLY = process.argv.includes('--apply');
 const limitArg = process.argv.indexOf('--limit');

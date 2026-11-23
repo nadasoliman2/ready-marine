@@ -8,7 +8,7 @@
  * It never prints a key — only its last four characters — and changes nothing.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const { unsafeReason, isLocalDatabase } = require('../services/everysecond/client');
+const { unsafeReason, isLocalDatabase } = require('../modules/admin/everysecond/client');
 
 const key = (process.env.EVERYSECOND_API_KEY || '').trim();
 const base = (process.env.EVERYSECOND_BASE_URL || 'https://everysecond.ai/api/v1').replace(/\/+$/, '');

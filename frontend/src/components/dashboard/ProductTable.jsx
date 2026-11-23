@@ -336,7 +336,8 @@ export default function ProductTable({
         <ColumnsMenu columns={columns} isAr={isAr} />
       </div>
       <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden flex flex-col">
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden xl:block overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
               <tr className={isAr ? 'text-right' : 'text-left'}>
@@ -557,6 +558,111 @@ export default function ProductTable({
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile / Tablet Responsive Cards View */}
+        <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {products.map((product) => {
+              const isPublished = product.status === 'published';
+              const isPending = product.status === 'pending';
+              const isToggling = togglingId === product._id;
+              const finalPrice = product.discount_price ?? product.price;
+              const name = isAr ? (product.title_ar || product.title_en) : product.title_en;
+
+              return (
+                <div
+                  key={product._id}
+                  {...rowLink(`${reviewBasePath}/${product._id}`)}
+                  className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3.5 cursor-pointer hover:border-marine-cyan/40 transition-all"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-16 h-16 rounded-xl bg-zinc-100 dark:bg-[#0E1012] border border-zinc-200 dark:border-white/5 overflow-hidden flex-shrink-0 shadow-sm">
+                      {product.images?.[0]?.url ? (
+                        <img src={thumbUrl(product.images[0].url, 200)} alt={name || ''} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-zinc-300"><LayoutGrid size={24} /></div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-zinc-900 dark:text-white text-sm line-clamp-2 leading-snug" title={name}>
+                        {name}
+                      </h4>
+                      <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-zinc-400">
+                        <span className="font-mono">SKU: {product.sku}</span>
+                        {product.vendor_id?.store_name && (
+                          <span className="text-zinc-500 font-bold truncate max-w-[120px]">
+                            {product.vendor_id.store_name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                    <div>
+                      <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'السعر' : 'Price'}</span>
+                      <span className="font-black text-sm text-zinc-900 dark:text-zinc-200">
+                        {money(finalPrice)}
+                      </span>
+                      {finalPrice !== product.price && (
+                        <span className="block text-[11px] text-zinc-400 line-through">
+                          {Number(product.price).toLocaleString(isAr ? 'ar-EG' : 'en-US', { maximumFractionDigits: 2 })}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-zinc-400 uppercase font-bold block">{isAr ? 'المخزون' : 'Stock'}</span>
+                      <span className={`font-bold mt-0.5 block ${product.stock_management && !(product.quantity > 0) ? 'text-red-500' : 'text-zinc-900 dark:text-zinc-300'}`}>
+                        {product.stock_management ? `${product.quantity ?? 0} ${isAr ? 'في المخزن' : 'in stock'}` : (t.notTracked || (isAr ? 'مش متتبع' : 'Not tracked'))}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-zinc-100 dark:border-white/5" onClick={(e) => e.stopPropagation()}>
+                    <div>
+                      {isPending ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
+                          <Bell size={11} />{isAr ? 'قيد المراجعة' : 'Pending'}
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handleToggleStatus(product)}
+                          disabled={isToggling}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isPublished
+                            ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
+                            : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'}`}
+                        >
+                          {isToggling ? <Loader2 size={11} className="animate-spin" /> : isPublished ? <ToggleRight size={13} /> : <ToggleLeft size={13} />}
+                          {isPublished ? (isAr ? 'منشور' : 'Published') : (isAr ? 'مسودة' : 'Draft')}
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <ProductViewMenu product={product} reviewHref={`${reviewBasePath}/${product._id}`} language={language} />
+                      <button
+                        onClick={() => onEdit(product)}
+                        className="p-2 text-zinc-500 hover:text-marine-primary hover:bg-marine-mist dark:hover:bg-marine-cyan/10 rounded-xl transition-colors"
+                        title={t.edit || 'Edit'}
+                      >
+                        <Edit2 size={15} />
+                      </button>
+                      {onDelete && (
+                        <button
+                          onClick={() => onDelete(product._id)}
+                          className="p-2 text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors"
+                          title={t.delete || 'Delete'}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

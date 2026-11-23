@@ -17,7 +17,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { Seller } = require('../models/sellers');
-const { listPickupLocations, updatePickupLocation, pickupLocationName } = require('../services/bostaService');
+const { listPickupLocations, updatePickupLocation, pickupLocationName } = require('../modules/shipping/bosta.service');
 
 const APPLY = process.argv.includes('--apply');
 const ONLY = (process.argv.find((a) => a.startsWith('--only=')) || '').slice('--only='.length) || null;

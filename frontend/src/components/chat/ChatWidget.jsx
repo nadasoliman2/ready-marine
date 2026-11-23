@@ -123,8 +123,8 @@ function PanelHeader({ copy, handoff, phone, onEditPhone, canReset, onReset, onC
                     <div className="flex items-center gap-3 min-w-0">
                         <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-marine-cyan to-[#008ba8] text-white shadow-md">
                             <Ship size={22} className="text-white drop-shadow-sm" />
-                            <Sparkles size={11} className="absolute end-1 top-1 text-cyan-100" />
-                            <span className="absolute -bottom-0.5 -end-0.5 h-3.5 w-3.5 rounded-full border-2 border-marine-primary bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
+                            {/* <Sparkles size={11} className="absolute end-1 top-1 text-cyan-100" /> */}
+                            {/* <span className="absolute -bottom-0.5 -end-0.5 h-3.5 w-3.5 rounded-full border-2 border-marine-primary bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" /> */}
                         </span>
                         <div className="min-w-0">
                             <h3 className="truncate text-base sm:text-lg font-black tracking-tight text-white leading-tight">{copy.title}</h3>

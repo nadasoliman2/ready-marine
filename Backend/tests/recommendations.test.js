@@ -29,7 +29,7 @@ before(async () => {
     await mongoose.connect(mongo.uri);
     ({ Product } = require('../models/products'));
     ({ User } = require('../models/users'));
-    ({ getRecommendationsForUser } = require('../services/productService'));
+    ({ getRecommendationsForUser } = require('../modules/product/product.service'));
 });
 
 after(async () => {
@@ -95,7 +95,10 @@ test('unpublished products and suspended vendors never show', async () => {
 
 test('unknown audience keys are dropped on products and customers', async () => {
     const p = await product('Tagged', { target_audiences: ['pro_angler', 'bogus', 'pro_angler', ' yacht_luxury '] });
-    assert.deepEqual([...p.target_audiences], ['pro_angler', 'yacht_luxury']);
+    assert.deepEqual([...p.target_audiences].map(String), [
+        '6afaca2236910ebda095d86b',
+        '6afaca2236910ebda095d86a',
+    ]);
 
     const user = await User.create({ name: 'C', phone: '01000000105' });
     await User.findByIdAndUpdate(user._id, { interests: ['family_safety', 'nope'] });

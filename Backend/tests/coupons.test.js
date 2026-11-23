@@ -11,7 +11,7 @@ before(async () => {
     await mongoose.connect(mongo.uri);
     ({ Coupon } = require('../models/coupons'));
     ({ Category } = require('../models/categories'));
-    couponService = require('../services/couponService');
+    couponService = require('../modules/coupon/coupon.service');
 });
 
 after(async () => {

@@ -311,6 +311,7 @@ const ALL_SLIDES = SLIDER_CARDS_DATA.flatMap((card) => card.slides);
 function MobileHubsCarousel({ isAr, slides = ALL_SLIDES }) {
   const trackRef = useRef(null);
   const [active, setActive] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const activeSlides = slides && slides.length > 0 ? slides : ALL_SLIDES;
 
@@ -324,9 +325,10 @@ function MobileHubsCarousel({ isAr, slides = ALL_SLIDES }) {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => goTo((active + 1) % activeSlides.length), 4000);
+    if (isPaused) return;
+    const timer = setInterval(() => goTo((active + 1) % activeSlides.length), 4500);
     return () => clearInterval(timer);
-  }, [active, goTo, activeSlides.length]);
+  }, [active, goTo, activeSlides.length, isPaused]);
 
   // The card nearest the middle is the current one.
   const onScroll = () => {
@@ -348,6 +350,10 @@ function MobileHubsCarousel({ isAr, slides = ALL_SLIDES }) {
       <div
         ref={trackRef}
         onScroll={onScroll}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => {
+          setTimeout(() => setIsPaused(false), 3000);
+        }}
         className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-[5vw]"
       >
         {activeSlides.map((slide, i) => (
@@ -431,6 +437,13 @@ export default function FeaturedHubs() {
               {isAr ? 'تسوّق حسب أسلوبك البحري' : 'Shop by Your Marine Lifestyle'}
             </h2>
           </div>
+          <Link
+            href="/hubs"
+            className="font-display text-xs sm:text-sm font-bold text-marine-primary hover:text-cyan-700 flex items-center gap-1 transition-colors"
+          >
+            <span>{isAr ? 'عرض كل المجموعات' : 'View All Hubs'}</span>
+            <ArrowRight size={14} className="rtl:rotate-180" />
+          </Link>
         </div>
 
         {/* The Exact 3-Cards Layout: 1 Large Dominant Card + 2 Stacked Cards */}

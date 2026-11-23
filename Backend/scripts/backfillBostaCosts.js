@@ -19,7 +19,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 const { Order } = require('../models/orders');
-const bostaCostService = require('../services/bostaCostService');
+const bostaCostService = require('../modules/shipping/bosta_cost.service');
 
 const APPLY = process.argv.includes('--apply');
 const FORCE = process.argv.includes('--force');

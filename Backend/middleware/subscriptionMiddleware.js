@@ -2,7 +2,7 @@
  * Subscription Middleware
  * Gates product publishing behind active subscription checks.
  */
-const { requireActiveSubscription, requireProductLimit } = require('../services/vendorSubscriptionService');
+const { requireActiveSubscription, requireProductLimit } = require('../modules/subscription/vendor_subscription.service');
 
 /**
  * Middleware: Requires vendor to have an active subscription.

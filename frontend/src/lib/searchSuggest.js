@@ -3,7 +3,7 @@
  * words inside them. The server does the matching (`GET /api/products/suggest`, see
  * Backend/services/searchSuggestService.js); this keeps the box fast on the client side.
  */
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 // ── Fetching ─────────────────────────────────────────────────────────────────────────────
 

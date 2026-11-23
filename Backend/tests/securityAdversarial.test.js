@@ -3,9 +3,9 @@ const assert = require('node:assert/strict');
 const mongoose = require('mongoose');
 
 const { startMongo } = require('./support/testServers');
-const adminAccess = require('../services/adminAccessService');
-const { assertOwnedAddressIds, resolveSharedAddress } = require('../services/shared/addressAuthorization');
-const authService = require('../services/authService');
+const adminAccess = require('../modules/admin/admin_access.service');
+const { assertOwnedAddressIds, resolveSharedAddress } = require('../common/shared/addressAuthorization');
+const authService = require('../modules/auth/auth.service');
 const { User } = require('../models/users');
 
 describe('Security & Adversarial Access Control Auditing', () => {

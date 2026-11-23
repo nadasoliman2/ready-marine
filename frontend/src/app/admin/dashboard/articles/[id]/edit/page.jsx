@@ -10,7 +10,7 @@ import { adminApi } from '../../../../../../lib/api';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
-const UPLOAD_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/upload`;
+const UPLOAD_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api'}/upload`;
 
 // Upload a file to the server and return its public URL
 async function uploadImageToServer(file) {

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Ship, Loader2, Package, Search, SlidersHorizontal, Store, X, Save, Plus, Upload, Table2 } from 'lucide-react';
-import { useRouter } from '../../../../lib/navigation';
+import { useRouter, useSearchParams } from '../../../../lib/navigation';
 import { adminApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import ProductTable from '../../../../components/dashboard/ProductTable';
@@ -24,6 +24,9 @@ const inputClass = 'w-full bg-zinc-50 dark:bg-[#0E1012] border border-zinc-200 d
 
 export default function AdminProductsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get('search');
+  const urlStatus = searchParams.get('status');
   const { language, siteSettings } = useApp();
   const isAr = language === 'ar';
   const [products, setProducts] = useState([]);
@@ -32,13 +35,18 @@ export default function AdminProductsPage() {
   const [metadata, setMetadata] = useState(null);
   const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(urlSearch || '');
   // The text search applies with every letter, from the first one, like the other filters:
   // no pause to wait out. An older answer arriving late is dropped (requestRef).
   const searchTerm = search.trim();
   const [filterCategory, setFilterCategory] = useState('');
   const [filterBrand, setFilterBrand] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+  const [filterStatus, setFilterStatus] = useState(urlStatus || '');
+
+  useEffect(() => {
+    if (urlSearch !== null && urlSearch !== undefined) setSearch(urlSearch);
+    if (urlStatus !== null && urlStatus !== undefined) setFilterStatus(urlStatus);
+  }, [urlSearch, urlStatus]);
   const [vendorSearch, setVendorSearch] = useState('');
   const [filterVendor, setFilterVendor] = useState('');
   const [editingProduct, setEditingProduct] = useState(null);

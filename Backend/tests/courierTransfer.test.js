@@ -38,11 +38,11 @@ function fixture({ source = 'bosta', sent = true, status = 'ready_for_pickup', t
     appendSubHistory: (s, action, title, details, metadata) => s.history.push({ action, metadata }),
     syncOrderStatus: () => {},
   };
-  const service = load('../services/couriers/transfer.js', {
-    '../subOrderService': core,
+  const service = load('../modules/shipping/couriers/transfer.js', {
+    '../../order/sub_order.service': core,
     './operation': { withOperation: (o, fn) => fn('operation-token') },
-    '../bostaService': { terminateDelivery: async () => { events.push('delete'); if (terminateError) throw terminateError; } },
-    '../bostaFulfillmentService': {
+    '../bosta.service': { terminateDelivery: async () => { events.push('delete'); if (terminateError) throw terminateError; } },
+    '../bosta_fulfillment.service': {
       dispatchBlockedReason: () => sub.status === 'pending_review' ? 'Items are not confirmed' : null,
       dispatchSubOrder: async (o, s, options) => {
         assert.equal(options.operationToken, 'operation-token');
@@ -182,7 +182,7 @@ test('a partial transfer cannot silently change its target', async () => {
 });
 
 test('a source cancellation webhook during transfer cannot cancel the customer parcel', () => {
-  const { applyBostaStatusToOrder } = require('../services/bostaStatusMap');
+  const { applyBostaStatusToOrder } = require('../modules/shipping/bosta_status_map');
   const order = { status: 'processing', sub_orders: [{ _id: 'parcel', status: 'awaiting_handover', courier_transfer: { phase: 'removing' } }] };
   const shipment = { sub_order_id: 'parcel', tracking_history: [] };
   const before = JSON.stringify({ order, shipment });
@@ -191,7 +191,7 @@ test('a source cancellation webhook during transfer cannot cancel the customer p
 });
 
 test('retired Arrive events cannot add attention or change the replacement tracking', () => {
-  const { applyArriveEvent } = require('../services/couriers/arrive/tracking');
+  const { applyArriveEvent } = require('../modules/shipping/couriers/arrive/tracking');
   const order = { status: 'processing', sub_orders: [{ _id: 'parcel', status: 'awaiting_handover', history: [] }] };
   const shipment = { sub_order_id: 'parcel', superseded_at: new Date(), tracking_history: [] };
   const before = JSON.stringify({ order, shipment });
@@ -244,18 +244,18 @@ function dispatchFixture(provider, { failCost = false } = {}) {
     transaction: { payment_method: 'cash' },
     async save() { assert.ok(locked, 'waybill must be saved before unlocking dispatch'); calls.push('save'); },
   };
-  const service = load('../services/bostaFulfillmentService.js', {
-    '../models/orders': { Order: { updateOne: async () => ({ modifiedCount: 1 }) } },
-    '../models/sellers': { Seller: { findById: () => query } },
+  const service = load('../modules/shipping/bosta_fulfillment.service.js', {
+    '../../models/orders': { Order: { updateOne: async () => ({ modifiedCount: 1 }) } },
+    '../../models/sellers': { Seller: { findById: () => query } },
     './couriers/operation': { withOperation: async (o, fn) => { locked = true; try { return await fn(); } finally { locked = false; } } },
-    './subOrderService': {
+    '../order/sub_order.service': {
       shippableItems: () => [{ _id: 'item', product_title: 'Part', quantity: 1 }],
       freezeAllocation: () => {}, appendSubHistory: () => {},
       liveShipmentFor: () => shipments[shipments.length - 1],
     },
-    './bostaService': { createDelivery: async (payload) => { calls.push(payload); return { deliveryId: 'remote', trackingNumber: 'NEW' }; } },
-    './courierCostService': { recordDispatchCost: async () => { if (failCost) throw new Error('Cost snapshot failed'); } },
-    './bostaCostService': { snapshotCostForSubOrder: async () => {} },
+    './bosta.service': { createDelivery: async (payload) => { calls.push(payload); return { deliveryId: 'remote', trackingNumber: 'NEW' }; } },
+    './courier_cost.service': { recordDispatchCost: async () => { if (failCost) throw new Error('Cost snapshot failed'); } },
+    './bosta_cost.service': { snapshotCostForSubOrder: async () => {} },
     './couriers/arrive/adapter': { isConfigured: () => true, createShipment: async (payload) => { calls.push(payload); return { waybill: 'NEW', shipment_id: 'remote' }; } },
     './couriers/arrive/sectors': {
       getSector: async () => ({ sector_id: 10, name: 'Maadi', gov_name: 'Cairo' }),

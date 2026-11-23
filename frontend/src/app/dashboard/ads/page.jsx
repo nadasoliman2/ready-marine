@@ -258,16 +258,18 @@ export default function VendorAdsPage() {
 
       {/* Ad performance */}
       {statsAd && (
-        <Overlay className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto" onClick={() => setStatsAd(null)}>
-          <div className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/10 rounded-2xl w-full max-w-3xl p-6 shadow-xl my-8" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
+        <Overlay className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-6 overflow-hidden" onClick={() => setStatsAd(null)}>
+          <div className="bg-white dark:bg-[#09090b] border border-zinc-200 dark:border-white/10 rounded-2xl w-full max-w-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden my-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-white/5 shrink-0 bg-white dark:bg-[#09090b]">
               <div>
                 <h3 className="font-bold text-lg text-zinc-900 dark:text-white flex items-center gap-2"><BarChart3 size={18} className="text-marine-primary" /> {isAr ? 'أداء الإعلان' : 'Ad performance'}</h3>
                 <p className="text-xs text-zinc-500 mt-0.5"><span className="font-mono">{statsAd.ad_number}</span> · {typeLabel(statsAd)}</p>
               </div>
-              <button onClick={() => setStatsAd(null)} className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white"><X size={20} /></button>
+              <button onClick={() => setStatsAd(null)} className="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors"><X size={20} /></button>
             </div>
-            <AdAnalyticsPanel load={loadAnalytics} isAr={isAr} />
+            <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+              <AdAnalyticsPanel load={loadAnalytics} isAr={isAr} />
+            </div>
           </div>
         </Overlay>
       )}

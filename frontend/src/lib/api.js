@@ -1820,6 +1820,14 @@ export const adminSubscriptionApi = {
         const qs = query.toString();
         return apiRequest(`/admin/subscriptions${qs ? `?${qs}` : ''}`);
     },
+    getSubscriptionHistory: (params = {}) => {
+        const query = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== '') query.set(key, value);
+        });
+        const qs = query.toString();
+        return apiRequest(`/admin/subscriptions/history${qs ? `?${qs}` : ''}`);
+    },
     getSubscriptionPayments: (params = {}) => {
         const query = new URLSearchParams();
         Object.entries(params).forEach(([key, value]) => {

@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 import { SESSION_REFRESHED_EVENT } from './api';
 
 // Derive the socket origin from the API base URL (strip the trailing /api).
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 const SOCKET_URL = API_URL.replace(/\/api\/?$/, '');
 
 let socket = null;

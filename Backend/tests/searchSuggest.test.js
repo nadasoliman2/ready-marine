@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const {
     normalizeText, tokenize, boundedDistance,
     _test: { createCollection, addEntry, sealCollection, searchCollection },
-} = require('../services/searchSuggestService');
+} = require('../modules/product/search_suggest.service');
 
 const collectionOf = (titles) => {
     const collection = createCollection();

@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const mongoose = require('mongoose');
 
 const { startMongo } = require('./support/testServers');
-const { buildPricedOrderItems } = require('../services/orderService');
+const { buildPricedOrderItems } = require('../modules/order/order.service');
 const { Product } = require('../models/products');
 const { Seller } = require('../models/sellers');
 const { Category } = require('../models/categories');

@@ -24,7 +24,7 @@ const FAULT_TYPE_BY_REASON = {
     changed_mind: 'customer_fault',
 };
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 export default function CreateReturnRequestPage() {
     const { orderId } = useParams();

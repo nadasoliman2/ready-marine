@@ -9,7 +9,7 @@ const CACHE_LIMIT = 80;
 /** Products per page of the shop's endless list. */
 export const PRODUCT_PAGE_SIZE = 24;
 
-const getApiBase = () => process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const getApiBase = () => process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 /**
  * The query string for one page of the shop: the filters (`category_id=…&search=…`, as the

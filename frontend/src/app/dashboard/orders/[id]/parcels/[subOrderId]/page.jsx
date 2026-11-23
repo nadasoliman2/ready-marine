@@ -18,7 +18,7 @@ import {
   formatOrderDate, formatRelativeDate,
 } from '../../../../../../lib/orderStatus';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 
 /**
  * One parcel, worked through the vendor's four stages.

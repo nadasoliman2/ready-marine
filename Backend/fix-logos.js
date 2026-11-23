@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/sayarty');
 
 const updateLogos = async () => {
-    const { CarBrand } = require('./models/car_brands');
+    const { Brand: CarBrand } = require('./models/product_brands');
     const { Brand } = require('./models/product_brands');
 
     const carMap = {

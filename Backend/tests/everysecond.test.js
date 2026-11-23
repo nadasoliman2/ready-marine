@@ -11,7 +11,7 @@ const {
     orderAddressFromChat,
     fitmentOf,
     isSellableStock,
-} = require('../services/everysecond/helpers');
+} = require('../modules/admin/everysecond/helpers');
 
 const P = 'a'.repeat(24);
 const V = 'b'.repeat(24);
@@ -38,7 +38,7 @@ const product = (over = {}) => ({
     stock_status: 'instock',
     quantity: 4,
     images: [{ url: '/uploads/products/x.jpg', is_primary: true }],
-    compatible_cars: [{ brand_name: 'Toyota', models: [{ model_name: 'Corolla', years: [2018, 2015, 2020] }] }],
+    compatible_vessels: [{ brand_name: 'Toyota', models: [{ model_name: 'Corolla', years: [2018, 2015, 2020] }] }],
     variants: [],
     ...over,
 });

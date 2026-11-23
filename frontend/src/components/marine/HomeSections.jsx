@@ -159,62 +159,80 @@ export function MarineHero() {
           buttonClassName="absolute end-3 top-1/2 -translate-y-1/2 text-marine-primary"
         />
 
-        {/* Compact Hero Card with Yacht Image & Dark Marine Gradient */}
-        <div className="relative min-h-[185px] sm:min-h-[200px] rounded-2xl overflow-hidden p-5 flex flex-col justify-between shadow-sm bg-[#061d2d]">
-          {/* Background Yacht photo */}
+        {/* Hero Card with Yacht Image & Dark Marine Gradient (Taller on mobile with 3 transparent badges inside) */}
+        <div className="relative min-h-[300px] sm:min-h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden p-5 sm:p-6 flex flex-col justify-between shadow-md bg-[#061d2d]">
+          {/* Background Yacht photo - flipped in RTL so yacht appears on the open side */}
           <img
             src="/images/hero-yacht.png"
             alt="Ready Marine"
             fetchPriority="high"
-            className="absolute inset-0 w-full h-full object-cover object-[78%_center] pointer-events-none select-none"
+            className="absolute inset-0 w-full h-full object-cover object-[78%_center] rtl:scale-x-[-1] pointer-events-none select-none"
           />
 
           {/* Dark marine overlay for mobile card readability */}
-          <div className="absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l from-[#061826]/95 via-[#061826]/80 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r rtl:bg-gradient-to-l from-[#061826]/95 via-[#061826]/70 via-50% to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#041624]/90 via-[#061d2d]/60 to-transparent pointer-events-none" />
 
-          {/* Card Content */}
-          <div className="relative z-10 max-w-[250px] text-start">
-            <h2 className="text-white font-black text-xl leading-tight mb-2 font-display">
+          {/* Card Top / Middle Content */}
+          <div className="relative z-10 max-w-[230px] xs:max-w-[260px] text-start pt-1">
+            <h2 className="text-white font-black text-2xl sm:text-3xl leading-tight mb-2 font-display">
               {isAr ? (
                 <>كل مستلزمات <span className="text-cyan-400">البحر</span> في مكان واحد</>
               ) : (
                 <>All Your <span className="text-cyan-400">Marine Gear</span> in One Place</>
               )}
             </h2>
-            <p className="text-cyan-100/85 text-xs line-clamp-2 leading-relaxed mb-3.5 font-medium">
+            <p className="text-cyan-100/90 text-xs sm:text-sm line-clamp-2 leading-relaxed mb-4 font-medium">
               {isAr
                 ? 'مستلزمات قوارب ويخوت ومعدات بحرية مختارة بعناية.'
                 : 'Boat, yacht, and marine essentials carefully curated for you.'}
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center gap-1.5 bg-[#0099b8] hover:bg-[#00829e] text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-colors"
+              className="inline-flex items-center gap-1.5 bg-[#0099b8] hover:bg-[#00829e] active:scale-95 text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl shadow-md transition-all"
             >
               <span>{isAr ? 'تسوق الآن' : 'Shop Now'}</span>
-              <ArrowRight size={13} className="rtl:rotate-180" />
+              <ArrowRight size={14} className="rtl:rotate-180" />
             </Link>
           </div>
-        </div>
 
-        {/* 3 Compact Trust Badges (mobile) */}
-        <div className="grid grid-cols-3 gap-2 pt-1">
-          <div className="bg-white border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-2xs">
-            <ShieldCheck size={18} className="text-[#0099b8] mb-1" />
-            <span className="text-[11px] font-bold text-slate-800 leading-tight text-center">
-              {isAr ? '100% أصلي معتمد' : '100% Genuine'}
-            </span>
-          </div>
-          <div className="bg-white border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-2xs">
-            <Truck size={18} className="text-[#0099b8] mb-1" />
-            <span className="text-[11px] font-bold text-slate-800 leading-tight text-center">
-              {isAr ? 'توصيل سريع' : 'Fast Delivery'}
-            </span>
-          </div>
-          <div className="bg-white border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-2xs">
-            <Headphones size={18} className="text-[#0099b8] mb-1" />
-            <span className="text-[11px] font-bold text-slate-800 leading-tight text-center">
-              {isAr ? 'دعم متخصص' : 'Marine Support'}
-            </span>
+          {/* 3 Transparent Trust Badges INSIDE the Hero Image Card (like desktop) */}
+          <div className="relative z-10 grid grid-cols-3 gap-2 pt-6 mt-auto">
+            <div className="rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-xs">
+              <div className="w-8 h-8 rounded-full border border-white/25 bg-white/10 flex items-center justify-center text-cyan-300 mb-1.5 shrink-0 shadow-2xs">
+                <ShieldCheck size={16} />
+              </div>
+              <span className="text-[11px] font-bold text-white leading-tight text-center">
+                {isAr ? '100% أصلي معتمد' : '100% Genuine'}
+              </span>
+              <span className="text-[9px] text-cyan-100/75 mt-0.5 leading-none hidden xs:inline">
+                {isAr ? 'ماركات عالمية' : 'Global Brands'}
+              </span>
+            </div>
+
+            <div className="rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-xs">
+              <div className="w-8 h-8 rounded-full border border-white/25 bg-white/10 flex items-center justify-center text-cyan-300 mb-1.5 shrink-0 shadow-2xs">
+                <Truck size={16} />
+              </div>
+              <span className="text-[11px] font-bold text-white leading-tight text-center">
+                {isAr ? 'توصيل سريع' : 'Fast Delivery'}
+              </span>
+              <span className="text-[9px] text-cyan-100/75 mt-0.5 leading-none hidden xs:inline">
+                {isAr ? 'لكل الموانئ' : 'All Ports'}
+              </span>
+            </div>
+
+            <div className="rounded-xl p-2.5 text-center flex flex-col items-center justify-center shadow-xs">
+              <div className="w-8 h-8 rounded-full border border-white/25 bg-white/10 flex items-center justify-center text-cyan-300 mb-1.5 shrink-0 shadow-2xs">
+                <Headphones size={16} />
+              </div>
+              <span className="text-[11px] font-bold text-white leading-tight text-center">
+                {isAr ? 'دعم متخصص' : 'Marine Support'}
+              </span>
+              <span className="text-[9px] text-cyan-100/75 mt-0.5 leading-none hidden xs:inline">
+                {isAr ? 'استشارات فنية' : 'Expert Advice'}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -463,124 +481,11 @@ export function CoreCategories() {
 }
 
 export function ServiceSpotlight() {
-  const { language } = useApp();
-  const isAr = language === 'ar';
-  return (
-    <section className="pb-10 sm:pb-14">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-marine-navy via-marine-teal to-marine-primary text-white p-6 sm:p-10 grid lg:grid-cols-[1fr_340px] gap-8 items-center">
-          <div>
-            <span className="inline-block bg-marine-cyan font-display text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-1 rounded-sm mb-4">
-              {isAr ? 'شريك مميّز' : 'Verified Partner Spotlight'}
-            </span>
-            <h2 className="font-display text-2xl sm:text-[32px] sm:leading-10 font-semibold mb-3">
-              {isAr ? 'متجر وخدمات الفحص البحري' : 'Marine Store & Diagnostic Services'}
-            </h2>
-            <p className="text-white/75 text-sm leading-relaxed max-w-2xl mb-6">
-              {isAr
-                ? 'محتاج تركيب معتمد؟ احجز مهندسين بحريين معتمدين في الإسكندرية وبورسعيد والغردقة. فحص إلكتروني للمحركات، عَمرة أوتبورد، وعقود صيانة للأساطيل.'
-                : 'Need certified installation? Book our vetted marine engineers in Alexandria, Port Said and Hurghada. Computerized engine diagnostics, outboard rebuilding, and fleet maintenance contracts.'}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link href="/services" className="flex items-center gap-2 bg-marine-cyan hover:bg-marine-cyan-dark font-display text-[11px] font-bold uppercase tracking-[0.06em] px-4 py-3 rounded transition-colors">
-                <Wrench size={14} />{isAr ? 'احجز فني بحري' : 'Book Marine Technician'}
-              </Link>
-              <Link href="/contact" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 font-display text-[11px] font-bold uppercase tracking-[0.06em] px-4 py-3 rounded transition-colors">
-                <Siren size={14} />{isAr ? 'طوارئ SOS' : 'Emergency Dispatch SOS'}
-              </Link>
-            </div>
-          </div>
-          <div className="bg-white/10 backdrop-blur border border-white/15 rounded-lg p-6 text-center">
-            <ShieldCheck size={32} className="mx-auto text-marine-cyan mb-3" />
-            <div className="font-display text-lg font-semibold mb-1">{isAr ? 'ضمان Ready' : 'Ready Guarantee'}</div>
-            <p className="text-white/70 text-xs mb-4">
-              {isAr ? '30 يوم ضمان استرجاع على كل قطع التجار المعتمدين في مصر.' : '30-day money-back fitment assurance on all certified vendor parts across Egypt.'}
-            </p>
-            <div className="bg-white/10 rounded px-3 py-2 font-display text-[11px] tracking-[0.04em]">{isAr ? 'مستودع بورسعيد #44-A' : 'Port Said Depot #44-A'}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+  return null;
 }
 
-const WORKSHOPS = [
-  {
-    name: 'Suez Canal Marine Tech', area_en: 'Port Said Freezone Area', area_ar: 'المنطقة الحرة - بورسعيد', rating: 4.9, icon: Anchor,
-    desc_en: 'Official warranty repairs, outboard/inboard mechanical overhaul, and certified impeller & gearbox swap within 24h.',
-    desc_ar: 'إصلاحات ضمان رسمية، عَمرة محركات أوتبورد وإنبورد، وتغيير الريشة والجيربوكس خلال 24 ساعة.',
-    tags: ['Yamaha', 'Mercury', 'Caterpillar'],
-  },
-  {
-    name: 'Alexandria Marina Service Center', area_en: 'Eastern Harbour, Alexandria', area_ar: 'الميناء الشرقي - الإسكندرية', rating: 4.8, icon: Wrench,
-    desc_en: 'Computerized diagnostics, hull & propeller service, and instant oil & filter fast-lane services at the berth.',
-    desc_ar: 'فحص إلكتروني، صيانة الهيكل والرفاص، وتغيير زيت وفلاتر سريع على المرسى.',
-    tags: ['Volvo Penta', 'Suzuki', 'Honda'],
-  },
-  {
-    name: 'Red Sea Avionics & Radar', area_en: 'Hurghada & El Gouna', area_ar: 'الغردقة والجونة', rating: 5.0, icon: Gauge,
-    desc_en: 'Specialized marine electricians: GPS chartplotter calibration, sonar transponder installation, and solar battery setups.',
-    desc_ar: 'كهربائية بحرية متخصصة: معايرة الـ GPS، تركيب السونار، وأنظمة البطاريات بالطاقة الشمسية.',
-    tags: ['Garmin', 'Raymarine', 'Simrad'],
-  },
-];
-
 export function WorkshopPartners() {
-  const { language } = useApp();
-  const isAr = language === 'ar';
-  return (
-    <section className="py-10 sm:py-16 bg-marine-mist/60 border-y border-marine-teal/10">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
-          <div>
-            <p className={SECTION_EYEBROW}>{isAr ? 'مراكز فنية معتمدة' : 'Certified Technical Centers'}</p>
-            <h2 className={SECTION_TITLE}>{isAr ? 'ورش الصيانة البحرية الشريكة' : 'Marine Workshop Partners'}</h2>
-            <p className="text-sm text-marine-muted mt-1 max-w-2xl">
-              {isAr ? 'محتاج تركيب على المرسى؟ اتواصل فوراً مع فنيين بحريين معتمدين بأسعار واضحة.' : 'Need parts installed on-site or at berth? Connect immediately with certified marine technicians with transparent labor rates.'}
-            </p>
-          </div>
-          <Link href="/register" className="flex items-center gap-1.5 bg-marine-teal hover:bg-marine-navy text-white font-display text-[11px] font-bold uppercase tracking-[0.06em] px-4 py-2.5 rounded transition-colors">
-            {isAr ? 'انضم كشريك خدمة' : 'Become a Service Partner'}<ArrowRight size={13} className="rtl:rotate-180" />
-          </Link>
-        </div>
-        <div className="grid md:grid-cols-3 gap-4">
-          {WORKSHOPS.map((w) => {
-            const Icon = w.icon;
-            return (
-              <div key={w.name} className="bg-white border border-marine-teal/15 rounded-lg p-5 flex flex-col">
-                <div className="flex items-start gap-3 mb-3">
-                  <span className="w-11 h-11 rounded bg-marine-mist text-marine-primary flex items-center justify-center flex-shrink-0"><Icon size={20} /></span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-marine-ink text-sm">{w.name}</h3>
-                      <span className="flex items-center gap-0.5 bg-marine-mist text-marine-primary font-display text-[11px] font-bold px-1.5 py-0.5 rounded-sm flex-shrink-0">
-                        {w.rating}<Star size={10} className="fill-current" />
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-marine-outline">{isAr ? w.area_ar : w.area_en}</p>
-                  </div>
-                </div>
-                <p className="text-xs text-marine-muted leading-relaxed mb-3 flex-1">{isAr ? w.desc_ar : w.desc_en}</p>
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {w.tags.map((tag) => (
-                    <span key={tag} className="font-display text-[9px] font-bold uppercase tracking-[0.08em] text-marine-teal bg-marine-canvas border border-marine-teal/15 px-1.5 py-0.5 rounded-sm">{tag}</span>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <Link href="/services" className="flex-1 flex items-center justify-center gap-1.5 bg-marine-cyan hover:bg-marine-cyan-dark text-white font-display text-[10px] font-bold uppercase tracking-[0.06em] py-2.5 rounded transition-colors">
-                    <MessageCircle size={13} />{isAr ? 'احجز واتساب' : 'WhatsApp Booking'}
-                  </Link>
-                  <Link href="/services" className="px-3 flex items-center border border-marine-teal/25 text-marine-teal text-[11px] font-semibold rounded hover:bg-marine-mist transition-colors">
-                    {isAr ? 'التفاصيل' : 'Details'}
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
+  return null;
 }
 
 const BRANDS = [

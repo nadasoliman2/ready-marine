@@ -27,7 +27,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const { CatalogEntry } = require('../models/catalogEntries');
 const { Product } = require('../models/products');
 const { Brand } = require('../models/product_brands');
-const catalogService = require('../services/catalogService');
+const catalogService = require('../modules/product/catalog.service');
 const { LINK, BOSCH_BY_PART, UNRESOLVED, NO_CATALOG_MATCH } = require('./vendorCatalogLinks');
 
 const APPLY = process.argv.includes('--apply');

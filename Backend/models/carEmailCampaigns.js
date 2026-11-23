@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const carEmailCampaignSchema = new Schema(
+const emailCampaignSchema = new Schema(
     {
         title: {
             type: String,
@@ -14,7 +14,7 @@ const carEmailCampaignSchema = new Schema(
             trim: true,
         },
         target_filter: {
-            brand_id: { type: Schema.Types.ObjectId, ref: 'CarBrand', default: null },
+            brand_id: { type: Schema.Types.ObjectId, ref: 'Brand', default: null },
             brand_name: { type: String, default: '' },
             model_id: { type: Schema.Types.ObjectId, default: null },
             model_name: { type: String, default: '' },
@@ -28,7 +28,6 @@ const carEmailCampaignSchema = new Schema(
             {
                 label: { type: String, required: true },
                 label_en: { type: String, default: '' },
-                // A tag picked from the site's categories opens that category's page.
                 category_id: { type: Schema.Types.ObjectId, ref: 'Category', default: null },
                 link: { type: String, default: '' },
             },
@@ -51,37 +50,50 @@ const carEmailCampaignSchema = new Schema(
             type: String,
             enum: ['draft', 'sending', 'sent', 'failed'],
             default: 'draft',
-            index: true,
         },
-        stats: {
-            targeted_count: { type: Number, default: 0 },
-            sent_count: { type: Number, default: 0 },
-            failed_count: { type: Number, default: 0 },
-            skipped_count: { type: Number, default: 0 },
+        total_targeted: {
+            type: Number,
+            default: 0,
         },
-        created_by: {
-            type: String,
-            default: 'admin',
+        total_sent: {
+            type: Number,
+            default: 0,
+        },
+        total_failed: {
+            type: Number,
+            default: 0,
+        },
+        logs: [
+            {
+                email: String,
+                status: String,
+                error: String,
+                sent_at: Date,
+            },
+        ],
+        sent_by: {
+            type: Schema.Types.ObjectId,
+            ref: 'AdminUser',
+            default: null,
         },
         sent_at: {
             type: Date,
             default: null,
         },
-        error_log: [
-            {
-                email: String,
-                error: String,
-                timestamp: { type: Date, default: Date.now },
-            },
-        ],
     },
     {
         timestamps: true,
     }
 );
 
-carEmailCampaignSchema.index({ createdAt: -1 });
+emailCampaignSchema.index({ createdAt: -1 });
 
-const CarEmailCampaign = mongoose.model('CarEmailCampaign', carEmailCampaignSchema);
+const EmailCampaign = mongoose.models.EmailCampaign || mongoose.models.CarEmailCampaign || mongoose.model('EmailCampaign', emailCampaignSchema);
 
-module.exports = { CarEmailCampaign };
+// Register alias so any legacy query for CarEmailCampaign resolves to EmailCampaign
+if (!mongoose.models.CarEmailCampaign) mongoose.models.CarEmailCampaign = EmailCampaign;
+
+module.exports = {
+    EmailCampaign,
+    CarEmailCampaign: EmailCampaign,
+};

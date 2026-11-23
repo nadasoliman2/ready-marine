@@ -29,7 +29,7 @@ export default function ShippingLayout({ children }) {
                 </p>
             </div>
 
-            <div className="flex flex-wrap gap-1 border-b border-zinc-200 dark:border-white/10">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 border-b border-zinc-200 dark:border-white/10">
                 {tabs.map((t) => {
                     const Icon = t.icon;
                     const active = pathname === t.href || pathname.startsWith(t.href + '/');

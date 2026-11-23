@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Loader2, Search, CheckCircle2, AlertTriangle, X, CreditCard, User, Calendar, Gift, UserX, Clock, Wallet, TrendingUp, ShieldCheck, Hourglass, Layers, RefreshCw } from 'lucide-react';
+import { Loader2, Search, CheckCircle2, AlertTriangle, X, CreditCard, User, Calendar, Gift, UserX, Clock, Wallet, TrendingUp, ShieldCheck, Hourglass, Layers, RefreshCw, History } from 'lucide-react';
 import { adminSubscriptionApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
 import PaginationControls from '../../../../components/dashboard/PaginationControls';
@@ -217,9 +217,40 @@ export default function AdminSubscriptionsPage() {
         }
     };
 
+    /* --- subscription history log tab state --- */
+    const [historyEvents, setHistoryEvents] = useState([]);
+    const [historyLogLoading, setHistoryLogLoading] = useState(false);
+    const [historySearch, setHistorySearch] = useState('');
+    const [historyEventType, setHistoryEventType] = useState('all');
+    const [historyVendorFilter, setHistoryVendorFilter] = useState('');
+    const [historyVendorNameFilter, setHistoryVendorNameFilter] = useState('');
+    const [historyPage, setHistoryPage] = useState(1);
+    const [historyTotal, setHistoryTotal] = useState(0);
+
+    const loadSubscriptionHistory = async () => {
+        setHistoryLogLoading(true);
+        try {
+            const params = { page: historyPage, limit: pageSize };
+            if (historySearch.trim()) params.q = historySearch.trim();
+            if (historyEventType && historyEventType !== 'all') params.event_type = historyEventType;
+            if (historyVendorFilter) params.vendor_id = historyVendorFilter;
+            const data = await adminSubscriptionApi.getSubscriptionHistory(params);
+            setHistoryEvents(data.events || []);
+            setHistoryTotal(data.pagination?.total || 0);
+        } catch (err) {
+            setError(err.message || 'Failed to load subscription history');
+        } finally {
+            setHistoryLogLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (activeTab === 'subscriptions') loadSubscriptions();
     }, [page, pageSize, statusFilter, packageFilter, trialFilter, segment, activeTab]);
+
+    useEffect(() => {
+        if (activeTab === 'history') loadSubscriptionHistory();
+    }, [historyPage, pageSize, historySearch, historyEventType, historyVendorFilter, activeTab]);
 
     useEffect(() => {
         if (activeTab === 'not_subscribed') loadNotSubscribed();
@@ -338,23 +369,30 @@ export default function AdminSubscriptionsPage() {
             )}
 
             {/* Tabs */}
-            <div ref={listRef} className="flex gap-2 border-b border-zinc-200 dark:border-white/5 scroll-mt-4">
+            <div ref={listRef} className="flex items-center gap-2 border-b border-zinc-200 dark:border-white/5 scroll-mt-4 overflow-x-auto scrollbar-hide pb-0.5">
                 <button
                     onClick={() => setActiveTab('subscriptions')}
-                    className={`px-5 py-2.5 text-sm font-black rounded-t-xl transition-colors ${activeTab === 'subscriptions' ? 'bg-marine-cyan text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
+                    className={`px-5 py-2.5 text-sm font-black rounded-t-xl transition-colors shrink-0 ${activeTab === 'subscriptions' ? 'bg-marine-cyan text-white shadow-xs' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
                 >
                     {isAr ? 'الاشتراكات' : 'Subscriptions'}
                 </button>
                 <button
+                    onClick={() => setActiveTab('history')}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-black rounded-t-xl transition-colors shrink-0 ${activeTab === 'history' ? 'bg-marine-cyan text-white shadow-xs' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
+                >
+                    <History size={15} />
+                    {isAr ? 'سجل الاشتراكات' : 'Subscription History'}
+                </button>
+                <button
                     onClick={() => setActiveTab('transactions')}
-                    className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-black rounded-t-xl transition-colors ${activeTab === 'transactions' ? 'bg-marine-cyan text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-black rounded-t-xl transition-colors shrink-0 ${activeTab === 'transactions' ? 'bg-marine-cyan text-white shadow-xs' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
                 >
                     <CreditCard size={14} />
                     {isAr ? 'المعاملات' : 'Transactions'}
                 </button>
                 <button
                     onClick={() => setActiveTab('not_subscribed')}
-                    className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-black rounded-t-xl transition-colors ${activeTab === 'not_subscribed' ? 'bg-marine-cyan text-white' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-black rounded-t-xl transition-colors shrink-0 ${activeTab === 'not_subscribed' ? 'bg-marine-cyan text-white shadow-xs' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
                 >
                     <UserX size={14} />
                     {isAr ? 'غير مشتركين' : 'Not Subscribed'}
@@ -393,8 +431,9 @@ export default function AdminSubscriptionsPage() {
                         </select>
                     </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm whitespace-nowrap">
+                    {/* Desktop Table */}
+                    <div className="hidden xl:block overflow-x-auto">
+                        <table className="w-full text-sm whitespace-nowrap min-w-[700px]">
                             <thead className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
                                 <tr className={isAr ? 'text-right' : 'text-left'}>
                                     <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'البائع' : 'Vendor'}</th>
@@ -485,11 +524,351 @@ export default function AdminSubscriptionsPage() {
                         </table>
                     </div>
 
+                    {/* Mobile / Tablet Responsive Cards */}
+                    <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {filtered.map(sub => {
+                                const pkg = sub.package_id;
+                                const vendor = sub.vendor_id;
+                                const isActive = sub.status === 'active' || sub.status === 'trial_active';
+                                const isExpired = new Date(sub.expires_at) < new Date();
+
+                                return (
+                                    <div key={sub._id} className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="flex items-start gap-3 min-w-0">
+                                                <div className="w-10 h-10 rounded-xl bg-marine-cyan/10 text-marine-primary flex items-center justify-center font-black text-sm shrink-0">
+                                                    {(vendor?.store_name || 'V').charAt(0).toUpperCase()}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <h3 className="font-black text-zinc-900 dark:text-white text-base leading-snug truncate">
+                                                        {vendor?.store_name || '-'}
+                                                    </h3>
+                                                    <p className="text-xs text-zinc-500 truncate">@{vendor?.store_username}</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => openHistoryModal(vendor?._id, vendor)}
+                                                className="focus:outline-none shrink-0"
+                                                title={isAr ? 'عرض سجل وتفاصيل الاشتراك' : 'View subscription history'}
+                                            >
+                                                <StatusBadge status={sub.status} isAr={isAr} isClickable />
+                                            </button>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-2 text-xs bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                                            <div>
+                                                <span className="block text-[10px] font-bold text-zinc-400 uppercase">{isAr ? 'الباقة' : 'Package'}</span>
+                                                <div className="flex items-center gap-1.5 mt-0.5">
+                                                    {sub.is_free_trial && <Gift size={12} className="text-emerald-500 shrink-0" />}
+                                                    <span className="font-bold text-zinc-900 dark:text-white truncate">{pkg?.name || '-'}</span>
+                                                </div>
+                                                <span className="text-[10px] text-zinc-400 block">{pkg?.max_products} {isAr ? 'منتج' : 'products'}</span>
+                                            </div>
+                                            <div>
+                                                <span className="block text-[10px] font-bold text-zinc-400 uppercase">{isAr ? 'تاريخ الانتهاء' : 'Expires At'}</span>
+                                                <span className={`font-bold mt-0.5 block ${isActive && isExpired ? 'text-red-600' : 'text-zinc-900 dark:text-white'}`}>
+                                                    {formatDate(sub.expires_at)}
+                                                </span>
+                                                <span className="text-[10px] text-zinc-400 block">{isAr ? 'بدأ: ' : 'From: '}{formatDate(sub.started_at)}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2 pt-1 border-t border-zinc-100 dark:border-white/5">
+                                            <button
+                                                type="button"
+                                                onClick={() => openHistoryModal(vendor?._id, vendor)}
+                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/10 transition-colors"
+                                            >
+                                                <Clock size={13} />
+                                                <span>{isAr ? 'سجل وتجديد الاشتراك' : 'History & Renew'}</span>
+                                            </button>
+                                            {isActive && (
+                                                <button
+                                                    onClick={() => { setCancelVendorId(vendor?._id); setShowCancelModal(true); }}
+                                                    className="inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl text-xs font-bold bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 transition-colors"
+                                                >
+                                                    {isAr ? 'إلغاء' : 'Cancel'}
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                            {filtered.length === 0 && (
+                                <div className="col-span-full py-12 text-center">
+                                    <p className="font-bold text-zinc-900 dark:text-white">{isAr ? 'لا توجد اشتراكات' : 'No subscriptions found'}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     <PaginationControls
                         page={page} pageSize={pageSize}
           onPageSizeChange={(n) => { setPageSize(n); setPage(1); }} total={total} onPageChange={setPage}
                         labels={{ showing: isAr ? 'عرض' : 'Showing', of: isAr ? 'من' : 'of', previous: isAr ? 'السابق' : 'Prev', next: isAr ? 'التالي' : 'Next' }}
                     />
+                </div>
+            )}
+
+            {/* ── Subscription History Log Tab ── */}
+            {activeTab === 'history' && (
+                <div className="bg-white dark:bg-[#14171A] rounded-xl border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden">
+                    {/* Header helper text from screenshot */}
+                    <div className="p-4 sm:p-5 border-b border-zinc-100 dark:border-white/5 bg-zinc-50/50 dark:bg-white/[0.01]">
+                        <p className="text-sm font-bold text-zinc-600 dark:text-zinc-300">
+                            {isAr
+                                ? 'كل اللي حصل في الاشتراكات من الأحدث للأقدم: مين اشترك، اتجدد، اتمد، خلص أو اتلغى، وإمتى، ومين عمله. دوس على اسم التاجر تشوف سجله لوحده.'
+                                : 'Timeline of all subscription activity from newest to oldest: purchases, renewals, extensions, grants, expirations, and cancellations. Click any vendor to filter their history.'}
+                        </p>
+
+                        {/* Active Vendor Filter Chip if filtered */}
+                        {historyVendorFilter && (
+                            <div className="mt-3 flex items-center gap-2">
+                                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-black bg-marine-cyan/10 text-marine-primary dark:text-marine-cyan border border-marine-cyan/20">
+                                    <span>{isAr ? `سجل التاجر: ${historyVendorNameFilter || 'المحدد'}` : `Vendor: ${historyVendorNameFilter}`}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setHistoryVendorFilter('');
+                                            setHistoryVendorNameFilter('');
+                                            setHistoryPage(1);
+                                        }}
+                                        className="hover:opacity-75"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Search & Event Filters */}
+                    <div className="p-4 border-b border-zinc-100 dark:border-white/5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                        <div className="relative flex-1">
+                            <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                            <input
+                                type="text"
+                                value={historySearch}
+                                onChange={(e) => { setHistorySearch(e.target.value); setHistoryPage(1); }}
+                                placeholder={isAr ? 'ابحث باسم المتجر...' : 'Search by store name...'}
+                                className="w-full ps-9 pe-4 py-2.5 text-xs bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl focus:outline-none focus:border-marine-cyan text-zinc-900 dark:text-white"
+                            />
+                        </div>
+
+                        <div className="w-full md:w-56">
+                            <select
+                                value={historyEventType}
+                                onChange={(e) => { setHistoryEventType(e.target.value); setHistoryPage(1); }}
+                                className="w-full px-4 py-2.5 text-xs font-bold bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl focus:outline-none focus:border-marine-cyan text-zinc-900 dark:text-white"
+                            >
+                                <option value="all">{isAr ? 'كل الأحداث' : 'All Events'}</option>
+                                <option value="trial">{isAr ? 'بدأ فترة تجريبية' : 'Free Trial'}</option>
+                                <option value="purchase">{isAr ? 'اشتراك جديد' : 'New Subscription'}</option>
+                                <option value="renew">{isAr ? 'تجديد / تمديد' : 'Renew / Extend'}</option>
+                                <option value="grant">{isAr ? 'منح من الإدارة' : 'Admin Grant'}</option>
+                                <option value="cancel">{isAr ? 'إلغاء اشتراك' : 'Cancelled'}</option>
+                                <option value="expired">{isAr ? 'انتهاء اشتراك' : 'Expired'}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Table View (Desktop xl:block) */}
+                    <div className="hidden xl:block overflow-x-auto">
+                        <table className="w-full text-sm whitespace-nowrap min-w-[850px]">
+                            <thead className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/5">
+                                <tr className={isAr ? 'text-right' : 'text-left'}>
+                                    <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'الوقت' : 'Time'}</th>
+                                    <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'التاجر' : 'Vendor'}</th>
+                                    <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'الحدث' : 'Event'}</th>
+                                    <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'الباقة' : 'Package'}</th>
+                                    <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{isAr ? 'التفاصيل' : 'Details'}</th>
+                                    <th className={`px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px] ${isAr ? 'text-left' : 'text-right'}`}>{isAr ? 'بواسطة' : 'By'}</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-zinc-100 dark:divide-white/5">
+                                {historyLogLoading ? (
+                                    <tr>
+                                        <td colSpan={6} className="px-6 py-16 text-center">
+                                            <Loader2 size={32} className="animate-spin text-marine-primary mx-auto mb-2" />
+                                            <p className="text-xs text-zinc-400 font-bold">{isAr ? 'جاري تحميل السجل...' : 'Loading history...'}</p>
+                                        </td>
+                                    </tr>
+                                ) : historyEvents.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={6} className="px-6 py-16 text-center">
+                                            <History size={32} className="text-zinc-300 dark:text-zinc-600 mx-auto mb-2" />
+                                            <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">{isAr ? 'لا توجد حركات مسجلة' : 'No history events found'}</p>
+                                            <p className="text-xs text-zinc-400 mt-1">{isAr ? 'جرّب تغيير خيارات البحث أو الفلتر' : 'Try searching for other terms'}</p>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    historyEvents.map((ev) => {
+                                        const eventBadgeClass =
+                                            ev.type === 'cancel'
+                                                ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border border-red-200/80'
+                                                : ev.type === 'trial'
+                                                ? 'bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400 border border-sky-200/80'
+                                                : ev.type === 'grant'
+                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/80'
+                                                : ev.type === 'extend' || ev.type === 'renew'
+                                                ? 'bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400 border border-violet-200/80'
+                                                : ev.type === 'expired'
+                                                ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200/80'
+                                                : 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border border-blue-200/80';
+
+                                        return (
+                                            <tr key={ev.id} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors">
+                                                <td className="px-6 py-4 font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                                                    {formatDateTime(ev.date)}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            if (ev.vendor_id) {
+                                                                setHistoryVendorFilter(ev.vendor_id);
+                                                                setHistoryVendorNameFilter(ev.vendor_name);
+                                                                setHistoryPage(1);
+                                                            }
+                                                        }}
+                                                        className="text-start group"
+                                                        title={isAr ? 'عرض سجل هذا التاجر فقط' : 'View history for this vendor'}
+                                                    >
+                                                        <span className="font-black text-zinc-900 dark:text-white group-hover:text-marine-cyan transition-colors block">
+                                                            {ev.vendor_name}
+                                                        </span>
+                                                        {ev.vendor_username && (
+                                                            <span className="text-[11px] text-zinc-400 block mt-0.5">
+                                                                @{ev.vendor_username}
+                                                            </span>
+                                                        )}
+                                                    </button>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${eventBadgeClass}`}>
+                                                        {ev.title || (isAr ? 'تحديث اشتراك' : 'Subscription update')}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 font-bold text-zinc-800 dark:text-zinc-200">
+                                                    {isAr ? ev.package_name_ar || ev.package_name : ev.package_name}
+                                                </td>
+                                                <td className="px-6 py-4 text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                                                    {ev.details || '-'}
+                                                </td>
+                                                <td className={`px-6 py-4 text-xs font-bold text-zinc-500 dark:text-zinc-400 ${isAr ? 'text-left' : 'text-right'}`}>
+                                                    {ev.actor || (isAr ? 'التاجر' : 'Vendor')}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Mobile / Tablet Responsive Cards View (xl:hidden) */}
+                    <div className="xl:hidden p-4 bg-zinc-50/50 dark:bg-transparent">
+                        {historyLogLoading ? (
+                            <div className="py-16 text-center">
+                                <Loader2 size={32} className="animate-spin text-marine-primary mx-auto mb-2" />
+                                <p className="text-xs text-zinc-400 font-bold">{isAr ? 'جاري تحميل السجل...' : 'Loading history...'}</p>
+                            </div>
+                        ) : historyEvents.length === 0 ? (
+                            <div className="py-16 text-center">
+                                <History size={32} className="text-zinc-300 dark:text-zinc-600 mx-auto mb-2" />
+                                <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">{isAr ? 'لا توجد حركات مسجلة' : 'No history events found'}</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                                {historyEvents.map((ev) => {
+                                    const eventBadgeClass =
+                                        ev.type === 'cancel'
+                                            ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border border-red-200/80'
+                                            : ev.type === 'trial'
+                                            ? 'bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400 border border-sky-200/80'
+                                            : ev.type === 'grant'
+                                            ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200/80'
+                                            : ev.type === 'extend' || ev.type === 'renew'
+                                            ? 'bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400 border border-violet-200/80'
+                                            : ev.type === 'expired'
+                                            ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border border-amber-200/80'
+                                            : 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border border-blue-200/80';
+
+                                    return (
+                                        <div
+                                            key={`card-${ev.id}`}
+                                            className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 shadow-sm space-y-3"
+                                        >
+                                            <div className="flex items-start justify-between gap-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (ev.vendor_id) {
+                                                            setHistoryVendorFilter(ev.vendor_id);
+                                                            setHistoryVendorNameFilter(ev.vendor_name);
+                                                            setHistoryPage(1);
+                                                        }
+                                                    }}
+                                                    className="text-start min-w-0"
+                                                >
+                                                    <h3 className="font-black text-zinc-900 dark:text-white text-base leading-snug truncate hover:text-marine-cyan transition-colors">
+                                                        {ev.vendor_name}
+                                                    </h3>
+                                                    {ev.vendor_username && (
+                                                        <p className="text-xs text-zinc-400 truncate mt-0.5">
+                                                            @{ev.vendor_username}
+                                                        </p>
+                                                    )}
+                                                </button>
+
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold shrink-0 ${eventBadgeClass}`}>
+                                                    {ev.title || (isAr ? 'تحديث اشتراك' : 'Update')}
+                                                </span>
+                                            </div>
+
+                                            <div className="bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5 text-xs space-y-1.5">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-zinc-400">{isAr ? 'الباقة:' : 'Plan:'}</span>
+                                                    <span className="font-bold text-zinc-800 dark:text-zinc-200">
+                                                        {isAr ? ev.package_name_ar || ev.package_name : ev.package_name}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-zinc-400">{isAr ? 'التفاصيل:' : 'Details:'}</span>
+                                                    <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                                                        {ev.details || '-'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center justify-between pt-1 border-t border-zinc-200/50 dark:border-white/5 text-[11px]">
+                                                    <span className="text-zinc-400">
+                                                        {formatDateTime(ev.date)}
+                                                    </span>
+                                                    <span className="font-bold text-zinc-500">
+                                                        {isAr ? 'بواسطة: ' : 'By: '}{ev.actor || (isAr ? 'التاجر' : 'Vendor')}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Pagination */}
+                    {historyEvents.length > 0 && (
+                        <div className="p-4 border-t border-zinc-100 dark:border-white/5">
+                            <PaginationControls
+                                page={historyPage}
+                                pageSize={pageSize}
+                                onPageSizeChange={(n) => { setPageSize(n); setHistoryPage(1); }}
+                                total={historyTotal}
+                                onPageChange={setHistoryPage}
+                            />
+                        </div>
+                    )}
                 </div>
             )}
 

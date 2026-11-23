@@ -65,7 +65,7 @@ const userSchema = new Schema(
         // emailless account block every one after it.
         // Stored — and matched in every query — in its canonical spelling (Gmail dots and
         // +aliases collapsed): see services/shared/emailIdentity.js.
-        email: { type: String, required: false, default: undefined, lowercase: true, trim: true, set: (v) => require('../services/shared/emailIdentity').canonicalEmail(v) },
+        email: { type: String, required: false, default: undefined, lowercase: true, trim: true, set: (v) => require('../common/shared/emailIdentity').canonicalEmail(v) },
         phone: { type: String, required: true, unique: true, index: true, trim: true },
         profile_image: { type: String, default: null },
         // Optional for the same reason. A guest account is reached by WhatsApp
@@ -135,7 +135,7 @@ const userSchema = new Schema(
         // A replacement contact awaiting its code. Held here rather than
         // overwriting the live field so a typo'd number can be corrected
         // without locking the customer out of the account they signed in with.
-        pending_email: { type: String, default: null, lowercase: true, trim: true, set: (v) => require('../services/shared/emailIdentity').canonicalEmail(v) },
+        pending_email: { type: String, default: null, lowercase: true, trim: true, set: (v) => require('../common/shared/emailIdentity').canonicalEmail(v) },
         pending_phone: { type: String, default: null, trim: true },
 
         addresses: [addressSchema], // embedded
@@ -146,7 +146,7 @@ const userSchema = new Schema(
         interests: {
             type: [{ type: String, trim: true }],
             default: [],
-            set: (v) => require('../services/shared/audiences').cleanAudiences(v),
+            set: (v) => require('../common/shared/audiences').cleanAudiences(v),
         },
         marketing_emails_unsubscribed: { type: Boolean, default: false, index: true },
 
@@ -243,7 +243,7 @@ const findUserByFields = async (query) => {
  * whole variant set makes the number mean one person regardless of formatting.
  */
 const findUserByPhoneVariants = async (rawPhone) => {
-    const { phoneLookupVariants } = require('../services/shared/phone');
+    const { phoneLookupVariants } = require('../common/shared/phone');
     const variants = phoneLookupVariants(rawPhone);
     if (variants.length === 0) return null;
     return await User.findOne({ phone: { $in: variants } });

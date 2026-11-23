@@ -1,18 +1,17 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Wrench } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { servicesApi } from '../../lib/api';
 import ServiceCard from '../../components/services/ServiceCard';
 import { getServiceLocationSearchValues } from '../../lib/serviceLocations';
-import { SosBar, ServicesHero, SopGrid, MockWorkbays, ServiceValues, PartnerProgramBanner } from '../../components/marine/ServicesSections';
-import { SECTION_EYEBROW, SECTION_TITLE } from '../../components/marine/HomeSections';
+import Link from '../../components/LocaleLink';
 
 const PAGE_SIZE = 9;
 
 export default function ServicesPage() {
-  const { language, siteSettings } = useApp();
+  const { language, t } = useApp();
   const isAr = language === 'ar';
 
   const [services, setServices] = useState([]);
@@ -61,32 +60,79 @@ export default function ServicesPage() {
   const pages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
 
   return (
-    <div className="bg-marine-canvas min-h-screen" dir={isAr ? 'rtl' : 'ltr'}>
-      <SosBar isAr={isAr} phone={siteSettings?.header_phone} />
-      <ServicesHero isAr={isAr} search={search} onSearch={setSearch} />
-      <SopGrid isAr={isAr} />
+    <div className="bg-marine-canvas min-h-screen py-6 sm:py-10" dir={isAr ? 'rtl' : 'ltr'}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="mb-4">
+          <ol className="flex items-center gap-2 text-xs text-marine-outline">
+            <li>
+              <Link href="/" className="hover:text-marine-primary transition-colors">
+                {t.home || (isAr ? 'الرئيسية' : 'Home')}
+              </Link>
+            </li>
+            <li className="select-none text-slate-300">/</li>
+            <li className="font-bold text-marine-ink">
+              {t.services || (isAr ? 'الخدمات' : 'Services')}
+            </li>
+          </ol>
+        </nav>
 
-      <div className="max-w-7xl mx-auto px-4 pb-12">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <p className={SECTION_EYEBROW}>{isAr ? 'مراكز خدمة معتمدة' : 'Authorized Service Centers'}</p>
-            <h2 className={SECTION_TITLE}>{isAr ? 'ورش بحرية موثّقة' : 'Vetted Marine Workbays'}</h2>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-marine-ink font-display">
+              {t.services || (isAr ? 'الخدمات' : 'Services')}
+            </h1>
+            <p className="text-sm text-marine-muted mt-1 max-w-xl">
+              {isAr
+                ? 'استعرض وتواصل مع مزودي الخدمات المتاحين.'
+                : 'Browse and connect with available service providers.'}
+            </p>
           </div>
+
+          {/* Search input (only visible if there are services) */}
+          {services.length > 0 && (
+            <div className="relative w-full md:w-72">
+              <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-marine-outline" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={isAr ? 'ابحث في الخدمات…' : 'Search services…'}
+                className="w-full bg-white border border-marine-teal/20 rounded-xl ps-9 pe-4 py-2.5 text-sm text-marine-ink placeholder-slate-400 outline-none focus:border-marine-cyan focus:ring-2 focus:ring-marine-cyan/15 transition-all shadow-xs"
+              />
+            </div>
+          )}
         </div>
+
+        {/* Content */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="aspect-[4/5] bg-marine-canvas rounded-xl animate-pulse" />
+              <div key={i} className="aspect-[4/5] bg-white border border-marine-teal/15 rounded-2xl animate-pulse" />
             ))}
           </div>
         ) : error ? (
           <div className="text-center py-20 text-red-500 font-bold">{error}</div>
         ) : services.length === 0 ? (
-          <MockWorkbays isAr={isAr} />
+          <div className="bg-white border border-marine-teal/15 rounded-2xl p-12 text-center max-w-md mx-auto shadow-xs my-12">
+            <div className="w-16 h-16 rounded-2xl bg-marine-mist text-marine-primary flex items-center justify-center mx-auto mb-4">
+              <Wrench size={28} />
+            </div>
+            <h3 className="font-display text-xl font-bold text-marine-ink mb-2">
+              {isAr ? 'لا توجد خدمات متاحة حالياً' : 'No services available yet'}
+            </h3>
+            <p className="text-sm text-marine-muted leading-relaxed">
+              {isAr
+                ? 'لم يتم إضافة أي خدمات بعد.'
+                : 'No services have been added yet.'}
+            </p>
+          </div>
         ) : paginated.length === 0 ? (
           <div className="text-center py-20 space-y-4">
             <Search size={48} className="mx-auto text-marine-line" />
-            <h3 className="text-xl font-bold text-marine-ink">{isAr ? 'لا توجد خدمات' : 'No services found'}</h3>
+            <h3 className="text-xl font-bold text-marine-ink">{isAr ? 'لا توجد نتائج مطابقة' : 'No services found'}</h3>
             <p className="text-marine-outline">{isAr ? 'جرّب تعديل كلمات البحث.' : 'Try adjusting your search keywords.'}</p>
           </div>
         ) : (
@@ -126,9 +172,8 @@ export default function ServicesPage() {
             )}
           </>
         )}
+
       </div>
-      <ServiceValues isAr={isAr} />
-      <PartnerProgramBanner isAr={isAr} />
     </div>
   );
 }

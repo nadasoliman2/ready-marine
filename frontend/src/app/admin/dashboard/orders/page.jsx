@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from '../../../../lib/navigation';
+import { useRouter, useSearchParams } from '../../../../lib/navigation';
 import { Loader2, Search, ShoppingCart, Filter, X, ChevronDown, Calendar, PhoneCall } from 'lucide-react';
 import { adminApi } from '../../../../lib/api';
 import { useApp } from '../../../../context/AppContext';
@@ -58,6 +58,11 @@ const PAYMENT_COLORS = {
 
 export default function AdminOrdersPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const urlSearch = searchParams.get('search');
+    const urlStatus = searchParams.get('status');
+    const urlConfirmation = searchParams.get('confirmation');
+
     const { language, siteSettings } = useApp();
     const isAr = language === 'ar';
     const currency = siteSettings?.currency || 'QAR';
@@ -67,14 +72,20 @@ export default function AdminOrdersPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
-    const [confirmationFilter, setConfirmationFilter] = useState('');
+    const [search, setSearch] = useState(urlSearch || '');
+    const [statusFilter, setStatusFilter] = useState(urlStatus || '');
+    const [confirmationFilter, setConfirmationFilter] = useState(urlConfirmation || '');
     const [paymentFilter, setPaymentFilter] = useState('');
     const [vendorFilter, setVendorFilter] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [page, setPage] = useState(1);
+
+    useEffect(() => {
+        if (urlSearch !== null && urlSearch !== undefined) setSearch(urlSearch);
+        if (urlStatus !== null && urlStatus !== undefined) setStatusFilter(urlStatus);
+        if (urlConfirmation !== null && urlConfirmation !== undefined) setConfirmationFilter(urlConfirmation);
+    }, [urlSearch, urlStatus, urlConfirmation]);
   const [pageSize, setPageSize] = usePageSize('admin.orders', 20);
     const [totalCount, setTotalCount] = useState(0);
     // Counted by the server over every order the filters match, not the page on screen.
@@ -370,7 +381,8 @@ export default function AdminOrdersPage() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Desktop Table View */}
+                <div className="hidden xl:block overflow-x-auto">
                     <table className="w-full text-sm min-w-[900px]">
                         <thead>
                             <tr className="bg-zinc-50/80 dark:bg-white/[0.03] border-b border-zinc-100 dark:border-white/5">
@@ -497,6 +509,80 @@ export default function AdminOrdersPage() {
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile / Tablet Responsive Cards View */}
+                <div className="xl:hidden p-3 sm:p-4 bg-zinc-50/50 dark:bg-transparent">
+                    {loading ? (
+                        <div className="py-16 text-center">
+                            <Loader2 size={28} className="animate-spin text-marine-primary mx-auto" />
+                        </div>
+                    ) : filteredBySearch.length === 0 ? (
+                        <div className="py-16 text-center bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5">
+                            <ShoppingCart size={36} className="mx-auto text-zinc-200 mb-3" />
+                            <p className="text-zinc-500 font-semibold">{isAr ? 'لا توجد طلبات مطابقة' : 'No orders found'}</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {filteredBySearch.map(order => (
+                                <div
+                                    key={order._id}
+                                    onClick={() => router.push(`/admin/dashboard/orders/${order._id}`)}
+                                    className="bg-white dark:bg-[#14171A] rounded-2xl border border-zinc-200 dark:border-white/5 p-4 sm:p-5 shadow-sm space-y-3 cursor-pointer hover:border-marine-cyan/40 transition-all"
+                                >
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div>
+                                            <span className="text-marine-primary font-black text-sm">
+                                                #{order.reference?.slice(-8).toUpperCase()}
+                                            </span>
+                                            <p className="text-[11px] text-zinc-400 mt-0.5">
+                                                {new Date(order.created_at).toLocaleDateString(isAr ? 'ar-u-ca-gregory' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                            </p>
+                                        </div>
+                                        <span className={`inline-flex items-center text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-widest ${getOrderStatusColor(order.status)}`}>
+                                            {getOrderStatusLabel(order.status, isAr)}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex items-center justify-between text-xs bg-zinc-50/70 dark:bg-white/[0.02] p-3 rounded-xl border border-zinc-100 dark:border-white/5">
+                                        <div>
+                                            <p className="font-bold text-zinc-900 dark:text-white">{order.user_name}</p>
+                                            <p className="text-zinc-400 text-[11px]" dir="ltr">{order.user_phone}</p>
+                                        </div>
+                                        <div className="text-end">
+                                            <p className="font-black text-zinc-900 dark:text-white text-sm">
+                                                {currency} {order.total_price?.toFixed(2)}
+                                            </p>
+                                            <span className={`inline-flex items-center text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${PAYMENT_COLORS[order.transaction?.status] || PAYMENT_COLORS.pending}`}>
+                                                {order.transaction?.status || 'pending'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between pt-1 text-xs">
+                                        <span className="text-zinc-500 font-medium">
+                                            {order.vendor_count} {isAr ? 'تاجر' : 'vendors'} · {order.item_count} {isAr ? 'منتج' : 'items'}
+                                        </span>
+                                        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                            <button
+                                                onClick={() => router.push(`/admin/dashboard/orders/${order._id}`)}
+                                                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-marine-cyan/10 text-marine-primary hover:bg-marine-cyan/20 transition-colors"
+                                            >
+                                                {isAr ? 'عرض التفاصيل' : 'View Details'}
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); deleteOrder(order._id); }}
+                                                disabled={deletingId === order._id}
+                                                className="p-1.5 rounded-xl text-xs font-bold bg-red-500/10 text-red-500 hover:bg-red-500/20 disabled:opacity-50 transition-colors"
+                                            >
+                                                {deletingId === order._id ? <Loader2 size={12} className="animate-spin" /> : <X size={12} />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <PaginationControls

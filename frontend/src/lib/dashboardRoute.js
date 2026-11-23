@@ -12,6 +12,12 @@ export function isAuthPath(pathname) {
   return path === '/login' || path === '/register';
 }
 
+export function isStandalonePath(pathname) {
+  if (!pathname) return false;
+  const path = stripLocale(pathname);
+  return path.startsWith('/review');
+}
+
 export function isDashboardPath(pathname) {
   if (!pathname) return false;
   const path = stripLocale(pathname);

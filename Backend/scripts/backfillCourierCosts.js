@@ -27,9 +27,9 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { Order } = require('../models/orders');
-const bostaTariff = require('../services/bostaTariff');
-const courierCostService = require('../services/courierCostService');
-const { classFlagsForItems } = require('../services/bostaFulfillmentService');
+const bostaTariff = require('../modules/shipping/bosta_tariff');
+const courierCostService = require('../modules/shipping/courier_cost.service');
+const { classFlagsForItems } = require('../modules/shipping/bosta_fulfillment.service');
 
 const APPLY = process.argv.includes('--apply');
 

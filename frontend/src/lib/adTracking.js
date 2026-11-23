@@ -18,7 +18,7 @@ import { stripLocale } from './locale';
  * Sending is fire-and-forget; nothing here can throw into the page.
  */
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:2000/api';
 const VIEWER_KEY = 'rc_viewer_id';
 const ATTRIBUTION_KEY = 'rc_ad_attribution';
 const ATTRIBUTION_TTL_MS = 6 * 60 * 60 * 1000; // a click stays "the reason" for six hours

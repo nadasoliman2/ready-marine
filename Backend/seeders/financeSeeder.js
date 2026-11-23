@@ -43,19 +43,19 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 
-const { Seller } = require("../models/sellers");
-const { User } = require("../models/users");
-const { Order } = require("../models/orders");
-const { VendorEarning } = require("../models/vendorEarnings");
-const { WithdrawalRequest } = require("../models/withdrawalRequests");
-const { Refund } = require("../models/refunds");
-const { SubscriptionPayment } = require("../models/subscriptionPayments");
-const { SupplyOrder } = require("../models/supplyOrders");
-const { AdSpend, AD_CHANNELS } = require("../models/adSpend");
-const { SiteSettings } = require("../models/site_settings");
+const { Seller } = require('../models/sellers');
+const { User } = require('../models/users');
+const { Order } = require('../models/orders');
+const { VendorEarning } = require('../models/vendorEarnings');
+const { WithdrawalRequest } = require('../models/withdrawalRequests');
+const { Refund } = require('../models/refunds');
+const { SubscriptionPayment } = require('../models/subscriptionPayments');
+const { SupplyOrder } = require('../models/supplyOrders');
+const { AdSpend, AD_CHANNELS } = require('../models/adSpend');
+const { SiteSettings } = require('../models/site_settings');
 
-const bostaTariff = require("../services/bostaTariff");
-const { recomputeWalletBalances } = require("../services/vendorEarningsService");
+const bostaTariff = require('../modules/shipping/bosta_tariff');
+const { recomputeWalletBalances } = require('../modules/vendor/vendor_earnings.service');
 
 /* ------------------------------------------------------------------ *
  * Tagging — what makes `--reset` safe

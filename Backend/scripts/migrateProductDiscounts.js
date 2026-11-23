@@ -35,7 +35,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { Product } = require('../models/products');
-const { round2, computeDiscountPrice } = require('../services/shared/productPricing');
+const { round2, computeDiscountPrice } = require('../common/shared/productPricing');
 
 const APPLY = process.argv.includes('--apply');
 const CLEAR_INVALID = process.argv.includes('--clear-invalid');

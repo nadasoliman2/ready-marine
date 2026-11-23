@@ -18,7 +18,7 @@ const { Seller } = require('../models/sellers');
 const { City } = require('../models/cities');
 
 const APPLY = process.argv.includes('--apply');
-const { MIN_FIRST_LINE } = require('../services/bostaService');
+const { MIN_FIRST_LINE } = require('../modules/shipping/bosta.service');
 
 (async () => {
   const uri = process.env.MONGO_URI;
@@ -69,7 +69,7 @@ const { MIN_FIRST_LINE } = require('../services/bostaService');
   }
 
   // Grouped per vendor so one vendor's failure doesn't strand the rest.
-  const { linkVendorLocationsToBosta } = require('../services/vendorService');
+  const { linkVendorLocationsToBosta } = require('../modules/vendor/vendor.service');
   const byVendor = new Map();
   for (const { vendor } of linkable) byVendor.set(vendor._id.toString(), vendor);
 

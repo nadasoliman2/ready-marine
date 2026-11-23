@@ -783,75 +783,7 @@ export default function CarCampaignsPage() {
               )}
             </div>
 
-            {/* Step 4: Testing & Dispatch */}
-            <div className={`${CARD} p-5 space-y-4 border-2 border-marine-cyan/20`}>
-              <div className="border-b border-zinc-100 dark:border-white/5 pb-3">
-                <div className="flex items-center gap-2 font-black text-zinc-900 dark:text-white">
-                  <span className="w-6 h-6 rounded-lg bg-marine-cyan text-white flex items-center justify-center text-xs font-black">4</span>
-                  <span>{isAr ? 'التجربة والإطلاق' : 'Test & Dispatch'}</span>
-                </div>
-              </div>
-
-              {/* Send Test Email Section */}
-              <div className="p-3 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 rounded-xl space-y-2">
-                <label className={LABEL}>{isAr ? 'إرسال إيميل تجريبي للمعاينة قبل الإطلاق' : 'Send Test Email before launch'}</label>
-                <p className="text-[11px] text-zinc-500">
-                  {isAr
-                    ? `هيتبعت ${previewLang === 'ar' ? 'بالعربي' : 'بالإنجليزي'} زي المعاينة. كل عميل بيوصله الإيميل بلغة حسابه.`
-                    : `It goes in ${previewLang === 'ar' ? 'Arabic' : 'English'}, as the preview. Each customer gets the email in their account's language.`}
-                </p>
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    value={testEmailAddress}
-                    onChange={(e) => setTestEmailAddress(e.target.value)}
-                    placeholder="your-email@example.com"
-                    className={`${INPUT} text-xs`}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSendTestEmail}
-                    disabled={sendingTest || products.length === 0}
-                    className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-900 text-white text-xs font-bold shrink-0 transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                  >
-                    {sendingTest ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
-                    <span>{isAr ? 'إرسال تجربة' : 'Send Test'}</span>
-                  </button>
-                </div>
-                {testResult && (
-                  <p className={`text-xs font-bold mt-1 ${testResult.success ? 'text-emerald-600' : 'text-red-500'}`}>
-                    {testResult.message}
-                  </p>
-                )}
-              </div>
-
-              {products.length === 0 && (
-                <p className="text-xs font-bold text-amber-600">
-                  {isAr ? 'اختار منتج واحد على الأقل عشان تقدر تبعت التجربة أو الحملة.' : 'Pick at least one product to send the test or the campaign.'}
-                </p>
-              )}
-
-              {/* Launch Campaign Button */}
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => setConfirmSendOpen(true)}
-                  disabled={audienceCount === 0 || products.length === 0 || !title.trim() || !subject.trim()}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-marine-cyan hover:bg-marine-cyan-dark disabled:opacity-40 disabled:hover:bg-marine-cyan text-white font-black text-base shadow-lg shadow-marine-cyan/20 transition-all"
-                >
-                  <Send size={18} />
-                  <span>{isAr ? `إطلاق الحملة البريدية إلى (${audienceCount}) عميل` : `Dispatch Campaign to (${audienceCount}) users`}</span>
-                </button>
-              </div>
-
-              {dispatchResult && (
-                <div className={`p-3 rounded-xl text-xs font-bold ${
-                  dispatchResult.success ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
-                }`}>
-                  {dispatchResult.message}
-                </div>
-              )}
-            </div>
+         
 
           </div>
 

@@ -89,7 +89,7 @@ export default function SubcategorySlider({ subcategories, currentCategoryId, se
                 )}
                 {cat.image ? (
                   <img 
-                    src={cat.image.startsWith('http') ? cat.image : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:4000'}${cat.image}`} 
+                    src={cat.image.startsWith('http') ? cat.image : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:2000'}${cat.image}`} 
                     alt={cat.name}
                     className="w-full h-full object-cover"
                   />

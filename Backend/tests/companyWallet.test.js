@@ -13,11 +13,11 @@ const { CompanyWalletTransaction: Journal } = require('../models/companyWalletTr
 const { CompanySpendCounter, CompanyLedgerEntry } = require('../models/companyLedger');
 const { WalletTopup } = require('../models/walletTopups');
 const { CompanyInvoice } = require('../models/companyInvoices');
-const wallet = require('../services/companyWalletService');
-const companyService = require('../services/companyService');
-const orders = require('../services/companyOrderService');
-const invoices = require('../services/companyInvoiceService');
-const topups = require('../services/walletTopupService');
+const wallet = require('../modules/company/company_wallet.service');
+const companyService = require('../modules/company/company.service');
+const orders = require('../modules/company/company_order.service');
+const invoices = require('../modules/company/company_invoice.service');
+const topups = require('../modules/wallet/wallet_topup.service');
 const id = () => new mongoose.Types.ObjectId();
 let mongo, directory;
 before(async () => {
