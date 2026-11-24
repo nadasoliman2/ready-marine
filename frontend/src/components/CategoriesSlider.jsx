@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight, Briefcase, Sparkles } from 'lucide-react';
 import Link from './LocaleLink';
 import { useApp } from '../context/AppContext';
-import { resolveAssetUrl } from '../lib/assets';
+import { resolveAssetUrl, thumbUrl } from '../lib/assets';
 
 export default function CategoriesSlider() {
   const { language, t, categories } = useApp();
@@ -63,7 +63,7 @@ export default function CategoriesSlider() {
           <Link key={cat._id} href={`/products?category_id=${cat._id}`} className="flex-none w-[78px] snap-start text-center">
             <span className="block w-[78px] h-[78px] rounded-2xl overflow-hidden bg-zinc-100 shadow-sm">
               {cat.image
-                ? <img src={resolveAssetUrl(cat.image)} alt="" loading="lazy" className="w-full h-full object-cover" />
+                ? <img src={thumbUrl(cat.image, 320)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                 : <span className="w-full h-full flex items-center justify-center text-lg font-black text-zinc-400">{nameOf(cat).charAt(0)}</span>}
             </span>
             <span className="mt-1.5 block text-[11px] font-bold leading-tight text-zinc-800 line-clamp-2">{nameOf(cat)}</span>
@@ -73,7 +73,14 @@ export default function CategoriesSlider() {
 
       <div className="px-4 mt-6 grid grid-cols-2 gap-3">
         <Link href="/hub/diy-maintenance" className="relative h-36 rounded-2xl overflow-hidden bg-slate-900 shadow-sm">
-          <img src="/images/hubs/diy-maintenance.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+          <img
+            src="/images/hubs/diy-maintenance.webp"
+            onError={(e) => { e.currentTarget.src = '/images/hubs/diy-maintenance.jpg'; }}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
           <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
           <span className="absolute bottom-0 inset-x-0 p-3 text-white">
             <span className="block text-[10px] font-bold text-white/70">{isAr ? 'وفر التكاليف' : 'Hands-on'}</span>
@@ -83,7 +90,14 @@ export default function CategoriesSlider() {
           <Briefcase size={18} className="absolute top-3 end-3 text-white/80" />
         </Link>
         <Link href="/hub/yacht-luxury" className="relative h-36 rounded-2xl overflow-hidden bg-slate-900 shadow-sm">
-          <img src="/images/hubs/yacht-luxury.png" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+          <img
+            src="/images/hubs/yacht-luxury.webp"
+            onError={(e) => { e.currentTarget.src = '/images/hubs/yacht-luxury.png'; }}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
           <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
           <span className="absolute bottom-0 inset-x-0 p-3 text-white">
             <span className="block text-[10px] font-bold text-cyan-300">{isAr ? 'فخامة ورفاهية' : 'VIP Elite'}</span>
@@ -135,8 +149,10 @@ export default function CategoriesSlider() {
               <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-zinc-200 mb-3 shadow-md group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] group-hover:-translate-y-1 transition-all duration-400 flex items-center justify-center">
                 {cat.image ? (
                   <img
-                    src={resolveAssetUrl(cat.image)}
+                    src={thumbUrl(cat.image, 320)}
                     alt={cat.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (

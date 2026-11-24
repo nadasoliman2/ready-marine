@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { LayoutGrid, Search, ChevronRight, ArrowRight, Package, FolderTree } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Link from '../../components/LocaleLink';
-import { resolveAssetUrl } from '../../lib/assets';
+import { resolveAssetUrl, thumbUrl } from '../../lib/assets';
 
 export default function CategoriesPage() {
   const { language, categories, t } = useApp();
@@ -92,7 +92,7 @@ export default function CategoriesPage() {
             {filteredCategories.map((cat) => {
               const displayName = isAr ? (cat.name_ar || cat.name) : (cat.name || cat.name_ar);
               const subs = cat.subcategories || [];
-              const imageUrl = cat.image ? resolveAssetUrl(cat.image) : null;
+              const imageUrl = cat.image ? thumbUrl(cat.image, 320) : null;
 
               return (
                 <div
@@ -107,6 +107,8 @@ export default function CategoriesPage() {
                           <img
                             src={imageUrl}
                             alt={displayName}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
                           />
                         </div>

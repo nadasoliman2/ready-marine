@@ -38,7 +38,7 @@ export default function MostSoldProducts() {
             <p className={SECTION_EYEBROW}>{isAr ? 'قطع سريعة الدوران' : 'High Turnaround Spares'}</p>
             <h2 className={SECTION_TITLE}>{isAr ? 'الأكثر مبيعاً والعروض' : 'Most Sold Products & Hot Deals'}</h2>
           </div>
-          <div className="flex flex-wrap gap-2">
+          {/* <div className="flex flex-wrap gap-2">
             {[
               { label: isAr ? 'كل المميز' : 'All Highlights', href: '/products?sort=sold', active: true },
               { label: isAr ? 'أوتبورد' : 'Marine Outboard', href: '/products?search=outboard' },
@@ -53,7 +53,7 @@ export default function MostSoldProducts() {
                 {tab.label}
               </Link>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <ProductRail gridClassName="sm:grid-cols-3 lg:grid-cols-4 sm:gap-5">

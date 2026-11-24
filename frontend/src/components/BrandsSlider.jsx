@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from './LocaleLink';
 import { useApp } from '../context/AppContext';
-import { resolveAssetUrl } from '../lib/assets';
+import { resolveAssetUrl, thumbUrl } from '../lib/assets';
 
 export default function BrandsSlider() {
   const { language, t } = useApp();
@@ -122,8 +122,10 @@ export default function BrandsSlider() {
                 <div className="w-full aspect-video rounded-xl overflow-hidden bg-zinc-100 flex items-center justify-center">
                   {brand.image ? (
                     <img
-                      src={resolveAssetUrl(brand.image)}
+                      src={thumbUrl(brand.image, 320)}
                       alt={brand.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (

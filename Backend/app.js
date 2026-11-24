@@ -67,6 +67,22 @@ mongoose.connect(process.env.MONGO_URI)
     console.log('MongoDB Connected');
     // Build the search index now, so the first visitor to type in the search box does not wait.
     require('./modules/product/search_suggest.service').getIndex().catch(() => {});
+    // Check if we need to seed categories catalogue on startup
+    try {
+        const { Category } = require('./models/categories');
+        const categoryCount = await Category.countDocuments();
+        if (categoryCount === 0) {
+            console.log('[Init] No categories found in DB, seeding full categories catalogue...');
+            const { seedCategories } = require('./seeders/categorySeeder');
+            await seedCategories({ quiet: false });
+        } else if (categoryCount < 200) {
+            console.log(`[Init] Incomplete categories found in DB (${categoryCount}/215), syncing missing categories...`);
+            const { seedCategories } = require('./seeders/categorySeeder');
+            await seedCategories({ sync: true, quiet: false });
+        }
+    } catch (e) {
+        console.error('[Init] Error checking/seeding categories:', e);
+    }
     // Check if we need to seed pages
     try {
         const { Page } = require('./models/pages');

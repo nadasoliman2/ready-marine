@@ -3,7 +3,7 @@
 import { storePath as storePathFor, storeKey } from '../lib/storeLink';
 import Link from './LocaleLink';
 import { CheckCircle2, MapPin, Package, Store } from 'lucide-react';
-import { resolveAssetUrl } from '../lib/assets';
+import { resolveAssetUrl, thumbUrl } from '../lib/assets';
 import VendorTrustStats from './reviews/VendorTrustStats';
 import { useAdImpression, trackAdClick } from '../lib/adTracking';
 
@@ -18,7 +18,7 @@ export default function VendorCard({ vendor, isAr = false, compact = false }) {
   const location = defaultLocation
     ? [defaultLocation.shipping_city, defaultLocation.shipping_country].filter(Boolean).join(', ') || defaultLocation.address
     : '';
-  const imageUrl = resolveAssetUrl(vendor?.store_image);
+  const imageUrl = thumbUrl(vendor?.store_image, 320);
 
   return (
     <Link

@@ -20,8 +20,9 @@ export const resolveAssetUrl = (url) => {
  * make an image lighter, never break it. Images hosted anywhere else are left alone.
  */
 export const thumbUrl = (url, width = 480) => {
-    // Anything that is not an uploaded image goes back exactly as it came in.
-    if (!url || typeof url !== 'string' || !url.includes('/uploads/') || url.includes('?')) return url;
-    if (url.startsWith('blob:') || url.startsWith('data:')) return url;
-    return `${url}?w=${width}`;
+    if (!url || typeof url !== 'string') return '';
+    const resolved = resolveAssetUrl(url);
+    if (!resolved || !resolved.includes('/uploads/') || resolved.includes('?')) return resolved;
+    if (resolved.startsWith('blob:') || resolved.startsWith('data:')) return resolved;
+    return `${resolved}?w=${width}`;
 };

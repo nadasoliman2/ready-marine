@@ -4,6 +4,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+let sharp = null;
+try { sharp = require('sharp'); } catch (_) { sharp = null; }
+
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, '../../public/uploads/products');
 if (!fs.existsSync(uploadDir)) {
@@ -85,7 +88,7 @@ router.post(
         { name: 'images', maxCount: 10 },
         { name: 'image', maxCount: 10 },
     ]),
-    (req, res) => {
+    async (req, res) => {
         const files = [
             ...((req.files && req.files.images) || []),
             ...((req.files && req.files.image) || []),
@@ -113,6 +116,26 @@ router.post(
                 message: `Not a valid image file: ${rejected.join(', ')}. Use JPG, PNG or WebP.`,
                 code: 'INVALID_IMAGE',
             });
+        }
+
+        // Auto-optimize accepted images: rotate EXIF and constrain max-width to 1600px
+        if (sharp) {
+            for (const file of accepted) {
+                try {
+                    const ext = path.extname(file.path).toLowerCase();
+                    const tmp = file.path + '.opt.tmp';
+                    let pipeline = sharp(file.path).rotate().resize({ width: 1600, withoutEnlargement: true });
+                    if (ext === '.png') {
+                        pipeline = pipeline.png({ quality: 82, compressionLevel: 8 });
+                    } else if (ext === '.webp') {
+                        pipeline = pipeline.webp({ quality: 80 });
+                    } else {
+                        pipeline = pipeline.jpeg({ quality: 82, progressive: true });
+                    }
+                    await pipeline.toFile(tmp);
+                    await fs.promises.rename(tmp, file.path);
+                } catch (_) {}
+            }
         }
 
         const baseUrl = process.env.BACKEND_PUBLIC_URL || (req.protocol + '://' + req.get('host'));

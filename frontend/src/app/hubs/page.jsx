@@ -170,10 +170,10 @@ export default function MarineHubsPage() {
 
         {/* Clean, Elegant Header */}
         <div className="mb-8 sm:mb-10">
-          <div className="flex items-center gap-2 text-marine-primary font-bold text-xs uppercase tracking-wider mb-1.5">
+          {/* <div className="flex items-center gap-2 text-marine-primary font-bold text-xs uppercase tracking-wider mb-1.5">
             <Sparkles size={16} />
             <span>{isAr ? 'تسوّق حسب أسلوب إبحارك' : 'Curated for Your Lifestyle'}</span>
-          </div>
+          </div> */}
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-marine-ink font-display tracking-tight">
             {isAr ? 'مجموعات ريدي مارين المتخصصة' : 'Ready Marine Specialized Hubs'}
           </h1>
@@ -199,11 +199,13 @@ export default function MarineHubsPage() {
               >
                 {/* Background Image with Zoom on Hover */}
                 <img
-                  src={hub.image}
+                  src={hub.image ? hub.image.replace(/\.(jpg|png)$/, '.webp') : '/images/hubs/yacht-luxury.webp'}
                   alt={title}
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none select-none"
                   onError={(e) => {
-                    e.currentTarget.src = '/images/hubs/yacht-luxury.jpg';
+                    e.currentTarget.src = hub.image || '/images/hubs/yacht-luxury.jpg';
                   }}
                 />
 

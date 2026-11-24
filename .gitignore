@@ -10,6 +10,8 @@ frontend/out/
 Backend/node_modules/
 Backend/public/uploads/*
 !Backend/public/uploads/.gitkeep
+!Backend/public/uploads/categories/
+!Backend/public/uploads/categories/**
 
 # Environment variables
 .env

@@ -1,0 +1,1581 @@
+[
+  {
+    "name": "Fishing Gear",
+    "name_ar": "أدوات الصيد",
+    "image": "/uploads/products/product-1793273325169-805799270.png",
+    "sort_order": 0,
+    "is_active": true,
+    "subcategories": [
+      {
+        "name": "Choose your game",
+        "name_ar": "أقسام مخصصة",
+        "image": null,
+        "sort_order": 0,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "King Fish Special",
+            "name_ar": "معدات صيد الكنعد",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Big Game",
+            "name_ar": "البيج جيم",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Fishing Reels",
+        "name_ar": "ماكينات الصيد",
+        "image": null,
+        "sort_order": 1,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Spinning Reels",
+            "name_ar": "ماكينات مخصصه للكاست",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Overhead Reels",
+            "name_ar": "ماكينات مخصصه للجقنق",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Trolling Reels",
+            "name_ar": "ماكينات مخصصه للفاح",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Electric Reels",
+            "name_ar": "ماكينات الصيد الكهربائية",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Fishing Rods",
+        "name_ar": "قصبات الصيد",
+        "image": null,
+        "sort_order": 2,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Casting Rods",
+            "name_ar": "قصبات مخصصه للكاستنق",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Trolling Rods",
+            "name_ar": "قصبات مخصصه للفاح",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Jigging Rods",
+            "name_ar": "قصبات مخصصه للجقنق",
+            "image": "/uploads/products/product-1793194714415-473490262.png",
+            "sort_order": 2,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Combos",
+        "name_ar": "صنارات جاهزة",
+        "image": null,
+        "sort_order": 3,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Casting",
+            "name_ar": "كومبو الكاستنق",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Trolling",
+            "name_ar": "كومبو اللفاح",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Jigging",
+            "name_ar": "كومبو جيقنق",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Lures Set",
+            "name_ar": "كومبو لورات",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Jigs Set",
+            "name_ar": "كومبو جيقات",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Fishing Lines",
+        "name_ar": "خيوط الصيد",
+        "image": null,
+        "sort_order": 4,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Braided Line",
+            "name_ar": "خيوط البريد",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Mono Line",
+            "name_ar": "خيوط المونو",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Flouro Leader",
+            "name_ar": "خيط الفلورو كربون",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Wire Line Leader",
+            "name_ar": "مسين الصيد \"ليدر\"",
+            "image": "/uploads/products/product-1793195809687-129238408.png",
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Fishing Lures",
+        "name_ar": "لورات الصيد",
+        "image": null,
+        "sort_order": 5,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Casting Lures",
+            "name_ar": "لورات الكاستنق",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Trolling",
+            "name_ar": "لورات اللفاح",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Jigs",
+            "name_ar": "لورات الجقنق",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Soft Bait",
+            "name_ar": "سوفت بيت",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Stick bait",
+            "name_ar": "ستيك بيت (Stick bait)",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Poppers",
+            "name_ar": "البوبرات - لورات البوبر",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "Live Bait Rig",
+            "name_ar": "ريجات الطعم الحي",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          },
+          {
+            "name": "Sabiki",
+            "name_ar": "خيوط الشب",
+            "image": null,
+            "sort_order": 7,
+            "is_active": true
+          },
+          {
+            "name": "Saltwater Flies",
+            "name_ar": "فلاي",
+            "image": null,
+            "sort_order": 8,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Terminal Tackle",
+        "name_ar": "مستلزمات الصيد",
+        "image": null,
+        "sort_order": 6,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Hooks",
+            "name_ar": "ميادير",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Snaps & Swivels",
+            "name_ar": "سنابات والدواري",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Sinkers & Diving Boards",
+            "name_ar": "بلود",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Solid & Split Rings",
+            "name_ar": "سبليت رنج",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Tackle Kits",
+            "name_ar": "مجموعات كاملة",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Pliers & Scissors",
+            "name_ar": "مقصات و بلايرز",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "Assist Hooks & Threads",
+            "name_ar": "أسيست هوك",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Fishing Accessories",
+        "name_ar": "أكسسوارات الصيد",
+        "image": null,
+        "sort_order": 7,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Storage Bags",
+            "name_ar": "حقائب صيد",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Tackle Boxes",
+            "name_ar": "صناديق التخزين",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Rod Holders",
+            "name_ar": "قاعدة قصبات",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Net & Gaffs",
+            "name_ar": "الشباك والمخالب",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Harnesses & Belts",
+            "name_ar": "أحزمة الصيد",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Headlamps & Lights",
+            "name_ar": "كشافات الصيد",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "Knives & Line Cutters",
+            "name_ar": "سكاكين التقطيع",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          },
+          {
+            "name": "Ice Coolers",
+            "name_ar": "ثلاجات",
+            "image": null,
+            "sort_order": 7,
+            "is_active": true
+          },
+          {
+            "name": "Reel Knobs & Stands",
+            "name_ar": "مقابض ماكينات الصيد",
+            "image": null,
+            "sort_order": 8,
+            "is_active": true
+          },
+          {
+            "name": "Reel Maintenance",
+            "name_ar": "صيانة الماكينات",
+            "image": null,
+            "sort_order": 9,
+            "is_active": true
+          },
+          {
+            "name": "Weighing Scales",
+            "name_ar": "ميزان الكتروني للأسماك",
+            "image": null,
+            "sort_order": 10,
+            "is_active": true
+          },
+          {
+            "name": "Accessories",
+            "name_ar": "اكسسوارات أخرى",
+            "image": null,
+            "sort_order": 11,
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Manuals & Publications",
+    "name_ar": "الأدلة والمنشورات",
+    "image": "/uploads/products/product-1793272923910-144873613.png",
+    "sort_order": 0,
+    "is_active": true
+  },
+  {
+    "name": "Marine Electronics",
+    "name_ar": "الاجهزة البحرية",
+    "image": "/uploads/products/product-1793272753039-879010226.png",
+    "sort_order": 0,
+    "is_active": true
+  },
+  {
+    "name": "Camping & Outdoor",
+    "name_ar": "التخييم",
+    "image": "/uploads/products/product-1793272563272-531584341.png",
+    "sort_order": 0,
+    "is_active": true,
+    "subcategories": [
+      {
+        "name": "Chairs & Tables",
+        "name_ar": "مقعد للشاطيء و التخييم",
+        "image": null,
+        "sort_order": 0,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Foldable Chairs",
+            "name_ar": "مقاعد سهلة التخزين",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Chairs with Table",
+            "name_ar": "مقاعد بمنضدة مثبتة",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Tables",
+            "name_ar": "طاولات",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Tents & Sleeping Gear",
+        "name_ar": "الخيام وحقائب النوم",
+        "image": null,
+        "sort_order": 1,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Tents",
+            "name_ar": "الخيام",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Sleeping Bags",
+            "name_ar": "حقائب نوم",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Sleeping Mats",
+            "name_ar": "مراتب رقيقة",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Air Beds & Seats",
+            "name_ar": "مرتبة هوائية للنوم",
+            "image": "/uploads/products/product-1793195608012-258872189.png",
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Canopies & Umbrellas",
+            "name_ar": "شمسيات و مظلات",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Coolers",
+        "name_ar": "برادات",
+        "image": null,
+        "sort_order": 2,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Cool Bags",
+            "name_ar": "برادات حقائب حافظة للبرودة",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Hard Coolers",
+            "name_ar": "صناديق ثلج حافظة للبرودة",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Ice Boxes",
+            "name_ar": "صناديق تبريد",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Water Coolers",
+            "name_ar": "مبردات مياه",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Camping Lights",
+        "name_ar": "إضاءة للتخييم",
+        "image": null,
+        "sort_order": 3,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Lanterns",
+            "name_ar": "مصابيح محمولة LED",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "LED Lights",
+            "name_ar": "كشافات LED",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Flash Lights",
+            "name_ar": "مصابيح اليد",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Outdoor Cooking",
+        "name_ar": "مستلزمات الطبخ",
+        "image": null,
+        "sort_order": 4,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Stoves",
+            "name_ar": "موقد غاز",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Gas",
+            "name_ar": "أسطوانات غاز",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Bonfire",
+            "name_ar": "بون فاير",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Charcoal & Firewood",
+            "name_ar": "فحم",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Teapot & Utensil",
+            "name_ar": "أدوات الطبخ",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "BBQ Grills",
+            "name_ar": "شوايات باربكيو",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Camping Accessories",
+        "name_ar": "أكواب السفر وبرطمانات",
+        "image": null,
+        "sort_order": 5,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Water Bottles & Cans",
+            "name_ar": "زجاجات مياه",
+            "image": "/uploads/products/product-1793195163333-283694051.png",
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Foldable Trolleys",
+            "name_ar": "ترولي قابل للطي",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Picnic Bags",
+            "name_ar": "حقائب للنزهة",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Storage Boxes",
+            "name_ar": "صناديق التخزين",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Camping Power",
+            "name_ar": "بطاريات التخييم",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Portable Toilets",
+            "name_ar": "مراحيض محمولة للتخييم",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Hunting Accessories",
+        "name_ar": "ادوات الصيد (البري)",
+        "image": null,
+        "sort_order": 6,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Gloves",
+            "name_ar": "قفازات",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Hunting & Survival Knives",
+            "name_ar": "سكاكين فولاذية",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Tactical Flashlight",
+            "name_ar": "كشافات إضاءة الصيد",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Binoculars",
+            "name_ar": "مناظير الرؤية عن بعد",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Marine Decor & Collectibles",
+    "name_ar": "الديكور والمقتنيات",
+    "image": "/uploads/products/product-1793272040718-947107772.png",
+    "sort_order": 0,
+    "is_active": true
+  },
+  {
+    "name": "Water Sports",
+    "name_ar": "الرياضات المائيه",
+    "image": "/uploads/products/product-1793272234940-940631300.png",
+    "sort_order": 0,
+    "is_active": true,
+    "subcategories": [
+      {
+        "name": "Diving",
+        "name_ar": "الغوص",
+        "image": null,
+        "sort_order": 0,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Bags",
+            "name_ar": "الحقائب",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Masks",
+            "name_ar": "نظارات الغوص",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Fins",
+            "name_ar": "زعانف",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Wet Suits & Rashguards",
+            "name_ar": "بدلات الغوص",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Socks",
+            "name_ar": "جوارب",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Gloves",
+            "name_ar": "قفازات",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "BCD Jackets",
+            "name_ar": "جاكيت BCD",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          },
+          {
+            "name": "Regulators",
+            "name_ar": "منظم هواء",
+            "image": null,
+            "sort_order": 7,
+            "is_active": true
+          },
+          {
+            "name": "Diving Sets",
+            "name_ar": "معدات كاملة",
+            "image": null,
+            "sort_order": 8,
+            "is_active": true
+          },
+          {
+            "name": "Underwater Scooter",
+            "name_ar": "سكوتر مائي",
+            "image": null,
+            "sort_order": 9,
+            "is_active": true
+          },
+          {
+            "name": "Underwater Lights",
+            "name_ar": "كشافات غوص",
+            "image": null,
+            "sort_order": 10,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Snorkeling",
+        "name_ar": "سنوركلنج",
+        "image": null,
+        "sort_order": 1,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Snorkels",
+            "name_ar": "سنوركل",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Masks",
+            "name_ar": "نظارات غوص",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Fins",
+            "name_ar": "زعانف",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Kayaking & Boating",
+        "name_ar": "كاياك",
+        "image": null,
+        "sort_order": 2,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Boats & SUP",
+            "name_ar": "قوارب",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Inflatable Boats",
+            "name_ar": "قوارب مطاطية",
+            "image": "/uploads/products/product-1793196141435-191692352.png",
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Kayaks",
+            "name_ar": "قوارب كاياك",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Kayak Paddles",
+            "name_ar": "مجداف الكاياك",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Trolleys",
+            "name_ar": "ترولي للكاياك",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Car Roof Racks",
+            "name_ar": "رفوف سقف السيارة",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "Anchors",
+            "name_ar": "مرساة",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          },
+          {
+            "name": "Air Pumps",
+            "name_ar": "مضخات هواء",
+            "image": null,
+            "sort_order": 7,
+            "is_active": true
+          },
+          {
+            "name": "Dry Bags",
+            "name_ar": "حقائب ضد الماء",
+            "image": null,
+            "sort_order": 8,
+            "is_active": true
+          },
+          {
+            "name": "Rod Holders",
+            "name_ar": "حوامل القصبات",
+            "image": null,
+            "sort_order": 9,
+            "is_active": true
+          },
+          {
+            "name": "Kayak Coolers",
+            "name_ar": "مبردات الكاياك",
+            "image": null,
+            "sort_order": 10,
+            "is_active": true
+          },
+          {
+            "name": "Life Jackets",
+            "name_ar": "جاكت السلامة والانقاذ",
+            "image": null,
+            "sort_order": 11,
+            "is_active": true
+          },
+          {
+            "name": "Trolling Motor",
+            "name_ar": "موتور الكاياك للفاح",
+            "image": null,
+            "sort_order": 12,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Spear Fishing",
+        "name_ar": "معدات الغوص الحر",
+        "image": null,
+        "sort_order": 3,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Spearguns",
+            "name_ar": "سبير جن",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Wishbone",
+            "name_ar": "ويش بون",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Accessories",
+            "name_ar": "اكسسوارات",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Beach & Pool Accessories",
+        "name_ar": "مستلزمات الألعاب المائية",
+        "image": null,
+        "sort_order": 4,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Inflatable Lounge",
+            "name_ar": "لوح عائم - عوامات",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Kids Arm Floats",
+            "name_ar": "أدوات السباحة للأطفال",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Donut Ride",
+            "name_ar": "عوامات قابلة للقطر",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Beach Towels",
+            "name_ar": "مناشف للشاطيء",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Swimming Pools for Kids",
+            "name_ar": "برك السباحة",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Swimming",
+        "name_ar": "السباحة",
+        "image": null,
+        "sort_order": 5,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Swimming Goggles",
+            "name_ar": "نظارات السباحة",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Swim Caps",
+            "name_ar": "كاب مخصص للسباحة",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Briefs",
+            "name_ar": "ملابس السباحة الداخلية",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Swimsuits",
+            "name_ar": "بدلات سباحة",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Marine Apparel",
+    "name_ar": "الملابس",
+    "image": "/uploads/products/product-1793273044364-691236796.png",
+    "sort_order": 0,
+    "is_active": true,
+    "subcategories": [
+      {
+        "name": "Fishing Clothing",
+        "name_ar": "الملابس",
+        "image": null,
+        "sort_order": 0,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Shirts",
+            "name_ar": "القمصان",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Shorts",
+            "name_ar": "الشورتات",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Performance Hoodies",
+            "name_ar": "الهودي",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Jackets",
+            "name_ar": "جاكيتات",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Kids Shirts",
+            "name_ar": "ملابس أطفال",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Women's Leggings",
+            "name_ar": "ليجن نسائي",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Footwear",
+        "name_ar": "الأحذية",
+        "image": null,
+        "sort_order": 1,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Water Shoes",
+            "name_ar": "الأحذية المائية",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Sandals",
+            "name_ar": "صنادل",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Accessories",
+        "name_ar": "اكسسوارات",
+        "image": null,
+        "sort_order": 2,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Sunglasses",
+            "name_ar": "نظارات شمسية",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Caps & Hats",
+            "name_ar": "القبعات",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Gloves",
+            "name_ar": "قفازات الصيد",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Faceshield",
+            "name_ar": "أغطية الوجه",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Poncho Towels",
+            "name_ar": "منشفة للبحر",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Arm Sleeves",
+            "name_ar": "أكمام الذراع",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "Multifunctional Headwears",
+            "name_ar": "أغطية رأس متعددة",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Spare Parts",
+    "name_ar": "قطع الغيار",
+    "image": "/uploads/products/product-1793272381122-875085234.png",
+    "sort_order": 0,
+    "is_active": true,
+    "subcategories": [
+      {
+        "name": "Propellers",
+        "name_ar": "المراوح",
+        "image": "/uploads/categories/propellers-nobg-a6c57e6a12.png",
+        "sort_order": 0,
+        "is_active": true
+      },
+      {
+        "name": "Waterproof Electrical Connectors",
+        "name_ar": "الموصلات الكهربائية المقاومة للماء",
+        "image": "/uploads/categories/waterproof-electrical-connectors-nobg-d357c747d3.png",
+        "sort_order": 0,
+        "is_active": true
+      },
+      {
+        "name": "Spark Plugs",
+        "name_ar": "شمعات الإشعال",
+        "image": "/uploads/categories/spark-plugs-nobg-8912650ae0.png",
+        "sort_order": 0,
+        "is_active": true
+      },
+      {
+        "name": "Fuel Pumps",
+        "name_ar": "مضخات الوقود",
+        "image": "/uploads/categories/fuel-pumps-nobg-f3c671952b.png",
+        "sort_order": 0,
+        "is_active": true
+      }
+    ]
+  },
+  {
+    "name": "Boat Fenders",
+    "name_ar": "مصدات القوارب",
+    "image": "/uploads/products/product-1793195869908-322514361.png",
+    "sort_order": 0,
+    "is_active": true
+  },
+  {
+    "name": "Boat Equipment",
+    "name_ar": "معدات القوارب",
+    "image": "/uploads/products/product-1793194374788-759980577.png",
+    "sort_order": 0,
+    "is_active": true,
+    "subcategories": [
+      {
+        "name": "Boats & Accessories",
+        "name_ar": "أكسسوارات القوارب",
+        "image": "/uploads/products/product-1793194551229-936266020.png",
+        "sort_order": 0,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Boats",
+            "name_ar": "قوارب مطاطية ترفيهية",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Kayaks",
+            "name_ar": "كاياك",
+            "image": "/uploads/products/product-1793195287898-359147203.png",
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Inflatable Boats",
+            "name_ar": "قوارب مطاطية للصيد",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Rod Holders",
+            "name_ar": "قواعد القصبات",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Mounts",
+            "name_ar": "قواعد تثبيت",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Steering Wheels",
+            "name_ar": "عجلات قيادة القوارب",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "Fillet & Bait Tables",
+            "name_ar": "طاولات قوارب",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          },
+          {
+            "name": "Shades & Blinds",
+            "name_ar": "ستائر ونوافذ القوارب",
+            "image": "/uploads/products/product-1793195451730-305978204.png",
+            "sort_order": 7,
+            "is_active": true
+          },
+          {
+            "name": "Downriggers",
+            "name_ar": "داون ريجرز",
+            "image": null,
+            "sort_order": 8,
+            "is_active": true
+          },
+          {
+            "name": "Flags",
+            "name_ar": "أعلام قوارب",
+            "image": null,
+            "sort_order": 9,
+            "is_active": true
+          },
+          {
+            "name": "Trolling Motor",
+            "name_ar": "موتور الترولنج واللفاح",
+            "image": "/uploads/products/product-1793194900132-321305845.png",
+            "sort_order": 10,
+            "is_active": true
+          },
+          {
+            "name": "Boat Seats & Cushions",
+            "name_ar": "مقاعد القارب والأغطية",
+            "image": null,
+            "sort_order": 11,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Safety & Survival",
+        "name_ar": "السلامة والانقاذ",
+        "image": null,
+        "sort_order": 1,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Life Jackets & PFDs",
+            "name_ar": "سترات النجاة",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Boat Rescue System",
+            "name_ar": "مجموعة انقاذ القوارب",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Health Safety Kits",
+            "name_ar": "صندوق الاسعافات الأولية",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Watertight Case",
+            "name_ar": "حقائب مانعة لتسرب الماء",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Electronics",
+        "name_ar": "إلكترونيات",
+        "image": null,
+        "sort_order": 2,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "GPS",
+            "name_ar": "الملاحة GPS",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Subwoofers",
+            "name_ar": "صب ووفر",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Amplifiers",
+            "name_ar": "أمبليفير",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Tower Speakers",
+            "name_ar": "سماعات معلقة",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Batteries and Boxes",
+            "name_ar": "البطاريات و الصناديق",
+            "image": "/uploads/products/product-1793194331568-699931979.png",
+            "sort_order": 4,
+            "is_active": true
+          },
+          {
+            "name": "Fans",
+            "name_ar": "مروحة بحرية للقارب",
+            "image": null,
+            "sort_order": 5,
+            "is_active": true
+          },
+          {
+            "name": "Wireless Chargers",
+            "name_ar": "شاحن لاسلكي",
+            "image": null,
+            "sort_order": 6,
+            "is_active": true
+          },
+          {
+            "name": "Battery Switches",
+            "name_ar": "مفاتيح توزيع كهرباء",
+            "image": null,
+            "sort_order": 7,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Lighting",
+        "name_ar": "إضاءة القوارب",
+        "image": null,
+        "sort_order": 3,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Underwater Lights",
+            "name_ar": "إضاءة اسفل القارب",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Flood Lights",
+            "name_ar": "إضاءة سطح القارب",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Flush Mount Down Lights",
+            "name_ar": "إضاءة سبوت",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Courtesy & Accent Lights",
+            "name_ar": "إضاءة قمرة القيادة",
+            "image": "/uploads/products/product-1793196490750-146304083.png",
+            "sort_order": 3,
+            "is_active": true
+          },
+          {
+            "name": "Incandescent Lights",
+            "name_ar": "اضاءة غرفة المحرك",
+            "image": null,
+            "sort_order": 4,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Boat Cleaning",
+        "name_ar": "معدات تنظيف القارب",
+        "image": null,
+        "sort_order": 4,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Mechanisms & Engine Care",
+            "name_ar": "تنظيف المحرك",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Metal Care / Gelcoat Care",
+            "name_ar": "تنظيف الجل كوت والمعادن",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Cleaners",
+            "name_ar": "منظفات وملمع الطراد",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Paint & Protection",
+            "name_ar": "أدوات طلاء وحماية",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Anchor & Docking",
+        "name_ar": "أدوات الرسو والتثبيت",
+        "image": null,
+        "sort_order": 5,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Anchors",
+            "name_ar": "المرساة",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Buoy",
+            "name_ar": "العوامات ومصدات الصدمات",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          },
+          {
+            "name": "Boat Hooks & Moors",
+            "name_ar": "آلات ربط القارب",
+            "image": null,
+            "sort_order": 2,
+            "is_active": true
+          },
+          {
+            "name": "Fenders & Accessories",
+            "name_ar": "المصدات و حماية",
+            "image": null,
+            "sort_order": 3,
+            "is_active": true
+          }
+        ]
+      },
+      {
+        "name": "Cabin & Galley",
+        "name_ar": "الكابينة والمطبخ",
+        "image": null,
+        "sort_order": 6,
+        "is_active": true,
+        "subcategories": [
+          {
+            "name": "Cookware & Accessories",
+            "name_ar": "تجهيزات المطابخ البحرية",
+            "image": null,
+            "sort_order": 0,
+            "is_active": true
+          },
+          {
+            "name": "Clocks & Meters",
+            "name_ar": "ساعات و أدوات قياس",
+            "image": null,
+            "sort_order": 1,
+            "is_active": true
+          }
+        ]
+      }
+    ]
+  }
+]

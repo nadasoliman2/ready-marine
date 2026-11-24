@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { ArrowLeft, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { thumbUrl } from '../../lib/assets';
 
 /**
  * The category cards above the shop's grid. `title` names the level the cards belong to;
@@ -89,8 +90,10 @@ export default function SubcategorySlider({ subcategories, currentCategoryId, se
                 )}
                 {cat.image ? (
                   <img 
-                    src={cat.image.startsWith('http') ? cat.image : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:2000'}${cat.image}`} 
+                    src={thumbUrl(cat.image, 320)} 
                     alt={cat.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 ) : (

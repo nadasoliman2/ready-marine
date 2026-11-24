@@ -176,9 +176,11 @@ function CardAutoSlider({ cardConfig, isAr }) {
       {slides.map((slide, idx) => (
         <img
           key={slide.slug}
-          src={slide.image}
+          src={slide.image ? slide.image.replace(/\.(jpg|png)$/, '.webp') : slide.image}
+          onError={(e) => { e.currentTarget.src = slide.image; }}
           alt={isAr ? slide.titleAr : slide.titleEn}
           loading="lazy"
+          decoding="async"
           className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out pointer-events-none select-none ${
             idx === currentIndex
               ? 'opacity-85 scale-100'
@@ -362,7 +364,14 @@ function MobileHubsCarousel({ isAr, slides = ALL_SLIDES }) {
             href={`/hub/${slide.slug}`}
             className="relative flex-none w-[78vw] aspect-[3/4] snap-center overflow-hidden rounded-2xl bg-marine-navy shadow-lg"
           >
-            <img src={slide.image} alt="" loading={i < 2 ? 'eager' : 'lazy'} className="absolute inset-0 w-full h-full object-cover" />
+            <img
+              src={slide.image ? slide.image.replace(/\.(jpg|png)$/, '.webp') : slide.image}
+              onError={(e) => { e.currentTarget.src = slide.image; }}
+              alt=""
+              loading={i < 2 ? 'eager' : 'lazy'}
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-[#061826]/95 via-[#061826]/30 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-5 text-center">
               <h3 className="font-display text-2xl font-black text-white leading-tight mb-1.5">{isAr ? slide.titleAr : slide.titleEn}</h3>

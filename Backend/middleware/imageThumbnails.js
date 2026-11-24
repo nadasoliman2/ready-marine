@@ -29,7 +29,7 @@ module.exports = function imageThumbnails(uploadsRoot) {
 
     return async function thumbnailMiddleware(req, res, next) {
         const width = Number(req.query.w);
-        if (!sharp || req.method !== 'GET' || !ALLOWED_WIDTHS.has(width)) return next();
+        if (!sharp || (req.method !== 'GET' && req.method !== 'HEAD') || !ALLOWED_WIDTHS.has(width)) return next();
 
         let relative;
         try { relative = decodeURIComponent(req.path); } catch (_) { return next(); }
@@ -60,6 +60,7 @@ module.exports = function imageThumbnails(uploadsRoot) {
             }
             res.set('Cache-Control', CACHE_HEADER);
             res.type('image/webp');
+            if (req.method === 'HEAD') return res.status(200).end();
             return res.sendFile(target, (err) => { if (err && !res.headersSent) next(); });
         } catch (err) {
             console.error(`[thumbnails] ${relative} @${width}: ${err.message}`);

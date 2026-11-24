@@ -163,7 +163,8 @@ export function MarineHero() {
         <div className="relative min-h-[300px] sm:min-h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden p-5 sm:p-6 flex flex-col justify-between shadow-md bg-[#061d2d]">
           {/* Background Yacht photo - flipped in RTL so yacht appears on the open side */}
           <img
-            src="/images/hero-yacht.png"
+            src="/images/hero-yacht.webp"
+            onError={(e) => { e.currentTarget.src = '/images/hero-yacht.png'; }}
             alt="Ready Marine"
             fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover object-[78%_center] rtl:scale-x-[-1] pointer-events-none select-none"
@@ -241,7 +242,8 @@ export function MarineHero() {
       <section className="hidden md:flex relative overflow-hidden h-[580px] flex-col justify-between">
         {/* Yacht Background - clear in natural sunlight without white overlay */}
         <img
-          src="/images/hero-yacht.png"
+          src="/images/hero-yacht.webp"
+          onError={(e) => { e.currentTarget.src = '/images/hero-yacht.png'; }}
           alt="Ready Marine"
           fetchPriority="high"
           className="absolute inset-0 w-full h-full object-cover object-[78%_center] pointer-events-none select-none"

@@ -16,6 +16,7 @@
     "everysecond:register-webhook": "node ./scripts/everysecondRegisterWebhook.js",
     "start": "node ./bin/www",
     "seed:categories": "node ./seeders/categorySeeder.js",
+    "seed:categories:sync": "node ./seeders/categorySeeder.js --sync",
     "seed:categories:reset": "node ./seeders/categorySeeder.js --reset",
     "seed:finance": "node ./seeders/financeSeeder.js",
     "seed:finance:reset": "node ./seeders/financeSeeder.js --reset",
